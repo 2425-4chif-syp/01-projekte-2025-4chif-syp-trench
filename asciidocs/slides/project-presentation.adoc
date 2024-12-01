@@ -47,8 +47,6 @@ ASC Sensor Visualisation
 [.stretch]
 image::sys-architecture.png[]
 
-[.lightbg,background-opacity="0.7"]
-
 [%auto-animate]
 == Frontend Concept
 
