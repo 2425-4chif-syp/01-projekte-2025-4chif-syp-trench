@@ -1,9 +1,7 @@
 = Trench Project
-:author: firstname lastname
-:email: x.y@htl.at
 :revnumber: 1.0
 :revdate: {docdate}
-:revremark: SLIDEDEMO @ HTL Leonding
+:revremark: TRENCH @ HTL Leonding
 :encoding: utf-8
 :lang: de
 :doctype: article
@@ -44,6 +42,7 @@ image::sys-architecture.png[]
 
 == Project Team
 
+[%hardbreaks]
 Filip Schauer: Project Leader
 Aaron Schreiegg
 Axel Csomany
