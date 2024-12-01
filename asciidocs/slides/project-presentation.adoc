@@ -33,21 +33,21 @@ endif::[]
 
 ASC Sensor Visualisation
 
+== Project Team
+
+[%hardbreaks]
+- *Filip Schauer*: Project Leader
+- *Aaron Schreiegg*
+- *Axel Csomany*
+- *Emil Silber*
+- *Simon Pesut*
+
 == System Architecture
 
 [.stretch]
 image::sys-architecture.png[]
 
 [.lightbg,background-opacity="0.7"]
-
-== Project Team
-
-[%hardbreaks]
-Filip Schauer: Project Leader
-Aaron Schreiegg
-Axel Csomany
-Emil Silber
-Simon Pesut
 
 [%auto-animate]
 == Frontend Concept
