@@ -1,0 +1,4 @@
+= Index page 4chif
+ifndef::imagesdir[:imagesdir: images]
+
+image::img.png[]
