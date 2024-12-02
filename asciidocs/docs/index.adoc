@@ -1,4 +1,13 @@
-= Index page 4chif
+= Trench Project
 ifndef::imagesdir[:imagesdir: images]
 
-image::img.png[]
+== Project Team
+- *Filip Schauer* (Project Leader)
+- *Aaron Schreiegg*
+- *Axel Csomany*
+- *Emil Silber*
+- *Simon Pesut*
+
+== Slides
+Further information can be found under the
+https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[*RevealJS slides*] of the project.
