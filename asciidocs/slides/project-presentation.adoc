@@ -47,6 +47,63 @@ ASC Sensor Visualisation
 [.stretch]
 image::sys-architecture.png[]
 
+[plantuml,format="png",options=""]
+----
+@startuml
+
+entity "Sensordaten" as Sensordaten {
+    *mess_id: number
+    -sensor_id: number
+    -anlage_id: number
+    --
+    messZeitpunkt: Timestamp
+    messergebnis: number
+}
+
+entity "Sensortyp" as Sensortyp {
+    *sensor_id : number
+    --
+    wicklungsBreite: number
+}
+
+entity "Messeinstellung" as Messeinstellung {
+    *einstellungs_id : number
+    --
+    bemessungsSpannung (U_m): number
+    bemessungsFrequenz (f_m): number
+    sondenProSchenkel: number
+    messStärke (I_m): number
+    uhrzeit: DateTIme
+}
+
+entity "Anlage (Spule)" as Anlage {
+    *anlage_id: number
+    -typ_id: number
+    -einstellungs_id: number
+    --
+    messSpannung : number
+    serienNummer (SN) : varchar
+    auftragsNummer : varchar
+    auftragsPosition : varchar
+}
+
+entity "Anlagetyp" as Anlagetyp {
+    *typ_id: int
+    --
+    schenkelZahl (RJ) : number
+    bandBreite (BB) : number
+    schichtHöhe (SH) : number
+    toleranz: number
+}
+
+
+Messeinstellung <-- Sensordaten 
+Messeinstellung <-- Sensortyp
+Anlage <--- Messeinstellung
+Anlage ---> Anlagetyp
+@enduml
+----
+
 [%auto-animate]
 == Frontend Concept
 
@@ -64,3 +121,4 @@ image::frontend-concept-2.png[]
 
 [.stretch]
 image::frontend-concept-3.png[]
+
