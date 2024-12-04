@@ -1,0 +1,23 @@
+= Commit Guidelines
+
+The commit messages generally follow the https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits] specification, however with the first letter being capitalized, the message being in the past tense and YouTrack issue ID being included at the end the message.
+
+New features may look for example like this:
+
+----
+feat: Added navbar #trench-7 To Verify
+----
+
+The types are::
+* `feat` for new features
+* `fix` for bug fixes
+* `docs` for documentation changes
+* `style` for changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+* `refactor` for code refactoring
+* `perf` for performance improvements
+* `test` for adding missing tests or correcting existing tests
+* `chore` for changes to the build process or auxiliary tools and libraries such as documentation generation
+
+The hash (in this case `#trench-7`) is the YouTrack issue ID. 
+
+Afterwards, you can optionally specify where to move the task to, which would be `Open`, `In Progress`, `To Verify`, or `Done`.
