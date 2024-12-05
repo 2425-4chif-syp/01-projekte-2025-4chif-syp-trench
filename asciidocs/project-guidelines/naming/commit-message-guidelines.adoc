@@ -21,3 +21,5 @@ The types are::
 The hash (in this case `#trench-7`) is the YouTrack issue ID. 
 
 Afterwards, you can optionally specify where to move the task to, which would be `Open`, `In Progress`, `To Verify`, or `Done`.
+
+Multiple changes in a single commit should be seperated by commas, however it is best practice to keep commits as small and as frequent as possible.
