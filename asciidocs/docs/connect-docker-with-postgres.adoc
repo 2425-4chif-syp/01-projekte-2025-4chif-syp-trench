@@ -16,7 +16,7 @@ Before proceeding, ensure you have the following installed and ready:
 - Basic familiarity with Docker commands.
 
 == Step 1: Docker Compose Configuration
-Create a `docker-compose.yml` file with the following content:
+1. Create a `docker-compose.yml` file with the following content:
 
 [source,yaml]
 ----
@@ -49,6 +49,10 @@ This file defines two services:
 
 1. `postgres`: Runs the PostgreSQL database.
 2. `pgadmin`: Runs the pgAdmin web-based database management interface.
+
+=== Where to place `docker-compose.yml`
+- Later on we will get some more services for backend and frontent as well, so we will have to put the `docker-compose.yml` file in the root of the project.
+- This allows the `docker-compose` command to manage all services (frontend, backend, and database) together.
 
 == Step 2: Start the Services
 Run the following commands to start the containers:
