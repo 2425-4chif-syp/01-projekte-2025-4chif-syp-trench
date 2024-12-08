@@ -1,14 +1,22 @@
 .navbar {
     background: linear-gradient(90deg, #002f72, #1db6d1, #4caf50);
-    padding-left: 1.5%;
+    padding-inline: 2.5%;
 
     .navbar-brand img {
         max-height: 40px;
     }
 
+    .navbar-collapse {
+        display: flex; 
+        justify-content: space-between; 
+    }
+
+    .navbar-nav {
+        margin-left: auto; 
+    }
+
     .nav-link {
         color: #ffffff;
-
         &.active {
             font-weight: bold;
             color: #007bff;
