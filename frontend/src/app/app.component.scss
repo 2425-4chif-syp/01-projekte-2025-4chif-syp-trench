@@ -18,9 +18,21 @@
 
     .nav-link {
         color: #ffffff;
+        transition: all 0.1 ease-in-out;
+        font-size: 1rem;
+        font-weight: bold;
+        display: inline-block;
+
         &.active {
             font-weight: bold;
-            color: #007bff;
+            color: #e8e8e8;
+            
+        }
+
+        &:hover{
+            transform: scale(1.035);
+            font-weight: bold;
+            color: #e8e8e8;
         }
     }
 }
