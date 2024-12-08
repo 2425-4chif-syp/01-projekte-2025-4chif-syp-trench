@@ -1,12 +1,13 @@
 .navbar {
-    background-color: #f8f9fa;
+    background: linear-gradient(90deg, #002f72, #1db6d1, #4caf50);
+    padding-left: 1.5%;
 
     .navbar-brand img {
         max-height: 40px;
     }
 
     .nav-link {
-        color: #000;
+        color: #ffffff;
 
         &.active {
             font-weight: bold;
