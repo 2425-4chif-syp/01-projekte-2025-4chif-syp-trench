@@ -1,1 +1,0 @@
-include::./asciidocs/docs/index.adoc[]
