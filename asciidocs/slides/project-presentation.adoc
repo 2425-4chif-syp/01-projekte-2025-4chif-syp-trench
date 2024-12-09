@@ -47,6 +47,11 @@ ASC Sensor Visualisation
 [.stretch]
 image::sys-architecture.png[]
 
+== Use-Case Diagram
+
+[.stretch]
+image::use_case.png[]
+
 [%auto-animate]
 == Frontend Concept
 
