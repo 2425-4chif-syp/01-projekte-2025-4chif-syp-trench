@@ -1,0 +1,17 @@
+The relevant files of the project are structured as follows:
+----
+asciidocs/
+    docs/
+        index.adoc
+            The main index file of the documentation.
+        no-header.adoc
+            index.adoc without the header.
+        connect-docker-with-postgres.adoc
+            Tutorial on how to connect a Docker container with a PostgreSQL database.
+        file-structure.adoc
+            The file structure of the project (this file).
+        project-team.adoc
+            The team of the project and what our tasks are.
+        ...
+...
+----

@@ -8,8 +8,10 @@ It assumes that the data is provided using a USB-Stick in a specific format, and
 include::../project-description/project-team.adoc[]
 
 == System Architecture
-
 image::./images/system-architecture.png[]
+
+== File Structure
+include::./file-structure.adoc[]
 
 == Frontend Concepts
 
