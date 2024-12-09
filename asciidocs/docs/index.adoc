@@ -13,8 +13,7 @@ ifndef::imagesdir[:imagesdir: images]
 - *https://vm81.htl-leonding.ac.at/agiles/99-400/current[YouTrack Board]*
 
 == Project Description
-
+include::../project-description/no-header.adoc[]
 
 == Project Guidelines
-
-include::../project-guidelines/no-header_project-guidelines.adoc[]
+include::../project-guidelines/no-header.adoc[]
