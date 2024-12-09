@@ -2,12 +2,19 @@
 ifndef::imagesdir[:imagesdir: images]
 
 == Project Team
-- *Filip Schauer* (Project Leader)
+- *Emil Silber* (Project Leader)
+- *Filip Schauer*
 - *Aaron Schreiegg*
 - *Axel Csomany*
-- *Emil Silber*
 - *Simon Pesut*
 
-== Slides
-Further information can be found under the
-https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[*RevealJS slides*] of the project.
+== Useful Links
+- *https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[RevealJS slides]*
+- *https://vm81.htl-leonding.ac.at/agiles/99-400/current[YouTrack Board]*
+
+== Project Description
+
+
+== Project Guidelines
+
+include::../project-guidelines/no-header_project-guidelines.adoc[]
