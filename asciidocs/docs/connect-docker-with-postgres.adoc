@@ -104,6 +104,7 @@ Ensure Docker Desktop is fully started. Open it and wait until the status icon i
 
 === Linux Container Mode
 If Docker Desktop is not in Linux Container mode:
+
 - Right-click the Docker Desktop icon in the taskbar and select **Switch to Linux Containers**.
 
 === `version` is obsolete warning
@@ -111,12 +112,14 @@ If you see a warning about the `version` attribute being obsolete in `docker-com
 
 === Cannot connect to PostgreSQL
 Check the following:
+
 - Containers are running (`docker ps`).
 - Credentials match the `docker-compose.yml` file.
 - Use `localhost` or `host.docker.internal` for the host.
 
 == Step 4: Manage Your Database
 Once connected, you can:
+
 - Use **pgAdmin** to create tables, run SQL queries, and manage your database visually.
 - Use the PostgreSQL CLI (`psql`) for direct command-line interaction.
 
@@ -134,6 +137,7 @@ $ psql -h localhost -U postgres -d postgres
 
 == Summary
 Congratulations! You have successfully:
+
 - Set up PostgreSQL and pgAdmin using Docker.
 - Connected pgAdmin to your PostgreSQL database.
 
