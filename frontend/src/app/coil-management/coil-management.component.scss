@@ -3,18 +3,30 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 20px;
+    min-width: 100%;
   }
   
   .left-panel, .center-panel, .right-panel {
     flex: 1;
     padding-inline: 20px;
-    padding-top: 10%;
+    padding-top: 1%;
   }
   
   .left-panel, .right-panel {
-    background-color: lightgray;
+    background-color: rgba(159, 159, 159, 0.333);
     height: calc(100vh - 120px);
+    max-width: 25%;
+    border-radius: 15px;
   }
+
+  .center-panel {
+    display: flex; /* Aktiviert Flexbox */
+    justify-content: center; /* Zentriert horizontal */
+    align-items: center; /* Zentriert vertikal */
+    height: 100%; /* Stellt sicher, dass das Panel den gesamten verfügbaren Platz einnimmt */
+    align-content: center; /* Optional, unterstützt das Zentrieren */
+}
+
   
   label {
     display: block;
@@ -43,7 +55,7 @@
   }
   
   img {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
   }
   
