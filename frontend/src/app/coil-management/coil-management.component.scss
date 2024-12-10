@@ -1,29 +1,49 @@
 .container {
     display: flex;
-    height: calc(100vh - 80px);
-}
-  
-.left-panel, .right-panel {
-    flex: 1; 
-    background-color: #f0f0f0;
+    flex-direction: row;
+    justify-content: space-between;
     padding: 20px;
-}
+  }
   
-.center-panel {
-    flex: 2; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffffff;
-    padding: 20px;
-}
+  .left-panel, .center-panel, .right-panel {
+    flex: 1;
+    padding-inline: 20px;
+    padding-top: 10%;
+  }
   
-img {
-    width: 80%;
+  .left-panel, .right-panel {
+    background-color: lightgray;
+    height: calc(100vh - 120px);
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+  
+  input[type="range"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  span {
+    display: block;
+    font-size: 14px;
+    text-align: right;
+  }
+  
+  img {
+    max-width: 100%;
     height: auto;
-}
+  }
   
-.numberSelectorComboBox {
-    margin-left: 5%;
-    min-width: 25%;
-}
