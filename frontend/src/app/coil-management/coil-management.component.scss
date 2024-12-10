@@ -1,10 +1,29 @@
-div {
-    text-align: center;
+.container {
+    display: flex;
+    height: calc(100vh - 80px);
+}
   
-    img {
-      width: 300px;
-      height: auto;
-      margin-top: 20px;
-    }
-  }
+.left-panel, .right-panel {
+    flex: 1; 
+    background-color: #f0f0f0;
+    padding: 20px;
+}
   
+.center-panel {
+    flex: 2; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+}
+  
+img {
+    width: 80%;
+    height: auto;
+}
+  
+.numberSelectorComboBox {
+    margin-left: 5%;
+    min-width: 25%;
+}

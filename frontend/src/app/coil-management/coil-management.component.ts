@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  selectedNumber: number | null = null;
+  selectedNumber: number = 2;
 
   getSvgPath(): string {
     return `assets/svg/${this.selectedNumber}RJ.svg`;
