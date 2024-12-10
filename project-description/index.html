@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Trench Project</title>
+<title>Project Description</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -434,68 +434,151 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-    pre.rouge .hll {
-        background-color: #ffc;
-        display: block;
-    }
-    pre.rouge .hll * {
-        background-color: initial;
-    }
-</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Trench Project</h1>
+<h1>Project Description</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_useful_links">1. Useful Links</a></li>
-<li><a href="#_index">2. Index</a></li>
-<li><a href="#_other">3. Other</a></li>
+<li><a href="#_what_is_this_project">1. What is this project?</a></li>
+<li><a href="#_project_team">2. Project Team</a></li>
+<li><a href="#_system_architecture">3. System Architecture</a></li>
+<li><a href="#_file_structure">4. File Structure</a></li>
+<li><a href="#_frontend_concepts">5. Frontend Concepts</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_useful_links"><a class="anchor" href="#_useful_links"></a>1. Useful Links</h2>
+<h2 id="_what_is_this_project"><a class="anchor" href="#_what_is_this_project"></a>1. What is this project?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This project is the SYP-Project of the 4CHIF class of the HTL Leonding. It&#8217;s idea is to aid the company <a href="https://trench-group.com/">Trench Group</a> on creating <a href="https://en.wikipedia.org/wiki/Arc_suppression">Arc Supression Coils</a> by providing a visualization and a summary of the position of the deviation of the its core, to see if it is within the allowed tolerance.</p>
+</div>
+<div class="paragraph">
+<p>It assumes that the data is provided using a USB-Stick in a specific format, and that the project gets run on a Windows tablet. It is primarily made using <a href="https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet">.NET</a> and <a href="https://angular.dev/">Angular</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_team"><a class="anchor" href="#_project_team"></a>2. Project Team</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html">RevealJS slides</a></p>
+<p><strong>Emil Silber</strong>: <strong>Project Leader</strong>, Organizational Leader, Backend</p>
 </li>
 <li>
-<p><a href="https://vm81.htl-leonding.ac.at/agiles/99-400/current">YouTrack Board</a></p>
+<p><strong>Filip Schauer</strong>: Technical Leader, Frontend</p>
+</li>
+<li>
+<p><strong>Aaron Schreiegg</strong>: Frontend</p>
+</li>
+<li>
+<p><strong>Axel Csomany</strong>: Backend</p>
+</li>
+<li>
+<p><strong>Simon Pesut</strong>: Backend (mostly database)</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_index"><a class="anchor" href="#_index"></a>2. Index</h2>
+<h2 id="_system_architecture"><a class="anchor" href="#_system_architecture"></a>3. System Architecture</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="./project-description/index">Project Description</a></p>
-</li>
-<li>
-<p><a href="./project-guidelines/index">Project Guidelines</a></p>
-</li>
-</ul>
+<div class="imageblock">
+<div class="content">
+<img src="images/images/system-architecture.png" alt="system architecture">
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_other"><a class="anchor" href="#_other"></a>3. Other</h2>
+<h2 id="_file_structure"><a class="anchor" href="#_file_structure"></a>4. File Structure</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="./connect-docker-with-postgres">Connect Docker with Postgres</a></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>The relevant files of the project are structured as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asciidocs/
+    docs/
+        index.adoc
+            &gt; The main index file of the documentation.
+            &gt; Includes references to other documentation files,
+            &gt; and is what is displayed on the website.
+
+    project-description/
+        &gt; A general description about the project.
+
+        images/
+            &gt; Images used in the project description.
+            &gt; Also gets used at other places, like the slides.
+
+        index.adoc
+
+        connect-docker-with-postgres.adoc
+            &gt; Tutorial on how to connect a Docker container
+            &gt; with a PostgreSQL database.
+        file-structure.adoc
+            &gt; The file structure of the project (this file).
+        project-team.adoc
+            &gt; The team of the project and what our tasks are.
+
+    project-guidelines/
+        &gt; Guidelines for working on the project.
+
+        index.adoc
+
+        naming/
+            &gt; Guidelines for naming branches and commits.
+
+            branch-name-guidelines.adoc
+            commit-message-guidelines.adoc
+
+    scripts/
+        &gt; Files to help with building the documentation and more.
+
+    slides/
+        &gt; The project presentation slides in RevealJS.
+
+        project-presentation.adoc
+
+        css/
+        images/
+
+frontend/
+    &gt; The frontend of the project, written in Angular using HTML, TypeScript, SCSS and Bootstrap.
+    &gt; Todo: List structure in more detail in the frontend/ directory.
+
+.gitignore
+    &gt; Files and directories that should be ignored by Git.
+
+README.md
+    &gt; The README file of the project, shown on GitHub. This only contains a link to the documentation, since GitHub cannot display AsciiDoc files properly.</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_frontend_concepts"><a class="anchor" href="#_frontend_concepts"></a>5. Frontend Concepts</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/images/frontend-concept-1.png" alt="frontend concept 1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/images/frontend-concept-2.png" alt="frontend concept 2">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/images/frontend-concept-3.png" alt="frontend concept 3">
+</div>
 </div>
 </div>
 </div>

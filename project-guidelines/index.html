@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Trench Project</title>
+<title>Project Guidelines</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -434,68 +434,52 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-    pre.rouge .hll {
-        background-color: #ffc;
-        display: block;
-    }
-    pre.rouge .hll * {
-        background-color: initial;
-    }
-</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Trench Project</h1>
+<h1>Project Guidelines</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_useful_links">1. Useful Links</a></li>
-<li><a href="#_index">2. Index</a></li>
-<li><a href="#_other">3. Other</a></li>
+<li><a href="#_steps_to_make_a_change">1. Steps to make a change</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_useful_links"><a class="anchor" href="#_useful_links"></a>1. Useful Links</h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html">RevealJS slides</a></p>
-</li>
-<li>
-<p><a href="https://vm81.htl-leonding.ac.at/agiles/99-400/current">YouTrack Board</a></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This document outlines the guidelines for the project, and how to work on it.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_index"><a class="anchor" href="#_index"></a>2. Index</h2>
+<h2 id="_steps_to_make_a_change"><a class="anchor" href="#_steps_to_make_a_change"></a>1. Steps to make a change</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p><a href="./project-description/index">Project Description</a></p>
+<p>Head to <a href="https://vm81.htl-leonding.ac.at/agiles/99-400/current">the project&#8217;s YouTrack board</a> and find a task that you want to work on, or create a new one.</p>
 </li>
 <li>
-<p><a href="./project-guidelines/index">Project Guidelines</a></p>
+<p>Create a new branch with the name following the <a href="./naming/branch-name-guidelines.adoc">branch name guidelines</a>.</p>
 </li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_other"><a class="anchor" href="#_other"></a>3. Other</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
 <li>
-<p><a href="./connect-docker-with-postgres">Connect Docker with Postgres</a></p>
+<p>Make your changes on that branch. Name your commits following the <a href="./naming/commit-message-guidelines.adoc">commit message guidelines</a>. Your first commit on that branch should include "In Progress", and your last commit "To Verify" at the end of the message.</p>
 </li>
-</ul>
+<li>
+<p>Create a pull request and give an extensive description of what you did. Ping Filip, Emil or whoever else you think should take a look at the PR to review it on Discord, or just ping @everyone.</p>
+</li>
+<li>
+<p>If any changes are requested, make them and push them to the branch, then repeat step 4.</p>
+</li>
+<li>
+<p>Once the PR is approved, merge it into the main branch, delete the branch and move the task to "Done" in YouTrack. Do not forget to update the documentation if necessary.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For small changes, these steps could be omitted, however it is best practice to follow them as closely as possible, and the <a href="./naming/commit-message-guidelines.adoc">commit message guidelines</a> should always be followed.</p>
 </div>
 </div>
 </div>
