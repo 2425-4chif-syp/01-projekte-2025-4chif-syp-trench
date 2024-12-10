@@ -21,6 +21,7 @@
         transition: all 0.1 ease-in-out;
         font-size: 1rem;
         font-weight: bold;
+        font-family: "Montserrat", Sans-serif;
         display: inline-block;
 
         &.active {
@@ -35,6 +36,23 @@
             color: #e8e8e8;
         }
     }
+
+    @media (max-width: 992px) {
+    .navbar-nav {
+        display: none; 
+    }
+
+    .navbar-collapse.show .navbar-nav {
+        display: flex; 
+        flex-direction: column; 
+    }
+
+    .nav-link {
+        text-align: center; 
+        padding: 0.5rem 1rem; 
+    }
+}
+
 }
 
 
