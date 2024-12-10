@@ -36,7 +36,7 @@ ASC Sensor Visualisation
 == Project Team
 
 [%hardbreaks]
-include::../docs/project-description/project-team.adoc[]
+include::/01-projekte-2025-4chif-syp-trench/project-description/project-team.adoc[]
 
 == System Architecture
 
