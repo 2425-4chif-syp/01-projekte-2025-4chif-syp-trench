@@ -2,14 +2,14 @@
 ifndef::imagesdir[:imagesdir: images]
 
 == Useful Links
-- https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[RevealJS slides]
+- link:/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[RevealJS slides]
 - https://vm81.htl-leonding.ac.at/agiles/99-400/current[YouTrack Board]
 
 == Index 
-- link:./project-description/index[Project Description]
+- link:/01-projekte-2025-4chif-syp-trench/project-description[Project Description]
 
-- link:./project-guidelines/index[Project Guidelines]
+- link:/01-projekte-2025-4chif-syp-trench/project-guidelines[Project Guidelines]
 
 == Other 
 
-- link:./connect-docker-with-postgres[Connect Docker with Postgres]
+- link:/01-projekte-2025-4chif-syp-trench/connect-docker-with-postgres[Connect Docker with Postgres]
