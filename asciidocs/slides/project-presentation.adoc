@@ -43,6 +43,11 @@ include::../project-description/project-team.adoc[]
 [.stretch]
 image::../../project-description/images/system-architecture.png[]
 
+== Use-Case Diagram
+
+[.stretch]
+image::use_case.png[]
+
 [%auto-animate]
 == Frontend Concept
 
