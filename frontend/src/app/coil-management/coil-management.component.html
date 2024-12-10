@@ -1,0 +1,13 @@
+<div class="test">
+    <label for="numberSelect">Wählen Sie eine Nummer:</label>
+    <select id="numberSelect" [(ngModel)]="selectedNumber">
+      <option [value]="2">2</option>
+      <option [value]="3">3</option>
+      <option [value]="4">4</option>
+    </select>
+  
+    <div>
+      <img [src]="getSvgPath()" alt="Spule SVG" />
+    </div>
+  </div>
+  
