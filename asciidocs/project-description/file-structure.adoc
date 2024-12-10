@@ -15,7 +15,6 @@ asciidocs/
             > Also gets used at other places, like the slides.
 
         index.adoc
-        no-header.adoc
 
         connect-docker-with-postgres.adoc
             > Tutorial on how to connect a Docker container
@@ -29,7 +28,6 @@ asciidocs/
         > Guidelines for working on the project.
 
         index.adoc
-        no-header.adoc
 
         naming/
             > Guidelines for naming branches and commits.

@@ -2,4 +2,13 @@
 
 This document outlines the guidelines for the project, and how to work on it.
 
-include::./no-header.adoc[]
+== Steps to make a change
+
+1. Head to https://vm81.htl-leonding.ac.at/agiles/99-400/current[the project's YouTrack board] and find a task that you want to work on, or create a new one.
+2. Create a new branch with the name following the link:./naming/branch-name-guidelines.adoc[branch name guidelines].
+3. Make your changes on that branch. Name your commits following the link:./naming/commit-message-guidelines.adoc[commit message guidelines]. Your first commit on that branch should include "In Progress", and your last commit "To Verify" at the end of the message.
+4. Create a pull request and give an extensive description of what you did. Ping Filip, Emil or whoever else you think should take a look at the PR to review it on Discord, or just ping @everyone.
+5. If any changes are requested, make them and push them to the branch, then repeat step 4.
+6. Once the PR is approved, merge it into the main branch, delete the branch and move the task to "Done" in YouTrack. Do not forget to update the documentation if necessary.
+
+For small changes, these steps could be omitted, however it is best practice to follow them as closely as possible, and the link:./naming/commit-message-guidelines.adoc[commit message guidelines] should always be followed. 
