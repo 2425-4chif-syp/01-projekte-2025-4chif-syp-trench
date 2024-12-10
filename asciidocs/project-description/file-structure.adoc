@@ -1,0 +1,60 @@
+The relevant files of the project are structured as follows:
+----
+asciidocs/
+    docs/
+        index.adoc
+            > The main index file of the documentation.
+            > Includes references to other documentation files,
+            > and is what is displayed on the website.
+        
+    project-description/
+        > A general description about the project.
+
+        images/
+            > Images used in the project description.
+            > Also gets used at other places, like the slides.
+
+        index.adoc
+        no-header.adoc
+
+        connect-docker-with-postgres.adoc
+            > Tutorial on how to connect a Docker container
+            > with a PostgreSQL database.
+        file-structure.adoc
+            > The file structure of the project (this file).
+        project-team.adoc
+            > The team of the project and what our tasks are.
+    
+    project-guidelines/
+        > Guidelines for working on the project.
+
+        index.adoc
+        no-header.adoc
+
+        naming/
+            > Guidelines for naming branches and commits.
+
+            branch-name-guidelines.adoc
+            commit-message-guidelines.adoc
+
+    scripts/
+        > Files to help with building the documentation and more.
+
+    slides/
+        > The project presentation slides in RevealJS.
+
+        project-presentation.adoc
+
+        css/
+        images/
+
+frontend/
+    > The frontend of the project, written in Angular using HTML, TypeScript, SCSS and Bootstrap.
+    > Todo: List structure in more detail in the frontend/ directory.
+
+.gitignore
+    > Files and directories that should be ignored by Git.
+
+README.md
+    > The README file of the project, shown on GitHub. This only contains a link to the documentation, since GitHub cannot display AsciiDoc files properly.
+----

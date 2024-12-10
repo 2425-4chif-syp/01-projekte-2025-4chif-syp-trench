@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: IloveSYP
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: trench@4CHIF.com
+      PGADMIN_DEFAULT_PASSWORD: IloveSYP
+    ports:
+      - "8080:80"
+
+volumes:
+  postgres_data:

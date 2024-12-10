@@ -36,31 +36,32 @@ ASC Sensor Visualisation
 == Project Team
 
 [%hardbreaks]
-- *Filip Schauer*: Project Leader
-- *Aaron Schreiegg*
-- *Axel Csomany*
-- *Emil Silber*
-- *Simon Pesut*
+include::../project-description/project-team.adoc[]
 
 == System Architecture
 
 [.stretch]
-image::sys-architecture.png[]
+image::../../project-description/images/system-architecture.png[]
+
+== Use-Case Diagram
+
+[.stretch]
+image::use_case.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::frontend-concept-1.png[]
+image::../../project-description/images/frontend-concept-1.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::frontend-concept-2.png[]
+image::../../project-description/images/frontend-concept-2.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::frontend-concept-3.png[]
+image::../../project-description/images/frontend-concept-3.png[]
