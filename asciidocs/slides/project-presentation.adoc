@@ -41,7 +41,7 @@ include::../docs/project-description/project-team.adoc[]
 == System Architecture
 
 [.stretch]
-image::../../docs/project-description/images/system-architecture.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-architecture.png[]
 
 == Use-Case Diagram
 
@@ -52,16 +52,16 @@ image::use_case.png[]
 == Frontend Concept
 
 [.stretch]
-image::../../docs/project-description/images/frontend-concept-1.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-1.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::../../docs/project-description/images/frontend-concept-2.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-2.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::../../docs/project-description/images/frontend-concept-3.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-3.png[]
