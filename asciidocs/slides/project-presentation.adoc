@@ -36,12 +36,12 @@ ASC Sensor Visualisation
 == Project Team
 
 [%hardbreaks]
-include::../project-description/project-team.adoc[]
+include::../docs/project-description/project-team.adoc[]
 
 == System Architecture
 
 [.stretch]
-image::../../project-description/images/system-architecture.png[]
+image::../../docs/project-description/images/system-architecture.png[]
 
 == Use-Case Diagram
 
@@ -52,16 +52,16 @@ image::use_case.png[]
 == Frontend Concept
 
 [.stretch]
-image::../../project-description/images/frontend-concept-1.png[]
+image::../../docs/project-description/images/frontend-concept-1.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::../../project-description/images/frontend-concept-2.png[]
+image::../../docs/project-description/images/frontend-concept-2.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::../../project-description/images/frontend-concept-3.png[]
+image::../../docs/project-description/images/frontend-concept-3.png[]
