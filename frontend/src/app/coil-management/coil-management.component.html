@@ -1,13 +1,17 @@
-<div class="test">
-    <label for="numberSelect">Wählen Sie eine Nummer:</label>
-    <select id="numberSelect" [(ngModel)]="selectedNumber">
-      <option [value]="2">2</option>
-      <option [value]="3">3</option>
-      <option [value]="4">4</option>
-    </select>
-  
-    <div>
+<div class="container">
+    <div class="left-panel">
+      <label for="numberSelect">Jochanzahl:</label>
+      <select class="numberSelectorComboBox" id="numberSelect" [(ngModel)]="selectedNumber">
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+      </select>
+    </div>
+    <div class="center-panel">
       <img [src]="getSvgPath()" alt="Spule SVG" />
+    </div>
+    <div class="right-panel">
+      <p>Messondenverwaltung</p>
     </div>
   </div>
   
