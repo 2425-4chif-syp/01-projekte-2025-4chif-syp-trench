@@ -36,7 +36,11 @@ ASC Sensor Visualisation
 == Project Team
 
 [%hardbreaks]
-include::/01-projekte-2025-4chif-syp-trench/project-description/project-team.adoc[]
+- *Emil Silber*: *Project Leader*, Organizational Leader, Backend
+- *Filip Schauer*: Technical Leader, Frontend
+- *Aaron Schreiegg*: Frontend
+- *Axel Csomany*: Backend
+- *Simon Pesut*: Backend (mostly database)
 
 == System Architecture
 
