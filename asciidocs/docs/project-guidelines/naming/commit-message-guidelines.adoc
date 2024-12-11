@@ -1,4 +1,4 @@
-= Commit Message Guidelines
+== Commit Message Guidelines
 
 The commit messages generally follow the https://www.conventionalcommits.org/en/v1.0.0/[Conventional Commits] specification, however with the first letter being capitalized, the message being in the past tense and YouTrack issue ID being included at the end the message.
 

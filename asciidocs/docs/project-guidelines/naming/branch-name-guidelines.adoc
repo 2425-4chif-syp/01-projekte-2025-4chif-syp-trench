@@ -1,6 +1,6 @@
-= Branch Name Guidelines
+== Branch Name Guidelines
 
-The branch names follow a similar pattern to the link:./commit-guidelines[commit messages], however without special characters and with the type being followed by an underscore, the words being separated by hyphens and the tense being in the present.
+The branch names follow a similar pattern to the link:./commit-message-guidelines[commit messages], however without special characters and with the type being followed by an underscore, the words being separated by hyphens and the tense being in the present.
 
 For example, a branch name could look like this:
 
