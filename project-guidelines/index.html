@@ -442,6 +442,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_steps_to_make_a_change">1. Steps to make a change</a></li>
+<li><a href="#_commit_message_guidelines">2. Commit Message Guidelines</a></li>
+<li><a href="#_branch_name_guidelines">3. Branch Name Guidelines</a></li>
 </ul>
 </div>
 </div>
@@ -462,10 +464,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Head to <a href="https://vm81.htl-leonding.ac.at/agiles/99-400/current">the project&#8217;s YouTrack board</a> and find a task that you want to work on, or create a new one.</p>
 </li>
 <li>
-<p>Create a new branch with the name following the <a href="./naming/branch-name-guidelines.adoc">branch name guidelines</a>.</p>
+<p>Create a new branch with the name following the <a href="#_branch_name_guidelines">Branch Name Guidelines</a>.</p>
 </li>
 <li>
-<p>Make your changes on that branch. Name your commits following the <a href="./naming/commit-message-guidelines.adoc">commit message guidelines</a>. Your first commit on that branch should include "In Progress", and your last commit "To Verify" at the end of the message.</p>
+<p>Make your changes on that branch. Name your commits following the <a href="#_commit_message_guidelines">Commit Message Guidelines</a>. Your first commit on that branch should include "In Progress", and your last commit "To Verify" at the end of the message.</p>
 </li>
 <li>
 <p>Create a pull request and give an extensive description of what you did. Ping Filip, Emil or whoever else you think should take a look at the PR to review it on Discord, or just ping @everyone.</p>
@@ -479,14 +481,90 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ol>
 </div>
 <div class="paragraph">
-<p>For small changes, these steps could be omitted, however it is best practice to follow them as closely as possible, and the <a href="./naming/commit-message-guidelines.adoc">commit message guidelines</a> should always be followed.</p>
+<p>For small changes, these steps could be omitted, however it is best practice to follow them as closely as possible, and the <a href="#_commit_message_guidelines">Commit Message Guidelines</a> should always be followed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commit_message_guidelines"><a class="anchor" href="#_commit_message_guidelines"></a>2. Commit Message Guidelines</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The commit messages generally follow the <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a> specification, however with the first letter being capitalized, the message being in the past tense and YouTrack issue ID being included at the end the message.</p>
+</div>
+<div class="paragraph">
+<p>New features may look for example like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>feat: Added navbar #trench-7 To Verify</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">The types are</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><code>feat</code> for new features</p>
+</li>
+<li>
+<p><code>fix</code> for bug fixes</p>
+</li>
+<li>
+<p><code>docs</code> for documentation changes</p>
+</li>
+<li>
+<p><code>style</code> for changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)</p>
+</li>
+<li>
+<p><code>refactor</code> for code refactoring</p>
+</li>
+<li>
+<p><code>perf</code> for performance improvements</p>
+</li>
+<li>
+<p><code>test</code> for adding missing tests or correcting existing tests</p>
+</li>
+<li>
+<p><code>chore</code> for changes to the build process or auxiliary tools and libraries such as documentation generation</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>The hash (in this case <code>#trench-7</code>) is the YouTrack issue ID.</p>
+</div>
+<div class="paragraph">
+<p>Afterwards, you can optionally specify where to move the task to, which would be <code>Open</code>, <code>In Progress</code>, <code>To Verify</code>, or <code>Done</code>.</p>
+</div>
+<div class="paragraph">
+<p>Multiple changes in a single commit should be seperated by commas, however it is best practice to keep commits as small and as frequent as possible.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_branch_name_guidelines"><a class="anchor" href="#_branch_name_guidelines"></a>3. Branch Name Guidelines</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The branch names follow a similar pattern to the <a href="./commit-message-guidelines">commit messages</a>, however without special characters and with the type being followed by an underscore, the words being separated by hyphens and the tense being in the present.</p>
+</div>
+<div class="paragraph">
+<p>For example, a branch name could look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>feat_add-navbar</pre>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-12-11 08:12:03 UTC
+Last updated 2024-12-11 09:13:23 UTC
 </div>
 </div>
 </body>
