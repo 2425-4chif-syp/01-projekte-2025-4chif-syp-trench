@@ -1,4 +1,7 @@
 = Setting up PostgreSQL and pgAdmin with Docker
+
+https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Connect Docker with Postgres*
+
 :icons: font
 :source-highlighter: pygments
 :toc: left
@@ -84,16 +87,16 @@ This command will display a list of running containers. Ensure both `postgres_co
 1. In pgAdmin, right-click on **Servers** and select **Create → Server**.
 2. Fill in the details on the following tabs:
 
-[.table-striped,.table-bordered,.table-hover]
-|===
-| **Tab** | **Field**            | **Value**
-| General | Name                 | My PostgreSQL Server
-| Connection | Host              | localhost or host.docker.internal
-| Connection | Port              | 5432
-| Connection | Maintenance DB    | postgres
-| Connection | Username          | postgres
-| Connection | Password          | your_password
-|===
+  [.table-striped,.table-bordered,.table-hover]
+  |===
+  | **Tab** | **Field**            | **Value**
+  | General | Name                 | My PostgreSQL Server
+  | Connection | Host              | localhost or host.docker.internal
+  | Connection | Port              | 5432
+  | Connection | Maintenance DB    | postgres
+  | Connection | Username          | postgres
+  | Connection | Password          | your_password
+  |===
 
 3. Click **Save**. pgAdmin will now connect to your PostgreSQL database.
 

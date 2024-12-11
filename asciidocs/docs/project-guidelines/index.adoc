@@ -1,5 +1,7 @@
 = Project Guidelines
 
+https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Project Guidelines*
+
 This document outlines the guidelines for the project, and how to work on it.
 
 == Steps to make a change

@@ -1,5 +1,7 @@
 = Project Description
 
+https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Project Description*
+
 == What is this project?
 
 This project is the SYP-Project of the 4CHIF class of the HTL Leonding. It's idea is to aid the company https://trench-group.com/[Trench Group] on creating https://en.wikipedia.org/wiki/Arc_suppression[Arc Supression Coils] by providing a visualization and a summary of the position of the deviation of the its core, to see if it is within the allowed tolerance.
