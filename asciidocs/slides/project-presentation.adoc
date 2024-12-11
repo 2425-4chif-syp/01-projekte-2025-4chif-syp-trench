@@ -36,16 +36,21 @@ ASC Sensor Visualisation
 == Project Team
 
 [%hardbreaks]
-- *Filip Schauer*: Project Leader
-- *Aaron Schreiegg*
-- *Axel Csomany*
-- *Emil Silber*
-- *Simon Pesut*
+- *Emil Silber*: *Project Leader*, Organizational Leader, Backend
+- *Filip Schauer*: Technical Leader, Frontend
+- *Aaron Schreiegg*: Frontend
+- *Axel Csomany*: Backend
+- *Simon Pesut*: Backend (mostly database)
 
 == System Architecture
 
 [.stretch]
-image::sys-architecture.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-architecture.png[]
+
+== Use-Case Diagram
+
+[.stretch]
+image::use_case.png[]
 
 :plantuml-server-url: http://www.plantuml.com/plantuml
 
@@ -127,17 +132,16 @@ Admin --> (Daten auslesen und vergleichen)
 == Frontend Concept
 
 [.stretch]
-image::frontend-concept-1.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-1.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::frontend-concept-2.png[]
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-2.png[]
 
 [%auto-animate]
 == Frontend Concept
 
 [.stretch]
-image::frontend-concept-3.png[]
-
+image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-3.png[]

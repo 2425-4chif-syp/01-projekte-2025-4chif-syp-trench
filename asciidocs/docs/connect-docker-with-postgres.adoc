@@ -1,0 +1,144 @@
+= Setting up PostgreSQL and pgAdmin with Docker
+:icons: font
+:source-highlighter: pygments
+:toc: left
+:toclevels: 2
+
+**Author**: Simon Pesut 
+
+This guide explains how to set up a PostgreSQL database and pgAdmin using Docker. It also demonstrates how to connect pgAdmin to the database step-by-step.
+
+== Prerequisites
+Before proceeding, ensure you have the following installed and ready:
+
+- **Docker Desktop** (running in Linux container mode).
+- **Docker Compose**.
+- Basic familiarity with Docker commands.
+
+== Step 1: Docker Compose Configuration
+1. Create a `docker-compose.yml` file with the following content:
+
+[source,yaml]
+----
+services:
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: your_email@example.com
+      PGADMIN_DEFAULT_PASSWORD: your_password
+    ports:
+      - "8080:80"
+
+volumes:
+  postgres_data:
+----
+
+This file defines two services:
+
+1. `postgres`: Runs the PostgreSQL database.
+2. `pgadmin`: Runs the pgAdmin web-based database management interface.
+
+=== Where to place `docker-compose.yml`
+- Later on we will get some more services for backend and frontent as well, so we will have to put the `docker-compose.yml` file in the root of the project.
+- This allows the `docker-compose` command to manage all services (frontend, backend, and database) together.
+
+== Step 2: Start the Services
+Run the following commands to start the containers:
+
+[command]
+----
+$ docker-compose up -d
+----
+
+Once the containers are up, confirm that they’re running:
+
+[command]
+----
+$ docker ps
+----
+
+This command will display a list of running containers. Ensure both `postgres_container` and `pgadmin_container` are listed.
+
+== Step 3: Access the Services
+
+=== Access pgAdmin
+1. Open your web browser and go to:
+   `http://localhost:8080`
+2. Log in using the credentials defined in the `docker-compose.yml` file:
+   - **Email**: `your_email@example.com`
+   - **Password**: `your_password`
+
+=== Connect pgAdmin to PostgreSQL
+1. In pgAdmin, right-click on **Servers** and select **Create → Server**.
+2. Fill in the details on the following tabs:
+
+[.table-striped,.table-bordered,.table-hover]
+|===
+| **Tab** | **Field**            | **Value**
+| General | Name                 | My PostgreSQL Server
+| Connection | Host              | localhost or host.docker.internal
+| Connection | Port              | 5432
+| Connection | Maintenance DB    | postgres
+| Connection | Username          | postgres
+| Connection | Password          | your_password
+|===
+
+3. Click **Save**. pgAdmin will now connect to your PostgreSQL database.
+
+== Common Issues and Troubleshooting
+
+=== Docker Desktop is not running
+Ensure Docker Desktop is fully started. Open it and wait until the status icon in the taskbar indicates it is running.
+
+=== Linux Container Mode
+If Docker Desktop is not in Linux Container mode:
+
+- Right-click the Docker Desktop icon in the taskbar and select **Switch to Linux Containers**.
+
+=== `version` is obsolete warning
+If you see a warning about the `version` attribute being obsolete in `docker-compose.yml`, simply remove the `version` line.
+
+=== Cannot connect to PostgreSQL
+Check the following:
+
+- Containers are running (`docker ps`).
+- Credentials match the `docker-compose.yml` file.
+- Use `localhost` or `host.docker.internal` for the host.
+
+== Step 4: Manage Your Database
+Once connected, you can:
+
+- Use **pgAdmin** to create tables, run SQL queries, and manage your database visually.
+- Use the PostgreSQL CLI (`psql`) for direct command-line interaction.
+
+=== Connecting with `psql`
+You can connect to your database from your terminal using:
+
+[command]
+----
+$ psql -h localhost -U postgres -d postgres
+----
+
+- **-h**: Hostname (`localhost`).
+- **-U**: Username (`postgres`).
+- **-d**: Database name (`postgres`).
+
+== Summary
+Congratulations! You have successfully:
+
+- Set up PostgreSQL and pgAdmin using Docker.
+- Connected pgAdmin to your PostgreSQL database.
+
+You can now manage your database using pgAdmin or `psql` as needed.
