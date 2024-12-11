@@ -20,11 +20,11 @@
   }
 
   .center-panel {
-    display: flex; /* Aktiviert Flexbox */
-    justify-content: center; /* Zentriert horizontal */
-    align-items: center; /* Zentriert vertikal */
-    height: 100%; /* Stellt sicher, dass das Panel den gesamten verfügbaren Platz einnimmt */
-    align-content: center; /* Optional, unterstützt das Zentrieren */
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    height: calc(100vh - 120px); 
+    align-content: center; 
 }
 
   
