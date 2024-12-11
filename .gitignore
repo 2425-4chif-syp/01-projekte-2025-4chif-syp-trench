@@ -36,3 +36,30 @@ Temporary Items
 dist/
 docs/slides/revealjs
 .idea/
+
+# Backend specific 
+
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Backup & Log files
+*.log
+*.bak
+
+# Temporary files
+*.tmp
+
