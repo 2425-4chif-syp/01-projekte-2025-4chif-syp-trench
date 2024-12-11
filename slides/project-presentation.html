@@ -416,7 +416,75 @@ ul.byline li + li {
 </style><link rel="stylesheet" href="./fonts/fontawesome/css/all.css"><link rel="stylesheet" href="css/presentation.css"></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title" data-transition="zoom" data-transition-speed="fast"><h1>Trench Project</h1><div class="preamble"><div class="paragraph"><p>ASC Sensor Visualisation</p></div></div></section>
 <section id="_project_team"><h2>Project Team</h2><div class="slide-content"><div class="ulist"><ul><li><p><strong>Emil Silber</strong>: <strong>Project Leader</strong>, Organizational Leader, Backend</p></li><li><p><strong>Filip Schauer</strong>: Technical Leader, Frontend</p></li><li><p><strong>Aaron Schreiegg</strong>: Frontend</p></li><li><p><strong>Axel Csomany</strong>: Backend</p></li><li><p><strong>Simon Pesut</strong>: Backend (mostly database)</p></li></ul></div></div></section>
 <section id="_system_architecture"><h2>System Architecture</h2><div class="slide-content"><div class="imageblock stretch"><img src="/01-projekte-2025-4chif-syp-trench/project-description/images/system-architecture.png" alt="system architecture" height="100%"></div></div></section>
-<section id="_use_case_diagram"><h2>Use-Case Diagram</h2><div class="slide-content"><div class="imageblock stretch"><img src="images/use_case.png" alt="use case" height="100%"></div></div></section>
+<section id="_use_case_diagram"><h2>Use-Case Diagram</h2><div class="slide-content"><div class="imageblock stretch"><img src="images/use_case.png" alt="use case" height="100%"></div>
+<div class="listingblock"><div class="content"><pre>Failed to generate image: undefined method `to_sym' for nil:NilClass
+@startuml
+
+entity "Sensordaten" as Sensordaten {
+    *mess_id: number
+    -sensor_id: number
+    -messeinstellung_id: number
+    --
+    messZeitpunkt: Timestamp
+    messErgebnis: number
+}
+
+entity "Sensortyp" as Sensortyp {
+    *sensor_id: number
+    --
+    wicklungsBreite: number
+}
+
+entity "Messeinstellung" as Messeinstellung {
+    *einstellungs_id: number
+    -anlage_id: number
+    --
+    bemessungsSpannung (U_m): number
+    bemessungsFrequenz (f_m): number
+    sondenProSchenkel: number
+    messStärke (I_m): number
+    uhrzeit: DateTIme
+}
+
+entity "Anlage (Spule)" as Anlage {
+    *anlage_id: number
+    -typ_id: number
+    --
+    messSpannung: number
+    serienNummer (SN): varchar
+    auftragsNummer: varchar
+    auftragsPosition: varchar
+}
+
+entity "Anlagetyp" as Anlagetyp {
+    *typ_id: int
+    --
+    schenkelZahl (RJ): number
+    bandBreite (BB): number
+    schichtHöhe (SH): number
+    toleranz: number
+}
+
+
+Messeinstellung &lt;-- Sensordaten
+Sensordaten &lt;-- Sensortyp
+Anlage &lt;--- Messeinstellung
+Anlage ---&gt; Anlagetyp
+@enduml</pre></div></div>
+<div class="listingblock"><div class="content"><pre>Failed to generate image: undefined method `to_sym' for nil:NilClass
+@startuml
+left to right direction
+
+actor User
+actor Admin
+
+User --&gt; (Aktuelle Ausrichtung ansehen)
+User --&gt; (Richtige Ausrichtung finden)
+User --&gt; (Visualisierte Daten ansehen)
+
+Admin --&gt; (Daten auslesen und vergleichen)
+
+@enduml</pre></div></div></div></section>
 <section id="_frontend_concept" data-auto-animate><h2>Frontend Concept</h2><div class="slide-content"><div class="imageblock stretch"><img src="/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-1.png" alt="frontend concept 1" height="100%"></div></div></section>
 <section id="_frontend_concept_2" data-auto-animate><h2>Frontend Concept</h2><div class="slide-content"><div class="imageblock stretch"><img src="/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-2.png" alt="frontend concept 2" height="100%"></div></div></section>
 <section id="_frontend_concept_3" data-auto-animate><h2>Frontend Concept</h2><div class="slide-content"><div class="imageblock stretch"><img src="/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-3.png" alt="frontend concept 3" height="100%"></div></div></section></div></div><script src="revealjs/dist/reveal.js"></script><script>Array.prototype.slice.call(document.querySelectorAll('.slides section')).forEach(function(slide) {
