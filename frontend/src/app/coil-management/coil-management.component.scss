@@ -101,3 +101,23 @@ select, input, textarea {
   .left-panel select, .left-panel input {
     margin-bottom: 15px;
   }
+
+  .saveButton{
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+ }
+
+.saveButton:hover {
+    background-color: #0056b3;
+}
+  
+.buttonContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
