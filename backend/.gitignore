@@ -1,0 +1,34 @@
+# Backend specific 
+
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+.vs/
+
+# Rider
+.idea/
+
+# Backup & Log files
+*.log
+*.bak
+
+# Temporary files
+*.tmp
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Processed files
+*.vsidx
