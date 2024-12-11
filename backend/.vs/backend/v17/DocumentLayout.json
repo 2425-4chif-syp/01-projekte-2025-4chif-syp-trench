@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\pesut\\OneDrive\\Desktop\\4CHIF\\Syp\\backend\\",
+  "WorkspaceRootPath": "C:\\Users\\pesut\\OneDrive\\Desktop\\4CHIF\\Syp\\01-projekte-2025-4chif-syp-trench\\backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}|backend\\backend.csproj|c:\\users\\pesut\\onedrive\\desktop\\4chif\\syp\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}|backend\\backend.csproj|c:\\users\\pesut\\onedrive\\desktop\\4chif\\syp\\01-projekte-2025-4chif-syp-trench\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}|backend\\backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -24,9 +24,9 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\pesut\\OneDrive\\Desktop\\4CHIF\\Syp\\backend\\backend\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\pesut\\OneDrive\\Desktop\\4CHIF\\Syp\\01-projekte-2025-4chif-syp-trench\\backend\\backend\\Program.cs",
               "RelativeDocumentMoniker": "backend\\Program.cs",
-              "ToolTip": "C:\\Users\\pesut\\OneDrive\\Desktop\\4CHIF\\Syp\\backend\\backend\\Program.cs",
+              "ToolTip": "C:\\Users\\pesut\\OneDrive\\Desktop\\4CHIF\\Syp\\01-projekte-2025-4chif-syp-trench\\backend\\backend\\Program.cs",
               "RelativeToolTip": "backend\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",

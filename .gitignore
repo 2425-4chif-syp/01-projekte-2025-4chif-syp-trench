@@ -63,3 +63,10 @@ obj/
 # Temporary files
 *.tmp
 
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Processed files
+*.vsidx
