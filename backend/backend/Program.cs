@@ -1,12 +1,27 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using backend.DBContext;
+using backend.Services;
+using Microsoft.Extensions.Configuration;
+using ConsoleDB.Interface;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateDefaultBuilder(args);
 
-// Startup-Klasse verwenden
-var startup = new Startup(builder.Configuration);
-startup.ConfigureServices(builder.Services);
+builder.ConfigureServices((context, services) =>
+{
+    // Datenbank-Konfiguration
+    services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(context.Configuration.GetConnectionString("DefaultConnection")));
+
+    // Deine Service-Logik
+    services.AddScoped<IAnlageService, AnlageService>();
+
+    // Andere Services wie z.B. BackgroundWorker
+    services.AddHostedService<Worker>();  
+});
 
 var app = builder.Build();
-startup.Configure(app);
 
 app.Run();
+
