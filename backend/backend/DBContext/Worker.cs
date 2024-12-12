@@ -1,23 +1,19 @@
 ﻿using ConsoleDB.Interface;
-using Microsoft.Extensions.Hosting;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace backend.Services
+public class Worker : BackgroundService
 {
-    public class Worker : BackgroundService
+    private readonly IServiceProvider _serviceProvider;
+
+    public Worker(IServiceProvider serviceProvider)
     {
-        private readonly IAnlageService _anlageService;
+        _serviceProvider = serviceProvider;
+    }
 
-        public Worker(IAnlageService anlageService)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        using (var scope = _serviceProvider.CreateScope()) 
         {
-            _anlageService = anlageService;
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            var anlage = await _anlageService.GetAnlageById(1);
-            Console.WriteLine($"Anlage gefunden: {anlage.Typ_Id}");
+            var service = scope.ServiceProvider.GetRequiredService<IAnlageService>();
         }
     }
 }

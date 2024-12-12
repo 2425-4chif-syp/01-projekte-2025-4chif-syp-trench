@@ -1,38 +1,31 @@
-﻿using backend.DBContext;
+﻿using Microsoft.AspNetCore.Mvc;
 using backend.Entities;
-using Microsoft.AspNetCore.Mvc;
+using backend.Services;
+using ConsoleDB.Interface;
 
 namespace backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class AnlageTypController : ControllerBase
+    [Route("api/[controller]")]
+    public class AnlageController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IAnlageService _anlageService;
 
-        public AnlageTypController(AppDbContext context)
+        public AnlageController(IAnlageService anlageService)
         {
-            _context = context;
+            _anlageService = anlageService;
         }
 
-        [HttpGet]
-        public IActionResult GetUsers()
-        {
-            List<AnlageTyp> AnlageTyp = _context.AnlageTyp.ToList();
-            return Ok(AnlageTyp);
-        }
-
+        // GET api/anlage/{id}
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<ActionResult<AnlageTyp>> Get(int id)
         {
-            var anlageTyp = _context.AnlageTyp.FirstOrDefault(a => a.Typ_Id == id);
-
-            if (anlageTyp == null)
+            var anlage = await _anlageService.GetAnlageById(id);
+            if (anlage == null)
             {
-                return NotFound($"AnlageTyp mit Typ_Id {id} wurde nicht gefunden.");
+                return NotFound(); 
             }
-
-            return Ok(anlageTyp);
+            return Ok(anlage); 
         }
     }
 }
