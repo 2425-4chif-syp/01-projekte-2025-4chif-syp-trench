@@ -5,8 +5,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="author" content="Emil Silber">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Untitled</title>
+<title>Besprechungsprotokoll 11.12.2024</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,70 +436,200 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="article">
+<body class="article toc2 toc-left">
 <div id="header">
+<h1>Besprechungsprotokoll 11.12.2024</h1>
+<div class="details">
+<span id="author" class="author">Emil Silber</span><br>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_besprochene_themen">1. Besprochene Themen</a></li>
+<li><a href="#_vereinbarungen_und_entscheidungen">2. Vereinbarungen und Entscheidungen</a></li>
+</ul>
+</div>
 </div>
 <div id="content">
-<div class="paragraph">
-<p>The relevant files of the project are structured as follows:</p>
+<div id="preamble">
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Teilnehmer</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Anwesend</th>
+<th class="tableblock halign-left valign-top">Relevant Für</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Ort und Zeit</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ort</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Raum 147</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 11.12.2024</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20 Minuten</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="listingblock">
+</div>
+<div class="sect1">
+<h2 id="_besprochene_themen"><a class="anchor" href="#_besprochene_themen"></a>1. Besprochene Themen</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Messungen</p>
+</li>
+<li>
+<p>Technologien</p>
+</li>
+<li>
+<p>Schnittstellen</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vereinbarungen_und_entscheidungen"><a class="anchor" href="#_vereinbarungen_und_entscheidungen"></a>2. Vereinbarungen und Entscheidungen</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all fit-content">
+<caption class="title">Table 3. Was wurde vereinbart?</caption>
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">wer</th>
+<th class="tableblock halign-left valign-top">möchte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>Nach einem Anruf mit Dr. Köck hat sich folgendes ergeben:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Er wird keine USB-Schnittstelle geben, deswegen werden wir MQTT verwenden.</p>
+</li>
+<li>
+<p>Das Backend soll in C# geschrieben werden</p>
+</li>
+<li>
+<p>Die Messung wird periodisch sein, der Intervall ist mit 5-10 Sekunden zu erwarten</p>
+</li>
+<li>
+<p>Die Messungen werden folgend stattfinden:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha">
+<li>
+<p>Der Tauchkern wird ganz oben gemessen</p>
+</li>
+<li>
+<p>Der Tauchkern wird ganz unten gemessen</p>
+</li>
+<li>
+<p>Der Tauchkern wird in der Mitte gemessen</p>
+</li>
+<li>
+<p>Abweichungen möglich</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Folgende relevante Informationen wurden gegeben:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Positionen der Sensoren werden in der Konfigurationsphase festgestellt.</p>
+</li>
+<li>
+<p>Sensoren werden 0-3 Volt machen.</p>
+</li>
+<li>
+<p>Sensoren werden mit einem ESP32 verbunden. Entweder werden alle eine individuell bekommen oder sie werden alle an eine ESP32 gebunden.</p>
+</li>
+<li>
+<p>Die Daten, die gesendet werden müssen, wir noch genauer ausmachen mit Prof. Stütz, möglicher Format:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha">
+<li>
+<p>Sensor: 1</p>
+</li>
+<li>
+<p>Value (Entfernung): 23 mm</p>
+</li>
+<li>
+<p>Time:</p>
+</li>
+<li>
+<p>Description:</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock">
 <div class="content">
-<pre>asciidocs/
-    docs/
-        index.adoc
-            &gt; The main index file of the documentation.
-            &gt; Includes references to other documentation files,
-            &gt; and is what is displayed on the website.
-
-    project-description/
-        &gt; A general description about the project.
-
-        images/
-            &gt; Images used in the project description.
-            &gt; Also gets used at other places, like the slides.
-
-        index.adoc
-
-        connect-docker-with-postgres.adoc
-            &gt; Tutorial on how to connect a Docker container
-            &gt; with a PostgreSQL database.
-        file-structure.adoc
-            &gt; The file structure of the project (this file).
-        project-team.adoc
-            &gt; The team of the project and what our tasks are.
-
-    project-guidelines/
-        &gt; Guidelines for working on the project.
-
-        index.adoc
-
-        naming/
-            &gt; Guidelines for naming branches and commits.
-
-            branch-name-guidelines.adoc
-            commit-message-guidelines.adoc
-
-    scripts/
-        &gt; Files to help with building the documentation and more.
-
-    slides/
-        &gt; The project presentation slides in RevealJS.
-
-        project-presentation.adoc
-
-        css/
-        images/
-
-frontend/
-    &gt; The frontend of the project, written in Angular using HTML, TypeScript, SCSS and Bootstrap.
-    &gt; Todo: List structure in more detail in the frontend/ directory.
-
-.gitignore
-    &gt; Files and directories that should be ignored by Git.
-
-README.md
-    &gt; The README file of the project, shown on GitHub. This only contains a link to the documentation, since GitHub cannot display AsciiDoc files properly.</pre>
+<img src="images/protocol-images/11-12-diagram.png" alt="11 12 diagram">
+</div>
+</div>
+<div class="paragraph">
+<p>Erklärung:</p>
+</div>
+<div class="paragraph">
+<p>Das WLAN-Box in der ESP32, schickt die Daten an MQTT, welches dann mithilfe eines MQTT-Brokers es an das C# Backend weiterleitet. Das Backend verarbeitet die Daten und speichert sie in der Datenbank und schickt es, mit NGINX, an das Frontend, dies wird dann von Angular im Browser dargestellt.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Stütz wird uns das C# Backend von Aitenbichler gebenden. Wir sollen die benutzten Libraries und Methoden analysieren, dann selbst schreiben.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
