@@ -1,0 +1,53 @@
+= Besprechungsprotokoll 02.12.2024
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|4CHIF
+|4CHIF
+
+|Prof. Palitsch-Infanger
+|Trench-Team
+
+|Prof. Stütz
+|
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Mo. 02.12.2024
+|Dauer
+|3 Stunden
+|===
+
+
+
+== Besprochene Themen
+
+* Projektanforderungen
+
+
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a| - Gespräche und Vereinbarungen sollen sauber protokollisiert und auf dem Github Respository gepusht werden
+- Es soll keine Datenbanken in dem Projekt Repository zu finden sein
+- SCRUM: Es sollen regelmäßig Tasks und Commits gemacht werden, eventuell auch Sprints
+- Sollte es vorkommen, dass ein Projektmitglied keine Youtrack Tasks erstellt und committed, wird er automatisch einen "Nicht Genügend" erhalten
+- Die Commits sollen sauber benannt werden, anhand der https://www.conventionalcommits.org/en/v1.0.0/[Guidelines]
+- Es sollen keine Binär-Files wie Word oder PDF verwendet werden, alles soll bei .adoc oder .md geschrieben werden
+
+|===

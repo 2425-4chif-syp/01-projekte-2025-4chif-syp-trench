@@ -1,0 +1,58 @@
+= Besprechungsprotokoll 04.12.2024
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|4CHIF
+|4CHIF
+
+|Prof. Palitsch-Infanger
+|
+|Prof. Stütz
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Mo. 09.12.2024
+|Dauer
+|2 Stunden
+|===
+
+
+
+== Besprochene Themen
+
+4CHIF:
+
+* Projektanforderungen
+* Diplomarbeit
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a| 
+
+- Wir müssen wissen, was wir machen, wie wir das machen und was wir künftig machen müssen in der Softwareentwicklung bei einem Kunden.
+
+- Die Aufgabe, die erledigt wird, muss mithilfe von User Stories ganz genau definiert werden.
+Alle Funktionen und Features müssen genau dokumentiert werden. 
+
+- Alles, was extra gemacht wird, wird auch extra bezahlt in der Praxis (Beispiel: Krankenhaus Software bei ehemaliger Arbeit von Stütz, der Entwickler hat alles genau dokumentiert was gefordert wurde und später alles, was extra gefordert wurde, hat er extra bezahlt bekommen.)
+
+- In der Diplomarbeit wird es ein Webformular geben, wo man alle Aufgaben und Herausforderungen klar definieren muss. In SYP wird das geübt mithilfe von YouTrack
+
+|===
