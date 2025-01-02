@@ -1,40 +1,39 @@
 <div class="container">
-    <div class="left-panel">
-        <div class="input-container">
-            <label for="nameInput">Magnetkreisname:</label>
-            <input type="text" id="nameInput" placeholder="Spulenname eingeben" [(ngModel)]="name">
+  <div class="left-panel">
+    <div class="input-container">
+      <label for="nameInput">Magnetkreisname:</label>
+      <input type="text" id="nameInput" placeholder="Spulenname eingeben" [(ngModel)]="name">
 
-            <label for="numberSelect">Schenkelanzahl:</label>
-        <select class="numberSelectorComboBox" id="numberSelect" [(ngModel)]="selectedNumber">
-            <option [value]="2">2</option>
-            <option [value]="3">3</option>
-            <option [value]="4">4</option>
-        </select>
-  
-        <label for="diameterInput">Durchmesser (mm):</label>
-        <input type="number" id="diameterInput" placeholder="Durchmesser in mm" [(ngModel)]="diameter" min="0">
-  
-        <label for="arcLengthInput">Bogenlänge (mm):</label>
-        <input type="number" id="arcLengthInput" placeholder="Bogenlänge in mm" [(ngModel)]="arcLength" min="0">
-  
-        <label for="endAreaInput">Stirnfläche (cm²):</label>
-        <input type="number" id="endAreaInput" placeholder="Stirnfläche in cm²" [(ngModel)]="endArea" min="0">
-  
-        <label for="toleranceRange">Zulässige Toleranz: {{tolerance}} </label>
-        <input type="range" id="toleranceRange" min="0" max="10000" step="50" [(ngModel)]="tolerance" min="0">
-        
-        <div class="buttonContainer">
-            <button class="saveButton">Speichern</button>
-        </div>
+      <label for="numberSelect">Schenkelanzahl:</label>
+      <select class="numberSelectorComboBox" id="numberSelect" [(ngModel)]="selectedNumber">
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+      </select>
+
+      <label for="diameterInput">Durchmesser (mm):</label>
+      <input type="number" id="diameterInput" placeholder="Durchmesser in mm" [(ngModel)]="diameter" min="0">
+
+      <label for="arcLengthInput">Bogenlänge (mm):</label>
+      <input type="number" id="arcLengthInput" placeholder="Bogenlänge in mm" [(ngModel)]="arcLength" min="0">
+
+      <label for="endAreaInput">Stirnfläche (cm²):</label>
+      <input type="number" id="endAreaInput" placeholder="Stirnfläche in cm²" [(ngModel)]="endArea" min="0">
+
+      <label for="toleranceRange">Zulässige Toleranz: {{tolerance}} </label>
+      <input type="range" id="toleranceRange" min="0" max="10000" step="50" [(ngModel)]="tolerance" min="0">
+
+      <div class="buttonContainer">
+        <button class="saveButton">Speichern</button>
       </div>
     </div>
-  
-    <div class="center-panel">
-      <img [src]="getSvgPath()" alt="Spule SVG" />
-    </div>
-  
-    <div class="right-panel">
-      <p>Messondenverwaltung</p>
-    </div>
   </div>
-  
+
+  <div class="center-panel">
+    <img [src]="getSvgPath()" alt="Spule SVG" />
+  </div>
+
+  <div class="right-panel">
+    <p>Messondenverwaltung</p>
+  </div>
+</div>
