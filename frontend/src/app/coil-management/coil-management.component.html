@@ -1,11 +1,13 @@
 <div class="coil-container">
-  <select class="selectedCoilCombobox" id="coilSelect" [(ngModel)]="selectedCoil">
-    <option *ngFor="let coil of coilsService.coils" [value]="coil">{{ coil }}</option>
+  <select *ngIf="coilsService.coils.length > 0" class="selectedCoilCombobox" id="coilSelect"
+      [(ngModel)]="selectedCoilId"
+      (ngModelChange)="onSelectedCoilChange($event)">
+      <option *ngFor="let coil of coilsService.coils" [value]="coil.id">{{ coil.name }}</option>
   </select>
   <button class="btn btn-primary new-coil-button" (click)="addNewCoil()">Neue Spule</button>
 </div>
 
-<div class="container" *ngIf="selectedCoil !== undefined">
+<div class="container" *ngIf="selectedCoilId !== null">
   <div class="left-panel">
     <div class="input-container">
       <label for="nameInput">Magnetkreisname:</label>
@@ -31,7 +33,7 @@
       <input type="range" id="toleranceRange" min="0" max="10000" step="50" [(ngModel)]="tolerance" min="0">
 
       <div class="buttonContainer">
-        <button class="saveButton">Speichern</button>
+        <button class="saveButton" (click)="saveChanges()">Speichern</button>
       </div>
     </div>
   </div>
@@ -44,6 +46,6 @@
     <p>Messondenverwaltung</p>
   </div>
 </div>
-<div class="container no-coil-selected" *ngIf="selectedCoil === undefined">
+<div class="container no-coil-selected" *ngIf="selectedCoilId === null">
   <p>Bitte wählen Sie eine Spule aus.</p>
 </div>
