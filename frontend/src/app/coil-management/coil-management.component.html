@@ -1,4 +1,11 @@
-<div class="container">
+<div class="coil-container">
+  <select class="selectedCoilCombobox" id="coilSelect" [(ngModel)]="selectedCoil">
+    <option *ngFor="let coil of coilsService.coils" [value]="coil">{{ coil }}</option>
+  </select>
+  <button class="btn btn-primary new-coil-button" (click)="addNewCoil()">Neue Spule</button>
+</div>
+
+<div class="container" *ngIf="selectedCoil !== undefined">
   <div class="left-panel">
     <div class="input-container">
       <label for="nameInput">Magnetkreisname:</label>
@@ -36,4 +43,7 @@
   <div class="right-panel">
     <p>Messondenverwaltung</p>
   </div>
+</div>
+<div class="container no-coil-selected" *ngIf="selectedCoil === undefined">
+  <p>Bitte wählen Sie eine Spule aus.</p>
 </div>

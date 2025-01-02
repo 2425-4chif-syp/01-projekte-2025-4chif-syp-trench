@@ -121,3 +121,28 @@ select, input, textarea {
     justify-content: center;
     margin-top: 20px;
 }
+
+.no-coil-selected {
+  font-style: italic;
+  color: #800000;
+  justify-content: center;
+}
+
+
+.coil-container {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+
+  .selectedCoilCombobox {
+    margin: 10px;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .new-coil-button {
+    padding: 5px 100px;
+    white-space: nowrap;
+  }
+}
