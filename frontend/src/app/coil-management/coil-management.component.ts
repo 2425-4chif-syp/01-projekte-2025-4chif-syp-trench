@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  selectedNumber: number = 2; // Standardwert für die Jochanzahl
+  yokesCount: number = 2; // Standardwert für die Jochanzahl
   name: string = ''; // Spulenname
   diameter: number | null = null; // Durchmesser in mm
   arcLength: number | null = null; // Bogenlänge in mm
@@ -17,6 +17,6 @@ export class CoilManagementComponent {
   tolerance: number = 0; // Zulässige Toleranz in %
 
   getSvgPath(): string {
-    return `assets/svg/${this.selectedNumber}RJ.svg`;
+    return `assets/svg/${this.yokesCount}RJ.svg`;
   }
 }
