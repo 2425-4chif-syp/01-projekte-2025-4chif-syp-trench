@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend", "backend\backend.csproj", "{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrenchAPI", "TrenchAPI.csproj", "{F2EAF273-A437-4825-B5B8-BD7F709B1C60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0FBF3D7-A251-4AE9-94EE-B246D388DFC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {98F4CF5C-93CE-4F81-803A-1B970CF9591D}
+		SolutionGuid = {3BF43561-BC11-41EE-B457-B9A6A30EC823}
 	EndGlobalSection
 EndGlobal
