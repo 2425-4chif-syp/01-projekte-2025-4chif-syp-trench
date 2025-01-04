@@ -116,12 +116,18 @@ select, input, textarea {
     background-color: #0056b3;
 }
   
-.buttonContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+.buttonContainer {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;  
+  gap: 8px;                
 }
+
+.buttons-row {
+  display: flex;
+  gap: 10px;               
+}
+
 
 .no-coil-selected {
   font-style: italic;
@@ -163,4 +169,13 @@ select, input, textarea {
   color: green;
   font-size: 1.3em;
   margin-top: 40px;
+}
+
+.modal.show {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.4); // halbtransparenter Hintergrund
+}
+
+.modal-dialog {
+  margin-top: 10%; // z. B. etwas tiefer setzen
 }

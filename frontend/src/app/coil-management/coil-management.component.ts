@@ -105,4 +105,22 @@ export class CoilManagementComponent {
     this.endArea = coil.endArea;
     this.tolerance = coil.tolerance;
   }
+
+  showDeleteModal = false;
+
+  onDelete(): void {
+    this.showDeleteModal = true;
+  }
+
+  deleteCoil(): void {
+    if (this.selectedCoilId === null) {
+      return;
+    }
+
+    //Spule löschen
+
+    this.selectedCoilId = null;
+    this.showDeleteModal = false;
+  }
 }
+

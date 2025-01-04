@@ -39,9 +39,15 @@
       <input type="range" id="toleranceRange" min="0" max="10000" step="50" [(ngModel)]="tolerance" min="0">
 
       <div class="buttonContainer">
-        <button class="saveButton" (click)="saveChanges()">Speichern</button>
-        <div class="saveMessage" *ngIf="saveMessage">{{saveMessage}}</div>
+        <div class="buttons-row">
+          <button class="saveButton" (click)="saveChanges()">Speichern</button>
+          <button class="btn btn-outline-danger" (click)="onDelete()">Spule Löschen</button>
+        </div>
+        <div class="saveMessage" *ngIf="saveMessage">
+          {{saveMessage}}
+        </div>
       </div>
+      
     </div>
   </div>
 
@@ -56,4 +62,39 @@
 
 <div class="container no-coil-selected" *ngIf="selectedCoilId === null">
   <p>Bitte wählen Sie eine Spule aus.</p>
+</div>
+
+<!-- Bestätigungs-Modal -->
+<div 
+  class="modal fade" 
+  tabindex="-1" 
+  role="dialog"
+  [ngClass]="{'show': showDeleteModal}" 
+  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Spule löschen?</h5>
+        <!--<button type="button" class="close" (click)="showDeleteModal = false">
+          <span aria-hidden="true">&times;</span>
+        </button>-->
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Spule löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteCoil()">
+          Löschen
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
