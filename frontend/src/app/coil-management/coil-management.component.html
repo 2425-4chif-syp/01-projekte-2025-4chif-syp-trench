@@ -21,13 +21,19 @@
       </select>
 
       <label for="diameterInput">Durchmesser (mm):</label>
-      <input type="number" id="diameterInput" placeholder="Durchmesser in mm" [(ngModel)]="diameter" min="0">
+      <input type="number" id="diameterInput" placeholder="Durchmesser in mm" [(ngModel)]="diameter" min="0"
+          [class.invalid]="isFieldInvalid('diameter')" />
+      <div class="error-message" *ngIf="isFieldInvalid('diameter')">Bitte einen gültigen Durchmesser eingeben.</div>
 
       <label for="arcLengthInput">Bogenlänge (mm):</label>
-      <input type="number" id="arcLengthInput" placeholder="Bogenlänge in mm" [(ngModel)]="arcLength" min="0">
+      <input type="number" id="arcLengthInput" placeholder="Bogenlänge in mm" [(ngModel)]="arcLength" min="0"
+          [class.invalid]="isFieldInvalid('arcLength')" />
+      <div class="error-message" *ngIf="isFieldInvalid('arcLength')">Bitte eine gültige Bogenlänge eingeben.</div>
 
       <label for="endAreaInput">Stirnfläche (cm²):</label>
-      <input type="number" id="endAreaInput" placeholder="Stirnfläche in cm²" [(ngModel)]="endArea" min="0">
+      <input type="number" id="endAreaInput" placeholder="Stirnfläche in cm²" [(ngModel)]="endArea" min="0"
+          [class.invalid]="isFieldInvalid('endArea')" />
+      <div class="error-message" *ngIf="isFieldInvalid('endArea')">Bitte eine gültige Stirnfläche eingeben.</div>
 
       <label for="toleranceRange">Zulässige Toleranz: {{tolerance}} </label>
       <input type="range" id="toleranceRange" min="0" max="10000" step="50" [(ngModel)]="tolerance" min="0">
@@ -46,6 +52,7 @@
     <p>Messondenverwaltung</p>
   </div>
 </div>
+
 <div class="container no-coil-selected" *ngIf="selectedCoilId === null">
   <p>Bitte wählen Sie eine Spule aus.</p>
 </div>
