@@ -23,6 +23,8 @@ export class CoilManagementComponent {
   endArea: number | null = null; // Stirnfläche in mm²
   tolerance: number = 0; // Zulässige Toleranz in %
 
+  saveMessage: string | null = null;
+
   getSvgPath(): string {
     return `assets/svg/${this.yokesCount}RJ.svg`;
   }
@@ -77,6 +79,11 @@ export class CoilManagementComponent {
     coil.tolerance = this.tolerance;
   
     this.onSelectedCoilChange(this.selectedCoilId);
+
+    this.saveMessage = 'Änderungen gespeichert!';
+    setTimeout(() => {
+      this.saveMessage = null;
+    }, 3000);
   }
 
   onSelectedCoilChange(coilId: number) {

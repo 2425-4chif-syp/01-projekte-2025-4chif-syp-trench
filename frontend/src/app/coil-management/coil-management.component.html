@@ -40,6 +40,7 @@
 
       <div class="buttonContainer">
         <button class="saveButton" (click)="saveChanges()">Speichern</button>
+        <div class="saveMessage" *ngIf="saveMessage">{{saveMessage}}</div>
       </div>
     </div>
   </div>
