@@ -19,5 +19,20 @@ services:
     ports:
       - "8080:80"
 
+  frontend:
+    container_name: nginx_container
+    build: ./frontend
+    image: asc-visualization:v1
+    ports:
+      - 80:80
+    expose:
+      - 80
+    networks:
+      - internalnet
+
 volumes:
   postgres_data:
+
+networks:
+  internalnet:
+    driver: bridge
