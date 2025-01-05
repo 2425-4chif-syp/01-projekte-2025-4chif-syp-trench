@@ -6,6 +6,7 @@ import { Coil } from './coil';
 })
 export class CoilsService {
   public coils: Coil[] = [];
+  public selectedCoilCopy:Coil|null = null;
 
   constructor() { }
 
@@ -46,5 +47,12 @@ export class CoilsService {
     }
 
     this.coils.splice(index, 1);
+  }
+
+  selectCoil(coilId: number) {
+    // Not sure why I have to cast the coilId to a number here, but it seems to be necessary. 
+    // Angular seems to pass the coilId as a string, despite what the type definition says.
+    const coilIdNumber:number = Number(coilId);
+    this.selectedCoilCopy = this.getCopyCoil(coilIdNumber);
   }
 }

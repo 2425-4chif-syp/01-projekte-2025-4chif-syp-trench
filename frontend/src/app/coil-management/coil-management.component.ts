@@ -12,16 +12,21 @@ import { Coil } from '../data/coil-data/coil';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService:CoilsService) {}  
-
-  selectedCoilCopy:Coil|null = null;
+  constructor(public coilsService:CoilsService) {} 
 
   saveMessage: string | null = null;
+
+  public get selectedCoilId():number|undefined {
+    return this.coilsService.selectedCoilCopy?.id;
+  }
+  public set selectedCoilId(id:number) {
+    this.coilsService.selectCoil(Number(id));
+  }
 
   addNewCoil() {
     const newCoil: Coil = this.coilsService.addNewCoil();
 
-    this.selectCoil(newCoil.id);
+    this.coilsService.selectCoil(newCoil.id);
   }
 
   isFieldInvalid(field: string): boolean {
@@ -38,11 +43,11 @@ export class CoilManagementComponent {
   } 
   
   saveChanges() {
-    if (this.selectedCoilCopy === null) {
+    if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
 
-    if (typeof this.selectedCoilCopy.id !== 'number') {
+    if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
       // This can happen if Angular sets selectedCoilId to a string for some reason
       throw new Error('selectedCoilId is not of type number'); 
     }
@@ -54,7 +59,7 @@ export class CoilManagementComponent {
       return;
     }
   
-    this.selectCoil(this.selectedCoilCopy.id);
+    this.coilsService.selectCoil(this.coilsService.selectedCoilCopy.id);
 
     this.saveMessage = 'Änderungen gespeichert!';
     setTimeout(() => {
@@ -65,28 +70,23 @@ export class CoilManagementComponent {
   onCoilSelectionChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const coilId = Number(selectElement.value);
-    this.selectCoil(coilId);
-  }
-
-  selectCoil(coilId: number) {
-    // Not sure why I have to cast the coilId to a number here, but it seems to be necessary. 
-    // Angular seems to pass the coilId as a string, despite what the type definition says.
-    const coilIdNumber:number = Number(coilId);
-    this.selectedCoilCopy = this.coilsService.getCopyCoil(coilIdNumber);
+    this.coilsService.selectCoil(coilId);
   }
 
   showDeleteModal = false;
 
-  onDelete(): void {
+  openDeleteModal(): void {
     this.showDeleteModal = true;
   }
 
   deleteCoil(): void {
-    if (this.selectedCoilCopy === null) {
+    this.showDeleteModal = false;
+
+    if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
 
-    this.coilsService.deleteCoil(this.selectedCoilCopy.id);
+    this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id);
   }
 }
 
