@@ -4,7 +4,7 @@
       (ngModelChange)="onSelectedCoilChange($event)">
       <option *ngFor="let coil of coilsService.coils" [value]="coil.id">{{ coil.name }}</option>
   </select>
-  <button class="btn btn-primary new-coil-button" (click)="addNewCoil()">Neue Spule</button>
+  <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoil()">Neue Spule</button>
 </div>
 
 <div class="container" *ngIf="selectedCoilId !== null">

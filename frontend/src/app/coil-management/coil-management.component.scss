@@ -133,6 +133,7 @@ select, input, textarea {
   font-style: italic;
   color: #800000;
   justify-content: center;
+  font-size: 1.2em;
 }
 
 
@@ -154,6 +155,9 @@ select, input, textarea {
     white-space: nowrap;
   }
 }
+.new-coil-button{
+  margin: 10px;
+}
 
 .invalid {
   border: 1px solid red;
@@ -173,9 +177,9 @@ select, input, textarea {
 
 .modal.show {
   display: block;
-  background-color: rgba(0, 0, 0, 0.4); // halbtransparenter Hintergrund
+  background-color: rgba(0, 0, 0, 0.4); 
 }
 
 .modal-dialog {
-  margin-top: 10%; // z. B. etwas tiefer setzen
+  margin-top: 10%; 
 }
