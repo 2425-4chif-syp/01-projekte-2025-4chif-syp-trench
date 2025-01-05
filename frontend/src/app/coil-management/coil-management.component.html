@@ -1,62 +1,23 @@
 <div class="coil-container">
-  <select *ngIf="coilsService.coils.length > 0" class="selectedCoilCombobox" id="coilSelect"
-      [(ngModel)]="selectedCoilId"
-      (ngModelChange)="onSelectedCoilChange($event)">
-      <option *ngFor="let coil of coilsService.coils" [value]="coil.id">{{ coil.name }}</option>
+  <select *ngIf="coilsService.coils.length > 0" id="coilSelect"
+    [(ngModel)]="selectedCoilId" (ngModelChange)="onSelectedCoilChange($event)">
+    <option *ngFor="let coil of coilsService.coils" [value]="coil.id">{{ coil.name }}</option>
   </select>
   <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoil()">Neue Spule</button>
 </div>
 
 <div class="container" *ngIf="selectedCoilId !== null">
-  <div class="left-panel">
-    <div class="input-container">
-      <label for="nameInput">Magnetkreisname:</label>
-      <input type="text" id="nameInput" placeholder="Spulenname eingeben" [(ngModel)]="name">
-
-      <label for="yokesCountSelect">Schenkelanzahl:</label>
-      <select class="yokesCountCombobox" id="numberSelect" [(ngModel)]="yokesCount">
-        <option [value]="2">2</option>
-        <option [value]="3">3</option>
-        <option [value]="4">4</option>
-      </select>
-
-      <label for="diameterInput">Durchmesser (mm):</label>
-      <input type="number" id="diameterInput" placeholder="Durchmesser in mm" [(ngModel)]="diameter" min="0"
-          [class.invalid]="isFieldInvalid('diameter')" />
-      <div class="error-message" *ngIf="isFieldInvalid('diameter')">Bitte einen gültigen Durchmesser eingeben.</div>
-
-      <label for="arcLengthInput">Bogenlänge (mm):</label>
-      <input type="number" id="arcLengthInput" placeholder="Bogenlänge in mm" [(ngModel)]="arcLength" min="0"
-          [class.invalid]="isFieldInvalid('arcLength')" />
-      <div class="error-message" *ngIf="isFieldInvalid('arcLength')">Bitte eine gültige Bogenlänge eingeben.</div>
-
-      <label for="endAreaInput">Stirnfläche (cm²):</label>
-      <input type="number" id="endAreaInput" placeholder="Stirnfläche in cm²" [(ngModel)]="endArea" min="0"
-          [class.invalid]="isFieldInvalid('endArea')" />
-      <div class="error-message" *ngIf="isFieldInvalid('endArea')">Bitte eine gültige Stirnfläche eingeben.</div>
-
-      <label for="toleranceRange">Zulässige Toleranz: {{tolerance}} </label>
-      <input type="range" id="toleranceRange" min="0" max="10000" step="50" [(ngModel)]="tolerance" min="0">
-
-      <div class="buttonContainer">
-        <div class="buttons-row">
-          <button class="saveButton" (click)="saveChanges()">Speichern</button>
-          <button class="btn btn-outline-danger" (click)="onDelete()">Spule Löschen</button>
-        </div>
-        <div class="saveMessage" *ngIf="saveMessage">
-          {{saveMessage}}
-        </div>
+  <div class="input-container">
+    <div class="buttonContainer">
+      <div class="buttons-row">
+        <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
+        <button class="btn btn-outline-danger" (click)="onDelete()">Spule Löschen</button>
       </div>
-      
+      <div class="saveMessage" *ngIf="saveMessage">
+        {{saveMessage}}
+      </div>
     </div>
-  </div>
 
-  <div class="center-panel">
-    <img [src]="getSvgPath()" alt="Spule SVG" />
-  </div>
-
-  <div class="right-panel">
-    <p>Messondenverwaltung</p>
   </div>
 </div>
 
@@ -65,13 +26,8 @@
 </div>
 
 <!-- Bestätigungs-Modal -->
-<div 
-  class="modal fade" 
-  tabindex="-1" 
-  role="dialog"
-  [ngClass]="{'show': showDeleteModal}" 
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}"
->
+<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
+  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
