@@ -11,6 +11,7 @@
     <div class="buttonContainer">
       <div class="buttons-row">
         <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
+        <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
         <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spule Löschen</button>
       </div>
       <div class="saveMessage" *ngIf="saveMessage">

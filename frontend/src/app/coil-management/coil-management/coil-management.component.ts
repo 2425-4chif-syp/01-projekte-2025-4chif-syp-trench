@@ -88,5 +88,9 @@ export class CoilManagementComponent {
 
     this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id);
   }
+
+  backToListing():void {
+    this.coilsService.selectedCoilCopy = null;
+  }
 }
 
