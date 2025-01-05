@@ -1,18 +1,18 @@
-<div class="coil-container">
-  <select *ngIf="coilsService.coils.length > 0" id="coilSelect"
-    [(ngModel)]="selectedCoilId">
-    <option *ngFor="let coil of coilsService.coils" [value]="coil.id">Spule #{{ coil.id }}</option>
+<div class="coiltype-container">
+  <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect"
+    [(ngModel)]="selectedCoiltypeId">
+    <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">Spulentyp #{{ coiltype.id }} ("{{coiltype.tK_Name}}")</option>
   </select>
-  <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoil()">Neue Spule</button>
+  <button class="btn btn-primary new-coiltype-button" id="new-coiltype-button" (click)="addNewCoiltype()">Neuer Spulentyp</button>
 </div>
 
-<div class="container" *ngIf="coilsService.selectedCoilCopy !== null">
+<div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
   <div class="input-container">
     <div class="buttonContainer">
       <div class="buttons-row">
         <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
         <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
-        <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spule Löschen</button>
+        <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spulentyp Löschen</button>
       </div>
       <div class="saveMessage" *ngIf="saveMessage">
         {{saveMessage}}
@@ -22,8 +22,8 @@
   </div>
 </div>
 
-<div class="container no-coil-selected" *ngIf="coilsService.selectedCoilCopy === null">
-  <p>Bitte wählen Sie eine Spule aus.</p>
+<div class="container no-coiltype-selected" *ngIf="coiltypesService.selectedCoiltypeCopy === null">
+  <p>Bitte wählen Sie einen Spulentypen aus.</p>
 </div>
 
 <!-- Bestätigungs-Modal -->
@@ -33,21 +33,21 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title">Spule löschen?</h5>
+        <h5 class="modal-title">Spulentyp löschen?</h5>
         <!--<button type="button" class="close" (click)="showDeleteModal = false">
           <span aria-hidden="true">&times;</span>
         </button>-->
       </div>
 
       <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diese Spule löschen möchten?</p>
+        <p>Sind Sie sicher, dass Sie diesen Spulentypen löschen möchten?</p>
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
           Abbrechen
         </button>
-        <button type="button" class="btn btn-danger" (click)="deleteCoil()">
+        <button type="button" class="btn btn-danger" (click)="deleteCoiltype()">
           Löschen
         </button>
       </div>

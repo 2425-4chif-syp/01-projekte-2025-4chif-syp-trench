@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { CoilsService } from '../../data/coil-data/coils.service';
-import { Coil } from '../../data/coil-data/coil';
+import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
+import { Coiltype } from '../../data/coiltype-data/coiltype';
 
 @Component({
   selector: 'app-coiltype-list',
@@ -11,15 +11,15 @@ import { Coil } from '../../data/coil-data/coil';
   styleUrl: './coiltype-list.component.scss'
 })
 export class CoiltypeListComponent {
-  constructor(public coilsService:CoilsService) {}
+  constructor(public coiltypesService:CoiltypesService) {}
 
-  addNewCoil() {
-    const newCoil: Coil = this.coilsService.addNewCoil();
+  addNewCoiltype() {
+    const newCoiltype: Coiltype = this.coiltypesService.addNewCoiltype();
 
-    //this.coilsService.selectCoil(newCoil.id);
+    //this.coiltypesService.selectCoiltype(newCoiltype.id);
   }
 
-  openCoil(coilId:number) {
-    this.coilsService.selectCoil(coilId);
+  openCoiltype(coiltypeId:number) {
+    this.coiltypesService.selectCoiltype(coiltypeId);
   }
 }

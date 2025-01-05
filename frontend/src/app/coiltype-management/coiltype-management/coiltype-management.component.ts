@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CoilsService } from '../../data/coil-data/coils.service';
-import { Coil } from '../../data/coil-data/coil';
+import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
+import { Coiltype } from '../../data/coiltype-data/coiltype';
 
 @Component({
   selector: 'app-coiltype-management',
@@ -12,21 +12,21 @@ import { Coil } from '../../data/coil-data/coil';
   styleUrl: './coiltype-management.component.scss'
 })
 export class CoiltypeManagementComponent {
-  constructor(public coilsService:CoilsService) {} 
+  constructor(public coiltypesService:CoiltypesService) {} 
 
   saveMessage: string | null = null;
 
-  public get selectedCoilId():number|undefined {
-    return this.coilsService.selectedCoilCopy?.id;
+  public get selectedCoiltypeId():number|undefined {
+    return this.coiltypesService.selectedCoiltypeCopy?.id;
   }
-  public set selectedCoilId(id:number) {
-    this.coilsService.selectCoil(Number(id));
+  public set selectedCoiltypeId(id:number) {
+    this.coiltypesService.selectCoiltype(Number(id));
   }
 
-  addNewCoil() {
-    const newCoil: Coil = this.coilsService.addNewCoil();
+  addNewCoiltype() {
+    const newCoiltype: Coiltype = this.coiltypesService.addNewCoiltype();
 
-    this.coilsService.selectCoil(newCoil.id);
+    this.coiltypesService.selectCoiltype(newCoiltype.id);
   }
 
   isFieldInvalid(field: string): boolean {
@@ -43,13 +43,13 @@ export class CoiltypeManagementComponent {
   } 
   
   saveChanges() {
-    if (this.coilsService.selectedCoilCopy === null) {
+    if (this.coiltypesService.selectedCoiltypeCopy === null) {
       return;
     }
 
-    if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
-      // This can happen if Angular sets selectedCoilId to a string for some reason
-      throw new Error('selectedCoilId is not of type number'); 
+    if (typeof this.coiltypesService.selectedCoiltypeCopy.id !== 'number') {
+      // This can happen if Angular sets selectedCoiltypeId to a string for some reason
+      throw new Error('selectedCoiltypeId is not of type number'); 
     }
     
     const invalidFields = ['diameter', 'arcLength', 'endArea'].filter(field => this.isFieldInvalid(field));
@@ -59,7 +59,7 @@ export class CoiltypeManagementComponent {
       return;
     }
   
-    this.coilsService.selectCoil(this.coilsService.selectedCoilCopy.id);
+    this.coiltypesService.selectCoiltype(this.coiltypesService.selectedCoiltypeCopy.id);
 
     this.saveMessage = 'Änderungen gespeichert!';
     setTimeout(() => {
@@ -67,10 +67,10 @@ export class CoiltypeManagementComponent {
     }, 3000);
   }
 
-  onCoilSelectionChange(event: Event) {
+  onCoiltypeSelectionChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    const coilId = Number(selectElement.value);
-    this.coilsService.selectCoil(coilId);
+    const coiltypeId = Number(selectElement.value);
+    this.coiltypesService.selectCoiltype(coiltypeId);
   }
 
   showDeleteModal = false;
@@ -79,18 +79,18 @@ export class CoiltypeManagementComponent {
     this.showDeleteModal = true;
   }
 
-  deleteCoil(): void {
+  deleteCoiltype(): void {
     this.showDeleteModal = false;
 
-    if (this.coilsService.selectedCoilCopy === null) {
+    if (this.coiltypesService.selectedCoiltypeCopy === null) {
       return;
     }
 
-    this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id);
+    this.coiltypesService.deleteCoiltype(this.coiltypesService.selectedCoiltypeCopy.id);
   }
 
   backToListing():void {
-    this.coilsService.selectedCoilCopy = null;
+    this.coiltypesService.selectedCoiltypeCopy = null;
   }
 }
 

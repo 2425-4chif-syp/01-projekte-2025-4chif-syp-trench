@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CoiltypeService } from './coiltype.service';
+import { CoiltypesService } from './coiltypes.service';
 
-describe('CoiltypeService', () => {
-  let service: CoiltypeService;
+describe('CoiltypesService', () => {
+  let service: CoiltypesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CoiltypeService);
+    service = TestBed.inject(CoiltypesService);
   });
 
   it('should be created', () => {
