@@ -14,7 +14,7 @@
   
   .left-panel, .right-panel {
     background-color: rgba(159, 159, 159, 0.333);
-    height: calc(100vh - 120px);
+    height: calc(100vh - 220px);
     max-width: 25%;
     border-radius: 15px;
   }
@@ -23,7 +23,7 @@
     display: flex; 
     justify-content: center;
     align-items: center; 
-    height: calc(100vh - 120px); 
+    height: calc(100vh - 220px); 
     align-content: center; 
 }
 
