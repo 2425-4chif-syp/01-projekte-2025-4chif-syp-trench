@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { CoilManagementComponent } from './coil-management/coil-management.component';
+import { CoilManagementComponent } from './coil-management/coil-management/coil-management.component';
 import { MeasurementManagementComponent } from './measurement-management/measurement-management.component';
 import { CoiltypeManagementComponent } from './coiltype-management/coiltype-management.component';
 

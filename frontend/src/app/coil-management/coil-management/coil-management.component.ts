@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CoilsService } from '../data/coil-data/coils.service';
-import { Coil } from '../data/coil-data/coil';
+import { CoilsService } from '../../data/coil-data/coils.service';
+import { Coil } from '../../data/coil-data/coil';
 
 @Component({
   selector: 'app-coil-management',
