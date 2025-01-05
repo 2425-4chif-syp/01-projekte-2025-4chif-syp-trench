@@ -47,6 +47,7 @@ export class CoilsService {
     }
 
     this.coils.splice(index, 1);
+    this.selectedCoilCopy = null;
   }
 
   selectCoil(coilId: number) {
