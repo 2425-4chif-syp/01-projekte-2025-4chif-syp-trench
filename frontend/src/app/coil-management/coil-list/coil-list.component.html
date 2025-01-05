@@ -2,7 +2,7 @@
     <table class="table table-striped table-hover">
         <tbody>
             <tr *ngFor="let coil of coilsService.coils" class="clickable-row" (click)="openCoil(coil.id)">
-                <td scope="row">{{coil.id}}</td>
+                <td scope="row">Spule #{{coil.id}}</td>
             </tr>
         </tbody>
     </table>
