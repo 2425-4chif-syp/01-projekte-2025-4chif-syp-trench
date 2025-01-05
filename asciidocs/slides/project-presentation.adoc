@@ -129,19 +129,13 @@ Admin --> (Daten auslesen und vergleichen)
 ----
 
 [%auto-animate]
-== Frontend Concept
+== Frontend Concept 1: Spulentypenverwaltung
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-1.png[]
 
 [%auto-animate]
-== Frontend Concept
+== Frontend Concept 2: Spulenverwaltung
 
 [.stretch]
 image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-2.png[]
-
-[%auto-animate]
-== Frontend Concept
-
-[.stretch]
-image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-3.png[]
