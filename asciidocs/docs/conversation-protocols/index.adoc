@@ -2,4 +2,42 @@
 
 https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Conversation Protocols*
 
-== 
+== Lessons
+|===
+|Link & Datum | Besprochene Themen | Anwesend
+
+
+|*link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/lessons/2024-12-04_lesson[04.12.2024]* 
+| Projektanforderungen, Diplomarbeit
+| Prof. Palitsch-Infanger, Prof. Stütz, 4CHIF
+
+|===
+
+== Teacher
+|===
+|Link & Datum | Besprochene Themen | Anwesend
+
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-02_teacher[02.12.2024]*
+| Projektanforderungen
+| Trench-Team, Prof. Palitsch-Infanger, Prof. Stütz, 4CHIF
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-04_teacher[04.12.2024]*
+| Derzeitige Projektstand, ERD, Sensordaten
+| Trench-Team, Prof. Palitsch-Infanger
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-09_teacher[09.12.2024]*
+| Systemarchitektur, Schnittstellen, Protokollieren, Mocking
+| Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_1_teacher[11.12.2024 (1)]*
+| Messungen, Technologien, Schnittstellen
+| Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_2_teacher[11.12.2024 (2)]*
+| Zukünftige Organisation, Vorweihnachten
+| Trench-Team, Prof. Palitsch-Infanger
+|===
+
+== Project Meetings
+_None_
