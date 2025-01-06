@@ -4,7 +4,7 @@ services:
     container_name: postgres_container
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: IloveSYP
+      POSTGRES_PASSWORD: TRENCH123
     ports:
       - "5432:5432"
     volumes:
@@ -15,7 +15,7 @@ services:
     container_name: pgadmin_container
     environment:
       PGADMIN_DEFAULT_EMAIL: trench@4CHIF.com
-      PGADMIN_DEFAULT_PASSWORD: IloveSYP
+      PGADMIN_DEFAULT_PASSWORD: TRENCH123
     ports:
       - "8080:80"
 
@@ -27,6 +27,22 @@ services:
       - 80:80
     expose:
       - 80
+    networks:
+      - internalnet
+
+  backend:
+    container_name: trenchapi_container
+    build:
+      context: ./backend/TrenchAPI
+    ports:
+      - "8081:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DevConnection=Host=localhost;Port=5432;Username=postgres;Password=TRENCH123;Database=TrenchDBI
+    volumes:
+      - ./backend/TrenchAPI:/src 
+    depends_on:
+      - postgres
     networks:
       - internalnet
 
