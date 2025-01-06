@@ -14,6 +14,12 @@ import { Coiltype } from '../../data/coiltype-data/coiltype';
 export class CoiltypeManagementComponent {
   constructor(public coiltypesService:CoiltypesService) {} 
 
+  selectedNumber: number = 2;
+  name: string = ''; 
+  bandbreite: number | null = null; 
+  schichthoehe: number | null = null;
+  durchmesser: number | null = null;
+
   saveMessage: string | null = null;
 
   public get selectedCoiltypeId():number|undefined {

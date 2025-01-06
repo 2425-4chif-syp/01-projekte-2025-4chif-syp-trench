@@ -1,42 +1,97 @@
 <div class="coiltype-container">
   <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect"
-    [(ngModel)]="selectedCoiltypeId">
-    <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">Spulentyp #{{ coiltype.id }} ("{{coiltype.tK_Name}}")</option>
+          [(ngModel)]="selectedCoiltypeId">
+    <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
+      Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
+    </option>
   </select>
-  <button class="btn btn-primary new-coiltype-button" id="new-coiltype-button" (click)="addNewCoiltype()">Neuer Spulentyp</button>
+  <button class="btn btn-primary new-coiltype-button"
+          id="new-coiltype-button"
+          (click)="addNewCoiltype()">
+    Neuer Spulentyp
+  </button>
 </div>
 
-<div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
-  <div class="input-container">
-    <div class="buttonContainer">
-      <div class="buttons-row">
-        <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
-        <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
-        <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spulentyp Löschen</button>
-      </div>
-      <div class="saveMessage" *ngIf="saveMessage">
-        {{saveMessage}}
+<div class="container">
+
+  <div class="panel">
+
+    <div class="input-container">
+      <label for="nameInput">Spulentyp-Name:</label>
+      <input type="text"
+             class="form-control inputField"
+             id="nameInput"
+             placeholder="Spulenname eingeben"
+             [(ngModel)]="name">
+
+      <label for="numberSelect">Schenkelanzahl:</label>
+      <select class="form-control form-select"
+              id="numberSelect"
+              [(ngModel)]="selectedNumber">
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+      </select>
+
+      <label for="diameterInput">Bandbreite (mm):</label>
+      <input type="number"
+             class="form-control inputField"
+             id="diameterInput"
+             placeholder="Bandbreite in mm"
+             [(ngModel)]="bandbreite"
+             min="0">
+
+      <label for="arcLengthInput">Schichthöhe (mm):</label>
+      <input type="number"
+             class="form-control inputField"
+             id="arcLengthInput"
+             placeholder="Schichthöhe in mm"
+             [(ngModel)]="schichthoehe"
+             min="0">
+
+      <label for="endAreaInput">Durchmesser (mm)</label>
+      <input type="number"
+             class="form-control inputField"
+             id="endAreaInput"
+             placeholder="Durchmesser in mm"
+             [(ngModel)]="durchmesser"
+             min="0">
+    </div>
+
+    <div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
+      <div class="input-container">
+        <div class="buttonContainer">
+          <div class="buttons-row">
+            <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
+            <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
+            <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spulentyp Löschen</button>
+          </div>
+          <div class="saveMessage" *ngIf="saveMessage">
+            {{saveMessage}}
+          </div>
+        </div>
       </div>
     </div>
 
-  </div>
-</div>
+    <div class="container no-coiltype-selected"
+         *ngIf="coiltypesService.selectedCoiltypeCopy === null">
+      <p>Bitte wählen Sie einen Spulentypen aus.</p>
+    </div>
 
-<div class="container no-coiltype-selected" *ngIf="coiltypesService.selectedCoiltypeCopy === null">
-  <p>Bitte wählen Sie einen Spulentypen aus.</p>
-</div>
+  </div> 
 
-<!-- Bestätigungs-Modal -->
-<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+</div> 
+
+<div class="modal fade"
+     tabindex="-1"
+     role="dialog"
+     [ngClass]="{'show': showDeleteModal}"
+     [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
       <div class="modal-header">
         <h5 class="modal-title">Spulentyp löschen?</h5>
-        <!--<button type="button" class="close" (click)="showDeleteModal = false">
-          <span aria-hidden="true">&times;</span>
-        </button>-->
       </div>
 
       <div class="modal-body">
@@ -44,14 +99,17 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+        <button type="button"
+                class="btn btn-secondary"
+                (click)="showDeleteModal = false">
           Abbrechen
         </button>
-        <button type="button" class="btn btn-danger" (click)="deleteCoiltype()">
+        <button type="button"
+                class="btn btn-danger"
+                (click)="deleteCoiltype()">
           Löschen
         </button>
       </div>
-
     </div>
   </div>
 </div>
