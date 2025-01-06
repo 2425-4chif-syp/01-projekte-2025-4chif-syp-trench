@@ -6,21 +6,69 @@
   <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoil()">Neue Spule</button>
 </div>
 
-<div class="container" *ngIf="coilsService.selectedCoilCopy !== null">
-  <div class="input-container">
-    <div class="buttonContainer">
-      <div class="buttons-row">
-        <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
-        <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
-        <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spule Löschen</button>
-      </div>
-      <div class="saveMessage" *ngIf="saveMessage">
-        {{saveMessage}}
+<div class="container">
+  <div class="panel">
+    <div class="input-container">
+      <label for="nameInput">Spulentyp-Name:</label>
+      <input type="text"
+             class="form-control inputField"
+             id="nameInput"
+             placeholder="Spulenname eingeben"
+             [(ngModel)]="name">
+
+      <label for="numberSelect">Schenkelanzahl:</label>
+      <select class="form-control form-select"
+              id="numberSelect"
+              [(ngModel)]="selectedNumber">
+        <option [value]="2">2</option>
+        <option [value]="3">3</option>
+        <option [value]="4">4</option>
+      </select>
+
+      <label for="diameterInput">Bandbreite (mm):</label>
+      <input type="number"
+             class="form-control inputField"
+             id="diameterInput"
+             placeholder="Bandbreite in mm"
+             [(ngModel)]="bandbreite"
+             min="0">
+
+      <label for="arcLengthInput">Schichthöhe (mm):</label>
+      <input type="number"
+             class="form-control inputField"
+             id="arcLengthInput"
+             placeholder="Schichthöhe in mm"
+             [(ngModel)]="schichthoehe"
+             min="0">
+
+      <label for="endAreaInput">Durchmesser (mm)</label>
+      <input type="number"
+             class="form-control inputField"
+             id="endAreaInput"
+             placeholder="Durchmesser in mm"
+             [(ngModel)]="durchmesser"
+             min="0">
+    </div>
+
+    <div class="container">
+      <div class="input-container">
+        <div class="buttonContainer">
+          <div class="buttons-row">
+            <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
+            <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
+            <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spulentyp Löschen</button>
+          </div>
+          <div class="saveMessage" *ngIf="saveMessage">
+            {{saveMessage}}
+          </div>
+        </div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div> 
+
+</div> 
+
 
 <div class="container no-coil-selected" *ngIf="coilsService.selectedCoilCopy === null">
   <p>Bitte wählen Sie eine Spule aus.</p>

@@ -14,6 +14,12 @@ import { Coil } from '../../data/coil-data/coil';
 export class CoilManagementComponent {
   constructor(public coilsService:CoilsService) {} 
 
+  selectedNumber: number = 2;
+  name: string = ''; 
+  bandbreite: number | null = null; 
+  schichthoehe: number | null = null;
+  durchmesser: number | null = null;
+
   saveMessage: string | null = null;
 
   public get selectedCoilId():number|undefined {
