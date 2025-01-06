@@ -66,8 +66,7 @@ b.	Value (Entfernung): 23 mm
 c.	Time: 
 d.	Description:
 
-
-image::protocol-images/11-12-diagram.png[]
+image::/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-04_teacher/protocol-images/11-12-diagram.png[]
 
 
 Erklärung:

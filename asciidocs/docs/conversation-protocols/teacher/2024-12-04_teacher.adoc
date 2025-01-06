@@ -58,5 +58,5 @@ a|- Das ERD soll auf Deutsch bleiben, weil es auf Englisch zu übersetzen techni
 
 Ergebenes ERD:
 
-image::protocol-images/4-12-ERD.png[]
+image::/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-04_teacher/protocol-images/4-12-ERD.png[]
 |===
