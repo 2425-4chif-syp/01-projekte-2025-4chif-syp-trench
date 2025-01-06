@@ -14,11 +14,11 @@ import { Coil } from '../../data/coil-data/coil';
 export class CoilManagementComponent {
   constructor(public coilsService:CoilsService) {} 
 
-  selectedNumber: number = 2;
-  name: string = ''; 
-  bandbreite: number | null = null; 
-  schichthoehe: number | null = null;
-  durchmesser: number | null = null;
+  ur: number | null = null;
+  einheit: number | null = null; 
+  auftragsNr: number | null = null;
+  auftragsPosNr: number | null = null;
+  omega: number | null = null;
 
   saveMessage: string | null = null;
 
@@ -36,15 +36,15 @@ export class CoilManagementComponent {
   }
 
   isFieldInvalid(field: string): boolean {
-    //if (field === 'diameter' && (this.diameter === null || this.diameter <= 0)) {
-    //  return true;
-    //}
-    //if (field === 'arcLength' && (this.arcLength === null || this.arcLength <= 0)) {
-    //  return true;
-    //}
-    //if (field === 'endArea' && (this.endArea === null || this.endArea <= 0)) {
-    //  return true;
-    //}
+    /*if (field === 'bandbreite' && this.bandbreite === null) {
+      return true;
+    }
+    if (field === 'schichthoehe' && this.schichthoehe === null) {
+      return true;
+    }
+    if (field === 'durchmesser' && this.durchmesser === null) {
+      return true;
+    }*/
     return false;
   } 
   
@@ -58,7 +58,7 @@ export class CoilManagementComponent {
       throw new Error('selectedCoilId is not of type number'); 
     }
     
-    const invalidFields = ['diameter', 'arcLength', 'endArea'].filter(field => this.isFieldInvalid(field));
+    const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
     
     if (invalidFields.length > 0) {
       alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
