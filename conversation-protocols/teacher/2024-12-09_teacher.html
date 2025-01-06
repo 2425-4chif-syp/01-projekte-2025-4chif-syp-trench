@@ -5,9 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<meta name="author" content="Emil Silber">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 04.12.2024</title>
+<title>Besprechungsprotokoll 09.12.2024</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,10 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 04.12.2024</h1>
-<div class="details">
-<span id="author" class="author">Emil Silber</span><br>
-</div>
+<h1>Besprechungsprotokoll 09.12.2024</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -453,6 +449,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 09.12.2024</strong></p>
+</div>
+<div class="paragraph">
+<p>Emil Silber</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Teilnehmer</caption>
 <colgroup>
@@ -471,7 +473,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -489,11 +491,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 04.12.2024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mo. 09.12.2024</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20 Minuten</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 Minuten</p></td>
 </tr>
 </tbody>
 </table>
@@ -505,13 +507,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Derzeitige Projektstand</p>
+<p>Systemarchitektur</p>
 </li>
 <li>
-<p>ERD</p>
+<p>Schnittstellen</p>
 </li>
 <li>
-<p>Sensordaten</p>
+<p>Protokollieren</p>
+</li>
+<li>
+<p>Mocking</p>
 </li>
 </ul>
 </div>
@@ -534,42 +539,59 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Das ERD soll auf Deutsch bleiben, weil es auf Englisch zu übersetzen technischen Schwierigkeiten bringen wird, wegen Unverständlichkeiten</p>
+<p>Wir sollen Dr.Köck fragen, wie wir die Daten erhalten werden:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>USB</p>
 </li>
 <li>
-<p>An dem ERD sollen 2 genannte Beziehungen gelöscht werden</p>
+<p>MQTT</p>
 </li>
 <li>
-<p>Sensor soll auf Sensortyp umbenannt werden</p>
+<p>USB + MQTT</p>
+</li>
+</ol>
+</div>
 </li>
 <li>
-<p>Folgende Frage ist zum aufklären: Was ist ein sensorknoten?</p>
+<p>Telegraf wäre eine Möglichkeit, wie wir mit den Daten umgehen können bei MQTT (MQTT &#8594; Postgre). Sollten wir doch EMQX wollen, müssen wir es nächstes mal genauer erklären.</p>
 </li>
 <li>
-<p>Wir müssen klären, woran wir identifizieren können, welches Sensor welches ist. Ort, Zahl etc.&#8201;&#8212;&#8201;Möglicher Vorschlag: Benennung in folgender Folge: 1.1, 1.2, 2.1, 2.2</p>
+<p>Eine Möglichkeit die Gesprächsprotokolle zu bennenen wäre: jahr-monat-tag-Thema z.B. 2024-12-09-Trench-Systemarchitektur</p>
 </li>
 <li>
-<p>Es soll sichergestellt werden:  Alle Sensoren sind aktiv und funktionieren</p>
+<p>Sollte Dr.Köck sich für USB entscheiden, brauchen wir:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Beispielsdaten wie sie am USB Sticks sind</p>
 </li>
 <li>
-<p>Die Sensordaten sollten die Uhrzeit und Datum inkludieren, ms Abweichungen sind nicht relevant</p>
+<p>In welchem Format bekommen wir die Daten am USB Stick</p>
+</li>
+</ol>
+</div>
 </li>
 <li>
-<p>Nur notwendige Attribute, fehlendes kann später ergänzt werden.</p>
+<p>Mocking mit daten. Frontend mit fake Daten</p>
+</li>
+<li>
+<p>Prozessablaufdiagram:</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Ergebenes ERD:</p>
-</div>
 <div class="imageblock">
 <div class="content">
-<img src="images/protocol-images/4-12-ERD.png" alt="4 12 ERD">
+<img src="images/protocol-images/diagram-9-12.png" alt="diagram 9 12">
 </div>
+</div>
+<div class="paragraph">
+<p>Konfiguration &#8658; Einlesen der Messwerte &#8658; Ermitteln der Handlungsempfehlung</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -579,7 +601,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-05 21:38:04 UTC
+Last updated 2025-01-06 17:31:38 UTC
 </div>
 </div>
 </body>

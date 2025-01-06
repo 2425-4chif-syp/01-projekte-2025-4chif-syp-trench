@@ -5,9 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<meta name="author" content="Emil Silber">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 11.12.2024</title>
+<title>Besprechungsprotokoll 04.12.2024</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,10 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 11.12.2024</h1>
-<div class="details">
-<span id="author" class="author">Emil Silber</span><br>
-</div>
+<h1>Besprechungsprotokoll 04.12.2024</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -453,6 +449,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 04.12.2024</strong></p>
+</div>
+<div class="paragraph">
+<p>Emil Silber</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Teilnehmer</caption>
 <colgroup>
@@ -471,7 +473,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -489,7 +491,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 11.12.2024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 04.12.2024</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
@@ -505,13 +507,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Messungen</p>
+<p>Derzeitige Projektstand</p>
 </li>
 <li>
-<p>Technologien</p>
+<p>ERD</p>
 </li>
 <li>
-<p>Schnittstellen</p>
+<p>Sensordaten</p>
 </li>
 </ul>
 </div>
@@ -534,98 +536,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Nach einem Anruf mit Dr. Köck hat sich folgendes ergeben:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Er wird keine USB-Schnittstelle geben, deswegen werden wir MQTT verwenden.</p>
+<p>Das ERD soll auf Deutsch bleiben, weil es auf Englisch zu übersetzen technischen Schwierigkeiten bringen wird, wegen Unverständlichkeiten</p>
 </li>
 <li>
-<p>Das Backend soll in C# geschrieben werden</p>
+<p>An dem ERD sollen 2 genannte Beziehungen gelöscht werden</p>
 </li>
 <li>
-<p>Die Messung wird periodisch sein, der Intervall ist mit 5-10 Sekunden zu erwarten</p>
+<p>Sensor soll auf Sensortyp umbenannt werden</p>
 </li>
 <li>
-<p>Die Messungen werden folgend stattfinden:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha">
-<li>
-<p>Der Tauchkern wird ganz oben gemessen</p>
+<p>Folgende Frage ist zum aufklären: Was ist ein sensorknoten?</p>
 </li>
 <li>
-<p>Der Tauchkern wird ganz unten gemessen</p>
+<p>Wir müssen klären, woran wir identifizieren können, welches Sensor welches ist. Ort, Zahl etc.&#8201;&#8212;&#8201;Möglicher Vorschlag: Benennung in folgender Folge: 1.1, 1.2, 2.1, 2.2</p>
 </li>
 <li>
-<p>Der Tauchkern wird in der Mitte gemessen</p>
+<p>Es soll sichergestellt werden:  Alle Sensoren sind aktiv und funktionieren</p>
 </li>
 <li>
-<p>Abweichungen möglich</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
+<p>Die Sensordaten sollten die Uhrzeit und Datum inkludieren, ms Abweichungen sind nicht relevant</p>
 </li>
 <li>
-<p>Folgende relevante Informationen wurden gegeben:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Positionen der Sensoren werden in der Konfigurationsphase festgestellt.</p>
-</li>
-<li>
-<p>Sensoren werden 0-3 Volt machen.</p>
-</li>
-<li>
-<p>Sensoren werden mit einem ESP32 verbunden. Entweder werden alle eine individuell bekommen oder sie werden alle an eine ESP32 gebunden.</p>
-</li>
-<li>
-<p>Die Daten, die gesendet werden müssen, wir noch genauer ausmachen mit Prof. Stütz, möglicher Format:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha">
-<li>
-<p>Sensor: 1</p>
-</li>
-<li>
-<p>Value (Entfernung): 23 mm</p>
-</li>
-<li>
-<p>Time:</p>
-</li>
-<li>
-<p>Description:</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
+<p>Nur notwendige Attribute, fehlendes kann später ergänzt werden.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Ergebenes ERD:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="images/protocol-images/11-12-diagram.png" alt="11 12 diagram">
+<img src="images/protocol-images/4-12-ERD.png" alt="4 12 ERD">
 </div>
-</div>
-<div class="paragraph">
-<p>Erklärung:</p>
-</div>
-<div class="paragraph">
-<p>Das WLAN-Box in der ESP32, schickt die Daten an MQTT, welches dann mithilfe eines MQTT-Brokers es an das C# Backend weiterleitet. Das Backend verarbeitet die Daten und speichert sie in der Datenbank und schickt es, mit NGINX, an das Frontend, dies wird dann von Angular im Browser dargestellt.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Stütz wird uns das C# Backend von Aitenbichler gebenden. Wir sollen die benutzten Libraries und Methoden analysieren, dann selbst schreiben.</p>
-</li>
-</ul>
 </div></div></td>
 </tr>
 </tbody>
@@ -635,7 +581,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-05 21:38:04 UTC
+Last updated 2025-01-06 17:31:38 UTC
 </div>
 </div>
 </body>

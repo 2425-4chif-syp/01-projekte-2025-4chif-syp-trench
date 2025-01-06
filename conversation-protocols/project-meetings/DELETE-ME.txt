@@ -1,0 +1,1 @@
+This file only exist so the `project-meetings` folder is tracked by git. Delete it once the first project-meeting conversation protocol is added.

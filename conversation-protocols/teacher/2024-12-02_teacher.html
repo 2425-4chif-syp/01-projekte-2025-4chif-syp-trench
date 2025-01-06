@@ -5,9 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<meta name="author" content="Emil Silber">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 09.12.2024</title>
+<title>Besprechungsprotokoll 02.12.2024</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,10 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 09.12.2024</h1>
-<div class="details">
-<span id="author" class="author">Emil Silber</span><br>
-</div>
+<h1>Besprechungsprotokoll 02.12.2024</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -453,6 +449,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 02.12.2024</strong></p>
+</div>
+<div class="paragraph">
+<p>Emil Silber</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Teilnehmer</caption>
 <colgroup>
@@ -467,7 +469,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4CHIF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4CHIF</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
 </tr>
 <tr>
@@ -489,11 +495,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mo. 09.12.2024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mo. 02.12.2024</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">30 Minuten</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3 Stunden</p></td>
 </tr>
 </tbody>
 </table>
@@ -505,16 +511,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Systemarchitektur</p>
-</li>
-<li>
-<p>Schnittstellen</p>
-</li>
-<li>
-<p>Protokollieren</p>
-</li>
-<li>
-<p>Mocking</p>
+<p>Projektanforderungen</p>
 </li>
 </ul>
 </div>
@@ -541,55 +538,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
 <ul>
 <li>
-<p>Wir sollen Dr.Köck fragen, wie wir die Daten erhalten werden:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>USB</p>
+<p>Gespräche und Vereinbarungen sollen sauber protokollisiert und auf dem Github Respository gepusht werden</p>
 </li>
 <li>
-<p>MQTT</p>
+<p>Es soll keine Datenbanken in dem Projekt Repository zu finden sein</p>
 </li>
 <li>
-<p>USB + MQTT</p>
-</li>
-</ol>
-</div>
+<p>SCRUM: Es sollen regelmäßig Tasks und Commits gemacht werden, eventuell auch Sprints</p>
 </li>
 <li>
-<p>Telegraf wäre eine Möglichkeit, wie wir mit den Daten umgehen können bei MQTT (MQTT &#8594; Postgre). Sollten wir doch EMQX wollen, müssen wir es nächstes mal genauer erklären.</p>
+<p>Sollte es vorkommen, dass ein Projektmitglied keine Youtrack Tasks erstellt und committed, wird er automatisch einen "Nicht Genügend" erhalten</p>
 </li>
 <li>
-<p>Eine Möglichkeit die Gesprächsprotokolle zu bennenen wäre: jahr-monat-tag-Thema z.B. 2024-12-09-Trench-Systemarchitektur</p>
+<p>Die Commits sollen sauber benannt werden, anhand der <a href="https://www.conventionalcommits.org/en/v1.0.0/">Guidelines</a></p>
 </li>
 <li>
-<p>Sollte Dr.Köck sich für USB entscheiden, brauchen wir:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Beispielsdaten wie sie am USB Sticks sind</p>
-</li>
-<li>
-<p>In welchem Format bekommen wir die Daten am USB Stick</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Mocking mit daten. Frontend mit fake Daten</p>
-</li>
-<li>
-<p>Prozessablaufdiagram:</p>
+<p>Es sollen keine Binär-Files wie Word oder PDF verwendet werden, alles soll bei .adoc oder .md geschrieben werden</p>
 </li>
 </ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="images/protocol-images/diagram-9-12.png" alt="diagram 9 12">
-</div>
-</div>
-<div class="paragraph">
-<p>Konfiguration &#8658; Einlesen der Messwerte &#8658; Ermitteln der Handlungsempfehlung</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -599,7 +565,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-05 21:38:04 UTC
+Last updated 2025-01-06 17:31:38 UTC
 </div>
 </div>
 </body>
