@@ -10,6 +10,8 @@ ifndef::imagesdir[:imagesdir: images]
 
 - link:/01-projekte-2025-4chif-syp-trench/project-guidelines[Project Guidelines]
 
+- link:/01-projekte-2025-4chif-syp-trench/conversation-protocols[Conversation Protocols]
+
 == Other 
 
 - link:/01-projekte-2025-4chif-syp-trench/connect-docker-with-postgres[Connect Docker with Postgres]
