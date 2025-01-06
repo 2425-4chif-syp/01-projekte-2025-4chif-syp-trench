@@ -1,12 +1,14 @@
+version: "3.9"
+
 services:
   postgres:
-    image: postgres
+    image: postgres:17.2
     container_name: postgres_container
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: TRENCH123
     ports:
-      - "5432:5432"
+      - "5432:5432" 
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -17,28 +19,30 @@ services:
       PGADMIN_DEFAULT_EMAIL: trench@4CHIF.com
       PGADMIN_DEFAULT_PASSWORD: TRENCH123
     ports:
-      - "8080:80"
+      - "8085:80" 
 
   frontend:
     container_name: nginx_container
     build: ./frontend
     image: asc-visualization:v1
     ports:
-      - 80:80
-    expose:
-      - 80
+      - "80:80"
     networks:
       - internalnet
-
+    depends_on:
+      - backend
+      
   backend:
     container_name: trenchapi_container
     build:
       context: ./backend/TrenchAPI
     ports:
-      - "8081:80"
+      - "5127:5127" 
+    expose:
+      - "5127" 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DevConnection=Host=localhost;Port=5432;Username=postgres;Password=TRENCH123;Database=TrenchDBI
+      - ASPNETCORE_URLS=http://0.0.0.0:5127 
     volumes:
       - ./backend/TrenchAPI:/src 
     depends_on:

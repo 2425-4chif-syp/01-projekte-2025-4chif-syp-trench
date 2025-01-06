@@ -1,9 +1,17 @@
+# Ignore all .git folders
+.git/
+
+# Ignore all bin and obj folders
+**/[b|B]in/**/[O|o]bj/
+
+# Ignore test results
+**/TestResults/
+
+# Ignore node_modules
+node_modules/
+
+# Ignore .env file
 .env
-.git
+
+# Ignore .gitignore
 .gitignore
-.vs
-.vscode
-docker-compose.yml
-docker-compose.*.yml
-*/bin
-*/obj
