@@ -37,7 +37,26 @@ https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Proje
 | *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_teacher_2[11.12.2024 (2)]*
 | Zukünftige Organisation, Vorweihnachten
 | Trench-Team, Prof. Palitsch-Infanger
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-19_teacher[19.12.2024]*
+| Epic, User stories, Tasks, Nach Weihnachten
+| Emil Silber, Prof. Palitsch-Infanger
 |===
 
 == Project Meetings
-_None_
+|===
+|Link & Datum | Besprochene Themen | Anwesend
+
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/project-meetings/2025-01-04_meeting[01.04.2025]*
+| Wie verwendet man YouTrack, Projektorganisation, Tasks und User stories
+| Trench-Team
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/project-meetings/2025-01-05_meeting_1[01.05.2025 (1)]*
+| Tasks, Projektorganisation
+| Trench-Team
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/project-meetings/2025-01-05_meeting_2[01.05.2025 (2)]*
+| Frontend, API
+| Trench-Team
+|===
