@@ -51,11 +51,11 @@ obj/
 *.sln.docstates
 
 # Visual Studio Code
-.vscode/
-.vs/
+**/.vscode/
+**/.vs/
 
 # Rider
-.idea/
+**/.idea/
 
 # Backup & Log files
 *.log
