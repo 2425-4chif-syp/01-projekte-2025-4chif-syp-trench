@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 04.12.2024</title>
+<title>Summary of REST Interfaces</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,149 +435,92 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="article toc2 toc-left">
+<body class="article">
 <div id="header">
-<h1>Besprechungsprotokoll 04.12.2024</h1>
-<div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_besprochene_themen">1. Besprochene Themen</a></li>
-<li><a href="#_vereinbarungen_und_entscheidungen">2. Vereinbarungen und Entscheidungen</a></li>
-</ul>
-</div>
+<h1>Summary of REST Interfaces</h1>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 04.12.2024</strong></p>
-</div>
-<div class="paragraph">
-<p>Emil Silber</p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Teilnehmer</caption>
 <colgroup>
-<col style="width: 50%;">
+<col style="width: 30%;">
+<col style="width: 20%;">
 <col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Anwesend</th>
-<th class="tableblock halign-left valign-top">Relevant Für</th>
+<th class="tableblock halign-left valign-top">Controller</th>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Endpoint</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Spule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>Spule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spule</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Spule/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>Spule</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Spule</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>Spule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spule</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Spule/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>Spule</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spule</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Spule/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>Spule</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SpuleTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/SpuleTyp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>SpuleTyp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SpuleTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/SpuleTyp/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>SpuleTyp</code> by ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SpuleTyp</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/SpuleTyp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>SpuleTyp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SpuleTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/SpuleTyp/{id}</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>SpuleTyp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SpuleTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
 </tr>
 </tbody>
 </table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Ort und Zeit</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ort</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Raum 147</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 04.12.2024</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20 Minuten</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_besprochene_themen"><a class="anchor" href="#_besprochene_themen"></a>1. Besprochene Themen</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Derzeitige Projektstand</p>
-</li>
-<li>
-<p>ERD</p>
-</li>
-<li>
-<p>Sensordaten</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_vereinbarungen_und_entscheidungen"><a class="anchor" href="#_vereinbarungen_und_entscheidungen"></a>2. Vereinbarungen und Entscheidungen</h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all fit-content">
-<caption class="title">Table 3. Was wurde vereinbart?</caption>
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">wer</th>
-<th class="tableblock halign-left valign-top">möchte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Das ERD soll auf Deutsch bleiben, weil es auf Englisch zu übersetzen technischen Schwierigkeiten bringen wird, wegen Unverständlichkeiten</p>
-</li>
-<li>
-<p>An dem ERD sollen 2 genannte Beziehungen gelöscht werden</p>
-</li>
-<li>
-<p>Sensor soll auf Sensortyp umbenannt werden</p>
-</li>
-<li>
-<p>Folgende Frage ist zum aufklären: Was ist ein sensorknoten?</p>
-</li>
-<li>
-<p>Wir müssen klären, woran wir identifizieren können, welches Sensor welches ist. Ort, Zahl etc.&#8201;&#8212;&#8201;Möglicher Vorschlag: Benennung in folgender Folge: 1.1, 1.2, 2.1, 2.2</p>
-</li>
-<li>
-<p>Es soll sichergestellt werden:  Alle Sensoren sind aktiv und funktionieren</p>
-</li>
-<li>
-<p>Die Sensordaten sollten die Uhrzeit und Datum inkludieren, ms Abweichungen sind nicht relevant</p>
-</li>
-<li>
-<p>Nur notwendige Attribute, fehlendes kann später ergänzt werden.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Ergebenes ERD:</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/protocol-images/4-12-ERD.png" alt="4 12 ERD">
-</div>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
