@@ -1,4 +1,4 @@
-[plantuml]
+[plantuml, format="svg"]
 ----
 @startuml
 left to right direction

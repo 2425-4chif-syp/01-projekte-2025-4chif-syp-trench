@@ -52,8 +52,6 @@ image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-arch
 [.stretch]
 image::use-case.png[]
 
-:plantuml-server-url: http://www.plantuml.com/plantuml
-
 [plantuml, format="svg"]
 ----
 @startuml
