@@ -1,0 +1,68 @@
+= Besprechungsprotokoll 04.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 04.01.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Emil Silber
+|Filip Schauer
+
+|Filip Schauer
+|Axel Csomany
+
+|Simon Pesut
+|Aaron Schreiegg
+
+|
+|Simon Pesut
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Discord
+
+|am
+|Sa. 04.1.2024
+|Dauer
+|20 Minuten
+|===
+
+
+
+== Besprochene Themen
+
+* Wie verwendet man YouTrack?
+* Projektorganisation
+* Tasks und User stories
+
+
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Emil Silber
+a| - Künftig werden all Tasks und User Stories mit dem Projektleiter vereinbart und gesprochen
+- Die Sprints werden in einem Intervall von 1-2 Wochen stattfinden
+- Am Ende von jeden Sprint werden die Tasks und User stories für alle Projektmitglieder erstellt und bearbeitet
+- Folgende Begriffe sind erklärt worden und zu merken:
+1. *Priority*: Wie wichtig und relevant ist es für das Projekt?
+2. *State*: Im welchem Stadium ist der Task/User Story gerade?
+3. *Asignee*: Wer arbeitet gerade daran?
+4. *Sprints*: Im welchem Sprint befindet sich der Task/User story?
+5. *Ideal days*: In wie vielen Tagen sollte der Task fertig sein im besten Fall?
+6. *Estimation*: Jedes Mal wenn "Spent time" aktualisiert wird, wie lange dauert der Rest noch?
+7. *Spent time*: Was hast du gemacht?
+8. *Original estimation*: Wie lange dachtest du wird es dauern am Anfang?
+
+- Jedes Meeting wird auf YouTrack aufgezeichnet und das dazugehörige Protokoll wird hinzugefügt
+|===
