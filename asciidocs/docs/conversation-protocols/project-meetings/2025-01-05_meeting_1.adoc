@@ -1,0 +1,57 @@
+= Besprechungsprotokoll 05.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 05.01.2025 (1)*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Emil Silber
+|Filip Schauer
+
+|Filip Schauer
+|Axel Csomany
+
+|Simon Pesut
+|Aaron Schreiegg
+
+|
+|Simon Pesut
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Discord
+
+|am
+|So. 05.1.2024
+|Dauer
+|10 Minuten
+|===
+
+
+
+== Besprochene Themen
+
+* Tasks
+* Projektorganisation
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Emil Silber
+a|- Die Tasks werden von dem Projektleiter erstellt und besprochen (voraussichtlich am Anfang eines neues Sprintes). 
+Während an dem Task gearbeitet wird, müssen nur 4 Sachen laufend aktualisiert werden.
+1. *Anfang*: Sobald die Arbeit an dem Task beginnt, muss es im YouTrack zu "In progress" rübergezogen werden und es muss eine neue Branch mit der YouTrack ID erstellt werden
+2. *Spent time*: Während an der Task gearbeit wird, muss laufend eingegeben werden, was gemacht wurde und wie lange es gedauert hat.
+3. *Estimation*: Jedes Mal, wenn "Spent time" aktualisiert wurde, muss eine neue "Estimation" eingegeben werden. Die Estimation bezieht sich darauf, wie lange man circa noch benötigt um den Task zu vervollständigen
+4. *Ende*: Sollte man mit dem Task fertig sein wird es auf YouTrack ins "To verify" rübergezogen und eine Pull Request erstellt, voraufhin es überprüft wird und dann vom Projektleiter ins "Done" eingeteilt wird
+|===

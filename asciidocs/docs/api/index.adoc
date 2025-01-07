@@ -1,0 +1,17 @@
+= Summary of REST Interfaces
+
+[cols="3,2,5", options="header"]
+|===
+| Controller     | Method | Endpoint                  | Description
+
+| Spule          | GET    | `/api/Spule`             | Get all `Spule`
+| Spule          | GET    | `/api/Spule/{id}`        | Get specific `Spule` by ID
+| Spule          | POST   | `/api/Spule`             | Create a new `Spule`
+| Spule          | PUT    | `/api/Spule/{id}`        | Update a `Spule`
+| Spule          | DELETE | `/api/Spule/{id}`        | Delete a `Spule`
+| SpuleTyp       | GET    | `/api/SpuleTyp`          | Get all `SpuleTyp`
+| SpuleTyp       | GET    | `/api/SpuleTyp/{id}`     | Get specific `SpuleTyp` by ID
+| SpuleTyp       | POST   | `/api/SpuleTyp`          | Create a new `SpuleTyp`
+| SpuleTyp       | PUT    | `/api/SpuleTyp/{id}`     | Update a `SpuleTyp`
+| SpuleTyp       | DELETE | `/api/SpuleTyp/{id}`     | Delete a `SpuleTyp`
+|===
