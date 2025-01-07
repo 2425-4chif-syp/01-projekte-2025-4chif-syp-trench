@@ -1,6 +1,6 @@
 = Summary of REST Interfaces
 
-[cols="3,2,5", options="header"]
+[cols="3,2,3,5", options="header"]
 |===
 | Controller     | Method | Endpoint                  | Description
 
