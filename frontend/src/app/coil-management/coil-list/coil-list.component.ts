@@ -19,7 +19,7 @@ export class CoilListComponent {
 
     console.log(await this.backendService.getAllCoils());
 
-    //this.coilsService.selectCoil(newCoil.id);
+    //this.coilsService.selectCoil(newCoil.id!);
   }
 
   openCoil(coilId:number) {

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Coil } from './coil';
+import { NonNullAssert } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -22,15 +23,15 @@ export class CoilsService {
   }
 
   public addNewCoil():Coil {
-    const newId:number = this.coils.map(c => c.id).reduce((a, b) => Math.max(a, b), 0) + 1;
+    const newId:number = this.coils.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
     
     const newCoil:Coil = {
       id: newId,
-      ur: 0, 
-      einheit: 0,
-      auftragsnummer: 0,
-      auftragsPosNr: 0,
-      omega: 0
+      ur: null, 
+      einheit: null,
+      auftragsnummer: null,
+      auftragsPosNr: null,
+      omega: null
     };
 
     this.coils.push(newCoil);

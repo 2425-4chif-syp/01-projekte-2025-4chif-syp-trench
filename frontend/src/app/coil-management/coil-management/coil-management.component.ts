@@ -14,6 +14,7 @@ import { Coil } from '../../data/coil-data/coil';
 export class CoilManagementComponent {
   constructor(public coilsService:CoilsService) {} 
 
+  id: number | null = null;
   ur: number | null = null;
   einheit: number | null = null; 
   auftragsNr: number | null = null;
@@ -23,7 +24,7 @@ export class CoilManagementComponent {
   saveMessage: string | null = null;
 
   public get selectedCoilId():number|undefined {
-    return this.coilsService.selectedCoilCopy?.id;
+    return this.coilsService.selectedCoilCopy?.id!;
   }
   public set selectedCoilId(id:number) {
     this.coilsService.selectCoil(Number(id));
@@ -31,8 +32,8 @@ export class CoilManagementComponent {
 
   addNewCoil() {
     const newCoil: Coil = this.coilsService.addNewCoil();
-
-    this.coilsService.selectCoil(newCoil.id);
+    this.coilsService.selectCoil(newCoil.id!);
+    this.onCoilSelectionChange(newCoil.id!);
   }
 
   isFieldInvalid(field: string): boolean {
@@ -53,6 +54,8 @@ export class CoilManagementComponent {
       return;
     }
 
+    console.log(this.coilsService.coils)
+
     if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
       // This can happen if Angular sets selectedCoilId to a string for some reason
       throw new Error('selectedCoilId is not of type number'); 
@@ -64,8 +67,21 @@ export class CoilManagementComponent {
       alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
       return;
     }
+
+    const coil: Coil | undefined = this.coilsService.coils.find(c => c.id === this.selectedCoilId!);
   
-    this.coilsService.selectCoil(this.coilsService.selectedCoilCopy.id);
+    if (coil === undefined) {
+      throw new Error(`Coil with ID ${this.selectedCoilId} not found`);
+    }
+
+    coil.auftragsPosNr = this.auftragsPosNr;
+    coil.auftragsnummer = this.auftragsNr;
+    coil.ur = this.ur;
+    coil.omega = this.omega;
+    coil.einheit = this.einheit;
+
+    this.onCoilSelectionChange(this.selectedCoilId!)
+
 
     this.saveMessage = 'Änderungen gespeichert!';
     setTimeout(() => {
@@ -73,10 +89,24 @@ export class CoilManagementComponent {
     }, 3000);
   }
 
-  onCoilSelectionChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const coilId = Number(selectElement.value);
-    this.coilsService.selectCoil(coilId);
+  onCoilSelectionChange(coilId: number) {
+    const coilIdNumber:number = Number(coilId);
+    this.selectedCoilId = coilIdNumber;
+    
+    const coil = this.coilsService.coils.find(c => c.id === coilIdNumber);
+    console.log(coil);
+    console.log(coilIdNumber);
+    
+    if (coil === undefined) {
+      return;
+    }
+
+    this.auftragsPosNr = coil.auftragsPosNr;
+    this.auftragsNr = coil.auftragsnummer;
+    this.ur = coil.ur;
+    this.omega = coil.omega;
+    this.einheit = coil.einheit;
+
   }
 
   showDeleteModal = false;
@@ -92,7 +122,7 @@ export class CoilManagementComponent {
       return;
     }
 
-    this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id);
+    this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id!);
   }
 
   backToListing():void {
