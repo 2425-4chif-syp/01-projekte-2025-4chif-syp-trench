@@ -14,6 +14,10 @@ export class HomeComponent {
     this.router.navigate(['/coil-management']);
   }
 
+  navigateToCoilTypeManagement() {
+    this.router.navigate(['/coiltype-management']);
+  }
+
   navigateToMeasurementManagement() {
     this.router.navigate(['/measurement-management']);
   }

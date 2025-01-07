@@ -1,0 +1,6 @@
+<div *ngIf="coiltypesService.selectedCoiltypeCopy === null">
+    <app-coiltype-list />
+</div>
+<div *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
+    <app-coiltype-management />
+</div>

@@ -1,0 +1,39 @@
+.clickable-row {
+    cursor: pointer;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.scrollable-list {
+    flex-grow: 1; 
+    max-height: 79%; 
+    width: 100%; 
+    overflow-y: auto; 
+    margin-bottom: 20px; 
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    padding: 5px;
+}
+
+.table {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.new-coil-button {
+    position: relative;
+    margin-top: auto; 
+    align-self: center; 
+}
