@@ -1,0 +1,135 @@
+= Project Documentation: Dockerized Frontend, Backend, and Database
+
+== Overview
+This document provides step-by-step instructions for setting up and running the project, which includes a frontend (Angular), a backend (ASP.NET Core), and a PostgreSQL database. The project uses Docker for containerization to ensure seamless deployment and consistent environments.
+
+== Prerequisites
+1. Docker and Docker Compose installed on your system.
+2. Git installed for cloning the repository.
+3. Basic knowledge of Docker and terminal commands.
+
+== Project Structure
+```
+project-root/
+├── frontend/                # Angular frontend source code
+│   ├── Dockerfile          # Dockerfile for the Angular frontend
+│   ├── dist/               # Built frontend files (after `npm run build`)
+│   └── ...                 # Other Angular project files
+├── backend/                # ASP.NET Core backend source code
+│   ├── TrenchAPI/          # Backend project folder
+│   │   ├── Dockerfile      # Dockerfile for the backend
+│   │   ├── Program.cs      # Main entry point for the backend
+│   │   └── ...             # Other backend project files
+├── docker-compose.yml      # Docker Compose file for orchestrating services
+└── README.adoc             # Project documentation (this file)
+```
+
+== Setting Up the Project
+
+=== Clone the Repository
+```bash
+git clone <repository-url>
+cd project-root
+```
+
+=== Build and Run the Project
+Use Docker Compose to build and run all services (frontend, backend, and database):
+```bash
+docker-compose up --build
+```
+
+=== Accessing the Services
+1. **Frontend**: Open your browser and navigate to `http://localhost`.
+2. **Backend**: Access the Swagger API documentation at `http://localhost:5127/swagger/index.html`.
+3. **Database**:
+   - PostgreSQL: Accessible at `localhost:5432`.
+   - pgAdmin: Open `http://localhost:8085` and log in with:
+     - Email: `trench@4CHIF.com`
+     - Password: `TRENCH123`
+
+== Detailed Configuration
+
+=== Docker Compose File (`docker-compose.yml`)
+This file orchestrates the services:
+
+- **PostgreSQL**: Configured with a persistent volume for data storage.
+- **pgAdmin**: A web-based interface for managing PostgreSQL.
+- **Frontend**: Angular app served via Nginx.
+- **Backend**: ASP.NET Core API.
+
+=== Frontend Dockerfile (`frontend/Dockerfile`)
+```dockerfile
+FROM node:22.12.0-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+FROM nginx:stable
+COPY --from=build /app/dist/asc-visualization/ /usr/share/nginx/html
+EXPOSE 80
+```
+
+=== Backend Dockerfile (`backend/TrenchAPI/Dockerfile`)
+```dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 5127
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["TrenchAPI.csproj", "./"]
+RUN dotnet restore "TrenchAPI.csproj"
+COPY . .
+RUN dotnet build "TrenchAPI.csproj" -c Release -o /app/build
+FROM build AS publish
+RUN dotnet publish "TrenchAPI.csproj" -c Release -o /app/publish
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "TrenchAPI.dll"]
+```
+
+=== Backend Launch Settings (`backend/TrenchAPI/Properties/launchSettings.json`)
+Ensure the backend listens on the correct port (5127):
+```json
+{
+  "profiles": {
+    "http": {
+      "applicationUrl": "http://localhost:5127",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
+
+== Troubleshooting
+
+=== Common Issues
+1. **Frontend displays default Nginx page**:
+   - Ensure the `dist/asc-visualization` folder exists after building the Angular app.
+   - Verify the `COPY` command in the frontend Dockerfile points to the correct directory.
+
+2. **Backend not accessible**:
+   - Check if the backend container is running using `docker ps`.
+   - Verify the `ASPNETCORE_URLS` environment variable is set correctly.
+
+3. **Database connection issues**:
+   - Ensure the PostgreSQL container is running.
+   - Verify the connection string in the backend matches the database credentials.
+
+=== Logs
+Use the following commands to view logs for each service:
+
+- Frontend: `docker logs nginx_container`
+- Backend: `docker logs trenchapi_container`
+- Database: `docker logs postgres_container`
+- pgAdmin: `docker logs pgadmin_container`
+
+== Additional Notes
+- To rebuild a specific service, use `docker-compose up --build <service-name>`.
+- To stop all services, run `docker-compose down`.
+- For production, consider adding SSL and environment-specific configurations.
+
+
