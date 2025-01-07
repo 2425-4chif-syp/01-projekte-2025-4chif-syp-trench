@@ -30,11 +30,11 @@ https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Proje
 | Systemarchitektur, Schnittstellen, Protokollieren, Mocking
 | Trench-Team, Prof. Stütz
 
-| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_1_teacher[11.12.2024 (1)]*
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_teacher_1[11.12.2024 (1)]*
 | Messungen, Technologien, Schnittstellen
 | Trench-Team, Prof. Stütz
 
-| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_2_teacher[11.12.2024 (2)]*
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2024-12-11_teacher_2[11.12.2024 (2)]*
 | Zukünftige Organisation, Vorweihnachten
 | Trench-Team, Prof. Palitsch-Infanger
 |===
