@@ -1,8 +1,9 @@
 = Summary of REST Interfaces
 
-[cols="3,2,5", options="header"]
+https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *API*
+
 |===
-| Controller     | Method | Endpoint                  | Description
+| Controller     | Method | Endpoint                 | Description
 
 | Spule          | GET    | `/api/Spule`             | Get all `Spule`
 | Spule          | GET    | `/api/Spule/{id}`        | Get specific `Spule` by ID
