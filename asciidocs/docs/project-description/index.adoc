@@ -14,6 +14,24 @@ include::./project-team.adoc[]
 == System Architecture
 image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-architecture.png[]
 
+== Use-Case Diagram
+[plantuml]
+----
+@startuml
+left to right direction
+
+actor User
+actor Admin
+
+User --> (Aktuelle Ausrichtung ansehen)
+User --> (Richtige Ausrichtung finden)
+User --> (Visualisierte Daten ansehen)
+
+Admin --> (Daten auslesen und vergleichen)
+
+@enduml
+----
+
 == File Structure
 include::./file-structure.adoc[]
 

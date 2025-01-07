@@ -1,0 +1,16 @@
+[plantuml]
+----
+@startuml
+left to right direction
+
+actor User
+actor Admin
+
+User --> (Aktuelle Ausrichtung ansehen)
+User --> (Richtige Ausrichtung finden)
+User --> (Visualisierte Daten ansehen)
+
+Admin --> (Daten auslesen und vergleichen)
+
+@enduml
+----

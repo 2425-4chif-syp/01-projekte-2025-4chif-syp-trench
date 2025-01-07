@@ -50,7 +50,7 @@ image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-arch
 == Use-Case Diagram
 
 [.stretch]
-image::use_case.png[]
+image::use-case.png[]
 
 :plantuml-server-url: http://www.plantuml.com/plantuml
 
@@ -111,22 +111,7 @@ Anlage ---> Anlagetyp
 @enduml
 ----
 
-[plantuml]
-----
-@startuml
-left to right direction
 
-actor User
-actor Admin
-
-User --> (Aktuelle Ausrichtung ansehen)
-User --> (Richtige Ausrichtung finden)
-User --> (Visualisierte Daten ansehen)
-
-Admin --> (Daten auslesen und vergleichen)
-
-@enduml
-----
 
 [%auto-animate]
 == Frontend Concept 1: Spulentypenverwaltung
