@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Project Guidelines</title>
+<title>Untitled</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,133 +435,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="article toc2 toc-left">
+<body class="article">
 <div id="header">
-<h1>Project Guidelines</h1>
-<div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_steps_to_make_a_change">1. Steps to make a change</a></li>
-<li><a href="#_commit_message_guidelines">2. Commit Message Guidelines</a></li>
-<li><a href="#_branch_name_guidelines">3. Branch Name Guidelines</a></li>
-</ul>
-</div>
 </div>
 <div id="content">
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <strong>Project Guidelines</strong></p>
-</div>
-<div class="paragraph">
-<p>This document outlines the guidelines for the project, and how to work on it.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_steps_to_make_a_change"><a class="anchor" href="#_steps_to_make_a_change"></a>1. Steps to make a change</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Head to <a href="https://vm81.htl-leonding.ac.at/agiles/99-400/current">the project&#8217;s YouTrack board</a> and find a task that you want to work on, or create a new one.</p>
-</li>
-<li>
-<p>Create a new branch with the name following the <a href="#_branch_name_guidelines">Branch Name Guidelines</a>.</p>
-</li>
-<li>
-<p>Make your changes on that branch. Name your commits following the <a href="#_commit_message_guidelines">Commit Message Guidelines</a>. Your first commit on that branch should include "In Progress", and your last commit "To Verify" at the end of the message.</p>
-</li>
-<li>
-<p>Create a pull request and give an extensive description of what you did. Ping Filip, Emil or whoever else you think should take a look at the PR to review it on Discord, or just ping @everyone.</p>
-</li>
-<li>
-<p>If any changes are requested, make them and push them to the branch, then repeat step 4.</p>
-</li>
-<li>
-<p>Once the PR is approved, merge it into the main branch, delete the branch and move the task to "Done" in YouTrack. Do not forget to update the documentation if necessary.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>For small changes, these steps could be omitted, however it is best practice to follow them as closely as possible, and the <a href="#_commit_message_guidelines">Commit Message Guidelines</a> should always be followed.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_commit_message_guidelines"><a class="anchor" href="#_commit_message_guidelines"></a>2. Commit Message Guidelines</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The commit messages generally follow the <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a> specification, however with the first letter being capitalized, the message being in the past tense and YouTrack issue ID being included at the end the message.</p>
-</div>
-<div class="paragraph">
-<p>New features may look for example like this:</p>
-</div>
-<div class="listingblock">
+<div class="imageblock">
 <div class="content">
-<pre>feat: Added navbar #trench-7 To Verify</pre>
-</div>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">The types are</dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p><code>feat</code> for new features</p>
-</li>
-<li>
-<p><code>fix</code> for bug fixes</p>
-</li>
-<li>
-<p><code>docs</code> for documentation changes</p>
-</li>
-<li>
-<p><code>style</code> for changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)</p>
-</li>
-<li>
-<p><code>refactor</code> for code refactoring</p>
-</li>
-<li>
-<p><code>perf</code> for performance improvements</p>
-</li>
-<li>
-<p><code>test</code> for adding missing tests or correcting existing tests</p>
-</li>
-<li>
-<p><code>chore</code> for changes to the build process or auxiliary tools and libraries such as documentation generation</p>
-</li>
-</ul>
-</div>
-</dd>
-</dl>
-</div>
-<div class="paragraph">
-<p>The hash (in this case <code>#trench-7</code>) is the YouTrack issue ID.</p>
-</div>
-<div class="paragraph">
-<p>Afterwards, you can optionally specify where to move the task to, which would be <code>Open</code>, <code>In Progress</code>, <code>To Verify</code>, or <code>Done</code>.</p>
-</div>
-<div class="paragraph">
-<p>Multiple changes in a single commit should be seperated by commas, however it is best practice to keep commits as small and as frequent as possible.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_branch_name_guidelines"><a class="anchor" href="#_branch_name_guidelines"></a>3. Branch Name Guidelines</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The branch names follow a similar pattern to the <a href="./commit-message-guidelines">commit messages</a>, however without special characters and with the type being followed by an underscore, the words being separated by hyphens and the tense being in the present.</p>
-</div>
-<div class="paragraph">
-<p>For example, a branch name could look like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>feat_add-navbar</pre>
-</div>
-</div>
+<img src="images/diag-plantuml-md5-641fb1905e59afaa74631d9d1ef293b0.png" alt="Diagram" width="369" height="333">
 </div>
 </div>
 </div>
