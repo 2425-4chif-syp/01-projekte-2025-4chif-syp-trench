@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 11.12.2024 (2)</title>
+<title>Project Documentation: Dockerized Frontend, Backend, and Database</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -434,119 +434,443 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
+}
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
+}
+pre.rouge .gr {
+  color: #f6f8fa;
+}
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
+}
+pre.rouge .gi {
+  color: #116329;
+  background-color: #dafbe1;
+}
+pre.rouge .kc {
+  color: #0550ae;
+}
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
+}
+pre.rouge .nd {
+  color: #8250df;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
+  font-weight: bold;
+}
+</style>
+<style>
+    pre.rouge .hll {
+        background-color: #ffc;
+        display: block;
+    }
+    pre.rouge .hll * {
+        background-color: initial;
+    }
+</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 11.12.2024 (2)</h1>
+<h1>Project Documentation: Dockerized Frontend, Backend, and Database</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_besprochene_themen">1. Besprochene Themen</a></li>
-<li><a href="#_vereinbarungen_und_entscheidungen">2. Vereinbarungen und Entscheidungen</a></li>
+<li><a href="#_overview">1. Overview</a></li>
+<li><a href="#_prerequisites">2. Prerequisites</a></li>
+<li><a href="#_project_structure">3. Project Structure</a></li>
+<li><a href="#_setting_up_the_project">4. Setting Up the Project</a>
+<ul class="sectlevel2">
+<li><a href="#_clone_the_repository">4.1. Clone the Repository</a></li>
+<li><a href="#_build_and_run_the_project">4.2. Build and Run the Project</a></li>
+<li><a href="#_accessing_the_services">4.3. Accessing the Services</a></li>
+</ul>
+</li>
+<li><a href="#_detailed_configuration">5. Detailed Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_docker_compose_file_docker_compose_yml">5.1. Docker Compose File (<code>docker-compose.yml</code>)</a></li>
+<li><a href="#_frontend_dockerfile_frontenddockerfile">5.2. Frontend Dockerfile (<code>frontend/Dockerfile</code>)</a></li>
+<li><a href="#_backend_dockerfile_backendtrenchapidockerfile">5.3. Backend Dockerfile (<code>backend/TrenchAPI/Dockerfile</code>)</a></li>
+<li><a href="#_backend_launch_settings_backendtrenchapipropertieslaunchsettings_json">5.4. Backend Launch Settings (<code>backend/TrenchAPI/Properties/launchSettings.json</code>)</a></li>
+</ul>
+</li>
+<li><a href="#_troubleshooting">6. Troubleshooting</a>
+<ul class="sectlevel2">
+<li><a href="#_common_issues">6.1. Common Issues</a></li>
+<li><a href="#_logs">6.2. Logs</a></li>
+</ul>
+</li>
+<li><a href="#_additional_notes">7. Additional Notes</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>1. Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 11.12.2024 (2)</strong></p>
+<p>This document provides step-by-step instructions for setting up and running the project, which includes a frontend (Angular), a backend (ASP.NET Core), and a PostgreSQL database. The project uses Docker for containerization to ensure seamless deployment and consistent environments.</p>
 </div>
-<div class="paragraph">
-<p>Emil Silber</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Teilnehmer</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Anwesend</th>
-<th class="tableblock halign-left valign-top">Relevant Für</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Ort und Zeit</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ort</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Raum 147</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 11.12.2024</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7 Minuten</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_besprochene_themen"><a class="anchor" href="#_besprochene_themen"></a>1. Besprochene Themen</h2>
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>2. Prerequisites</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Docker and Docker Compose installed on your system.</p>
+</li>
+<li>
+<p>Git installed for cloning the repository.</p>
+</li>
+<li>
+<p>Basic knowledge of Docker and terminal commands.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_structure"><a class="anchor" href="#_project_structure"></a>3. Project Structure</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code>project-root/
+├── frontend/                # Angular frontend source code
+│   ├── Dockerfile          # Dockerfile for the Angular frontend
+│   ├── dist/               # Built frontend files (after `npm run build`)
+│   └── ...                 # Other Angular project files
+├── backend/                # ASP.NET Core backend source code
+│   ├── TrenchAPI/          # Backend project folder
+│   │   ├── Dockerfile      # Dockerfile for the backend
+│   │   ├── Program.cs      # Main entry point for the backend
+│   │   └── ...             # Other backend project files
+├── docker-compose.yml      # Docker Compose file for orchestrating services
+└── README.adoc             # Project documentation (this file)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_up_the_project"><a class="anchor" href="#_setting_up_the_project"></a>4. Setting Up the Project</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_clone_the_repository"><a class="anchor" href="#_clone_the_repository"></a>4.1. Clone the Repository</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">git clone &lt;repository-url&gt;
+<span class="nb">cd </span>project-root</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_build_and_run_the_project"><a class="anchor" href="#_build_and_run_the_project"></a>4.2. Build and Run the Project</h3>
+<div class="paragraph">
+<p>Use Docker Compose to build and run all services (frontend, backend, and database):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">docker-compose up <span class="nt">--build</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_accessing_the_services"><a class="anchor" href="#_accessing_the_services"></a>4.3. Accessing the Services</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Frontend</strong>: Open your browser and navigate to <code><a href="http://localhost" class="bare">http://localhost</a></code>.</p>
+</li>
+<li>
+<p><strong>Backend</strong>: Access the Swagger API documentation at <code><a href="http://localhost:5127/swagger/index.html" class="bare">http://localhost:5127/swagger/index.html</a></code>.</p>
+</li>
+<li>
+<p><strong>Database</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>PostgreSQL: Accessible at <code>localhost:5432</code>.</p>
+</li>
+<li>
+<p>pgAdmin: Open <code><a href="http://localhost:8085" class="bare">http://localhost:8085</a></code> and log in with:</p>
+</li>
+<li>
+<p>Email: <code>trench@4CHIF.com</code></p>
+</li>
+<li>
+<p>Password: <code>TRENCH123</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_detailed_configuration"><a class="anchor" href="#_detailed_configuration"></a>5. Detailed Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_docker_compose_file_docker_compose_yml"><a class="anchor" href="#_docker_compose_file_docker_compose_yml"></a>5.1. Docker Compose File (<code>docker-compose.yml</code>)</h3>
+<div class="paragraph">
+<p>This file orchestrates the services:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>PostgreSQL</strong>: Configured with a persistent volume for data storage.</p>
+</li>
+<li>
+<p><strong>pgAdmin</strong>: A web-based interface for managing PostgreSQL.</p>
+</li>
+<li>
+<p><strong>Frontend</strong>: Angular app served via Nginx.</p>
+</li>
+<li>
+<p><strong>Backend</strong>: ASP.NET Core API.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_frontend_dockerfile_frontenddockerfile"><a class="anchor" href="#_frontend_dockerfile_frontenddockerfile"></a>5.2. Frontend Dockerfile (<code>frontend/Dockerfile</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="dockerfile"><span class="k">FROM</span><span class="w"> </span><span class="s">node:22.12.0-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm <span class="nb">install</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm run build
+<span class="k">FROM</span><span class="s"> nginx:stable</span>
+<span class="k">COPY</span><span class="s"> --from=build /app/dist/asc-visualization/ /usr/share/nginx/html</span>
+<span class="k">EXPOSE</span><span class="s"> 80</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_backend_dockerfile_backendtrenchapidockerfile"><a class="anchor" href="#_backend_dockerfile_backendtrenchapidockerfile"></a>5.3. Backend Dockerfile (<code>backend/TrenchAPI/Dockerfile</code>)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="dockerfile"><span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/aspnet:8.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">base</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">EXPOSE</span><span class="s"> 5127</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/sdk:8.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
+<span class="k">WORKDIR</span><span class="s"> /src</span>
+<span class="k">COPY</span><span class="s"> ["TrenchAPI.csproj", "./"]</span>
+<span class="k">RUN </span>dotnet restore <span class="s2">"TrenchAPI.csproj"</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>dotnet build <span class="s2">"TrenchAPI.csproj"</span> <span class="nt">-c</span> Release <span class="nt">-o</span> /app/build
+<span class="k">FROM</span><span class="w"> </span><span class="s">build</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">publish</span>
+<span class="k">RUN </span>dotnet publish <span class="s2">"TrenchAPI.csproj"</span> <span class="nt">-c</span> Release <span class="nt">-o</span> /app/publish
+<span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">final</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> --from=publish /app/publish .</span>
+<span class="k">ENTRYPOINT</span><span class="s"> ["dotnet", "TrenchAPI.dll"]</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_backend_launch_settings_backendtrenchapipropertieslaunchsettings_json"><a class="anchor" href="#_backend_launch_settings_backendtrenchapipropertieslaunchsettings_json"></a>5.4. Backend Launch Settings (<code>backend/TrenchAPI/Properties/launchSettings.json</code>)</h3>
+<div class="paragraph">
+<p>Ensure the backend listens on the correct port (5127):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"profiles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"http"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"applicationUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:5127"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"environmentVariables"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ASPNETCORE_ENVIRONMENT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Development"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>6. Troubleshooting</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_common_issues"><a class="anchor" href="#_common_issues"></a>6.1. Common Issues</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Frontend displays default Nginx page</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensure the <code>dist/asc-visualization</code> folder exists after building the Angular app.</p>
+</li>
+<li>
+<p>Verify the <code>COPY</code> command in the frontend Dockerfile points to the correct directory.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Backend not accessible</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Check if the backend container is running using <code>docker ps</code>.</p>
+</li>
+<li>
+<p>Verify the <code>ASPNETCORE_URLS</code> environment variable is set correctly.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Database connection issues</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensure the PostgreSQL container is running.</p>
+</li>
+<li>
+<p>Verify the connection string in the backend matches the database credentials.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logs"><a class="anchor" href="#_logs"></a>6.2. Logs</h3>
+<div class="paragraph">
+<p>Use the following commands to view logs for each service:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Frontend: <code>docker logs nginx_container</code></p>
+</li>
+<li>
+<p>Backend: <code>docker logs trenchapi_container</code></p>
+</li>
+<li>
+<p>Database: <code>docker logs postgres_container</code></p>
+</li>
+<li>
+<p>pgAdmin: <code>docker logs pgadmin_container</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_notes"><a class="anchor" href="#_additional_notes"></a>7. Additional Notes</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Zukünftige Organisation</p>
+<p>To rebuild a specific service, use <code>docker-compose up --build &lt;service-name&gt;</code>.</p>
 </li>
 <li>
-<p>Vorweihnachten</p>
+<p>To stop all services, run <code>docker-compose down</code>.</p>
+</li>
+<li>
+<p>For production, consider adding SSL and environment-specific configurations.</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_vereinbarungen_und_entscheidungen"><a class="anchor" href="#_vereinbarungen_und_entscheidungen"></a>2. Vereinbarungen und Entscheidungen</h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all fit-content">
-<caption class="title">Table 3. Was wurde vereinbart?</caption>
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">wer</th>
-<th class="tableblock halign-left valign-top">möchte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Wir sollen alle zukünftige Fragen nicht an Dr.Köck stellen, sondern an Prof. Stütz oder Prof. Palitsch-Infanger</p>
-</li>
-<li>
-<p>Wir sollen etwas funktionierendes präsentieren können, am Besten etwas, was wir dem Kunden zeigen könnten</p>
-</li>
-</ul>
-</div></div></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 </div>
