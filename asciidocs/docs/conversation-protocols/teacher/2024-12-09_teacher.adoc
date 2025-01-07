@@ -67,7 +67,8 @@ a|
 
 - Prozessablaufdiagram:
 
-image::/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/protocol-images/diagram-9-12.png[]
+image::../protocol-images/2024-12-9_diagram.png[x]
+image::/01-projekte-2025-4chif-syp-trench/conversation-protocols/protocol-images/2024-12-11_diagram.png[x]
 
 Konfiguration => Einlesen der Messwerte => Ermitteln der Handlungsempfehlung 
 
