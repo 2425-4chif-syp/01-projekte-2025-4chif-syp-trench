@@ -668,7 +668,7 @@ pre.rouge .gs {
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Frontend</strong>: Open your browser and navigate to <code><a href="http://localhost" class="bare">http://localhost</a></code>.</p>
+<p><strong>Frontend</strong>: Open your browser and navigate to <code><a href="http://localhost:4200" class="bare">http://localhost:4200</a></code>.</p>
 </li>
 <li>
 <p><strong>Backend</strong>: Access the Swagger API documentation at <code><a href="http://localhost:5127/swagger/index.html" class="bare">http://localhost:5127/swagger/index.html</a></code>.</p>
@@ -728,12 +728,15 @@ pre.rouge .gs {
 <div class="content">
 <pre class="rouge highlight"><code data-lang="dockerfile"><span class="k">FROM</span><span class="w"> </span><span class="s">node:22.12.0-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
 <span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">RUN </span><span class="nb">rm</span> <span class="nt">-rf</span> ./<span class="k">*</span>
 <span class="k">COPY</span><span class="s"> package*.json ./</span>
 <span class="k">RUN </span>npm <span class="nb">install</span>
+<span class="k">RUN </span>npx ngcc <span class="nt">--properties</span> es2023 browser module main <span class="nt">--first-only</span> <span class="nt">--create-ivy-entry-points</span>
 <span class="k">COPY</span><span class="s"> . .</span>
-<span class="k">RUN </span>npm run build
+<span class="k">RUN </span>npm run build <span class="nt">--prod</span>
 <span class="k">FROM</span><span class="s"> nginx:stable</span>
-<span class="k">COPY</span><span class="s"> --from=build /app/dist/asc-visualization/ /usr/share/nginx/html</span>
+<span class="k">COPY</span><span class="s"> --from=build /app/dist/asc-visualization/browser/ /usr/share/nginx/html</span>
+<span class="k">COPY</span><span class="s"> ./nginx.conf /etc/nginx/nginx.conf</span>
 <span class="k">EXPOSE</span><span class="s"> 80</span></code></pre>
 </div>
 </div>
@@ -876,7 +879,7 @@ pre.rouge .gs {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-07 15:46:57 UTC
+Last updated 2025-01-07 19:17:29 UTC
 </div>
 </div>
 </body>
