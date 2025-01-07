@@ -23,7 +23,7 @@ export class CoiltypeManagementComponent {
   saveMessage: string | null = null;
 
   public get selectedCoiltypeId():number|undefined {
-    return this.coiltypesService.selectedCoiltypeCopy?.id;
+    return this.coiltypesService.selectedCoiltypeCopy?.id!;
   }
   public set selectedCoiltypeId(id:number) {
     this.coiltypesService.selectCoiltype(Number(id));
@@ -32,7 +32,8 @@ export class CoiltypeManagementComponent {
   addNewCoiltype() {
     const newCoiltype: Coiltype = this.coiltypesService.addNewCoiltype();
 
-    this.coiltypesService.selectCoiltype(newCoiltype.id);
+    this.coiltypesService.selectCoiltype(newCoiltype.id!);
+    this.onCoiltypeSelectionChange(newCoiltype.id!)
   }
 
   isFieldInvalid(field: string): boolean {
@@ -64,7 +65,20 @@ export class CoiltypeManagementComponent {
       alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
       return;
     }
+
+    const coilType: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId);
+
+    if (coilType === undefined){
+      throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
+    }
+
+    coilType.tK_Name = this.name;
+    coilType.schenkel = this.selectedNumber;
+    coilType.bb = this.bandbreite;
+    coilType.sh = this.schichthoehe;
+    coilType.dm = this.durchmesser;
   
+    this.onCoiltypeSelectionChange(this.selectedCoiltypeId!)
     this.coiltypesService.selectCoiltype(this.coiltypesService.selectedCoiltypeCopy.id);
 
     this.saveMessage = 'Änderungen gespeichert!';
@@ -73,10 +87,21 @@ export class CoiltypeManagementComponent {
     }, 3000);
   }
 
-  onCoiltypeSelectionChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const coiltypeId = Number(selectElement.value);
-    this.coiltypesService.selectCoiltype(coiltypeId);
+  onCoiltypeSelectionChange(coiltypeId: number) {
+    const coilTypeIdNumber: number = Number(coiltypeId);
+    this.selectedCoiltypeId = coilTypeIdNumber;
+
+    const coilType = this.coiltypesService.coiltypes.find(c => c.id === coilTypeIdNumber);
+
+    if (coilType === undefined){
+      return;
+    }
+
+    this.name = coilType.tK_Name;
+    this.selectedNumber = coilType.schenkel!;
+    this.bandbreite = coilType.bb;
+    this.schichthoehe = coilType.sh;
+    this.durchmesser = coilType.dm;
   }
 
   showDeleteModal = false;
@@ -92,7 +117,7 @@ export class CoiltypeManagementComponent {
       return;
     }
 
-    this.coiltypesService.deleteCoiltype(this.coiltypesService.selectedCoiltypeCopy.id);
+    this.coiltypesService.deleteCoiltype(this.coiltypesService.selectedCoiltypeCopy.id!);
   }
 
   backToListing():void {

@@ -16,7 +16,7 @@ export class CoiltypeListComponent {
   addNewCoiltype() {
     const newCoiltype: Coiltype = this.coiltypesService.addNewCoiltype();
 
-    //this.coiltypesService.selectCoiltype(newCoiltype.id);
+    //this.coiltypesService.selectCoiltype(newCoiltype.id!);
   }
 
   openCoiltype(coiltypeId:number) {

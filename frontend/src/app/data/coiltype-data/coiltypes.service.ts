@@ -22,15 +22,15 @@ export class CoiltypesService {
   }
 
   public addNewCoiltype():Coiltype {
-    const newId:number = this.coiltypes.map(c => c.id).reduce((a, b) => Math.max(a, b), 0) + 1;
+    const newId:number = this.coiltypes.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
     
     const newCoiltype:Coiltype = {
       id: newId,
       tK_Name: '',
-      schenkel: 0,
-      bb: 0,
-      sh: 0,
-      dm: 0,
+      schenkel: 2,
+      bb: null,
+      sh: null,
+      dm: null,
     };
 
     this.coiltypes.push(newCoiltype);

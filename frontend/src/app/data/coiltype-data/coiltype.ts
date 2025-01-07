@@ -1,8 +1,8 @@
 export interface Coiltype {
-    id: number;
+    id: number | null;
     tK_Name: string,
     schenkel: number,
-    bb: number;
-    sh: number;
-    dm: number;
+    bb: number | null;
+    sh: number | null;
+    dm: number | null;
 }

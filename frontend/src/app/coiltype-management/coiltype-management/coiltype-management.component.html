@@ -1,6 +1,6 @@
 <div class="coiltype-container">
   <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect"
-          [(ngModel)]="selectedCoiltypeId">
+          [(ngModel)]="selectedCoiltypeId" (ngModelChange)="onCoiltypeSelectionChange($event)">
     <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
       Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
     </option>
@@ -20,7 +20,7 @@
       <label for="nameInput">Spulentyp-Name:</label>
       <input type="text"
              class="form-control inputField"
-             id="nameInput"
+             id="name"
              placeholder="Spulenname eingeben"
              [(ngModel)]="name">
 
@@ -36,7 +36,7 @@
       <label for="diameterInput">Bandbreite (mm):</label>
       <input type="number"
              class="form-control inputField"
-             id="diameterInput"
+             id="bandbreite"
              placeholder="Bandbreite in mm"
              [(ngModel)]="bandbreite"
              min="0">
@@ -44,7 +44,7 @@
       <label for="arcLengthInput">Schichthöhe (mm):</label>
       <input type="number"
              class="form-control inputField"
-             id="arcLengthInput"
+             id="schichthoehe"
              placeholder="Schichthöhe in mm"
              [(ngModel)]="schichthoehe"
              min="0">
@@ -52,7 +52,7 @@
       <label for="endAreaInput">Durchmesser (mm)</label>
       <input type="number"
              class="form-control inputField"
-             id="endAreaInput"
+             id="durchmesser"
              placeholder="Durchmesser in mm"
              [(ngModel)]="durchmesser"
              min="0">
