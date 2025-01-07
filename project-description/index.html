@@ -545,6 +545,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
             branch-name-guidelines.adoc
             commit-message-guidelines.adoc
 
+    conversation-protocols/
+        &gt; Protocols of the conversations we had during the project.
+
+        index.adoc
+
+        lessons/
+            &gt; Things said in SYP-class that is relevant to the project.
+        teacher/
+            &gt; Private conversations with a teacher about the project.
+        project-meetings/
+            &gt; Intern conversations with the project team about the project.
+
     scripts/
         &gt; Files to help with building the documentation and more.
 
@@ -558,7 +570,95 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 
 frontend/
     &gt; The frontend of the project, written in Angular using HTML, TypeScript, SCSS and Bootstrap.
-    &gt; Todo: List structure in more detail in the frontend/ directory.
+
+    src/
+        app/
+            &gt; The main Angular components of the project.
+
+            coil-data/
+                &gt; Data and service for the coils.
+            coil-management/
+                &gt; The coil management component.
+                &gt; Contains a parent component, which loads
+                &gt; either the list of coils or the specific coil form.
+
+            coiltype-data/
+                &gt; Data and service for the coil types.
+            coiltype-management/
+                &gt; The coil type management component.
+                &gt; Contains a parent component, which loads
+                &gt; either the list of coil types or the specific coil type form.
+
+            home/
+                &gt; Home page of the application.
+
+            measurement-management/
+                &gt; Currently empty.
+
+            app.component.*
+                &gt; The main component of the application.
+
+            app.config.ts
+                &gt; Configuration of the application.
+
+            app.routes.ts
+                &gt; Routes of the application.
+        assets/
+            &gt; Images and other assets used in the frontend.
+
+        index.html
+        main.ts
+        styles.scss
+
+    angular.json
+    package.json
+    package-lock.json
+    tsconfig.json
+
+backend/TrenchAPI/
+    &gt; The backend of the project, written in C# using ASP.NET Core.
+
+    Controllers/
+        &gt; The controllers of the API.
+
+        SpuleController.cs
+            &gt; The controller for the coils.
+        SpuleTypController.cs
+            &gt; The controller for the coil types.
+
+    Models/
+        &gt; The data models of the API.
+
+        Spule.cs &amp; SpuleContext.cs
+            &gt; The model for the coils.
+        SpuleTyp.cs &amp; SpuleTypContext.cs
+            &gt; The model for the coil types.
+
+    Migrations/
+        &gt; Migrations for the database.
+
+    Services/
+        &gt; The services of the API.
+
+        CoilService.cs
+            &gt; The service for the coils.
+        CoilTypeService.cs
+            &gt; The service for the coil types.
+
+    Properties/
+        launchSettings.json
+
+    TrenchAPI.csproj
+        &gt; The project file of the API.
+
+    appsettings.json
+    appsettings.development.json
+
+    Program.cs
+        &gt; The main program file of the API.
+
+    TrenchAPI.sln
+        &gt; The Visual Studio solution file of the API.
 
 .gitignore
     &gt; Files and directories that should be ignored by Git.
@@ -587,7 +687,7 @@ README.md
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-07 10:57:57 UTC
+Last updated 2025-01-07 11:22:58 UTC
 </div>
 </div>
 </body>
