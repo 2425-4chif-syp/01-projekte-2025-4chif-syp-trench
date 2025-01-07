@@ -17,6 +17,7 @@ export class CoilListComponent {
   async addNewCoil() {
     const newCoil: Coil = this.coilsService.addNewCoil();
 
+    console.log("Sending request...");
     console.log(await this.backendService.getAllCoils());
 
     //this.coilsService.selectCoil(newCoil.id!);
