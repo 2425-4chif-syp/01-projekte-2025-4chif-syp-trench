@@ -7,6 +7,7 @@ namespace TrenchAPI.Models
     {
         [Key]
         public int SpuleID { get; set; }
+        
         [Column(TypeName = "decimal(8,3)")]
         public decimal Ur { get; set; }
 
