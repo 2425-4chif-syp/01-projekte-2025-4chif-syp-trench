@@ -11,12 +11,16 @@ import { Coiltype } from '../../data/coiltype-data/coiltype';
   styleUrl: './coiltype-list.component.scss'
 })
 export class CoiltypeListComponent {
-  constructor(public coiltypesService:CoiltypesService) {}
+  constructor(public coiltypesService:CoiltypesService) {
+    this.initialize();
+  }
 
-  addNewCoiltype() {
-    const newCoiltype: Coiltype = this.coiltypesService.addNewCoiltype();
+  async initialize() {
+    await this.coiltypesService.reloadCoiltypes();
+  }
 
-    //this.coiltypesService.selectCoiltype(newCoiltype.id);
+  async addNewCoiltype() {
+    console.log(await this.coiltypesService.addNewCoiltype());
   }
 
   openCoiltype(coiltypeId:number) {

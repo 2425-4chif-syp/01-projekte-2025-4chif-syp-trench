@@ -12,27 +12,25 @@ import { Coil } from '../../data/coil-data/coil';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService:CoilsService) {} 
-
-  ur: number | null = null;
-  einheit: number | null = null; 
-  auftragsNr: number | null = null;
-  auftragsPosNr: number | null = null;
-  omega: number | null = null;
-
+  constructor(public coilsService:CoilsService) {
+    
+  } 
   saveMessage: string | null = null;
 
+  public get selectedCoil():Coil|null {
+    return this.coilsService.selectedCoilCopy;
+  }
   public get selectedCoilId():number|undefined {
-    return this.coilsService.selectedCoilCopy?.id;
+    return this.coilsService.selectedCoilCopy?.id!;
   }
   public set selectedCoilId(id:number) {
     this.coilsService.selectCoil(Number(id));
   }
 
-  addNewCoil() {
-    const newCoil: Coil = this.coilsService.addNewCoil();
-
-    this.coilsService.selectCoil(newCoil.id);
+  async addNewCoil() {
+    const newCoil: Coil = await this.coilsService.addNewCoil();
+    this.coilsService.selectCoil(newCoil.id!);
+    this.onCoilSelectionChange(newCoil.id!);
   }
 
   isFieldInvalid(field: string): boolean {
@@ -48,7 +46,7 @@ export class CoilManagementComponent {
     return false;
   } 
   
-  saveChanges() {
+  async saveChanges() {
     if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
@@ -58,14 +56,23 @@ export class CoilManagementComponent {
       throw new Error('selectedCoilId is not of type number'); 
     }
     
-    const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
-    
-    if (invalidFields.length > 0) {
-      alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
-      return;
-    }
+      // TODO: Fix invalid fields
+      //const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
+
+      //if (invalidFields.length > 0) {
+      //  alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
+      //  return;
+      //}
+
+    const coil: Coil | undefined = this.coilsService.coils.find(c => c.id === this.selectedCoilId!);
   
-    this.coilsService.selectCoil(this.coilsService.selectedCoilCopy.id);
+    if (coil === undefined) {
+      throw new Error(`Coil with ID ${this.selectedCoilId} not found`);
+    }
+
+    await this.coilsService.updateCoil(this.selectedCoil!);
+
+    this.onCoilSelectionChange(this.selectedCoilId!);
 
     this.saveMessage = 'Änderungen gespeichert!';
     setTimeout(() => {
@@ -73,10 +80,10 @@ export class CoilManagementComponent {
     }, 3000);
   }
 
-  onCoilSelectionChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const coilId = Number(selectElement.value);
-    this.coilsService.selectCoil(coilId);
+  async onCoilSelectionChange(coilId: number) {
+    const coilIdNumber:number = Number(coilId);
+    
+    await this.coilsService.selectCoil(coilIdNumber);
   }
 
   showDeleteModal = false;
@@ -85,14 +92,14 @@ export class CoilManagementComponent {
     this.showDeleteModal = true;
   }
 
-  deleteCoil(): void {
+  async deleteCoil(): Promise<void> {
     this.showDeleteModal = false;
 
     if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
 
-    this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id);
+    await this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id!);
   }
 
   backToListing():void {
