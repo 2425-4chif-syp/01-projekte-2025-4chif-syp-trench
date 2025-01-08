@@ -3,7 +3,7 @@ using TrenchAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Setze ASPNETCORE_URLS explizit
+// Port
 builder.WebHost.UseUrls("http://0.0.0.0:5127");
 
 // Services hinzufügen
