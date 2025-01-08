@@ -23,10 +23,34 @@ export class BackendService {
       });
     });
   }
+  private httpPostRequest(endpoint:string, body:any): Promise<any> | void {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.post(this.apiUrl + endpoint, JSON.stringify(body), {
+        headers: { 'Content-Type': 'application/json', 'charset': 'utf-8' }
+      }).subscribe({
+        next: (response) => {
+          resolve(response);
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
+  }
 
-  private formatCoil(coil: any): Coil { 
+  private coilBackendToFrontend(coil: any): Coil { 
     return {
-      id: coil.id,
+      id: coil.spuleID,
+      ur: coil.ur,
+      einheit: coil.einheit,
+      auftragsnummer: coil.auftragsnummer,
+      auftragsPosNr: coil.auftragsPosNr,
+      omega: coil.omega,
+    };
+  }
+  private coilFrontendToBackend(coil: Coil): any {
+    return {
+      spuleID: coil.id,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
@@ -37,11 +61,16 @@ export class BackendService {
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
-    return response.map((coil: any) => (this.formatCoil(coil)));
+    return response.map((coil: any) => (this.coilBackendToFrontend(coil)));
   }
 
   public async getCoil(id: number): Promise<Coil> {
     const response:any = await this.httpGetRequest('Spule/' + id);
-    return this.formatCoil(response);
+    return this.coilBackendToFrontend(response);
+  }
+
+  public async addCoil(coil: Coil): Promise<Coil> {
+    const response:any = await this.httpPostRequest('Spule', this.coilFrontendToBackend(coil));
+    return this.coilBackendToFrontend(response);
   }
 }

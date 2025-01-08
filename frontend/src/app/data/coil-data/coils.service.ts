@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Coil } from './coil';
 import { NonNullAssert } from '@angular/compiler';
+import { BackendService } from '../../backend.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class CoilsService {
   public coils: Coil[] = [];
   public selectedCoilCopy:Coil|null = null;
 
-  constructor() { }
+  constructor(private backendService:BackendService) { }
 
   public getCopyCoil(id:number):Coil {
     id = Number(id);
@@ -22,21 +23,23 @@ export class CoilsService {
     return {...original};
   }
 
-  public addNewCoil():Coil {
-    const newId:number = this.coils.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
+  public async addNewCoil():Promise<Coil> {
+    //const newId:number = this.coils.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
     
     const newCoil:Coil = {
-      id: newId,
-      ur: null, 
-      einheit: null,
-      auftragsnummer: null,
-      auftragsPosNr: null,
-      omega: null
+      id: 0,
+      ur: 0, 
+      einheit: 0,
+      auftragsnummer: 0,
+      auftragsPosNr: 0,
+      omega: 0
     };
 
-    this.coils.push(newCoil);
+    const response:Coil = await this.backendService.addCoil(newCoil);
 
-    return newCoil;
+    this.coils.push(response);
+
+    return response;
   }
 
   public deleteCoil(id: number): void {

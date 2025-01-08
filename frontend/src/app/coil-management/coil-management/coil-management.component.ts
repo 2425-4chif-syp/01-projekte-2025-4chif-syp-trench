@@ -30,8 +30,8 @@ export class CoilManagementComponent {
     this.coilsService.selectCoil(Number(id));
   }
 
-  addNewCoil() {
-    const newCoil: Coil = this.coilsService.addNewCoil();
+  async addNewCoil() {
+    const newCoil: Coil = await this.coilsService.addNewCoil();
     this.coilsService.selectCoil(newCoil.id!);
     this.onCoilSelectionChange(newCoil.id!);
   }
