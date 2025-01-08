@@ -12,17 +12,14 @@ import { Coil } from '../../data/coil-data/coil';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService:CoilsService) {} 
-
-  id: number | null = null;
-  ur: number | null = null;
-  einheit: number | null = null; 
-  auftragsNr: number | null = null;
-  auftragsPosNr: number | null = null;
-  omega: number | null = null;
-
+  constructor(public coilsService:CoilsService) {
+    
+  } 
   saveMessage: string | null = null;
 
+  public get selectedCoil():Coil|null {
+    return this.coilsService.selectedCoilCopy;
+  }
   public get selectedCoilId():number|undefined {
     return this.coilsService.selectedCoilCopy?.id!;
   }
@@ -49,12 +46,10 @@ export class CoilManagementComponent {
     return false;
   } 
   
-  saveChanges() {
+  async saveChanges() {
     if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
-
-    console.log(this.coilsService.coils)
 
     if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
       // This can happen if Angular sets selectedCoilId to a string for some reason
@@ -74,14 +69,9 @@ export class CoilManagementComponent {
       throw new Error(`Coil with ID ${this.selectedCoilId} not found`);
     }
 
-    coil.auftragsPosNr = this.auftragsPosNr;
-    coil.auftragsnummer = this.auftragsNr;
-    coil.ur = this.ur;
-    coil.omega = this.omega;
-    coil.einheit = this.einheit;
+    await this.coilsService.updateCoil(this.selectedCoil!);
 
-    this.onCoilSelectionChange(this.selectedCoilId!)
-
+    this.onCoilSelectionChange(this.selectedCoilId!);
 
     this.saveMessage = 'Änderungen gespeichert!';
     setTimeout(() => {
@@ -89,24 +79,10 @@ export class CoilManagementComponent {
     }, 3000);
   }
 
-  onCoilSelectionChange(coilId: number) {
+  async onCoilSelectionChange(coilId: number) {
     const coilIdNumber:number = Number(coilId);
-    this.selectedCoilId = coilIdNumber;
     
-    const coil = this.coilsService.coils.find(c => c.id === coilIdNumber);
-    console.log(coil);
-    console.log(coilIdNumber);
-    
-    if (coil === undefined) {
-      return;
-    }
-
-    this.auftragsPosNr = coil.auftragsPosNr;
-    this.auftragsNr = coil.auftragsnummer;
-    this.ur = coil.ur;
-    this.omega = coil.omega;
-    this.einheit = coil.einheit;
-
+    await this.coilsService.selectCoil(coilIdNumber);
   }
 
   showDeleteModal = false;

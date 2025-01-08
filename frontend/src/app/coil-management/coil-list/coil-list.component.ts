@@ -12,7 +12,13 @@ import { BackendService } from '../../backend.service';
   styleUrl: './coil-list.component.scss'
 })
 export class CoilListComponent {
-  constructor(public coilsService:CoilsService, private backendService:BackendService) {}
+  constructor(public coilsService:CoilsService) {
+    this.initialize();
+  }
+
+  async initialize() {
+    await this.coilsService.reloadCoils();
+  }
 
   async addNewCoil() {
     //const newCoil: Coil = this.coilsService.addNewCoil();

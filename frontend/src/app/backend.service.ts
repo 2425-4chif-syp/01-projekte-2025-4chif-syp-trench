@@ -37,6 +37,20 @@ export class BackendService {
       });
     });
   }
+  private httpPutRequest(endpoint:string, body:any): Promise<any> | void {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.put(this.apiUrl + endpoint, JSON.stringify(body), {
+        headers: { 'Content-Type': 'application/json', 'charset': 'utf-8' }
+      }).subscribe({
+        next: (response) => {
+          resolve(response);
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
+  }
 
   private coilBackendToFrontend(coil: any): Coil { 
     return {
@@ -72,5 +86,9 @@ export class BackendService {
   public async addCoil(coil: Coil): Promise<Coil> {
     const response:any = await this.httpPostRequest('Spule', this.coilFrontendToBackend(coil));
     return this.coilBackendToFrontend(response);
+  }
+
+  public async updateCoil(coil: Coil): Promise<void> {
+    await this.httpPutRequest('Spule/' + coil.id, this.coilFrontendToBackend(coil));
   }
 }

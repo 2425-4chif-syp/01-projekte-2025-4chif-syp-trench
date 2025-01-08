@@ -23,6 +23,27 @@ export class CoilsService {
     return {...original};
   }
 
+  public async reloadCoils():Promise<void> {
+    this.coils = await this.backendService.getAllCoils();
+  }
+  public async reloadCoilWithId(id:number):Promise<Coil> {
+    id = Number(id);
+
+    const coil:Coil = await this.backendService.getCoil(id);
+    const index:number = this.coils.findIndex(c => c.id === id);
+    if (index === -1) {
+      this.coils.push(coil);
+    } else {
+      this.coils[index] = coil;
+    }
+
+    return coil;  
+  }
+  
+  public async updateCoil(coil:Coil):Promise<void> {
+    await this.backendService.updateCoil(coil);
+  }
+
   public async addNewCoil():Promise<Coil> {
     //const newId:number = this.coils.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
     
@@ -54,10 +75,13 @@ export class CoilsService {
     this.selectedCoilCopy = null;
   }
 
-  selectCoil(coilId: number) {
+  async selectCoil(coilId: number) {
     // Not sure why I have to cast the coilId to a number here, but it seems to be necessary. 
     // Angular seems to pass the coilId as a string, despite what the type definition says.
     const coilIdNumber:number = Number(coilId);
+
+    await this.reloadCoilWithId(coilIdNumber);
+
     this.selectedCoilCopy = this.getCopyCoil(coilIdNumber);
   }
 }
