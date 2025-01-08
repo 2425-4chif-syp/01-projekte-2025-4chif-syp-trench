@@ -50,6 +50,18 @@ export class BackendService {
         }
       });
     });
+  }  
+  private httpDeleteRequest(endpoint:string): Promise<any> | void {
+    return new Promise<any>((resolve, reject) => {
+      this.httpClient.delete(this.apiUrl + endpoint).subscribe({
+        next: (response) => {
+          resolve(response);
+        },
+        error: (error) => {
+          reject(error);
+        }
+      });
+    });
   }
 
   private coilBackendToFrontend(coil: any): Coil { 
@@ -90,5 +102,9 @@ export class BackendService {
 
   public async updateCoil(coil: Coil): Promise<void> {
     await this.httpPutRequest('Spule/' + coil.id, this.coilFrontendToBackend(coil));
+  }
+
+  public async deleteCoil(coil: Coil): Promise<void> {
+    await this.httpDeleteRequest('Spule/' + coil.id);
   }
 }

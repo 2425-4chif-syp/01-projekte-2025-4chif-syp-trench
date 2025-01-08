@@ -91,14 +91,14 @@ export class CoilManagementComponent {
     this.showDeleteModal = true;
   }
 
-  deleteCoil(): void {
+  async deleteCoil(): Promise<void> {
     this.showDeleteModal = false;
 
     if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
 
-    this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id!);
+    await this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id!);
   }
 
   backToListing():void {

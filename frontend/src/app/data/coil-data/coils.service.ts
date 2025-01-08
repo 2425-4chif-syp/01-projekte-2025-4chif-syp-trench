@@ -63,7 +63,7 @@ export class CoilsService {
     return response;
   }
 
-  public deleteCoil(id: number): void {
+  public async deleteCoil(id: number): Promise<void> {
     id = Number(id);
 
     const index = this.coils.findIndex(c => c.id === id);
@@ -71,11 +71,13 @@ export class CoilsService {
       throw new Error(`Coil with ID ${id} not found.`);
     }
 
+    await this.backendService.deleteCoil(this.coils[index]);
+
     this.coils.splice(index, 1);
     this.selectedCoilCopy = null;
   }
 
-  async selectCoil(coilId: number) {
+  public async selectCoil(coilId: number) {
     // Not sure why I have to cast the coilId to a number here, but it seems to be necessary. 
     // Angular seems to pass the coilId as a string, despite what the type definition says.
     const coilIdNumber:number = Number(coilId);
