@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Coil } from './data/coil-data/coil';
+import { Coiltype } from './data/coiltype-data/coiltype';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,28 @@ export class BackendService {
       omega: coil.omega,
     };
   }
+  
+  private coiltypeBackendToFrontend(coiltype: any): Coiltype {
+    return {
+      id: coiltype.spulenTypID,
+      tK_Name: coiltype.tK_Name,
+      schenkel: coiltype.schenkel,
+      bb: coiltype.bb,
+      sh: coiltype.sh,
+      dm: coiltype.dm,
+    };
+  }
+  private coiltypeFrontendToBackend(coiltype: Coiltype): any {
+    return {
+      spulenTypID: coiltype.id,
+      tK_Name: coiltype.tK_Name,
+      schenkel: coiltype.schenkel,
+      bb: coiltype.bb,
+      sh: coiltype.sh,
+      dm: coiltype.dm,
+    };
+  }
+
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
@@ -106,5 +129,29 @@ export class BackendService {
 
   public async deleteCoil(coil: Coil): Promise<void> {
     await this.httpDeleteRequest('Spule/' + coil.id);
+  }
+  
+  
+  public async getAllCoiltypes(): Promise<Coiltype[]> {
+    const response:any = await this.httpGetRequest('Spule');
+    return response.map((coiltype: any) => (this.coiltypeBackendToFrontend(coiltype)));
+  }
+
+  public async getCoiltype(id: number): Promise<Coiltype> {
+    const response:any = await this.httpGetRequest('Spule/' + id);
+    return this.coiltypeBackendToFrontend(response);
+  }
+
+  public async addCoiltype(coiltype: Coiltype): Promise<Coiltype> {
+    const response:any = await this.httpPostRequest('Spule', this.coiltypeFrontendToBackend(coiltype));
+    return this.coiltypeBackendToFrontend(response);
+  }
+
+  public async updateCoiltype(coiltype: Coiltype): Promise<void> {
+    await this.httpPutRequest('Spule/' + coiltype.id, this.coiltypeFrontendToBackend(coiltype));
+  }
+
+  public async deleteCoiltype(coiltype: Coiltype): Promise<void> {
+    await this.httpDeleteRequest('Spule/' + coiltype.id);
   }
 }
