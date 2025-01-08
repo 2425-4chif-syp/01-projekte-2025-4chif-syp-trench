@@ -21,15 +21,7 @@ export class CoilListComponent {
   }
 
   async addNewCoil() {
-    //const newCoil: Coil = this.coilsService.addNewCoil();
-
-    console.log("Sending requests...");
-    
     console.log(await this.coilsService.addNewCoil());
-
-    //console.log(await this.backendService.getAllCoils());
-
-    //this.coilsService.selectCoil(newCoil.id!);
   }
 
   openCoil(coilId:number) {
