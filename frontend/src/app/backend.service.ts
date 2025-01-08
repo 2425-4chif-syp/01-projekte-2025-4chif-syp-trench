@@ -131,27 +131,27 @@ export class BackendService {
     await this.httpDeleteRequest('Spule/' + coil.id);
   }
   
-  
+
   public async getAllCoiltypes(): Promise<Coiltype[]> {
-    const response:any = await this.httpGetRequest('Spule');
+    const response:any = await this.httpGetRequest('SpuleTyp');
     return response.map((coiltype: any) => (this.coiltypeBackendToFrontend(coiltype)));
   }
 
   public async getCoiltype(id: number): Promise<Coiltype> {
-    const response:any = await this.httpGetRequest('Spule/' + id);
+    const response:any = await this.httpGetRequest('SpuleTyp/' + id);
     return this.coiltypeBackendToFrontend(response);
   }
 
   public async addCoiltype(coiltype: Coiltype): Promise<Coiltype> {
-    const response:any = await this.httpPostRequest('Spule', this.coiltypeFrontendToBackend(coiltype));
+    const response:any = await this.httpPostRequest('SpuleTyp', this.coiltypeFrontendToBackend(coiltype));
     return this.coiltypeBackendToFrontend(response);
   }
 
   public async updateCoiltype(coiltype: Coiltype): Promise<void> {
-    await this.httpPutRequest('Spule/' + coiltype.id, this.coiltypeFrontendToBackend(coiltype));
+    await this.httpPutRequest('SpuleTyp/' + coiltype.id, this.coiltypeFrontendToBackend(coiltype));
   }
 
   public async deleteCoiltype(coiltype: Coiltype): Promise<void> {
-    await this.httpDeleteRequest('Spule/' + coiltype.id);
+    await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
   }
 }
