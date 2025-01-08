@@ -1,8 +1,8 @@
 export interface Coil {
-    id: number;
-    ur: number;
-    einheit: number;
-    auftragsnummer: number;
-    auftragsPosNr: number;
-    omega: number;
+    id: number | null;
+    ur: number | null;
+    einheit: number | null;
+    auftragsnummer: number | null;
+    auftragsPosNr: number | null;
+    omega: number | null;
 }

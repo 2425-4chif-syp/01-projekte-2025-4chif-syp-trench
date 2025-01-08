@@ -1,6 +1,6 @@
 <div class="coiltype-container">
   <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect"
-          [(ngModel)]="selectedCoiltypeId">
+          [(ngModel)]="selectedCoiltypeId" (ngModelChange)="onCoiltypeSelectionChange($event)">
     <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
       Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
     </option>
@@ -13,21 +13,19 @@
 </div>
 
 <div class="container">
-
-  <div class="panel">
-
+  <div class="panel" *ngIf="selectedCoiltype !== null">
     <div class="input-container">
       <label for="nameInput">Spulentyp-Name:</label>
       <input type="text"
              class="form-control inputField"
-             id="nameInput"
+             id="name"
              placeholder="Spulenname eingeben"
-             [(ngModel)]="name">
+             [(ngModel)]="selectedCoiltype.tK_Name">
 
       <label for="numberSelect">Schenkelanzahl:</label>
       <select class="form-control form-select"
               id="numberSelect"
-              [(ngModel)]="selectedNumber">
+              [(ngModel)]="selectedCoiltype.schenkel">
         <option [value]="2">2</option>
         <option [value]="3">3</option>
         <option [value]="4">4</option>
@@ -36,25 +34,25 @@
       <label for="diameterInput">Bandbreite (mm):</label>
       <input type="number"
              class="form-control inputField"
-             id="diameterInput"
+             id="bandbreite"
              placeholder="Bandbreite in mm"
-             [(ngModel)]="bandbreite"
+             [(ngModel)]="selectedCoiltype.bb"
              min="0">
 
       <label for="arcLengthInput">Schichthöhe (mm):</label>
       <input type="number"
              class="form-control inputField"
-             id="arcLengthInput"
+             id="schichthoehe"
              placeholder="Schichthöhe in mm"
-             [(ngModel)]="schichthoehe"
+             [(ngModel)]="selectedCoiltype.sh"
              min="0">
 
       <label for="endAreaInput">Durchmesser (mm)</label>
       <input type="number"
              class="form-control inputField"
-             id="endAreaInput"
+             id="durchmesser"
              placeholder="Durchmesser in mm"
-             [(ngModel)]="durchmesser"
+             [(ngModel)]="selectedCoiltype.dm"
              min="0">
     </div>
 
@@ -80,6 +78,11 @@
 
   </div> 
 
+  <div *ngIf="selectedCoiltype === null">
+    <span class="text-danger">
+      Fehler: Spule konnte nicht geladen werden. 
+    </span>
+  </div>
 </div> 
 
 <div class="modal fade"

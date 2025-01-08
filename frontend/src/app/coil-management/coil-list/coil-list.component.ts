@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CoilsService } from '../../data/coil-data/coils.service';
 import { Coil } from '../../data/coil-data/coil';
+import { BackendService } from '../../backend.service';
 
 @Component({
   selector: 'app-coil-list',
@@ -11,12 +12,16 @@ import { Coil } from '../../data/coil-data/coil';
   styleUrl: './coil-list.component.scss'
 })
 export class CoilListComponent {
-  constructor(public coilsService:CoilsService) {}
+  constructor(public coilsService:CoilsService) {
+    this.initialize();
+  }
 
-  addNewCoil() {
-    const newCoil: Coil = this.coilsService.addNewCoil();
+  async initialize() {
+    await this.coilsService.reloadCoils();
+  }
 
-    //this.coilsService.selectCoil(newCoil.id);
+  async addNewCoil() {
+    console.log(await this.coilsService.addNewCoil());
   }
 
   openCoil(coilId:number) {

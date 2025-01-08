@@ -27,13 +27,40 @@
     padding: 5px;
 }
 
-.table {
-    width: 100%;
-    margin: 0 auto;
-}
-
 .new-coil-button {
     position: relative;
     margin-top: auto; 
     align-self: center; 
 }
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0px;
+    border-radius: 0px;
+    overflow: hidden;
+    text-align: left;
+
+    th:first-child {
+        border-top-left-radius: 5px; 
+      }
+      
+      th:last-child {
+        border-top-right-radius: 5px;
+      }
+
+    th, td {
+        padding: 10px; 
+        text-align: center;
+        border: 1px solid #ddd; 
+    }
+
+    th {
+        background-color: #ffffff; /* Hintergrund für die Kopfzeile */
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+}
+
