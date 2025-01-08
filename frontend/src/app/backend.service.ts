@@ -88,7 +88,7 @@ export class BackendService {
   
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
-      id: coiltype.spulenTypID,
+      id: coiltype.spulenTypId,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -98,7 +98,7 @@ export class BackendService {
   }
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      spulenTypID: coiltype.id,
+      spulenTypId: coiltype.id,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
