@@ -4,6 +4,7 @@
             <thead>
                 <tr>
                     <th (click)="sortTable('id')">Spule</th>
+                    <th (click)="sortTable('coiltypeId')">Spulentyp</th>
                     <th (click)="sortTable('auftragsnummer')">AuftragsNr</th>
                     <th (click)="sortTable('auftragsPosNr')">AuftragsPosNr</th>
                     <th (click)="sortTable('ur')">UR</th>
@@ -14,6 +15,7 @@
             <tbody>
                 <tr *ngFor="let coil of sortedCoils" class="clickable-row" (click)="openCoil(coil.id!)">
                     <td>Spule #{{ coil.id }}</td>
+                    <td>{{ coil.coiltypeId }}</td>
                     <td>{{ coil.auftragsnummer }}</td>
                     <td>{{ coil.auftragsPosNr }}</td>
                     <td>{{ coil.ur }}</td>
