@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrenchAPI.Context;
 using TrenchAPI.Models;
 
 namespace TrenchAPI.Controllers
@@ -13,9 +14,9 @@ namespace TrenchAPI.Controllers
     [ApiController]
     public class SpuleTypController : ControllerBase
     {
-        private readonly SpuleTypContext _context;
+        private readonly WebDbContext _context;
 
-        public SpuleTypController(SpuleTypContext context)
+        public SpuleTypController(WebDbContext context)
         {
             _context = context;
         }
@@ -46,7 +47,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSpuleTyp(int id, SpuleTyp spuleTyp)
         {
-            if (id != spuleTyp.SpulenTypId)
+            if (id != spuleTyp.SpuleTypId)
             {
                 return BadRequest();
             }
@@ -80,7 +81,7 @@ namespace TrenchAPI.Controllers
             _context.SpuleTyp.Add(spuleTyp);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpulenTypId }, spuleTyp);
+            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpuleTypId }, spuleTyp);
         }
 
         // DELETE: api/SpuleTyp/5
@@ -101,7 +102,7 @@ namespace TrenchAPI.Controllers
 
         private bool SpuleTypExists(int id)
         {
-            return _context.SpuleTyp.Any(e => e.SpulenTypId == id);
+            return _context.SpuleTyp.Any(e => e.SpuleTypId == id);
         }
     }
 }
