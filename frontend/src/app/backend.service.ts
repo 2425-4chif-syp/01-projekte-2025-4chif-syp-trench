@@ -68,7 +68,7 @@ export class BackendService {
   private coilBackendToFrontend(coil: any): Coil { 
     return {
       id: coil.spuleID,
-      coiltypeId: coil.coiltypeId,
+      coiltypeId: coil.spulenTypenID,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
@@ -112,6 +112,7 @@ export class BackendService {
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
+    console.log(response.map((coil: any) => coil));
     return response.map((coil: any) => (this.coilBackendToFrontend(coil)));
   }
 

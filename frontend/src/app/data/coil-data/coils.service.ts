@@ -8,7 +8,7 @@ import { BackendService } from '../../backend.service';
 })
 export class CoilsService {
   public coils: Coil[] = [];
-  public selectedCoilCopy:Coil|null = null;
+  public selectedCoilCopy: Coil|null = null;
 
   constructor(private backendService:BackendService) { }
 
@@ -22,10 +22,12 @@ export class CoilsService {
     
     return {...original};
   }
+  
 
   public async reloadCoils():Promise<void> {
     this.coils = await this.backendService.getAllCoils();
   }
+  
   public async reloadCoilWithId(id:number):Promise<Coil> {
     id = Number(id);
 
@@ -42,13 +44,14 @@ export class CoilsService {
   
   public async updateCoil(coil:Coil):Promise<void> {
     await this.backendService.updateCoil(coil);
-  }
+  }  
 
   public async addNewCoil():Promise<Coil> {
     //const newId:number = this.coils.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
     
     const newCoil:Coil = {
       id: 0,
+      coiltypeId: 0,
       ur: 0, 
       einheit: 0,
       auftragsnummer: 0,

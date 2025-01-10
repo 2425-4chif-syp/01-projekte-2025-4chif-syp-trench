@@ -5,29 +5,28 @@ namespace TrenchAPI.Models
 {
     public class Spule
     {
-        [Key]
-        public int SpuleID { get; set; }
+    [Key]
+    public int SpuleID { get; set; }
 
-        [Column(Typename="int")]
-        public int SpulenTypenId { get; set; }
+    [Column(TypeName = "int")]
+    public int SpulenTypId { get; set; }
 
-        [Foreignkey(nameof(SpulenTypenId))]
-        public Spule Spule { get; set; }
+    [ForeignKey(nameof(SpulenTypId))]
+    public SpuleTyp? SpulenTyp { get; set; } 
 
-        [Column(TypeName = "decimal(8,3)")]
-        public decimal Ur { get; set; }
+    [Column(TypeName = "decimal(8,3)")]
+    public decimal Ur { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Einheit { get; set; }
+    [Column(TypeName = "int")]
+    public int Einheit { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Auftragsnummer { get; set; }
+    [Column(TypeName = "int")]
+    public int Auftragsnummer { get; set; }
 
-        [Column(TypeName = "int")]
-        public int AuftragsPosNr { get; set; }
+    [Column(TypeName = "int")]
+    public int AuftragsPosNr { get; set; }
 
-        [Column(TypeName = "decimal(8,5)")]
-        public decimal omega { get; set; }
-
+    [Column(TypeName = "decimal(8,5)")]
+    public decimal omega { get; set; }
     }
 }

@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoilsService } from '../../data/coil-data/coils.service';
 import { Coil } from '../../data/coil-data/coil';
+import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
+import { Coiltype } from '../../data/coiltype-data/coiltype';
 
 @Component({
   selector: 'app-coil-management',
@@ -12,12 +14,15 @@ import { Coil } from '../../data/coil-data/coil';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService:CoilsService) {
-    
-  } 
+  constructor(public coilsService:CoilsService, public coiltypesService: CoiltypesService) {
+    this.coiltypesService.reloadCoiltypes();
+} 
+  
   saveMessage: string | null = null;
 
   public get selectedCoil():Coil|null {
+    //console.log(this.coilsService.selectedCoilCopy);
+    //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)! 
     return this.coilsService.selectedCoilCopy;
   }
   public get selectedCoilId():number|undefined {
@@ -33,7 +38,7 @@ export class CoilManagementComponent {
     this.onCoilSelectionChange(newCoil.id!);
   }
 
-  isFieldInvalid(field: string): boolean {
+  isFieldInvalid(field: string): boolean {  
     /*if (field === 'bandbreite' && this.bandbreite === null) {
       return true;
     }
@@ -47,6 +52,9 @@ export class CoilManagementComponent {
   } 
   
   async saveChanges() {
+    console.log(this.coiltypesService.coiltypes);
+    console.log("test: " + this.coilsService.selectedCoilCopy?.coiltypeId + " " + this.coilsService.selectedCoilCopy?.auftragsnummer)
+    console.log(this.coiltypesService.coiltypes)
     if (this.coilsService.selectedCoilCopy === null) {
       return;
     }
@@ -70,7 +78,13 @@ export class CoilManagementComponent {
       throw new Error(`Coil with ID ${this.selectedCoilId} not found`);
     }
 
+    //this.coilTypeSelected =  this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)!;
+    console.log("SSSS:" + this.selectedCoil?.coiltypeId)
+    console.log(this.selectedCoil);
+
     await this.coilsService.updateCoil(this.selectedCoil!);
+
+
 
     this.onCoilSelectionChange(this.selectedCoilId!);
 
@@ -105,5 +119,40 @@ export class CoilManagementComponent {
   backToListing():void {
     this.coilsService.selectedCoilCopy = null;
   }
+
+  showCoiltypeDropdown: boolean = false;
+
+toggleCoiltypeDropdown() {
+  this.showCoiltypeDropdown = !this.showCoiltypeDropdown;
+}
+
+selectCoiltype(coiltypeId: number) {
+  if (this.selectedCoil) {
+    this.selectedCoil.coiltypeId = coiltypeId;
+  }
+  this.showCoiltypeDropdown = false;
+}
+
+getCoiltypeName(coiltypeId: number): string {
+  const coiltype = this.coiltypesService.coiltypes.find(c => c.id === coiltypeId);
+  return coiltype ? coiltype.tK_Name : 'Unbekannt';
+}
+
+sortTable(column: keyof Coiltype) {
+  // Sortierlogik für die Tabelle
+  const direction = !this.coiltypesService.sortDirection[column];
+  this.coiltypesService.sortDirection[column] = direction;
+
+  this.coiltypesService.coiltypes.sort((a, b) => {
+    if (a[column]! < b[column]!) {
+      return direction ? -1 : 1;
+    }
+    if (a[column]! > b[column]!) {
+      return direction ? 1 : -1;
+    }
+    return 0;
+  });
+}
+
 }
 

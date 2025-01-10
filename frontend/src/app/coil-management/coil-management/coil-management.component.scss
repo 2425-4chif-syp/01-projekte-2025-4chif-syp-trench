@@ -12,7 +12,7 @@
   background-color: rgba(159, 159, 159, 0.333);
   border-radius: 15px;
   padding: 20px;
-  max-width: 650px;       
+  max-width: 850px;       
   width: 100%;
 }
 
@@ -89,4 +89,55 @@
 
 .modal-dialog {
   margin-top: 10%;
+}
+
+.dropdown-container {
+  position: relative;
+  width: 100%; // Breite des Dropdowns
+
+  .dropdown-selected {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+  }
+
+  .dropdown-table {
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+
+    .table-container {
+      padding: 10px;
+    }
+    
+    th, td {
+      text-align: center; // Zentriert den Text in den Zellen
+      vertical-align: middle; // Zentriert den Text auch vertikal
+      padding: 8px; // Optional: Abstand innerhalb der Zellen
+    }
+  
+    th {
+      font-weight: bold;
+      background-color: #f4f4f4; // Optional: Hintergrundfarbe für die Kopfzeile
+    }
+
+    .clickable-row {
+      cursor: pointer;
+      text-align: center;
+      &:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+      }
+    }
+  }
 }
