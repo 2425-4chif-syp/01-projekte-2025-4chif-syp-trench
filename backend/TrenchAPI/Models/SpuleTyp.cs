@@ -6,7 +6,7 @@ namespace TrenchAPI.Models
     public class SpuleTyp
     {
         [Key]
-        public int SpulenTypId { get; set; }
+        public int SpuleTypId { get; set; }
         
         [Column(TypeName = "VARCHAR(100)")]
         public string TK_Name { get; set; } = "";
