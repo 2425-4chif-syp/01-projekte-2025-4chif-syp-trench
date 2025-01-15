@@ -12,5 +12,6 @@ namespace TrenchAPI.Context
 
         public DbSet<Spule> Spule { get; set; }
         public DbSet<SpuleTyp> SpuleTyp { get; set; }
+        public DbSet<Messeinstellung> Messeinstellung { get; set; }
     }
 }
