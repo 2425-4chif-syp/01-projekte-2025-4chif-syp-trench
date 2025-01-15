@@ -51,6 +51,7 @@ export class CoilsService {
     
     const newCoil:Coil = {
       id: 0,
+      coiltype: null,
       coiltypeId: 0,
       ur: 0, 
       einheit: 0,
@@ -81,12 +82,12 @@ export class CoilsService {
   }
 
   public async selectCoil(coilId: number) {
-    // Not sure why I have to cast the coilId to a number here, but it seems to be necessary. 
-    // Angular seems to pass the coilId as a string, despite what the type definition says.
-    const coilIdNumber:number = Number(coilId);
-
+    const coilIdNumber: number = Number(coilId);
+    console.log('Lade Spule mit ID:', coilIdNumber);
     await this.reloadCoilWithId(coilIdNumber);
-
+  
     this.selectedCoilCopy = this.getCopyCoil(coilIdNumber);
+    console.log('selectedCoilCopy nach Laden:', this.selectedCoilCopy);
   }
+  
 }

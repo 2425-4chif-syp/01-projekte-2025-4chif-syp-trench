@@ -65,10 +65,19 @@ export class BackendService {
     });
   }
 
-  private coilBackendToFrontend(coil: any): Coil { 
+  private coilBackendToFrontend(coil: any): Coil {
+    console.log('Backend-Daten für Coil:', coil);
     return {
       id: coil.spuleID,
-      coiltypeId: coil.spulenTypenID,
+      coiltype: coil.spulenTyp ? { // Falls spulenTyp existiert
+        id: coil.spulenTyp.spulenTypID,
+        tK_Name: coil.spulenTyp.tK_Name,
+        schenkel: coil.spulenTyp.schenkel,
+        bb: coil.spulenTyp.bb,
+        sh: coil.spulenTyp.sh,
+        dm: coil.spulenTyp.dm,
+      } : null,
+      coiltypeId: coil.spulenTypID, // Direkte Referenz, falls nur die ID benötigt wird
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
@@ -76,6 +85,7 @@ export class BackendService {
       omega: coil.omega,
     };
   }
+  
   private coilFrontendToBackend(coil: Coil): any {
     return {
       spuleID: coil.id,

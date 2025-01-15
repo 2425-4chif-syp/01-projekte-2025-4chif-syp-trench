@@ -71,7 +71,7 @@ export class CoilManagementComponent {
       //  alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
       //  return;
       //}
-
+  
     const coil: Coil | undefined = this.coilsService.coils.find(c => c.id === this.selectedCoilId!);
   
     if (coil === undefined) {
@@ -82,9 +82,8 @@ export class CoilManagementComponent {
     console.log("SSSS:" + this.selectedCoil?.coiltypeId)
     console.log(this.selectedCoil);
 
+  
     await this.coilsService.updateCoil(this.selectedCoil!);
-
-
 
     this.onCoilSelectionChange(this.selectedCoilId!);
 
@@ -128,10 +127,16 @@ toggleCoiltypeDropdown() {
 
 selectCoiltype(coiltypeId: number) {
   if (this.selectedCoil) {
+    console.log('Aktueller Zustand von selectedCoil:', this.selectedCoil);
+    console.log('Vorher coiltypeId:', this.selectedCoil.coiltypeId);
     this.selectedCoil.coiltypeId = coiltypeId;
+    console.log('Nachher coiltypeId:', this.selectedCoil.coiltypeId);
+  } else {
+    console.error('selectedCoil ist null oder undefined!');
   }
   this.showCoiltypeDropdown = false;
 }
+
 
 getCoiltypeName(coiltypeId: number): string {
   const coiltype = this.coiltypesService.coiltypes.find(c => c.id === coiltypeId);
