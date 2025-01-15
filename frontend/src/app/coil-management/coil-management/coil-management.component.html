@@ -8,12 +8,12 @@
 
 <div class="container">
   <div class="panel" *ngIf="selectedCoil !== null">
-    <div class="input-container">
-
+    <div class="input-container">      
       <div class="dropdown-container">
         <div class="dropdown-selected" (click)="toggleCoiltypeDropdown()">
           {{ selectedCoil?.coiltypeId ? getCoiltypeName(selectedCoil.coiltypeId!) : 'Spulentyp auswählen' }}
         </div>
+        
         <div class="dropdown-table" *ngIf="showCoiltypeDropdown">
           <div class="table-container">
             <table class="table table-striped table-hover">
@@ -44,11 +44,12 @@
         </div>
       </div>
       
-      
+      <!--
       <label for="coiltype-selector">Spulentyp: </label>
       <select [(ngModel)]="selectedCoil.coiltypeId" class="form-control form-select">
         <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">{{coiltype.tK_Name}}</option>
       </select> 
+      -->
 
       <label for="arcLengthInput">Auftrags-Nummer:</label>
       <input type="number"
