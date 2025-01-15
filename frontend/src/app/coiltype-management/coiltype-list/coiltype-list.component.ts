@@ -26,6 +26,7 @@ export class CoiltypeListComponent {
 
   async addNewCoiltype() {
     console.log(await this.coiltypesService.addNewCoiltype());
+    //this.openCoiltype(this.sortedCoiltypes[this.sortedCoiltypes.length - 1].id!)
     this.sortedCoiltypes = [...this.coiltypesService.coiltypes]
   }
 

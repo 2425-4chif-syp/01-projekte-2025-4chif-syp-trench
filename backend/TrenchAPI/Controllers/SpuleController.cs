@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrenchAPI.Context;
 using TrenchAPI.Models;
 
 namespace TrenchAPI.Controllers
@@ -13,9 +14,9 @@ namespace TrenchAPI.Controllers
     [ApiController]
     public class SpuleController : ControllerBase
     {
-        private readonly SpuleContext _context;
+        private readonly WebDbContext _context;
 
-        public SpuleController(SpuleContext context)
+        public SpuleController(WebDbContext context)
         {
             _context = context;
         }

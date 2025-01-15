@@ -67,6 +67,7 @@ export class BackendService {
 
   private coilBackendToFrontend(coil: any): Coil {
     console.log('Backend-Daten für Coil:', coil);
+    //console.log(coil.spulenTyp.tK_Name)
     return {
       id: coil.spuleID,
       coiltype: coil.spulenTyp ? { // Falls spulenTyp existiert

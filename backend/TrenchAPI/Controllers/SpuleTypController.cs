@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrenchAPI.Context;
 using TrenchAPI.Models;
 
 namespace TrenchAPI.Controllers
@@ -13,25 +14,25 @@ namespace TrenchAPI.Controllers
     [ApiController]
     public class SpuleTypController : ControllerBase
     {
-        private readonly SpuleTypContext _context;
+        private readonly WebDbContext _context;
 
-        public SpuleTypController(SpuleTypContext context)
+        public SpuleTypController(WebDbContext context)
         {
             _context = context;
         }
 
         // GET: api/SpuleTyp
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SpuleTyp>>> GetSpuleTyp()
+        public async Task<ActionResult<IEnumerable<SpulenTyp>>> GetSpuleTyp()
         {
-            return await _context.SpuleTyp.ToListAsync();
+            return await _context.SpulenTyp.ToListAsync();
         }
 
         // GET: api/SpuleTyp/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SpuleTyp>> GetSpuleTyp(int id)
+        public async Task<ActionResult<SpulenTyp>> GetSpuleTyp(int id)
         {
-            var spuleTyp = await _context.SpuleTyp.FindAsync(id);
+            var spuleTyp = await _context.SpulenTyp.FindAsync(id);
 
             if (spuleTyp == null)
             {
@@ -44,9 +45,9 @@ namespace TrenchAPI.Controllers
         // PUT: api/SpuleTyp/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpuleTyp(int id, SpuleTyp spuleTyp)
+        public async Task<IActionResult> PutSpuleTyp(int id, SpulenTyp spuleTyp)
         {
-            if (id != spuleTyp.SpulenTypId)
+            if (id != spuleTyp.SpulenTypID)
             {
                 return BadRequest();
             }
@@ -75,25 +76,25 @@ namespace TrenchAPI.Controllers
         // POST: api/SpuleTyp
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SpuleTyp>> PostSpuleTyp(SpuleTyp spuleTyp)
+        public async Task<ActionResult<SpulenTyp>> PostSpuleTyp(SpulenTyp spuleTyp)
         {
-            _context.SpuleTyp.Add(spuleTyp);
+            _context.SpulenTyp.Add(spuleTyp);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpulenTypId }, spuleTyp);
+            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpulenTypID }, spuleTyp);
         }
 
         // DELETE: api/SpuleTyp/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpuleTyp(int id)
         {
-            var spuleTyp = await _context.SpuleTyp.FindAsync(id);
+            var spuleTyp = await _context.SpulenTyp.FindAsync(id);
             if (spuleTyp == null)
             {
                 return NotFound();
             }
 
-            _context.SpuleTyp.Remove(spuleTyp);
+            _context.SpulenTyp.Remove(spuleTyp);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +102,7 @@ namespace TrenchAPI.Controllers
 
         private bool SpuleTypExists(int id)
         {
-            return _context.SpuleTyp.Any(e => e.SpulenTypId == id);
+            return _context.SpulenTyp.Any(e => e.SpulenTypID == id);
         }
     }
 }

@@ -1,0 +1,71 @@
+= Besprechungsprotokoll 04.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 04.01.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Emil Silber
+|Emil Silber
+
+|Filip Schauer
+|Axel Csomany
+
+|Simon Pesut
+|Aaron Schreiegg
+
+|Axel Csomany
+|Simon Pesut
+
+|Aaron Schreiegg
+|Filip Schauer
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Discord
+
+|am
+|Di. 07.1.2024
+|Dauer
+|4 Stunden
+|===
+
+
+
+== Besprochene Themen
+
+* Virtualisierung
+* Docker
+
+
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer | 
+
+| Team
+a| == Ausgangslage
+Eine .NET-Anwendung und eine PostgreSQL-Datenbank sollten in Docker laufen. Dabei sollten automatisch Datenbanktabellen durch Migrationen erstellt werden.
+
+== Probleme
+1. Während des Builds war die Datenbank nicht erreichbar, was zu Fehlern führte.
+2. Der fertige Container konnte keine Migrationen ausführen, weil wichtige Tools fehlten.
+3. Es gab Probleme mit Pfadangaben und Umgebungsvariablen, die zu Syntaxfehlern führten.
+
+== Lösung
+Ein zusätzlicher Dienst namens *"migrate"* wurde erstellt. Dieser Dienst nutzt ein passendes Image, das alle notwendigen Tools enthält, um die Migrationen durchzuführen. Der eigentliche Backend-Container bleibt schlank und führt nur die Anwendung aus.
+
+== Ergebnis
+- Die Tabellen werden korrekt erstellt, die Datenbank läuft.
+- Die Aufgaben sind gut aufgeteilt: Der *"migrate"*-Dienst kümmert sich nur um die Migrationen, der Backend-Container nur um die Anwendung.
+- Alles funktioniert stabil.
+|===
