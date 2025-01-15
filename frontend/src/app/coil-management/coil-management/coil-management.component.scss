@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(50vh - 220px);      
+  min-height: calc(50vh - 220px);
   padding: 20px;
 }
 
@@ -12,7 +12,7 @@
   background-color: rgba(159, 159, 159, 0.333);
   border-radius: 15px;
   padding: 20px;
-  max-width: 850px;       
+  max-width: 850px;
   width: 100%;
 }
 
@@ -50,12 +50,10 @@
   position: relative;
 }
 
-
 .buttons-row {
   display: flex;
   gap: 10px;
 }
-
 
 .no-coil-selected {
   font-style: italic;
@@ -76,7 +74,7 @@
 
 .saveMessage {
   position: absolute;
-  top: 100%; 
+  top: 100%;
   color: green;
   font-size: 1.3em;
   margin-top: 25px;
@@ -93,14 +91,32 @@
 
 .dropdown-container {
   position: relative;
-  width: 100%; // Breite des Dropdowns
+  width: 100%;
 
   .dropdown-selected {
     padding: 7px;
-    //border: 1px solid #ccc;
+    margin-top: 10px;
     border-radius: 5px;
     cursor: pointer;
     background-color: #fff;
+    position: relative;
+
+    &::after {
+      content: '▼';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: #6c757d;
+      transition: transform 0.2s ease; 
+    }
+  }
+
+  .dropdown-selected.open {
+    &::after {
+      transform: translateY(-50%) rotate(180deg)
+    }
   }
 
   .dropdown-table {
@@ -119,24 +135,25 @@
     .table-container {
       padding: 10px;
     }
-    
-    th, td {
-      text-align: center; // Zentriert den Text in den Zellen
-      vertical-align: middle; // Zentriert den Text auch vertikal
-      padding: 8px; // Optional: Abstand innerhalb der Zellen
+
+    th,
+    td {
+      text-align: center;
+      vertical-align: middle;
+      padding: 8px;
     }
-  
+
     th {
       font-weight: bold;
-      background-color: #f4f4f4; // Optional: Hintergrundfarbe für die Kopfzeile
+      background-color: #f4f4f4;
     }
 
     .clickable-row {
       cursor: pointer;
       text-align: center;
+
       &:hover {
         background-color: #f1f1f1;
-        cursor: pointer;
       }
     }
   }
