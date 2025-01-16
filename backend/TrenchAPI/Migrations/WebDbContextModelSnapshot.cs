@@ -49,8 +49,6 @@ namespace TrenchAPI.Migrations
 
                     b.HasKey("SpuleID");
 
-                    b.HasIndex("SpuleTypId");
-
                     b.ToTable("Spule");
                 });
 
@@ -81,17 +79,6 @@ namespace TrenchAPI.Migrations
                     b.HasKey("SpuleTypId");
 
                     b.ToTable("SpuleTyp");
-                });
-
-            modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
-                {
-                    b.HasOne("TrenchAPI.Models.SpuleTyp", "SpuleTyp")
-                        .WithMany()
-                        .HasForeignKey("SpuleTypId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SpuleTyp");
                 });
 #pragma warning restore 612, 618
         }
