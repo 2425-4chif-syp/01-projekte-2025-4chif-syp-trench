@@ -8,11 +8,8 @@ namespace TrenchAPI.Models
         [Key]
         public int SpuleID { get; set; }
 
-        [ForeignKey(nameof(SpuleTypId))]
-        public SpuleTyp? SpuleTyp { get; set; }
-
         public int SpuleTypId { get; set; }
-        
+
         [Column(TypeName = "decimal(8,3)")]
         public decimal Ur { get; set; }
 
@@ -27,6 +24,5 @@ namespace TrenchAPI.Models
 
         [Column(TypeName = "decimal(8,5)")]
         public decimal omega { get; set; }
-
     }
 }
