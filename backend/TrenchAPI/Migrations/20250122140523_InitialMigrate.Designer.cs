@@ -11,8 +11,8 @@ using TrenchAPI.Context;
 namespace TrenchAPI.Migrations
 {
     [DbContext(typeof(WebDbContext))]
-    [Migration("20250116102648_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20250122140523_InitialMigrate")]
+    partial class InitialMigrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

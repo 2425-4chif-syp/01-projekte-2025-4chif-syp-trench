@@ -10,6 +10,9 @@ ARG BUILD_CONFIGURATION=Release
 # Wechsel ins Backend/TrenchAPI Verzeichnis
 WORKDIR /src/TrenchAPI
 
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
 # Kopiere die .csproj-Datei und stelle sicher, dass alle Abhängigkeiten wiederhergestellt werden
 COPY ["TrenchAPI.csproj", "./"]
 
@@ -29,6 +32,8 @@ RUN dotnet publish "TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 # Schritt 4: Bereitstellung des veröffentlichten Projekts
 FROM base AS final
 WORKDIR /app
+
+COPY --from=build /src/TrenchAPI/. ./
 COPY --from=publish /app/publish .
 
 # Definiere den Einstiegspunkt für den Container
