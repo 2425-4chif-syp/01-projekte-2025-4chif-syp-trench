@@ -1,7 +1,8 @@
 <div class="coiltype-container">
   <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect"
-          [(ngModel)]="selectedCoiltypeId" (ngModelChange)="onCoiltypeSelectionChange($event)">
-    <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
+          [(ngModel)]="selectedCoiltypeId">
+    <option [ngValue]="null">Spulentyp auswählen...</option>
+    <option *ngFor="let coiltype of coiltypesService.coiltypes" [ngValue]="coiltype.id">
       Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
     </option>
   </select>
@@ -26,9 +27,9 @@
       <select class="form-control form-select"
               id="numberSelect"
               [(ngModel)]="selectedCoiltype.schenkel">
-        <option [value]="2">2</option>
-        <option [value]="3">3</option>
-        <option [value]="4">4</option>
+        <option [ngValue]="2">2</option>
+        <option [ngValue]="3">3</option>
+        <option [ngValue]="4">4</option>
       </select>
 
       <label for="diameterInput">Bandbreite (mm):</label>
@@ -56,7 +57,7 @@
              min="0">
     </div>
 
-    <div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
+    <div class="container">
       <div class="input-container">
         <div class="buttonContainer">
           <div class="buttons-row">
@@ -70,13 +71,7 @@
         </div>
       </div>
     </div>
-
-    <div class="container no-coiltype-selected"
-         *ngIf="coiltypesService.selectedCoiltypeCopy === null">
-      <p>Bitte wählen Sie einen Spulentypen aus.</p>
-    </div>
-
-  </div> 
+  </div>
 
   <div *ngIf="selectedCoiltype === null">
     <span class="text-danger">

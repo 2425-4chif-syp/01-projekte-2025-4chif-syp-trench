@@ -25,7 +25,7 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Spule>>> GetSpule()
         {
-            return await _context.Spule.ToListAsync();
+            return await _context.Spule.Include(s => s.SpuleTyp).ToListAsync();
         }
 
         // GET: api/Spule/5

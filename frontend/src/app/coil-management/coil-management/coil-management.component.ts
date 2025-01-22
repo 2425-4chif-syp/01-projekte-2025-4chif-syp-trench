@@ -5,11 +5,13 @@ import { CoilsService } from '../../data/coil-data/coils.service';
 import { Coil } from '../../data/coil-data/coil';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
+import { MeasurementManagementComponent } from '../../measurement-management/measurement-management.component';
+import { MeasuringProbeMeasurementComponent } from "./measuring-probe-measurement/measuring-probe-measurement.component";
 
 @Component({
   selector: 'app-coil-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, MeasuringProbeMeasurementComponent],
   templateUrl: './coil-management.component.html',
   styleUrl: './coil-management.component.scss'
 })
