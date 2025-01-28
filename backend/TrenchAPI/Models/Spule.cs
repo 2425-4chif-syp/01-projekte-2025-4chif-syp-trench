@@ -5,11 +5,19 @@ namespace TrenchAPI.Models
 {
     public class Spule
     {
+        [Required]
         [Key]
-        public int SpuleID { get; set; }
+        public int SpuleId { get; set; }
 
+<<<<<<< Updated upstream
         [ForeignKey(nameof(SpuleTypID))]
         public SpuleTyp? SpuleTyp { get; set; }
+=======
+        [Required]
+        [ForeignKey(nameof(SpuleTypId))]
+        public SpuleTyp? SpuleTyp { get; set; }
+        public int SpuleTypId { get; set; }
+>>>>>>> Stashed changes
 
         public int SpuleTypID { get; set; }
         
