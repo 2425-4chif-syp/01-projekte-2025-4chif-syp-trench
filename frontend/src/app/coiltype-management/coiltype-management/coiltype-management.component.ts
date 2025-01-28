@@ -13,30 +13,24 @@ import { Coiltype } from '../../data/coiltype-data/coiltype';
 })
 export class CoiltypeManagementComponent {
     constructor(public coiltypesService:CoiltypesService) {
-      this.coiltypesService.reloadCoiltypes();
+
     }
-    
     saveMessage: string | null = null;
 
     public get selectedCoiltype():Coiltype|null {
       return this.coiltypesService.selectedCoiltypeCopy;
     }
-    
-    public get selectedCoiltypeId():number|null {
-      return this.selectedCoiltype?.id ?? null;
+    public get selectedCoiltypeId():number|undefined {
+      return this.coiltypesService.selectedCoiltypeCopy?.id!;
     }
-    
-    public set selectedCoiltypeId(id:number|null) {
-      if (id !== null) {
-        this.coiltypesService.selectCoiltype(Number(id));
-      } else {
-        this.coiltypesService.selectedCoiltypeCopy = null;
-      }
+    public set selectedCoiltypeId(id:number) {
+      this.coiltypesService.selectCoiltype(Number(id));
     }
 
     async addNewCoiltype() {
-      const newCoiltype = await this.coiltypesService.addNewCoiltype();
-      this.selectedCoiltypeId = newCoiltype.id!;
+      const newCoiltype: Coiltype = await this.coiltypesService.addNewCoiltype();
+      this.coiltypesService.selectCoiltype(newCoiltype.id!);
+      this.onCoiltypeSelectionChange(newCoiltype.id!);
     }
 
     isFieldInvalid(field: string): boolean {
@@ -53,16 +47,43 @@ export class CoiltypeManagementComponent {
     }
 
     async saveChanges() {
-      if (!this.selectedCoiltype) {
+      if (this.coiltypesService.selectedCoiltypeCopy === null) {
         return;
       }
 
-      await this.coiltypesService.updateCoiltype(this.selectedCoiltype);
-      
+      if (typeof this.coiltypesService.selectedCoiltypeCopy.id !== 'number') {
+        // This can happen if Angular sets selectedCoiltypeId to a string for some reason
+        throw new Error('selectedCoiltypeId is not of type number');
+      }
+
+      // TODO: Fix invalid fields
+      //const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
+
+      //if (invalidFields.length > 0) {
+      //  alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
+      //  return;
+      //}
+
+      const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
+
+      if (coiltype === undefined) {
+        throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
+      }
+
+      await this.coiltypesService.updateCoiltype(this.selectedCoiltype!);
+
+      this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
+
       this.saveMessage = 'Änderungen gespeichert!';
       setTimeout(() => {
         this.saveMessage = null;
       }, 3000);
+    }
+
+    async onCoiltypeSelectionChange(coiltypeId: number) {
+      const coiltypeIdNumber:number = Number(coiltypeId);
+
+      await this.coiltypesService.selectCoiltype(coiltypeIdNumber);
     }
 
     showDeleteModal = false;
@@ -74,16 +95,15 @@ export class CoiltypeManagementComponent {
     async deleteCoiltype(): Promise<void> {
       this.showDeleteModal = false;
 
-      if (!this.selectedCoiltype?.id) {
+      if (this.coiltypesService.selectedCoiltypeCopy === null) {
         return;
       }
 
-      await this.coiltypesService.deleteCoiltype(this.selectedCoiltype.id);
-      this.selectedCoiltypeId = null;
+      await this.coiltypesService.deleteCoiltype(this.coiltypesService.selectedCoiltypeCopy.id!);
     }
 
     backToListing():void {
-      this.selectedCoiltypeId = null;
+      this.coiltypesService.selectedCoiltypeCopy = null;
     }
 }
 

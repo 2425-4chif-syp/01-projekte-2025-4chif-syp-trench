@@ -16,7 +16,7 @@
           class="dropdown-selected "
           [class.open]="showCoiltypeDropdown"
           (click)="toggleCoiltypeDropdown()">
-          {{ selectedCoil?.coiltypeId! ? getCoiltypeName(selectedCoil.coiltypeId!) : 'Spulentyp auswählen' }}
+          {{ selectedCoil.coiltypeId! ? getCoiltypeName(selectedCoil.coiltypeId!) : 'Spulentyp auswählen' }}
         </div>
         
         <div
@@ -91,7 +91,7 @@
              min="0">
     </div>
 
-    <app-measuring-probe-measurement *ngIf=""/>
+    <!--<app-measuring-probe-measurement *ngIf=""/>-->
 
     <div class="container">
       <div class="input-container">

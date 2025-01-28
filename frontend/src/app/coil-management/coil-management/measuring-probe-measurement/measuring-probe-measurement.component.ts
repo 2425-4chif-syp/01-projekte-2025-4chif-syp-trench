@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+/*import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-measuring-probe-measurement',
@@ -9,4 +9,4 @@ import { Component } from '@angular/core';
 })
 export class MeasuringProbeMeasurementComponent {
 
-}
+}*/

@@ -11,8 +11,8 @@ using TrenchAPI.Context;
 namespace TrenchAPI.Migrations
 {
     [DbContext(typeof(WebDbContext))]
-    [Migration("20250116102648_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20250128162249_InitialMigrate")]
+    partial class InitialMigrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace TrenchAPI.Migrations
                     b.Property<int>("Einheit")
                         .HasColumnType("int");
 
-                    b.Property<int>("SpuleTypId")
+                    b.Property<int>("SpuleTypID")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Ur")
@@ -52,16 +52,18 @@ namespace TrenchAPI.Migrations
 
                     b.HasKey("SpuleID");
 
+                    b.HasIndex("SpuleTypID");
+
                     b.ToTable("Spule");
                 });
 
             modelBuilder.Entity("TrenchAPI.Models.SpuleTyp", b =>
                 {
-                    b.Property<int>("SpuleTypId")
+                    b.Property<int>("SpuleTypID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleTypId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleTypID"));
 
                     b.Property<int>("BB")
                         .HasColumnType("int");
@@ -79,9 +81,20 @@ namespace TrenchAPI.Migrations
                     b.Property<int>("dm")
                         .HasColumnType("int");
 
-                    b.HasKey("SpuleTypId");
+                    b.HasKey("SpuleTypID");
 
                     b.ToTable("SpuleTyp");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
+                {
+                    b.HasOne("TrenchAPI.Models.SpuleTyp", "SpuleTyp")
+                        .WithMany()
+                        .HasForeignKey("SpuleTypID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SpuleTyp");
                 });
 #pragma warning restore 612, 618
         }

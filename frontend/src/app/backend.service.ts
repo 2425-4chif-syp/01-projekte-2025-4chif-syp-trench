@@ -70,14 +70,7 @@ export class BackendService {
     //console.log(coil.spulenTyp.tK_Name)
     return {
       id: coil.spuleID,
-      coiltype: coil.spulenTyp ? { // Falls spulenTyp existiert
-        id: coil.spulenTyp.spulenTypID,
-        tK_Name: coil.spulenTyp.tK_Name,
-        schenkel: coil.spulenTyp.schenkel,
-        bb: coil.spulenTyp.bb,
-        sh: coil.spulenTyp.sh,
-        dm: coil.spulenTyp.dm,
-      } : null,
+      coiltype: coil.SpuleTyp,
       coiltypeId: coil.spulenTypID, // Direkte Referenz, falls nur die ID benötigt wird
       ur: coil.ur,
       einheit: coil.einheit,

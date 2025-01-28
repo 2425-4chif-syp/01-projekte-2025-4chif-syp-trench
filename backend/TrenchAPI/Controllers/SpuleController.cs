@@ -32,7 +32,7 @@ namespace TrenchAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Spule>> GetSpule(int id)
         {
-            var spule = await _context.Spule.FindAsync(id);
+            var spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(s => s.SpuleID == id);
 
             if (spule == null)
             {

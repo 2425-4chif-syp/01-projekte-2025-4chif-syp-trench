@@ -16,6 +16,21 @@ builder.Services.AddDbContext<WebDbContext>(options => options.UseNpgsql(builder
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try 
+    {
+        var context = services.GetRequiredService<WebDbContext>();
+        context.Database.Migrate();
+        Console.WriteLine("Migration erfolgreich durchgeführt!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Ein Fehler ist bei der Migration aufgetreten: {ex.Message}");
+    }
+}
+
 // Middleware konfigurieren
 if (app.Environment.IsDevelopment())
 {
