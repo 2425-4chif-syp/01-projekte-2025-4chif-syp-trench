@@ -129,6 +129,25 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteSpulen()
+        {
+            var spulen = await _context.Spule.ToListAsync();
+            if (spulen == null)
+            {
+                return NotFound();
+            }
+
+            foreach(var spule in spulen)
+            {
+                _context.Spule.Remove(spule);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool SpuleExists(int id)
         {
             return _context.Spule.Any(e => e.SpuleID == id);
