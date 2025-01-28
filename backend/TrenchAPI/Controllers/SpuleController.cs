@@ -76,12 +76,41 @@ namespace TrenchAPI.Controllers
         // POST: api/Spule
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Spule>> PostSpule(Spule spule)
+        public async Task<ActionResult<Spule>> PostSpule(SpuleCreateDto spuleDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.SpuleTyp.Any(st => st.SpuleTypId == spuleDto.SpuleTypId))
+            {
+                return BadRequest("Der angegebene SpuleTyp existiert nicht.");
+            }
+
+            var spule = new Spule
+            {
+                SpuleId = spuleDto.SpuleId,
+                SpuleTypId = spuleDto.SpuleTypId,
+                Ur = spuleDto.Ur,
+                Einheit = spuleDto.Einheit,
+                Auftragsnummer = spuleDto.Auftragsnummer,
+                AuftragsPosNr = spuleDto.AuftragsPosNr,
+                omega = spuleDto.omega
+            };
+
+            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypId);
+            if (existingSpuleTyp == null)
+            {
+                return BadRequest("Der angegebene SpuleTyp existiert nicht.");
+            }
+
+            spule.SpuleTyp = existingSpuleTyp;
+
             _context.Spule.Add(spule);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpule", new { id = spule.SpuleID }, spule);
+            return CreatedAtAction("GetSpule", new { id = spule.SpuleId }, spule);
         }
 
         // DELETE: api/Spule/5
