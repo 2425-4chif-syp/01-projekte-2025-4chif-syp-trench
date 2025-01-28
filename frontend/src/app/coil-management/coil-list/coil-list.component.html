@@ -15,7 +15,7 @@
             <tbody>
                 <tr *ngFor="let coil of sortedCoils" class="clickable-row" (click)="openCoil(coil.id!)">
                     <td>Spule #{{ coil.id }}</td>
-                    <td>{{ coil.coiltypeId }}</td>
+                    <td>{{ coil.coiltype?.tK_Name }}</td>
                     <td>{{ coil.auftragsnummer }}</td>
                     <td>{{ coil.auftragsPosNr }}</td>
                     <td>{{ coil.ur }}</td>
