@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Context;
+using TrenchAPI.DTO;
 using TrenchAPI.Models;
 
 namespace TrenchAPI.Controllers
@@ -25,7 +26,14 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Spule>>> GetSpule()
         {
+<<<<<<< Updated upstream
             return await _context.Spule.Include(s => s.SpuleTyp).ToListAsync();
+=======
+            var spule = _context.Spule
+                .Include(s => s.SpuleTyp) // Eagerly load the SpuleTyp navigation property
+                .ToList();
+            return await _context.Spule.ToListAsync();
+>>>>>>> Stashed changes
         }
 
         // GET: api/Spule/5
@@ -47,7 +55,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSpule(int id, Spule spule)
         {
-            if (id != spule.SpuleID)
+            if (id != spule.SpuleId)
             {
                 return BadRequest();
             }
@@ -150,7 +158,7 @@ namespace TrenchAPI.Controllers
 
         private bool SpuleExists(int id)
         {
-            return _context.Spule.Any(e => e.SpuleID == id);
+            return _context.Spule.Any(e => e.SpuleId == id);
         }
     }
 }
