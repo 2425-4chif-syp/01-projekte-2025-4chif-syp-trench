@@ -1,6 +1,17 @@
-<div class="container">
-    <label for="coilSelect">Spulentyp:</label>
-    <select class="numberSelectorComboBox" id="coilSelect" [(ngModel)]="selectedCoil">
-        
-    </select>
+<!--<div class="container">-->
+<!--    <label for="coilSelect">Spulentyp:</label>-->
+<!--    <select class="numberSelectorComboBox" id="coilSelect" [(ngModel)]="selectedCoil">-->
+
+<!--    </select>-->
+<!--</div>-->
+
+<h1>MQTT Data</h1>
+<div>
+  <!-- Display the MQTT data as a formatted JSON string -->
+  <pre *ngIf="mqttData">{{ mqttData | json }}</pre>
+  <p *ngIf="!mqttData">Waiting for MQTT data...</p>
+
+  <div id="mqtt-data">
+    <!-- This is where the Data_json will be displayed -->
+  </div>
 </div>
