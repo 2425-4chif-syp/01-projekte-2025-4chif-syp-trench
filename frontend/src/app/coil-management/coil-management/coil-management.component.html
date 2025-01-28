@@ -16,7 +16,7 @@
           class="dropdown-selected "
           [class.open]="showCoiltypeDropdown"
           (click)="toggleCoiltypeDropdown()">
-          {{ selectedCoil.coiltypeId! ? getCoiltypeName(selectedCoil.coiltypeId!) : 'Spulentyp auswählen' }}
+          {{ getCoiltypeName() || 'Spulentyp auswählen' }}
         </div>
         
         <div

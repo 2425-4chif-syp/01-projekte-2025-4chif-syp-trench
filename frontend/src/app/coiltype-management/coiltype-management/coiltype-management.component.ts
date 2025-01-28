@@ -64,11 +64,11 @@ export class CoiltypeManagementComponent {
       //  return;
       //}
 
-      const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
+      //const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
 
-      if (coiltype === undefined) {
+      /*if (coiltype === undefined) {
         throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
-      }
+      }*/
 
       await this.coiltypesService.updateCoiltype(this.selectedCoiltype!);
 

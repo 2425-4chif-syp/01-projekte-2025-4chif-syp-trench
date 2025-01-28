@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoilsService } from '../../data/coil-data/coils.service';
@@ -124,14 +124,17 @@ export class CoilManagementComponent {
   showCoiltypeDropdown: boolean = false;
 
 toggleCoiltypeDropdown() {
+  console.log(this.coilsService.selectCoil)
   this.showCoiltypeDropdown = !this.showCoiltypeDropdown;
 }
 
 selectCoiltype(coiltypeId: number) {
   if (this.selectedCoil) {
+    console.log(this.coiltypesService.coiltypes)
     console.log('Aktueller Zustand von selectedCoil:', this.selectedCoil);
     console.log('Vorher coiltypeId:', this.selectedCoil.coiltypeId);
     this.selectedCoil.coiltypeId = coiltypeId;
+    console.log("Test", this.selectedCoil)
     console.log('Nachher coiltypeId:', this.selectedCoil.coiltypeId);
   } else {
     console.error('selectedCoil ist null oder undefined!');
@@ -140,10 +143,13 @@ selectCoiltype(coiltypeId: number) {
 }
 
 
-getCoiltypeName(coiltypeId: number): string {
-  const coiltype = this.coiltypesService.coiltypes.find(c => c.id === coiltypeId);
-  return coiltype ? coiltype.tK_Name : 'Unbekannt';
+getCoiltypeName(): string {
+  if (!this.selectedCoilId) return 'Spulentyp auswählen';
+  const coil = this.coilsService.coils.find(coil => coil.id === this.selectedCoilId);
+  const coiltype = this.coiltypesService.coiltypes.find(type => type.id === this.selectedCoil?.coiltypeId);
+  return coiltype ? coiltype.tK_Name : 'Spulentyp auswählen';
 }
+
 
 sortTable(column: keyof Coiltype) {
   // Sortierlogik für die Tabelle
