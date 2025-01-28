@@ -74,11 +74,11 @@ export class CoilManagementComponent {
       //  return;
       //}
   
-    const coil: Coil | undefined = this.coilsService.coils.find(c => c.id === this.selectedCoilId!);
+    //const coil: Coil | undefined = this.coilsService.coils.find(c => c.id === this.selectedCoilId!);
   
-    if (coil === undefined) {
+    /*if (coil === undefined) {
       throw new Error(`Coil with ID ${this.selectedCoilId} not found`);
-    }
+    }*/
 
     //this.coilTypeSelected =  this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)!;
     console.log("SSSS:" + this.selectedCoil?.coiltypeId)
