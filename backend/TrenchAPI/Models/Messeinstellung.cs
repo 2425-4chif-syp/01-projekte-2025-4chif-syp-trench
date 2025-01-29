@@ -1,15 +1,18 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Models
 {
     public class Messeinstellung
     {
         [Key]
-        public int MesssondendatenID { get; set; }
+        public int MesseinstellungId { get; set; }
 
-        [ForeignKey(nameof(SpuleID))]
+        [ForeignKey(nameof(SpuleId))]
         public Spule? Spule { get; set; }
 
-        public int SpuleID { get; set; }
+        public int SpuleId { get; set; }
 
         [Column(TypeName = "decimal(8,3)")]
         public decimal bemessungsSpannung { get; set; }
