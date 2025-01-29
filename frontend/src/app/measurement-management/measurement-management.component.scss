@@ -1,0 +1,14 @@
+.tolerance {
+    width: 100px;
+    height: 100px; 
+
+    &.bad {
+        background-color: red;
+    }
+    &.medium {
+        background-color: orange;
+    }
+    &.good {
+        background-color: lime;
+    }
+}
