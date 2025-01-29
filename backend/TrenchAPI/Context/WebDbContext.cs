@@ -12,5 +12,11 @@ namespace TrenchAPI.Context
 
         public DbSet<Spule> Spule { get; set; }
         public DbSet<SpuleTyp> SpuleTyp { get; set; }
+
+        public void onModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Spule>()
+                .Ignore(s => s.SpuleTyp);
+        }
     }
 }

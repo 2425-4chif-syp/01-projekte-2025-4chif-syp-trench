@@ -9,7 +9,10 @@ export class CoiltypesService {
   public coiltypes: Coiltype[] = [];
   public selectedCoiltypeCopy:Coiltype|null = null;
 
-  constructor(private backendService:BackendService) { }
+  constructor(private backendService:BackendService) {
+
+}
+public sortDirection: { [key: string]: boolean } = {};
 
   public getCopyCoiltype(id:number):Coiltype {
     id = Number(id);
