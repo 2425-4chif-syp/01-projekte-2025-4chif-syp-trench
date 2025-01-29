@@ -8,17 +8,38 @@
     }
 
     .navbar-collapse {
-        display: flex; 
-        justify-content: space-between; 
+        display: flex;
+        justify-content: space-between;
     }
 
     .navbar-nav {
-        margin-left: auto; 
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-item {
+        margin-right: 30px; /* Einheitlicher Abstand auf der rechten Seite */
+        position: relative;
+
+        &:last-child {
+            margin-right: 0; /* Entfernt den zusätzlichen Abstand vom letzten Element */
+        }
+
+        &:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            right: -15px; /* Position des Strichs etwas anpassen, falls nötig */
+            top: 20%; /* Beginn des Strichs weiter oben */
+            height: 60%; /* Längere Linie */
+            width: 2px; /* Breite der Linie */
+            background-color: #ffffff; /* Farbe der Linie */
+        }
     }
 
     .nav-link {
         color: #ffffff;
-        transition: all 0.1 ease-in-out;
+        transition: all 0.1s ease-in-out;
         font-size: 1rem;
         font-weight: bold;
         font-family: "Montserrat", Sans-serif;
@@ -27,10 +48,9 @@
         &.active {
             font-weight: bold;
             color: #e8e8e8;
-            
         }
 
-        &:hover{
+        &:hover {
             transform: scale(1.035);
             font-weight: bold;
             color: #e8e8e8;
@@ -38,21 +58,22 @@
     }
 
     @media (max-width: 992px) {
-    .navbar-nav {
-        display: none; 
-    }
+        .navbar-nav {
+            display: none;
+        }
 
-    .navbar-collapse.show .navbar-nav {
-        display: flex; 
-        flex-direction: column; 
-    }
+        .navbar-collapse.show .navbar-nav {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .nav-link {
-        text-align: center; 
-        padding: 0.5rem 1rem; 
+        .nav-item:not(:last-child)::after {
+            display: none; /* Versteckt den Trennstrich auf kleinen Bildschirmen */
+        }
+
+        .nav-link {
+            text-align: center;
+            padding: 0.5rem 1rem;
+        }
     }
 }
-
-}
-
-
