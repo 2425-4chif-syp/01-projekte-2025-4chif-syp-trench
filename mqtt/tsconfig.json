@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES5",                    // or ES6
+    "module": "ES6",                     // Use ES modules
+    "moduleResolution": "node",          // Helps resolve node modules
+    "esModuleInterop": true,             // Ensures compatibility with CommonJS
+    "skipLibCheck": true,                // Skip checking library files
+    "outDir": "./dist",                  // Output directory for compiled files
+    "strict": true,                      // Enable strict type-checking
+    "resolveJsonModule": true            // Allow importing JSON modules
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}
