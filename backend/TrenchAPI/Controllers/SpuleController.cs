@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Context;
+using TrenchAPI.DTO;
 using TrenchAPI.Models;
 
 namespace TrenchAPI.Controllers
@@ -25,7 +26,14 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Spule>>> GetSpule()
         {
+<<<<<<< Updated upstream
             return await _context.Spule.Include(s => s.SpuleTyp).ToListAsync();
+=======
+            var spule = _context.Spule
+                .Include(s => s.SpuleTyp) // Eagerly load the SpuleTyp navigation property
+                .ToList();
+            return await _context.Spule.ToListAsync();
+>>>>>>> Stashed changes
         }
 
         // GET: api/Spule/5
@@ -47,7 +55,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSpule(int id, Spule spule)
         {
-            if (id != spule.SpuleID)
+            if (id != spule.SpuleId)
             {
                 return BadRequest();
             }
@@ -76,12 +84,41 @@ namespace TrenchAPI.Controllers
         // POST: api/Spule
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Spule>> PostSpule(Spule spule)
+        public async Task<ActionResult<Spule>> PostSpule(SpuleCreateDto spuleDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.SpuleTyp.Any(st => st.SpuleTypId == spuleDto.SpuleTypId))
+            {
+                return BadRequest("Der angegebene SpuleTyp existiert nicht.");
+            }
+
+            var spule = new Spule
+            {
+                SpuleId = spuleDto.SpuleId,
+                SpuleTypId = spuleDto.SpuleTypId,
+                Ur = spuleDto.Ur,
+                Einheit = spuleDto.Einheit,
+                Auftragsnummer = spuleDto.Auftragsnummer,
+                AuftragsPosNr = spuleDto.AuftragsPosNr,
+                omega = spuleDto.omega
+            };
+
+            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypId);
+            if (existingSpuleTyp == null)
+            {
+                return BadRequest("Der angegebene SpuleTyp existiert nicht.");
+            }
+
+            spule.SpuleTyp = existingSpuleTyp;
+
             _context.Spule.Add(spule);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpule", new { id = spule.SpuleID }, spule);
+            return CreatedAtAction("GetSpule", new { id = spule.SpuleId }, spule);
         }
 
         // DELETE: api/Spule/5
@@ -100,9 +137,28 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteSpulen()
+        {
+            var spulen = await _context.Spule.ToListAsync();
+            if (spulen == null)
+            {
+                return NotFound();
+            }
+
+            foreach(var spule in spulen)
+            {
+                _context.Spule.Remove(spule);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool SpuleExists(int id)
         {
-            return _context.Spule.Any(e => e.SpuleID == id);
+            return _context.Spule.Any(e => e.SpuleId == id);
         }
     }
 }

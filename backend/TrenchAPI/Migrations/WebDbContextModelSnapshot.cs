@@ -16,18 +16,18 @@ namespace TrenchAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
                 {
-                    b.Property<int>("SpuleID")
+                    b.Property<int>("SpuleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleId"));
 
                     b.Property<int>("AuftragsPosNr")
                         .HasColumnType("int");
@@ -47,7 +47,9 @@ namespace TrenchAPI.Migrations
                     b.Property<decimal>("omega")
                         .HasColumnType("decimal(8,5)");
 
-                    b.HasKey("SpuleID");
+                    b.HasKey("SpuleId");
+
+                    b.HasIndex("SpuleTypId");
 
                     b.HasIndex("SpuleTypID");
 
@@ -87,7 +89,11 @@ namespace TrenchAPI.Migrations
                 {
                     b.HasOne("TrenchAPI.Models.SpuleTyp", "SpuleTyp")
                         .WithMany()
+<<<<<<< Updated upstream
                         .HasForeignKey("SpuleTypID")
+=======
+                        .HasForeignKey("SpuleTypId")
+>>>>>>> Stashed changes
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

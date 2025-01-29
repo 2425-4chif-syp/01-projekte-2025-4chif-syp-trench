@@ -100,6 +100,39 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteSpuleTypen()
+        {
+            var spulenTypen = await _context.SpuleTyp.ToListAsync();
+            if (spulenTypen == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var spuleTyp in spulenTypen)
+            {
+                _context.SpuleTyp.Remove(spuleTyp);
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Database.ExecuteSqlRaw("ALTER SEQUENCE \"YourTableName_Id_seq\" RESTART WITH 1");
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool SpuleTypExists(int id)
         {
             return _context.SpuleTyp.Any(e => e.SpuleTypID == id);
