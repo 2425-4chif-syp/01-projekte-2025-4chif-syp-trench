@@ -1,18 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import mqtt from 'mqtt';
-import {JsonPipe, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-measurement-management',
   standalone: true,
-  imports: [FormsModule, JsonPipe, NgIf],
+  imports: [FormsModule, CommonModule],
   templateUrl: './measurement-management.component.html',
   styleUrl: './measurement-management.component.scss'
 })
 export class MeasurementManagementComponent implements OnInit, OnDestroy {
   public hasConnected:boolean = false;
   public json:string|undefined = undefined;
+  public lastUpdate:Date|undefined = undefined;
+  public tolerance:string = 'medium';
+
   private client!: mqtt.MqttClient;
 
   constructor() {}
@@ -50,6 +53,8 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
         console.log('Received Data_json:', messageData);
         
         this.json = JSON.stringify(messageData, null, 2);
+        this.lastUpdate = new Date();
+        this.tolerance = ['bad', 'medium', 'good'][Math.floor(Math.random() * 3)];
       } catch (error) {
         console.error('Failed to parse message:', error);
       }
