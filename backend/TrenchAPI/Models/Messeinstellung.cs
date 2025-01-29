@@ -26,7 +26,7 @@ namespace TrenchAPI.Models
         [Column(TypeName = "decimal(8,3)")]
         public decimal messStärke { get; set; }
 
-        [Column(TypeName = "datetime")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime zeitstempel { get; set; }
     }
 }
