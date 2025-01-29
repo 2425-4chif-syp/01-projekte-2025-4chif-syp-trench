@@ -63,7 +63,7 @@
       </div>
 
       <label>UR: <span class="required">*</span></label>
-      <input type="text" class="form-control inputField" id="ur" placeholder="UR eingeben"
+      <input type="number" class="form-control inputField" id="ur" placeholder="UR eingeben"
          [(ngModel)]="selectedCoil.ur" [class.invalid]="isFieldInvalid('ur')" min="0" required>
       <div class="error-message" *ngIf="isFieldInvalid('ur')">
         Bitte geben Sie einen UR-Wert ein

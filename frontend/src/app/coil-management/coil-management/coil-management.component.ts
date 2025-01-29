@@ -46,7 +46,7 @@ export class CoilManagementComponent {
     let value = this.selectedCoil[field as keyof Coil];
     console.log(`Checking field ${field}:`, typeof value); // Hier siehst du den aktuellen Wert und Typ
 
-    if (value === null || value === undefined || typeof value  === 'string') {
+    if (value === null || value === undefined) {
       return true;
     }
     
