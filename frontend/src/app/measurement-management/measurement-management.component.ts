@@ -11,7 +11,8 @@ import {JsonPipe, NgIf} from "@angular/common";
   styleUrl: './measurement-management.component.scss'
 })
 export class MeasurementManagementComponent implements OnInit, OnDestroy {
-  mqttData: any;
+  public hasConnected:boolean = false;
+  public json:string|undefined = undefined;
   private client!: mqtt.MqttClient;
 
   constructor() {}
@@ -22,8 +23,6 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
     const password = 'passme';
     const topic = 'SmartHome/Sun_Power/Data_json';
 
-    const dataDiv = document.getElementById('mqtt-data');
-
     this.client = mqtt.connect(`ws://${host}:9001/ws`, {
       username: username,
       password: password
@@ -32,32 +31,31 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
     this.client.on('connect', () => {
       console.log('Connected to MQTT broker');
       // Subscribe to the updated topic SmartHome/Sun_Power
-      this.client.subscribe(topic, { qos: 1 }, (err, granted) => {
+      this.client.subscribe(topic, { qos: 1 }, (err:any, granted:any) => {
         if (err) {
           console.error('Subscription error:', err);
         } else {
           console.log(`Subscribed to topic: `, topic);
+          this.hasConnected = true;
         }
       });
     });
 
-    this.client.on('message', (topic, message) => {
+    this.client.on('message', (topic: any, message: any) => {
       try {
         // The message should contain a JSON string directly
         const messageData = JSON.parse(message.toString());
 
         // Display the received JSON data in the div
         console.log('Received Data_json:', messageData);
-
-        if(dataDiv !== null) {
-          dataDiv.innerHTML = `<pre>${JSON.stringify(messageData, null, 2)}</pre>`;
-        }
+        
+        this.json = JSON.stringify(messageData, null, 2);
       } catch (error) {
         console.error('Failed to parse message:', error);
       }
     });
 
-    this.client.on('error', (err) => {
+    this.client.on('error', (err:any) => {
       console.error('MQTT connection error:', err);
     });
 

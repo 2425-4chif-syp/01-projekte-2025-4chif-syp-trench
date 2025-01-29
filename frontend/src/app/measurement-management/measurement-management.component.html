@@ -8,8 +8,17 @@
 <h1>MQTT Data</h1>
 <div>
   <!-- Display the MQTT data as a formatted JSON string -->
-  <pre *ngIf="mqttData">{{ mqttData | json }}</pre>
-  <p *ngIf="!mqttData">Waiting for MQTT data...</p>
+   @if (hasConnected) {
+    @if (json === undefined) {
+      <p>Waiting for MQTT data...</p>
+    }
+    @else {
+      <pre>{{ json }}</pre>
+    }
+   }
+   @else {
+    <p>Waiting for MQTT connection...</p>
+   }
 
   <div id="mqtt-data">
     <!-- This is where the Data_json will be displayed -->
