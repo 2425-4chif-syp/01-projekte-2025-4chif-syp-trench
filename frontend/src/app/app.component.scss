@@ -4,7 +4,9 @@
     height: 80px;
 
     .navbar-brand img {
-        max-height: 40px;
+        max-height: 80px;
+        display: flex;
+        align-items: center;
     }
 
     .navbar-collapse {
