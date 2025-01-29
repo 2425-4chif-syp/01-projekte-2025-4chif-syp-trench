@@ -1,6 +1,6 @@
 <div class="coil-container">
-  <select *ngIf="coilsService.coils.length > 0" id="coilSelect" 
-    [(ngModel)]="selectedCoilId" (ngModelChange)="onCoilSelectionChange($event)">
+  <select *ngIf="coilsService.coils.length > 0" id="coilSelect" [(ngModel)]="selectedCoilId"
+    (ngModelChange)="onCoilSelectionChange($event)">
     <option *ngFor="let coil of coilsService.coils" [value]="coil.id">Spule #{{ coil.id }}</option>
   </select>
   <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoil()">Neue Spule</button>
@@ -9,45 +9,82 @@
 <div class="container">
   <div class="panel" *ngIf="selectedCoil !== null">
     <div class="input-container">
-      <label for="arcLengthInput">Auftrags-Nummer:</label>
-      <input type="number"
-             class="form-control inputField"
-             id="auftragsNr"
-             placeholder="Auftrags-Nummer"
-            [(ngModel)]="selectedCoil.auftragsnummer"
-             min="0">
+      <div class="dropdown-container">
+        <label for="coilType">Spulentyp: <span class="required">*</span></label>
+        <div class="dropdown-selected" [class.open]="showCoiltypeDropdown" [class.invalid]="isFieldInvalid('coiltype')"
+          (click)="toggleCoiltypeDropdown()">
+          {{ getCoiltypeName() || 'Spulentyp auswählen' }}
+        </div>
 
-      <label for="endAreaInput">AuftragsPosNr</label>
-      <input type="number"
-             class="form-control inputField"
-             id="auftragsPosNr"
-             placeholder="AuftragsPosNr"
-             [(ngModel)]="selectedCoil.auftragsPosNr"
-             min="0">
-             
-      <label for="nameInput">UR:</label>
-      <input type="text"
-             class="form-control inputField"
-             id="ur"
-             placeholder="UR eingeben"
-             [(ngModel)]="selectedCoil.ur">
+        <div class="dropdown-table" *ngIf="showCoiltypeDropdown">
+          <div class="table-container">
+            <table class="table table-striped table-hover">
+              <thead style="cursor: pointer;">
+                <tr>
+                  <th (click)="sortTable('id')">Spulentyp</th>
+                  <th (click)="sortTable('tK_Name')">Name</th>
+                  <th (click)="sortTable('schenkel')">Schenkelanzahl</th>
+                  <th (click)="sortTable('bb')">Bandbreite</th>
+                  <th (click)="sortTable('sh')">Schichthöhe</th>
+                  <th (click)="sortTable('dm')">Durchmesser</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let coiltype of coiltypesService.coiltypes" (click)="selectCoiltype(coiltype.id!)"
+                  class="clickable-row" [class.table-primary]="coiltype.id === selectedCoil.coiltypeId">
+                  <td>Spulentyp #{{ coiltype.id }}</td>
+                  <td>{{ coiltype.tK_Name }}</td>
+                  <td>{{ coiltype.schenkel }}</td>
+                  <td>{{ coiltype.bb }}</td>
+                  <td>{{ coiltype.sh }}</td>
+                  <td>{{ coiltype.dm }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="isFieldInvalid('coiltype')">
+          Bitte wählen Sie einen Spulentyp aus
+        </div>
+      </div>
 
-      <label for="diameterInput">Einheit:</label>
-      <input type="number"
-             class="form-control inputField"
-             id="einheit"
-             placeholder="Einheit"
-             [(ngModel)]="selectedCoil.einheit"
-             min="0">
+      <label for="arcLengthInput">Auftrags-Nummer: <span class="required">*</span></label>
+      <input type="number" class="form-control inputField" id="auftragsNr" placeholder="Auftrags-Nummer"
+        [(ngModel)]="selectedCoil.auftragsnummer" [class.invalid]="isFieldInvalid('auftragsnummer')" min="0" required>
+      <div class="error-message" *ngIf="isFieldInvalid('auftragsnummer')">
+        Bitte geben Sie eine Auftragsnummer ein
+      </div>
 
-      <label for="endAreaInput">Omega</label>
-      <input type="number"
-             class="form-control inputField"
-             id="omega"
-             placeholder="Omega"
-             [(ngModel)]="selectedCoil.omega"
-             min="0">
+      <label for="endAreaInput">AuftragsPosNr <span class="required">*</span></label>
+      <input type="number" class="form-control inputField" id="auftragsPosNr" placeholder="AuftragsPosNr"
+        [(ngModel)]="selectedCoil.auftragsPosNr" [class.invalid]="isFieldInvalid('auftragsPosNr')" min="0" required>
+      <div class="error-message" *ngIf="isFieldInvalid('auftragsPosNr')">
+        Bitte geben Sie eine AuftragsPosNr ein
+      </div>
+
+      <label>UR: <span class="required">*</span></label>
+      <input type="number" class="form-control inputField" id="ur" placeholder="UR eingeben"
+         [(ngModel)]="selectedCoil.ur" [class.invalid]="isFieldInvalid('ur')" min="0" required>
+      <div class="error-message" *ngIf="isFieldInvalid('ur')">
+        Bitte geben Sie einen UR-Wert ein
+      </div>
+
+      <label for="diameterInput">Einheit: <span class="required">*</span></label>
+      <input type="number" class="form-control inputField" id="einheit" placeholder="Einheit"
+        [(ngModel)]="selectedCoil.einheit" [class.invalid]="isFieldInvalid('einheit')" min="0" required>
+      <div class="error-message" *ngIf="isFieldInvalid('einheit')">
+        Bitte geben Sie eine Einheit ein
+      </div>
+
+      <label for="endAreaInput">Omega <span class="required">*</span></label>
+      <input type="number" class="form-control inputField" id="omega" placeholder="Omega"
+        [(ngModel)]="selectedCoil.omega" [class.invalid]="isFieldInvalid('omega')" min="0" required>
+      <div class="error-message" *ngIf="isFieldInvalid('omega')">
+        Bitte geben Sie einen Omega-Wert ein
+      </div>
     </div>
+
+    <!--<app-measuring-probe-measurement *ngIf=""/>-->
 
     <div class="container">
       <div class="input-container">
@@ -63,16 +100,14 @@
         </div>
       </div>
     </div>
-
-  </div> 
+  </div>
 
   <div *ngIf="selectedCoil === null">
     <span class="text-danger">
-      Fehler: Spule konnte nicht geladen werden. 
+      Fehler: Spule konnte nicht geladen werden.
     </span>
   </div>
-</div> 
-
+</div>
 
 <div class="container no-coil-selected" *ngIf="coilsService.selectedCoilCopy === null">
   <p>Bitte wählen Sie eine Spule aus.</p>
@@ -86,9 +121,6 @@
 
       <div class="modal-header">
         <h5 class="modal-title">Spule löschen?</h5>
-        <!--<button type="button" class="close" (click)="showDeleteModal = false">
-          <span aria-hidden="true">&times;</span>
-        </button>-->
       </div>
 
       <div class="modal-body">
@@ -103,7 +135,6 @@
           Löschen
         </button>
       </div>
-
     </div>
   </div>
 </div>

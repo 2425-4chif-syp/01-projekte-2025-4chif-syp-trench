@@ -1,6 +1,19 @@
 <div class="container">
-    <label for="coilSelect">Spulentyp:</label>
-    <select class="numberSelectorComboBox" id="coilSelect" [(ngModel)]="selectedCoil">
-        
-    </select>
+  <h1>MQTT Data</h1>
+
+  @if (hasConnected) {
+    @if (json === undefined) {
+      <p>Waiting for MQTT data...</p>
+    }
+    @else {
+      <pre>{{ json }}</pre>
+      <p>Last update: {{lastUpdate}}</p>
+      <div class="tolerance" [ngClass]="tolerance">
+      </div>
+      <p>Tolerance: {{tolerance}}</p>
+    }
+    }
+   @else {
+    <p>Waiting for MQTT connection...</p>
+   }
 </div>

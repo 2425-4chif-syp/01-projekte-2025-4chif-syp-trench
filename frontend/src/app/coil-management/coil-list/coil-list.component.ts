@@ -12,19 +12,41 @@ import { BackendService } from '../../backend.service';
   styleUrl: './coil-list.component.scss'
 })
 export class CoilListComponent {
-  constructor(public coilsService:CoilsService) {
+  public sortedCoils: Coil[] = [];
+
+  private sortDirection: { [key: string]: boolean } = {};
+
+  constructor(public coilsService: CoilsService) {
     this.initialize();
   }
 
   async initialize() {
     await this.coilsService.reloadCoils();
+    this.sortedCoils = [...this.coilsService.coils];
   }
 
   async addNewCoil() {
-    console.log(await this.coilsService.addNewCoil());
+    await this.coilsService.addNewCoil();
+    this.sortedCoils = [...this.coilsService.coils];
   }
 
-  openCoil(coilId:number) {
+  openCoil(coilId: number) {
     this.coilsService.selectCoil(coilId);
   }
+
+  sortTable(column: keyof Coil) {
+    const direction = this.sortDirection[column] = !this.sortDirection[column];
+
+    this.sortedCoils.sort((a, b) => {
+      if (a[column]! < b[column]!) {
+        return direction ? -1 : 1;
+      }
+      if (a[column]! > b[column]!) {
+        return direction ? 1 : -1;
+      }
+      return 0;
+    });
+  }
 }
+
+

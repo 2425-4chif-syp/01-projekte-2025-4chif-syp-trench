@@ -65,19 +65,33 @@ export class BackendService {
     });
   }
 
-  private coilBackendToFrontend(coil: any): Coil { 
-    return {
+  private coilBackendToFrontend(coil: any): Coil {
+    console.log('Backend-Daten für Coil:', coil);
+    //console.log(coil.spulenTyp.tK_Name)
+    console.log('Name:', coil.spuleTyp.tK_Name);
+    console.log('SpuleTyp aus dem Backend:', coil.spuleTyp);
+
+    const newCoil: Coil = {
       id: coil.spuleID,
+      coiltype: coil.spuleTyp,
+      coiltypeId: coil.spuleTypID, // Direkte Referenz, falls nur die ID benötigt wird
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
       auftragsPosNr: coil.auftragsPosNr,
       omega: coil.omega,
     };
+
+    console.log("Coil Backend to Frontend")
+    console.log(newCoil)
+
+    return newCoil;
   }
+  
   private coilFrontendToBackend(coil: Coil): any {
     return {
       spuleID: coil.id,
+      spuleTypID: coil.coiltypeId,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
@@ -88,7 +102,7 @@ export class BackendService {
   
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
-      id: coiltype.spulenTypId,
+      id: coiltype.spuleTypID,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -98,7 +112,7 @@ export class BackendService {
   }
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      spulenTypId: coiltype.id,
+      SpulenTypID: coiltype.id,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -110,6 +124,7 @@ export class BackendService {
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
+    console.log(response.map((coil: any) => coil));
     return response.map((coil: any) => (this.coilBackendToFrontend(coil)));
   }
 
