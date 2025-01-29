@@ -40,14 +40,17 @@
     .nav-link {
         color: #ffffff;
         transition: all 0.1s ease-in-out;
-        font-size: 1rem;
+        font-size: 1.05rem;
         font-weight: bold;
         font-family: "Montserrat", Sans-serif;
         display: inline-block;
 
         &.active {
             font-weight: bold;
-            color: #e8e8e8;
+            color: #ffffff;
+            text-decoration: underline solid rgb(255, 255, 255);
+            text-decoration-thickness: 2px; 
+            text-decoration-skip-ink: auto;
         }
 
         &:hover {
