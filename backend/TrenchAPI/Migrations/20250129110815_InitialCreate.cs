@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace TrenchAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigrate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,16 +46,48 @@ namespace TrenchAPI.Migrations
                 {
                     table.PrimaryKey("PK_SpuleTyp", x => x.SpuleTypId);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Messeinstellung",
+                columns: table => new
+                {
+                    MesseinstellungId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SpuleId = table.Column<int>(type: "integer", nullable: false),
+                    bemessungsSpannung = table.Column<decimal>(type: "numeric(8,3)", nullable: false),
+                    bemessungsFrequenz = table.Column<decimal>(type: "numeric(8,3)", nullable: false),
+                    sondenProSchenkel = table.Column<int>(type: "int", nullable: false),
+                    messStärke = table.Column<decimal>(type: "numeric(8,3)", nullable: false),
+                    zeitstempel = table.Column<DateTime>(type: "datetime", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messeinstellung", x => x.MesseinstellungId);
+                    table.ForeignKey(
+                        name: "FK_Messeinstellung_Spule_SpuleId",
+                        column: x => x.SpuleId,
+                        principalTable: "Spule",
+                        principalColumn: "SpuleID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messeinstellung_SpuleId",
+                table: "Messeinstellung",
+                column: "SpuleId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Spule");
+                name: "Messeinstellung");
 
             migrationBuilder.DropTable(
                 name: "SpuleTyp");
+
+            migrationBuilder.DropTable(
+                name: "Spule");
         }
     }
 }

@@ -7,7 +7,6 @@ namespace TrenchAPI.Context
     {
         public WebDbContext(DbContextOptions<WebDbContext> options) : base(options)
         {
-
         }
 
         public DbSet<Spule> Spule { get; set; }
