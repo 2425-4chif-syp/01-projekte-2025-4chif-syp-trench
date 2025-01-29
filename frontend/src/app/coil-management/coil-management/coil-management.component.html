@@ -10,11 +10,11 @@
   <div class="panel" *ngIf="selectedCoil !== null">
     <div class="input-container">
       <div class="dropdown-container">
-
-        <label for="coilType">Spulentyp:</label>
+        <label for="coilType">Spulentyp: <span class="required">*</span></label>
         <div
-          class="dropdown-selected "
+          class="dropdown-selected"
           [class.open]="showCoiltypeDropdown"
+          [class.invalid]="isFieldInvalid('coiltype')"
           (click)="toggleCoiltypeDropdown()">
           {{ getCoiltypeName() || 'Spulentyp auswählen' }}
         </div>
@@ -49,46 +49,74 @@
             </table>
           </div>
         </div>
+        <div class="error-message" *ngIf="isFieldInvalid('coiltype')">
+          Bitte wählen Sie einen Spulentyp aus
+        </div>
       </div>
 
-      <label for="arcLengthInput">Auftrags-Nummer:</label>
+      <label for="arcLengthInput">Auftrags-Nummer: <span class="required">*</span></label>
       <input type="number"
              class="form-control inputField"
              id="auftragsNr"
              placeholder="Auftrags-Nummer"
              [(ngModel)]="selectedCoil.auftragsnummer"
-             min="0">
+             [class.invalid]="isFieldInvalid('auftragsnummer')"
+             min="0"
+             required>
+      <div class="error-message" *ngIf="isFieldInvalid('auftragsnummer')">
+        Bitte geben Sie eine Auftragsnummer ein
+      </div>
 
-      <label for="endAreaInput">AuftragsPosNr</label>
+      <label for="endAreaInput">AuftragsPosNr <span class="required">*</span></label>
       <input type="number"
              class="form-control inputField"
              id="auftragsPosNr"
              placeholder="AuftragsPosNr"
              [(ngModel)]="selectedCoil.auftragsPosNr"
-             min="0">
+             [class.invalid]="isFieldInvalid('auftragsPosNr')"
+             min="0"
+             required>
+      <div class="error-message" *ngIf="isFieldInvalid('auftragsPosNr')">
+        Bitte geben Sie eine AuftragsPosNr ein
+      </div>
              
-      <label for="nameInput">UR:</label>
+      <label for="nameInput">UR: <span class="required">*</span></label>
       <input type="text"
              class="form-control inputField"
              id="ur"
              placeholder="UR eingeben"
-             [(ngModel)]="selectedCoil.ur">
+             [(ngModel)]="selectedCoil.ur"
+             [class.invalid]="isFieldInvalid('ur')"
+             required>
+      <div class="error-message" *ngIf="isFieldInvalid('ur')">
+        Bitte geben Sie einen UR-Wert ein
+      </div>
 
-      <label for="diameterInput">Einheit:</label>
+      <label for="diameterInput">Einheit: <span class="required">*</span></label>
       <input type="number"
              class="form-control inputField"
              id="einheit"
              placeholder="Einheit"
              [(ngModel)]="selectedCoil.einheit"
-             min="0">
+             [class.invalid]="isFieldInvalid('einheit')"
+             min="0"
+             required>
+      <div class="error-message" *ngIf="isFieldInvalid('einheit')">
+        Bitte geben Sie eine Einheit ein
+      </div>
 
-      <label for="endAreaInput">Omega</label>
+      <label for="endAreaInput">Omega <span class="required">*</span></label>
       <input type="number"
              class="form-control inputField"
              id="omega"
              placeholder="Omega"
              [(ngModel)]="selectedCoil.omega"
-             min="0">
+             [class.invalid]="isFieldInvalid('omega')"
+             min="0"
+             required>
+      <div class="error-message" *ngIf="isFieldInvalid('omega')">
+        Bitte geben Sie einen Omega-Wert ein
+      </div>
     </div>
 
     <!--<app-measuring-probe-measurement *ngIf=""/>-->

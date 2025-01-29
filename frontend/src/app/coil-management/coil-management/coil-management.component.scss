@@ -63,21 +63,34 @@
 }
 
 .invalid {
-  border: 1px solid red;
+  border: 1px solid #dc3545 !important;
+  background-color: #fff8f8;
 }
 
 .error-message {
-  color: red;
-  font-size: 0.9em;
-  margin-top: -10px;
+  color: #dc3545;
+  font-size: 0.8em;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: #dc3545;
+  margin-left: 2px;
 }
 
 .saveMessage {
   position: absolute;
   top: 100%;
-  color: green;
   font-size: 1.3em;
   margin-top: 25px;
+
+  &.error {
+    color: #dc3545;
+  }
+  &:not(.error) {
+    color: #28a745;
+  }
 }
 
 .modal.show {
