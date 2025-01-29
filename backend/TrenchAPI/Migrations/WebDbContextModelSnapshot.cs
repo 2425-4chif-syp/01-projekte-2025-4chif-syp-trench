@@ -46,13 +46,13 @@ namespace TrenchAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("zeitstempel")
-                        .HasColumnType("datetime");
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("MesseinstellungId");
 
                     b.HasIndex("SpuleId");
 
-                    b.ToTable("Messeinstellung", (string)null);
+                    b.ToTable("Messeinstellung");
                 });
 
             modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
@@ -72,7 +72,7 @@ namespace TrenchAPI.Migrations
                     b.Property<int>("Einheit")
                         .HasColumnType("int");
 
-                    b.Property<int>("SpuleTypID")
+                    b.Property<int>("SpuleTypId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Ur")
@@ -85,16 +85,16 @@ namespace TrenchAPI.Migrations
 
                     b.HasIndex("SpuleTypId");
 
-                    b.ToTable("Spule", (string)null);
+                    b.ToTable("Spule");
                 });
 
             modelBuilder.Entity("TrenchAPI.Models.SpuleTyp", b =>
                 {
-                    b.Property<int>("SpuleTypID")
+                    b.Property<int>("SpuleTypId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleTypID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleTypId"));
 
                     b.Property<int>("BB")
                         .HasColumnType("int");
@@ -112,9 +112,9 @@ namespace TrenchAPI.Migrations
                     b.Property<int>("dm")
                         .HasColumnType("int");
 
-                    b.HasKey("SpuleTypID");
+                    b.HasKey("SpuleTypId");
 
-                    b.ToTable("SpuleTyp", (string)null);
+                    b.ToTable("SpuleTyp");
                 });
 
             modelBuilder.Entity("TrenchAPI.Models.Messeinstellung", b =>
@@ -132,14 +132,12 @@ namespace TrenchAPI.Migrations
                 {
                     b.HasOne("TrenchAPI.Models.SpuleTyp", "SpuleTyp")
                         .WithMany()
-
                         .HasForeignKey("SpuleTypId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("SpuleTyp");
                 });
-
 #pragma warning restore 612, 618
         }
     }

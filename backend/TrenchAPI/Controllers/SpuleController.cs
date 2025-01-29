@@ -26,21 +26,17 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Spule>>> GetSpule()
         {
-<<<<<<< Updated upstream
-            return await _context.Spule.Include(s => s.SpuleTyp).ToListAsync();
-=======
             var spule = _context.Spule
                 .Include(s => s.SpuleTyp) // Eagerly load the SpuleTyp navigation property
                 .ToList();
             return await _context.Spule.ToListAsync();
->>>>>>> Stashed changes
         }
 
         // GET: api/Spule/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Spule>> GetSpule(int id)
         {
-            var spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(s => s.SpuleID == id);
+            var spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(s => s.SpuleId == id);
 
             if (spule == null)
             {

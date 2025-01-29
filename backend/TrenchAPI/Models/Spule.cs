@@ -7,7 +7,7 @@ namespace TrenchAPI.Models
     {
         [Required]
         [Key]
-        public int SpuleID { get; set; }
+        public int SpuleId { get; set; }
 
         [ForeignKey(nameof(SpuleTypId))]
         public SpuleTyp? SpuleTyp { get; set; }
