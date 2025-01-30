@@ -45,22 +45,20 @@ export class CoilManagementComponent {
   }
 
   isFieldInvalid(field: string): boolean {
-    return false;
-
-  //   if (!this.selectedCoil) return true;
+    if (!this.selectedCoil) return true;
   
-  //   let value = this.selectedCoil[field as keyof Coil];
+    let value = this.selectedCoil[field as keyof Coil];
 
-  //   if (value === null || value === undefined) {
-  //     return true;
-  //   }
+    if (value === null || value === undefined) {
+        return true;
+    }
     
-  //  if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
-  //     return value <= 0;
-  //   }
+    if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
+      return value <= 0;
+    }
   
-  //   // Allgemeine Prüfung für alle anderen Fälle
-  //   return false;
+    // Allgemeine Prüfung für alle anderen Fälle
+    return false;
   }
   
   openCoiltypeSelect() {
@@ -80,21 +78,26 @@ export class CoilManagementComponent {
     }
 
     // Check all required fields
+    if (this.selectedCoiltype === null) {
+      this.writeSaveMessage('Bitte wählen Sie einen Spulentypen aus.');
+    }
+
     const requiredFields = ['coiltype', 'ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-      this.saveMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
+      this.writeSaveMessage('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
     }
 
     await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
     this.onCoilSelectionChange(this.selectedCoilId!);
 
-    this.saveMessage = 'Änderungen gespeichert!';
+    this.writeSaveMessage('Änderungen gespeichert!');
+  }
+
+  writeSaveMessage(message:string) {
+    this.saveMessage = message;
     setTimeout(() => {
       this.saveMessage = null;
     }, 3000);

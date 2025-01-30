@@ -66,11 +66,6 @@ export class BackendService {
   }
 
   private coilBackendToFrontend(coil: any): Coil {
-    console.log('Backend-Daten für Coil:', coil);
-    //console.log(coil.spulenTyp.tK_Name)
-    console.log('Name:', coil.spuleTyp.tK_Name);
-    console.log('SpuleTyp aus dem Backend:', coil.spuleTyp);
-
     const newCoil: Coil = {
       id: coil.spuleId,
       coiltype: coil.spuleTyp,
@@ -81,9 +76,6 @@ export class BackendService {
       auftragsPosNr: coil.auftragsPosNr,
       omega: coil.omega,
     };
-
-    console.log("Coil Backend to Frontend")
-    console.log(newCoil)
 
     return newCoil;
   }
@@ -124,7 +116,6 @@ export class BackendService {
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
-    console.log(response.map((coil: any) => coil));
     return response.map((coil: any) => (this.coilBackendToFrontend(coil)));
   }
 

@@ -1,8 +1,13 @@
 <div class="coil-container">
-  <select *ngIf="coilsService.coils.length > 0" id="coilSelect" [(ngModel)]="selectedCoilId"
-    (ngModelChange)="onCoilSelectionChange($event)">
-    <option *ngFor="let coil of coilsService.coils" [value]="coil.id">Spule #{{ coil.id }}</option>
-  </select> 
+  @if (coilsService.selectedCoilIsNew) {
+    <h2>Neue Spule</h2>
+  }
+  @else {
+    <select *ngIf="coilsService.coils.length > 0" id="coilSelect" [(ngModel)]="selectedCoilId"
+      (ngModelChange)="onCoilSelectionChange($event)">
+      <option *ngFor="let coil of coilsService.coils" [value]="coil.id">Spule #{{ coil.id }}</option>
+    </select> 
+  }
 </div>
 
 <div class="container">
@@ -18,7 +23,7 @@
         }
         @else {
           <div class="text-danger">
-            Fehler: Spulentyp konnte nicht geladen werden.
+            Kein Spulentyp ausgewählt
           </div>
         }
 
