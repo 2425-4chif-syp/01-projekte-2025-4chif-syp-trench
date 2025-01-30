@@ -6,6 +6,7 @@ import { Coil } from '../../data/coil-data/coil';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
 import { MeasurementManagementComponent } from '../../measurement-management/measurement-management.component';
+import { Router } from '@angular/router';
 //import { MeasuringProbeMeasurementComponent } from "./measuring-probe-measurement/measuring-probe-measurement.component";
 
 @Component({
@@ -16,7 +17,8 @@ import { MeasurementManagementComponent } from '../../measurement-management/mea
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService: CoilsService, public coiltypesService: CoiltypesService) {
+  constructor(public coilsService: CoilsService, private coiltypesService: CoiltypesService, private router:Router) {
+    this.coiltypesService.isCoilSelector = false;
     this.coiltypesService.reloadCoiltypes();
   }
 
@@ -34,24 +36,39 @@ export class CoilManagementComponent {
     this.coilsService.selectCoil(Number(id));
   }
 
-  isFieldInvalid(field: string): boolean {
-    if (!this.selectedCoil) return true;
-  
-    let value = this.selectedCoil[field as keyof Coil];
-    console.log(`Checking field ${field}:`, typeof value); // Hier siehst du den aktuellen Wert und Typ
+  public get selectedCoiltype(): Coiltype|null {
+    if (this.selectedCoil?.coiltypeId === null){
+      return null;
+    }
 
-    if (value === null || value === undefined) {
-      return true;
-    }
-    
-   if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
-      return value <= 0;
-    }
-  
-    // Allgemeine Prüfung für alle anderen Fälle
+    return this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
+  }
+
+  isFieldInvalid(field: string): boolean {
     return false;
+
+  //   if (!this.selectedCoil) return true;
+  
+  //   let value = this.selectedCoil[field as keyof Coil];
+
+  //   if (value === null || value === undefined) {
+  //     return true;
+  //   }
+    
+  //  if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
+  //     return value <= 0;
+  //   }
+  
+  //   // Allgemeine Prüfung für alle anderen Fälle
+  //   return false;
   }
   
+  openCoiltypeSelect() {
+    this.coiltypesService.selectedCoiltypeCopy = null;
+    this.coiltypesService.isCoilSelector = true;
+
+    this.router.navigate(['/coiltype-management']);
+  }
 
   async saveChanges() {
     if (this.coilsService.selectedCoilCopy === null) {
@@ -117,15 +134,10 @@ export class CoilManagementComponent {
   }
 
   selectCoiltype(coiltypeId: number) {
-    if (this.selectedCoil) {
-      console.log(this.coiltypesService.coiltypes)
-      console.log('Aktueller Zustand von selectedCoil:', this.selectedCoil);
-      console.log('Vorher coiltypeId:', this.selectedCoil.coiltypeId);
+    if (this.selectedCoil !== null) {
       this.selectedCoil.coiltypeId = coiltypeId;
-      console.log("Test", this.selectedCoil)
-      console.log('Nachher coiltypeId:', this.selectedCoil.coiltypeId);
     } else {
-      console.error('selectedCoil ist null oder undefined!');
+      console.error('selectedCoil is null');
     }
     this.showCoiltypeDropdown = false;
   }

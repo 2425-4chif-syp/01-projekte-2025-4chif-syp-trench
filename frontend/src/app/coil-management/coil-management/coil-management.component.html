@@ -8,43 +8,21 @@
 <div class="container">
   <div class="panel" *ngIf="selectedCoil !== null">
     <div class="input-container">
-      <div class="dropdown-container">
-        <label for="coilType">Spulentyp: <span class="required">*</span></label>
-        <div class="dropdown-selected" [class.open]="showCoiltypeDropdown" [class.invalid]="isFieldInvalid('coiltype')"
-          (click)="toggleCoiltypeDropdown()">
-          {{ getCoiltypeName() || 'Spulentyp auswählen' }}
-        </div>
-
-        <div class="dropdown-table" *ngIf="showCoiltypeDropdown">
-          <div class="table-container">
-            <table class="table table-striped table-hover">
-              <thead style="cursor: pointer;">
-                <tr>
-                  <th (click)="sortTable('id')">Spulentyp</th>
-                  <th (click)="sortTable('tK_Name')">Name</th>
-                  <th (click)="sortTable('schenkel')">Schenkelanzahl</th>
-                  <th (click)="sortTable('bb')">Bandbreite</th>
-                  <th (click)="sortTable('sh')">Schichthöhe</th>
-                  <th (click)="sortTable('dm')">Durchmesser</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let coiltype of coiltypesService.coiltypes" (click)="selectCoiltype(coiltype.id!)"
-                  class="clickable-row" [class.table-primary]="coiltype.id === selectedCoil.coiltypeId">
-                  <td>Spulentyp #{{ coiltype.id }}</td>
-                  <td>{{ coiltype.tK_Name }}</td>
-                  <td>{{ coiltype.schenkel }}</td>
-                  <td>{{ coiltype.bb }}</td>
-                  <td>{{ coiltype.sh }}</td>
-                  <td>{{ coiltype.dm }}</td>
-                </tr>
-              </tbody>
-            </table>
+      <label for="coiltypeSelect">Spulentyp: <span class="required">*</span></label>
+      <div id="coiltypeSelect">
+        @if (selectedCoil.coiltype !== null) {
+          <div>
+            ID: {{selectedCoiltype!.id}} <br />
+            Name: {{ selectedCoiltype!.tK_Name }}
           </div>
-        </div>
-        <div class="error-message" *ngIf="isFieldInvalid('coiltype')">
-          Bitte wählen Sie einen Spulentyp aus
-        </div>
+        }
+        @else {
+          <div class="text-danger">
+            Fehler: Spulentyp konnte nicht geladen werden.
+          </div>
+        }
+
+        <button class="btn btn-sm btn-outline-secondary" (click)="openCoiltypeSelect()">Spulentyp ändern...</button>
       </div>
 
       <label for="arcLengthInput">Auftrags-Nummer: <span class="required">*</span></label>

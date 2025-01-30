@@ -10,6 +10,8 @@ export class CoiltypesService {
   public selectedCoiltypeCopy:Coiltype|null = null;
   public selectedCoiltypeIsNew: boolean = false;
 
+  public isCoilSelector:boolean = false;
+
   constructor(private backendService:BackendService) {
 
 }
@@ -84,7 +86,7 @@ public sortDirection: { [key: string]: boolean } = {};
     // Angular seems to pass the coiltypeId as a string, despite what the type definition says.
     const coiltypeIdNumber:number = Number(coiltypeId);
     this.selectedCoiltypeIsNew = false;
-
+    
     await this.reloadCoiltypeWithId(coiltypeIdNumber);
 
     this.selectedCoiltypeCopy = this.getCopyCoiltype(coiltypeIdNumber);

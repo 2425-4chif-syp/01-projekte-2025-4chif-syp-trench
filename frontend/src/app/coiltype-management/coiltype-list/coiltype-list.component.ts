@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
+import { CoilsService } from '../../data/coil-data/coils.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-coiltype-list',
@@ -15,7 +17,7 @@ export class CoiltypeListComponent {
 
   private sortDirection: { [key: string]: boolean } = {};
 
-  constructor(public coiltypesService:CoiltypesService) {
+  constructor(public coiltypesService:CoiltypesService, private coilsService:CoilsService, private router:Router) {
     this.initialize();
   }
 
@@ -40,6 +42,14 @@ export class CoiltypeListComponent {
   }
 
   openCoiltype(coiltypeId:number) {
+    if (this.coiltypesService.isCoilSelector) {
+      this.coilsService.selectedCoilCopy!.coiltypeId = coiltypeId;
+      this.coilsService.selectedCoilCopy!.coiltype = this.coiltypesService.getCopyCoiltype(coiltypeId);
+
+      this.router.navigate(['/coil-management']);
+      return;
+    }
+
     this.coiltypesService.selectCoiltype(coiltypeId);
   }
 
