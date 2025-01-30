@@ -6,6 +6,7 @@ import { Coil } from '../../data/coil-data/coil';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
 import { MeasurementManagementComponent } from '../../measurement-management/measurement-management.component';
+import { Router } from '@angular/router';
 //import { MeasuringProbeMeasurementComponent } from "./measuring-probe-measurement/measuring-probe-measurement.component";
 
 @Component({
@@ -16,7 +17,8 @@ import { MeasurementManagementComponent } from '../../measurement-management/mea
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService: CoilsService, public coiltypesService: CoiltypesService) {
+  constructor(public coilsService: CoilsService, private coiltypesService: CoiltypesService, private router:Router) {
+    this.coiltypesService.isCoilSelector = false;
     this.coiltypesService.reloadCoiltypes();
   }
 
@@ -34,23 +36,24 @@ export class CoilManagementComponent {
     this.coilsService.selectCoil(Number(id));
   }
 
-  async addNewCoil() {
-    const newCoil: Coil = await this.coilsService.addNewCoil();
-    this.coilsService.selectCoil(newCoil.id!);
-    this.onCoilSelectionChange(newCoil.id!);
+  public get selectedCoiltype(): Coiltype|null {
+    if (this.selectedCoil?.coiltypeId === null){
+      return null;
+    }
+
+    return this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
   }
 
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return true;
   
     let value = this.selectedCoil[field as keyof Coil];
-    console.log(`Checking field ${field}:`, typeof value); // Hier siehst du den aktuellen Wert und Typ
 
     if (value === null || value === undefined) {
-      return true;
+        return true;
     }
     
-   if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
+    if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
       return value <= 0;
     }
   
@@ -58,6 +61,12 @@ export class CoilManagementComponent {
     return false;
   }
   
+  openCoiltypeSelect() {
+    this.coiltypesService.selectedCoiltypeCopy = null;
+    this.coiltypesService.isCoilSelector = true;
+
+    this.router.navigate(['/coiltype-management']);
+  }
 
   async saveChanges() {
     if (this.coilsService.selectedCoilCopy === null) {
@@ -69,21 +78,26 @@ export class CoilManagementComponent {
     }
 
     // Check all required fields
+    if (this.selectedCoiltype === null) {
+      this.writeSaveMessage('Bitte wählen Sie einen Spulentypen aus.');
+    }
+
     const requiredFields = ['coiltype', 'ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-      this.saveMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
+      this.writeSaveMessage('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
     }
 
-    await this.coilsService.updateCoil(this.selectedCoil!);
+    await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
     this.onCoilSelectionChange(this.selectedCoilId!);
 
-    this.saveMessage = 'Änderungen gespeichert!';
+    this.writeSaveMessage('Änderungen gespeichert!');
+  }
+
+  writeSaveMessage(message:string) {
+    this.saveMessage = message;
     setTimeout(() => {
       this.saveMessage = null;
     }, 3000);
@@ -123,15 +137,10 @@ export class CoilManagementComponent {
   }
 
   selectCoiltype(coiltypeId: number) {
-    if (this.selectedCoil) {
-      console.log(this.coiltypesService.coiltypes)
-      console.log('Aktueller Zustand von selectedCoil:', this.selectedCoil);
-      console.log('Vorher coiltypeId:', this.selectedCoil.coiltypeId);
+    if (this.selectedCoil !== null) {
       this.selectedCoil.coiltypeId = coiltypeId;
-      console.log("Test", this.selectedCoil)
-      console.log('Nachher coiltypeId:', this.selectedCoil.coiltypeId);
     } else {
-      console.error('selectedCoil ist null oder undefined!');
+      console.error('selectedCoil is null');
     }
     this.showCoiltypeDropdown = false;
   }

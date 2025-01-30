@@ -33,7 +33,7 @@ namespace TrenchAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Spule>> GetSpule(int id)
         {
-            var spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(s => s.SpuleID == id);
+            var spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(s => s.SpuleId == id);
 
             if (spule == null)
             {
@@ -48,7 +48,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSpule(int id, Spule spule)
         {
-            if (id != spule.SpuleID)
+            if (id != spule.SpuleId)
             {
                 return BadRequest();
             }
@@ -84,14 +84,14 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.SpuleTyp.Any(st => st.SpuleTypID == spuleDto.SpuleTypId))
+            if (!_context.SpuleTyp.Any(st => st.SpuleTypId == spuleDto.SpuleTypId))
             {
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");
             }
 
             var spule = new Spule
             {
-                SpuleID = spuleDto.SpuleId,
+                SpuleId = spuleDto.SpuleId,
                 SpuleTypID = spuleDto.SpuleTypId,
                 Ur = spuleDto.Ur,
                 Einheit = spuleDto.Einheit,
@@ -111,7 +111,7 @@ namespace TrenchAPI.Controllers
             _context.Spule.Add(spule);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpule", new { id = spule.SpuleID }, spule);
+            return CreatedAtAction("GetSpule", new { id = spule.SpuleId }, spule);
         }
 
         // DELETE: api/Spule/5
@@ -151,7 +151,7 @@ namespace TrenchAPI.Controllers
 
         private bool SpuleExists(int id)
         {
-            return _context.Spule.Any(e => e.SpuleID == id);
+            return _context.Spule.Any(e => e.SpuleId == id);
         }
     }
 }

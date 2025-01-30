@@ -26,8 +26,19 @@ export class CoilListComponent {
   }
 
   async addNewCoil() {
-    await this.coilsService.addNewCoil();
-    this.sortedCoils = [...this.coilsService.coils];
+    const newCoil:Coil = {
+      id: 0,
+      coiltype: null,
+      coiltypeId: 0,
+      ur: 0, 
+      einheit: 0,
+      auftragsnummer: 0,
+      auftragsPosNr: 0,
+      omega: 0
+    };
+
+    this.coilsService.selectedCoilCopy = newCoil;
+    this.coilsService.selectedCoilIsNew = true;
   }
 
   openCoil(coilId: number) {
