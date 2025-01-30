@@ -8,6 +8,7 @@ import { BackendService } from '../../backend.service';
 export class CoiltypesService {
   public coiltypes: Coiltype[] = [];
   public selectedCoiltypeCopy:Coiltype|null = null;
+  public selectedCoiltypeIsNew: boolean = false;
 
   constructor(private backendService:BackendService) {
 
@@ -42,23 +43,22 @@ public sortDirection: { [key: string]: boolean } = {};
     return coiltype;  
   }
   
-  public async updateCoiltype(coiltype:Coiltype):Promise<void> {
+  public async updateOrCreateCoiltype(coiltype:Coiltype):Promise<void> {
+    if (this.selectedCoiltypeIsNew) {
+      this.selectedCoiltypeCopy = await this.postSelectedCoiltype();
+      this.selectedCoiltypeIsNew = false;
+      return;
+    }
+
     await this.backendService.updateCoiltype(coiltype);
   }
 
-  public async addNewCoiltype():Promise<Coiltype> {
-    //const newId:number = this.coiltypes.map(c => c.id).reduce((a, b) => Math.max(a!, b!), 0)! + 1;
-    
-    const newCoiltype:Coiltype = {
-      id: 0,
-      tK_Name: '',
-      schenkel: 0,
-      bb: 0,
-      sh: 0,
-      dm: 0
-    };
+  private async postSelectedCoiltype():Promise<Coiltype> {
+    if (this.selectedCoiltypeCopy === null) {
+      throw new Error('No coil selected.');
+    }
 
-    const response:Coiltype = await this.backendService.addCoiltype(newCoiltype);
+    const response:Coiltype = await this.backendService.addCoiltype(this.selectedCoiltypeCopy);
 
     this.coiltypes.push(response);
 
@@ -83,6 +83,7 @@ public sortDirection: { [key: string]: boolean } = {};
     // Not sure why I have to cast the coiltypeId to a number here, but it seems to be necessary. 
     // Angular seems to pass the coiltypeId as a string, despite what the type definition says.
     const coiltypeIdNumber:number = Number(coiltypeId);
+    this.selectedCoiltypeIsNew = false;
 
     await this.reloadCoiltypeWithId(coiltypeIdNumber);
 

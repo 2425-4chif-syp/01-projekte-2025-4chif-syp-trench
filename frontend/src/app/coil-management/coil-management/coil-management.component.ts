@@ -34,12 +34,6 @@ export class CoilManagementComponent {
     this.coilsService.selectCoil(Number(id));
   }
 
-  async addNewCoil() {
-    const newCoil: Coil = await this.coilsService.addNewCoil();
-    this.coilsService.selectCoil(newCoil.id!);
-    this.onCoilSelectionChange(newCoil.id!);
-  }
-
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return true;
   
@@ -80,7 +74,7 @@ export class CoilManagementComponent {
       return;
     }
 
-    await this.coilsService.updateCoil(this.selectedCoil!);
+    await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
     this.onCoilSelectionChange(this.selectedCoilId!);
 
     this.saveMessage = 'Änderungen gespeichert!';

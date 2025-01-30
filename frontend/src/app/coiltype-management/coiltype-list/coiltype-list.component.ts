@@ -24,10 +24,19 @@ export class CoiltypeListComponent {
     this.sortedCoiltypes = [...this.coiltypesService.coiltypes]
   }
 
+
   async addNewCoiltype() {
-    console.log(await this.coiltypesService.addNewCoiltype());
-    //this.openCoiltype(this.sortedCoiltypes[this.sortedCoiltypes.length - 1].id!)
-    this.sortedCoiltypes = [...this.coiltypesService.coiltypes]
+    const newCoiltype:Coiltype = {
+      id: 0,
+      tK_Name: '',
+      schenkel: 0,
+      bb: 0,
+      sh: 0,
+      dm: 0
+    };
+
+    this.coiltypesService.selectedCoiltypeCopy = newCoiltype;
+    this.coiltypesService.selectedCoiltypeIsNew = true; 
   }
 
   openCoiltype(coiltypeId:number) {
