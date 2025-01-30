@@ -72,9 +72,9 @@ export class BackendService {
     console.log('SpuleTyp aus dem Backend:', coil.spuleTyp);
 
     const newCoil: Coil = {
-      id: coil.spuleID,
+      id: coil.spuleId,
       coiltype: coil.spuleTyp,
-      coiltypeId: coil.spuleTypID, // Direkte Referenz, falls nur die ID benötigt wird
+      coiltypeId: coil.spuleTypId,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
@@ -90,19 +90,19 @@ export class BackendService {
   
   private coilFrontendToBackend(coil: Coil): any {
     return {
-      spuleID: coil.id,
-      spuleTypID: coil.coiltypeId,
+      spuleId: coil.id,
+      spuleTypId: coil.coiltypeId,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
       auftragsPosNr: coil.auftragsPosNr,
-      omega: coil.omega,
+      omega: coil.omega
     };
   }
   
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
-      id: coiltype.spuleTypID,
+      id: coiltype.spuleTypId,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -112,7 +112,7 @@ export class BackendService {
   }
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      SpulenTypID: coiltype.id,
+      spuleTypId: coiltype.id,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
