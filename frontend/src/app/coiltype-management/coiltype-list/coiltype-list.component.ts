@@ -17,8 +17,12 @@ export class CoiltypeListComponent {
 
   private sortDirection: { [key: string]: boolean } = {};
 
-  constructor(public coiltypesService:CoiltypesService, private coilsService:CoilsService, private router:Router) {
+  constructor(public coiltypesService:CoiltypesService, public coilsService:CoilsService, private router:Router) {
     this.initialize();
+  }
+
+  public get isCoilSelector(): boolean { 
+    return this.coiltypesService.isCoilSelector;
   }
 
   async initialize() {
