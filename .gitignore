@@ -38,6 +38,9 @@ docs/slides/revealjs
 .idea/
 
 # Backend specific 
+**/Migrations/
+**/*.Designer.cs
+**/*ModelSnapshot.cs
 
 # Build results
 bin/
