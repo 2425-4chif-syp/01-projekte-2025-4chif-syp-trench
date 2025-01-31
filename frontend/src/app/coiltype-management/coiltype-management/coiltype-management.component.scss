@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(50vh - 220px);      
+  min-height: calc(49.55vh - 220px);      
   padding: 20px;
 }
 
@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
   background-color: rgba(159, 159, 159, 0.333);
+  box-shadow: 0px 0px 7.5px rgb(0, 0, 0.1);
   border-radius: 15px;
   padding: 20px;
   max-width: 650px;       
@@ -20,7 +21,7 @@
   display: flex;
   flex-direction: column; 
   gap: 10px;              
-  margin-bottom: 20px;    
+  margin-bottom: 20px;   
 }
 
 .buttonContainer {
