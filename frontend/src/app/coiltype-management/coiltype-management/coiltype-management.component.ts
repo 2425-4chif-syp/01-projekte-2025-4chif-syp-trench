@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
+import { Coil } from '../../data/coil-data/coil';
 
 @Component({
   selector: 'app-coiltype-management',
@@ -28,15 +29,22 @@ export class CoiltypeManagementComponent {
     }
 
     isFieldInvalid(field: string): boolean {
-      /*if (field === 'bandbreite' && this.bandbreite === null) {
+      if(!this.selectedCoiltype) return true;
+
+      let value = this.selectedCoiltype[field as keyof Coiltype]
+
+      if (value === null || value === undefined){
         return true;
       }
-      if (field === 'schichthoehe' && this.schichthoehe === null) {
+
+      if (typeof value === 'string' && field == 'tk_Name'){
         return true;
       }
-      if (field === 'durchmesser' && this.durchmesser === null) {
-        return true;
-      }*/
+
+      if (typeof value === 'number' && (field === 'schenkel' || field === 'bb' || field === 'sh' || field === 'dm')) {
+        return value <= 0;
+      }
+    
       return false;
     }
 
@@ -64,14 +72,21 @@ export class CoiltypeManagementComponent {
         throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
       }*/
 
-      await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
+        try{
+          await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
 
-      this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
-
-      this.saveMessage = 'Änderungen gespeichert!';
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
+          this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
+    
+          this.saveMessage = 'Änderungen gespeichert!';
+          setTimeout(() => {
+            this.saveMessage = null;
+          }, 3000);
+        }catch(e){
+          this.saveMessage = 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus';
+        setTimeout(() => {
+          this.saveMessage = null;
+        }, 5000);
+        }
     }
 
     async onCoiltypeSelectionChange(coiltypeId: number) {
@@ -99,5 +114,7 @@ export class CoiltypeManagementComponent {
     backToListing():void {
       this.coiltypesService.selectedCoiltypeCopy = null;
     }
+
+    
 }
 
