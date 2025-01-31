@@ -25,30 +25,30 @@
         <option [value]="3">3</option>
         <option [value]="4">4</option>
       </select>
-      <div class="error-message" *ngIf="isFieldInvalid('schenkel')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('schenkel')">
         Bitte geben Sie die Anzahl der Schenkel an
-      </div>
+      </div>-->
 
       <label for="diameterInput">Bandbreite (mm):</label>
       <input type="number" class="form-control inputField" id="bandbreite" placeholder="Bandbreite in mm"
         [(ngModel)]="selectedCoiltype.bb" min="0">
-      <div class="error-message" *ngIf="isFieldInvalid('bb')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('bb')">
         Bitte geben Sie die Bandbreite an
-      </div>
+      </div>-->
 
       <label for="arcLengthInput">Schichthöhe (mm):</label>
       <input type="number" class="form-control inputField" id="schichthoehe" placeholder="Schichthöhe in mm"
         [(ngModel)]="selectedCoiltype.sh" min="0">
-      <div class="error-message" *ngIf="isFieldInvalid('sh')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('sh')">
         Bitte geben Sie die Schichthöhe an
-      </div>
+      </div>-->
 
       <label for="endAreaInput">Durchmesser (mm)</label>
       <input type="number" class="form-control inputField" id="durchmesser" placeholder="Durchmesser in mm"
         [(ngModel)]="selectedCoiltype.dm" min="0">
-      <div class="error-message" *ngIf="isFieldInvalid('dm')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('dm')">
         Bitte geben Sie den Durchmesser an
-      </div>
+      </div>-->
     </div>
 
     <div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">

@@ -33,37 +33,37 @@
       <label for="arcLengthInput">Auftrags-Nummer: <span class="required">*</span></label>
       <input type="number" class="form-control inputField" id="auftragsNr" placeholder="Auftrags-Nummer"
         [(ngModel)]="selectedCoil.auftragsnummer" [class.invalid]="isFieldInvalid('auftragsnummer')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('auftragsnummer')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('auftragsnummer')">
         Bitte geben Sie eine Auftragsnummer ein
-      </div>
+      </div>-->
 
       <label for="endAreaInput">AuftragsPosNr <span class="required">*</span></label>
       <input type="number" class="form-control inputField" id="auftragsPosNr" placeholder="AuftragsPosNr"
         [(ngModel)]="selectedCoil.auftragsPosNr" [class.invalid]="isFieldInvalid('auftragsPosNr')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('auftragsPosNr')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('auftragsPosNr')">
         Bitte geben Sie eine AuftragsPosNr ein
-      </div>
+      </div>-->
 
       <label>UR: <span class="required">*</span></label>
       <input type="number" class="form-control inputField" id="ur" placeholder="UR eingeben"
          [(ngModel)]="selectedCoil.ur" [class.invalid]="isFieldInvalid('ur')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('ur')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('ur')">
         Bitte geben Sie einen UR-Wert ein
-      </div>
+      </div>-->
 
       <label for="diameterInput">Einheit: <span class="required">*</span></label>
       <input type="number" class="form-control inputField" id="einheit" placeholder="Einheit"
         [(ngModel)]="selectedCoil.einheit" [class.invalid]="isFieldInvalid('einheit')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('einheit')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('einheit')">
         Bitte geben Sie eine Einheit ein
-      </div>
+      </div>-->
 
       <label for="endAreaInput">Omega <span class="required">*</span></label>
       <input type="number" class="form-control inputField" id="omega" placeholder="Omega"
         [(ngModel)]="selectedCoil.omega" [class.invalid]="isFieldInvalid('omega')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('omega')">
+      <!--<div class="error-message" *ngIf="isFieldInvalid('omega')">
         Bitte geben Sie einen Omega-Wert ein
-      </div>
+      </div>-->
     </div>
 
     <!--<app-measuring-probe-measurement *ngIf=""/>-->
