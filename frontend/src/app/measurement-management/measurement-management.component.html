@@ -2,18 +2,23 @@
   <h1>MQTT Data</h1>
 
   @if (hasConnected) {
-    @if (json === undefined) {
+    @if (measurements.length === 0) {
       <p>Waiting for MQTT data...</p>
     }
     @else {
-      <pre>{{ json }}</pre>
       <p>Last update: {{lastUpdate}}</p>
-      <div class="tolerance" [ngClass]="tolerance">
-      </div>
-      <p>Tolerance: {{tolerance}}</p>
     }
-    }
-   @else {
+  }
+  @else {
     <p>Waiting for MQTT connection...</p>
-   }
+  }
+</div>
+
+<div class="measurements-container">
+  <div *ngFor="let measurement of measurements" 
+       class="measurement-box"
+       [style.background-color]="getToleranceColor(measurement.tolerance)">
+    <h3>{{measurement.name}}</h3>
+    <p>{{measurement.value}}</p>
+  </div>
 </div>

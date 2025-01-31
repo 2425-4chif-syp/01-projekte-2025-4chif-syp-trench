@@ -6,15 +6,14 @@ import mqtt from 'mqtt';
 @Component({
   selector: 'app-measurement-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, FormsModule] as const,
   templateUrl: './measurement-management.component.html',
   styleUrl: './measurement-management.component.scss'
 })
 export class MeasurementManagementComponent implements OnInit, OnDestroy {
   public hasConnected:boolean = false;
-  public json:string|undefined = undefined;
+  public measurements: Array<{name: string, value: any, tolerance: string}> = [];
   public lastUpdate:Date|undefined = undefined;
-  public tolerance:string = 'medium';
 
   private client!: mqtt.MqttClient;
 
@@ -46,15 +45,18 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
 
     this.client.on('message', (topic: any, message: any) => {
       try {
-        // The message should contain a JSON string directly
         const messageData = JSON.parse(message.toString());
-
-        // Display the received JSON data in the div
-        console.log('Received Data_json:', messageData);
         
-        this.json = JSON.stringify(messageData, null, 2);
+        // Nehme die ersten 5 Attribute aus dem messageData Objekt
+        this.measurements = Object.entries(messageData)
+          .slice(0, 5)
+          .map(([name, value]) => ({
+            name,
+            value,
+            tolerance: ['bad', 'medium', 'good'][Math.floor(Math.random() * 3)]
+          }));
+
         this.lastUpdate = new Date();
-        this.tolerance = ['bad', 'medium', 'good'][Math.floor(Math.random() * 3)];
       } catch (error) {
         console.error('Failed to parse message:', error);
       }
@@ -72,5 +74,14 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Close the MQTT connection when the component is destroyed
     this.client.end();
+  }
+
+  getToleranceColor(tolerance: string): string {
+    switch(tolerance) {
+      case 'bad': return 'red';
+      case 'medium': return 'yellow';
+      case 'good': return 'green';
+      default: return 'gray';
+    }
   }
 }
