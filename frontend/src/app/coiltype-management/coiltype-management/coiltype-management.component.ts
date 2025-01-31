@@ -27,12 +27,6 @@ export class CoiltypeManagementComponent {
       this.coiltypesService.selectCoiltype(Number(id));
     }
 
-    async addNewCoiltype() {
-      const newCoiltype: Coiltype = await this.coiltypesService.addNewCoiltype();
-      this.coiltypesService.selectCoiltype(newCoiltype.id!);
-      this.onCoiltypeSelectionChange(newCoiltype.id!);
-    }
-
     isFieldInvalid(field: string): boolean {
       /*if (field === 'bandbreite' && this.bandbreite === null) {
         return true;
@@ -70,7 +64,7 @@ export class CoiltypeManagementComponent {
         throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
       }*/
 
-      await this.coiltypesService.updateCoiltype(this.selectedCoiltype!);
+      await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
 
       this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
 
