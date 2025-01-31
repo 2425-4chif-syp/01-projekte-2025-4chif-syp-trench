@@ -1,14 +1,14 @@
 <div class="coiltype-container">
   @if (coiltypesService.selectedCoiltypeIsNew) {
-    <h2>Neuer Spulentyp</h2>
+  <h2>Neuer Spulentyp</h2>
   }
   @else {
-    <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
-      (ngModelChange)="onCoiltypeSelectionChange($event)">
-      <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
-        Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
-      </option>
-    </select>
+  <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
+    (ngModelChange)="onCoiltypeSelectionChange($event)">
+    <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
+      Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
+    </option>
+  </select>
   }
 </div>
 
@@ -17,10 +17,11 @@
     <div class="input-container">
       <label for="nameInput">Spulentyp-Name:</label>
       <input type="text" class="form-control inputField" id="name" placeholder="Spulenname eingeben"
-        [(ngModel)]="selectedCoiltype.tK_Name">
+        [(ngModel)]="selectedCoiltype.tK_Name" [class.invalid]="isFieldInvalid('tK_Name')">
 
       <label for="numberSelect">Schenkelanzahl:</label>
-      <select class="form-control form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel">
+      <select class="form-control form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel"
+        [class.invalid]="isFieldInvalid('numberSelect')">
         <option [value]="2">2</option>
         <option [value]="3">3</option>
         <option [value]="4">4</option>
@@ -31,21 +32,21 @@
 
       <label for="diameterInput">Bandbreite (mm):</label>
       <input type="number" class="form-control inputField" id="bandbreite" placeholder="Bandbreite in mm"
-        [(ngModel)]="selectedCoiltype.bb" min="0">
+        [(ngModel)]="selectedCoiltype.bb"  [class.invalid]="isFieldInvalid('bb')" min="0">
       <!--<div class="error-message" *ngIf="isFieldInvalid('bb')">
         Bitte geben Sie die Bandbreite an
       </div>-->
 
       <label for="arcLengthInput">Schichthöhe (mm):</label>
       <input type="number" class="form-control inputField" id="schichthoehe" placeholder="Schichthöhe in mm"
-        [(ngModel)]="selectedCoiltype.sh" min="0">
+        [(ngModel)]="selectedCoiltype.sh"  [class.invalid]="isFieldInvalid('sh')" min="0">
       <!--<div class="error-message" *ngIf="isFieldInvalid('sh')">
         Bitte geben Sie die Schichthöhe an
       </div>-->
 
       <label for="endAreaInput">Durchmesser (mm)</label>
       <input type="number" class="form-control inputField" id="durchmesser" placeholder="Durchmesser in mm"
-        [(ngModel)]="selectedCoiltype.dm" min="0">
+        [(ngModel)]="selectedCoiltype.dm"  [class.invalid]="isFieldInvalid('dm')" min="0">
       <!--<div class="error-message" *ngIf="isFieldInvalid('dm')">
         Bitte geben Sie den Durchmesser an
       </div>-->
@@ -59,9 +60,10 @@
             <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
             <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spulentyp Löschen</button>
           </div>
-          <div *ngIf="saveMessage" [ngClass]="{'save-success': saveMessage === 'Änderungen gespeichert!', 'save-fail': saveMessage === 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus'}">
+          <div *ngIf="saveMessage"
+            [ngClass]="{'save-success': saveMessage === 'Änderungen gespeichert!', 'save-fail': saveMessage === 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus'}">
             {{saveMessage}}
-          </div>          
+          </div>
         </div>
       </div>
     </div>

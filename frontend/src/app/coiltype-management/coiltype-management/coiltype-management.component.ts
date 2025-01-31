@@ -17,6 +17,7 @@ export class CoiltypeManagementComponent {
 
     }
     saveMessage: string | null = null;
+    hasSaved: boolean = false;
 
     public get selectedCoiltype():Coiltype|null {
       return this.coiltypesService.selectedCoiltypeCopy;
@@ -29,19 +30,25 @@ export class CoiltypeManagementComponent {
     }
 
     isFieldInvalid(field: string): boolean {
+      if(!this.hasSaved) return false;
       if(!this.selectedCoiltype) return true;
 
       let value = this.selectedCoiltype[field as keyof Coiltype]
 
-      if (value === null || value === undefined){
+      if (field === 'numberSelect' && this.selectedCoiltype.schenkel == 0){
         return true;
       }
 
-      if (typeof value === 'string' && field == 'tk_Name'){
+      if (value === null || value === undefined && field != 'numberSelect'){
         return true;
       }
 
-      if (typeof value === 'number' && (field === 'schenkel' || field === 'bb' || field === 'sh' || field === 'dm')) {
+
+      if (typeof value === 'string' && field == 'tK_Name' && value === ''){
+        return true;
+      }
+
+      if (typeof value === 'number' && (field === 'bb' || field === 'sh' || field === 'dm')) {
         return value <= 0;
       }
     
@@ -57,27 +64,16 @@ export class CoiltypeManagementComponent {
         // This can happen if Angular sets selectedCoiltypeId to a string for some reason
         throw new Error('selectedCoiltypeId is not of type number');
       }
-
-      // TODO: Fix invalid fields
-      //const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
-
-      //if (invalidFields.length > 0) {
-      //  alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
-      //  return;
-      //}
-
-      //const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
-
-      /*if (coiltype === undefined) {
-        throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
-      }*/
-
         try{
+          if(this.selectedCoiltype?.tK_Name.length == 0){
+            throw new Error("Name ist leer");
+          }
           await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
 
           this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
     
           this.saveMessage = 'Änderungen gespeichert!';
+          this.hasSaved = true;
           setTimeout(() => {
             this.saveMessage = null;
           }, 3000);
