@@ -45,6 +45,7 @@ h1 {
     align-items: center;
     gap: 8px;
     position: relative;
+    margin-top: 20px
 }
 
 .buttons-row {
@@ -54,10 +55,19 @@ h1 {
     gap: 10px;
 }
 
-.saveMessage {
-    position: absolute;
-    top: 100%;
+.save-success {
     color: green;
     font-size: 1.3em;
     margin-top: 25px;
+}
+
+.save-fail {
+    color: red;
+    font-size: 1.3em;
+    margin-top: 25px;
+}
+
+.invalid {
+    border: 1px solid #dc3545 !important;
+    background-color: #fff8f8;
 }
