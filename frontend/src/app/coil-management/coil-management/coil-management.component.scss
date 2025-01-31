@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   //align-items: center;
-  max-height: 70vh;  
-  min-height: 30vh; 
+  max-height: 70vh;
+  min-height: 30vh;
   padding: 20px;
 }
 
@@ -54,8 +54,8 @@
 
 .buttons-row {
   display: flex;
-  flex-direction: row;     
-  justify-content: center; 
+  flex-direction: row;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -83,19 +83,18 @@
   margin-left: 2px;
 }
 
-.saveMessage {
-  position: absolute;
-  top: 100%;
+.save-success {
+  color: green;
   font-size: 1.3em;
   margin-top: 25px;
-
-  &.error {
-    color: #dc3545;
-  }
-  &:not(.error) {
-    color: #28a745;
-  }
 }
+
+.save-fail {
+  color: red;
+  font-size: 1.3em;
+  margin-top: 25px;
+}
+
 
 .modal.show {
   display: block;
@@ -126,7 +125,7 @@
       transform: translateY(-50%);
       font-size: 0.75rem;
       color: #6c757d;
-      transition: transform 0.2s ease; 
+      transition: transform 0.2s ease;
     }
   }
 

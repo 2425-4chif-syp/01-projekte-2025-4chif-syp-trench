@@ -13,7 +13,7 @@
 <div class="container">
   <div class="panel" *ngIf="selectedCoil !== null">
     <div class="input-container">
-      <label for="coiltypeSelect">Spulentyp: <span class="required">*</span></label>
+      <label for="coiltypeSelect">Spulentyp: <!--<span class="required">*</span>--></label>
       <div id="coiltypeSelect">
         @if (selectedCoil.coiltype !== null) {
           <div>
@@ -30,35 +30,35 @@
         <button class="btn btn-sm btn-outline-secondary" (click)="openCoiltypeSelect()">Spulentyp ändern...</button>
       </div>
 
-      <label for="arcLengthInput">Auftrags-Nummer: <span class="required">*</span></label>
+      <label for="arcLengthInput">Auftrags-Nummer: <!--<span class="required">*</span>--></label>
       <input type="number" class="form-control inputField" id="auftragsNr" placeholder="Auftrags-Nummer"
         [(ngModel)]="selectedCoil.auftragsnummer" [class.invalid]="isFieldInvalid('auftragsnummer')" min="0" required>
       <!--<div class="error-message" *ngIf="isFieldInvalid('auftragsnummer')">
         Bitte geben Sie eine Auftragsnummer ein
       </div>-->
 
-      <label for="endAreaInput">AuftragsPosNr <span class="required">*</span></label>
+      <label for="endAreaInput">AuftragsPosNr <!--<span class="required">*</span>--></label>
       <input type="number" class="form-control inputField" id="auftragsPosNr" placeholder="AuftragsPosNr"
         [(ngModel)]="selectedCoil.auftragsPosNr" [class.invalid]="isFieldInvalid('auftragsPosNr')" min="0" required>
       <!--<div class="error-message" *ngIf="isFieldInvalid('auftragsPosNr')">
         Bitte geben Sie eine AuftragsPosNr ein
       </div>-->
 
-      <label>UR: <span class="required">*</span></label>
+      <label>UR: <!--<span class="required">*</span>--></label>
       <input type="number" class="form-control inputField" id="ur" placeholder="UR eingeben"
          [(ngModel)]="selectedCoil.ur" [class.invalid]="isFieldInvalid('ur')" min="0" required>
       <!--<div class="error-message" *ngIf="isFieldInvalid('ur')">
         Bitte geben Sie einen UR-Wert ein
       </div>-->
 
-      <label for="diameterInput">Einheit: <span class="required">*</span></label>
+      <label for="diameterInput">Einheit: <!--<span class="required">*</span>--></label>
       <input type="number" class="form-control inputField" id="einheit" placeholder="Einheit"
         [(ngModel)]="selectedCoil.einheit" [class.invalid]="isFieldInvalid('einheit')" min="0" required>
       <!--<div class="error-message" *ngIf="isFieldInvalid('einheit')">
         Bitte geben Sie eine Einheit ein
       </div>-->
 
-      <label for="endAreaInput">Omega <span class="required">*</span></label>
+      <label for="endAreaInput">Omega <!--<span class="required">*</span>--></label>
       <input type="number" class="form-control inputField" id="omega" placeholder="Omega"
         [(ngModel)]="selectedCoil.omega" [class.invalid]="isFieldInvalid('omega')" min="0" required>
       <!--<div class="error-message" *ngIf="isFieldInvalid('omega')">
@@ -76,7 +76,8 @@
             <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
             <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spule Löschen</button>
           </div>
-          <div class="saveMessage" *ngIf="saveMessage">
+          <div *ngIf="saveMessage"
+            [ngClass]="{'save-success': saveMessage === 'Änderungen gespeichert!', 'save-fail': saveMessage === 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus'}">
             {{saveMessage}}
           </div>
         </div>

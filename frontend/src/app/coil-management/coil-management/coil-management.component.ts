@@ -23,6 +23,7 @@ export class CoilManagementComponent {
   }
 
   saveMessage: string | null = null;
+  hasSaved: boolean = false;
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
@@ -45,6 +46,7 @@ export class CoilManagementComponent {
   }
 
   isFieldInvalid(field: string): boolean {
+    if(!this.hasSaved) return false;
     if (!this.selectedCoil) return true;
   
     let value = this.selectedCoil[field as keyof Coil];
@@ -73,7 +75,7 @@ export class CoilManagementComponent {
       return;
     }
 
-    if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
+    /*if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
       throw new Error('selectedCoilId is not of type number');
     }
 
@@ -89,11 +91,26 @@ export class CoilManagementComponent {
       this.writeSaveMessage('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
     }
-
-    await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
+    */
+    /*await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
     this.onCoilSelectionChange(this.selectedCoilId!);
 
-    this.writeSaveMessage('Änderungen gespeichert!');
+    this.writeSaveMessage('Änderungen gespeichert!');*/
+    try{
+      await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
+      this.onCoilSelectionChange(this.selectedCoilId!);
+
+      this.saveMessage = 'Änderungen gespeichert!';
+      this.hasSaved = true;
+      setTimeout(() => {
+        this.saveMessage = null;
+      }, 3000);
+    }catch(e){
+      this.saveMessage = 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus';
+    setTimeout(() => {
+      this.saveMessage = null;
+    }, 5000);
+    }
   }
 
   writeSaveMessage(message:string) {
