@@ -30,7 +30,7 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
     const host = 'vm90.htl-leonding.ac.at';
     const username = 'student';
     const password = 'passme';
-    const baseTopic = 'trench_test/#';
+    const baseTopic = 'trench_test/test_data/#';
 
     this.client = mqtt.connect(`ws://${host}:9001/ws`, {
       username: username,
