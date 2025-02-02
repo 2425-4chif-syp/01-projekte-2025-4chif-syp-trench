@@ -70,13 +70,15 @@ export class BackendService {
     const newCoil: Coil = {
       id: coil.spuleId,
       coiltype: coil.spuleTyp,
-      coiltypeId: coil.spuleTypId,
+      coiltypeId: coil.spuleTypID,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
       auftragsPosNr: coil.auftragsPosNr,
       omega: coil.omega,
     };
+
+    //console.log('Coil:', newCoil);
 
     return newCoil;
   }
