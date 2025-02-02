@@ -85,17 +85,17 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
 
   getBackgroundColor(value: number, sensorName: string): string {
     const tolerances = JSON.parse(localStorage.getItem('sensorTolerances') || '[]') as SensorTolerance[];
-    const sensorTolerance = tolerances.find(t => t.name === sensorName);
-    
+    const fullSensorName = `trench_test/${sensorName}`;
+    const sensorTolerance = tolerances.find(t => t.name === fullSensorName);
 
     if (!sensorTolerance) {
-      // Standardwerte falls keine Toleranzen gesetzt sind
       if (value >= 0 && value <= 0.4) return 'green';
       if (value >= 0.41 && value <= 0.7) return 'yellow';
       if (value >= 0.71 && value <= 1) return 'red';
       return 'gray';
     }
 
+    // Anwenden der benutzerdefinierten Toleranzwerte
     if (value >= 0 && value <= sensorTolerance.greenMax) return 'green';
     if (value > sensorTolerance.greenMax && value <= sensorTolerance.yellowMax) return 'yellow';
     if (value > sensorTolerance.yellowMax && value <= 1) return 'red';
