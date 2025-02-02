@@ -25,7 +25,7 @@ export class CoilVisualizationComponent {
       n: n,
       rotate: 360 / this.n * n,
       width: 80 - 8 * this.n,
-      height: 20,
+      height: 40,
       distanceFromRadius: 32 * Math.sqrt(this.n - 2),
     }
   }
