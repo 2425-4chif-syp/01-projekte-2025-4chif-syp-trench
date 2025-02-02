@@ -1,6 +1,6 @@
 <svg width="512px" height="512px">
     <!-- Center cirle -->
-    <circle r="64" cx="256" cy="256" fill="none" stroke="black" stroke-width="5" />
+    <circle [attr.r]="coreRadius" cx="256" cy="256" fill="none" stroke="black" stroke-width="5" />
     <!-- Yokes -->
     @for (n of nTransforms; track n.n) {
         <!-- 
@@ -20,12 +20,12 @@
             />
 
             <!-- Arc between those lines -->
-            <path [attr.d]="'M '+(-n.width)+','+n.height+' A 64,64 0 0 0 '+n.width+','+n.height"
+            <path [attr.d]="'M '+(-n.width)+','+n.height+' A '+coreRadius+','+coreRadius+' 0 0 0 '+n.width+','+n.height"
             fill="none" stroke="black" stroke-width="5"/> 
         </g>
 
         <!-- Center dot -->
-        <circle r="2" cx="256" cy="256" 
+        <circle r="3" cx="256" cy="256" 
         fill="none" stroke="black" stroke-width="2" />
     }
 </svg>
