@@ -35,7 +35,7 @@
     }
 </div>
 
-@if (hoveredCoiltype !== null) {
+@if (hoveredCoiltype !== null && mousePosition !== null) {
     <div class="hover-tooltip" [ngStyle]="{
         'top.px': mousePosition.y,
         'left.px': mousePosition.x,

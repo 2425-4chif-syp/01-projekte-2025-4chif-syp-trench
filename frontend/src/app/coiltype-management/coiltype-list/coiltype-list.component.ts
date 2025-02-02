@@ -20,7 +20,7 @@ export class CoiltypeListComponent {
 
   public hoveredCoiltype: Coiltype | null = null;
 
-  public mousePosition: { x: number, y: number } = { x: 0, y: 0 };
+  public mousePosition: { x: number, y: number }|null = null;
 
   constructor(public coiltypesService:CoiltypesService, public coilsService:CoilsService, private router:Router) {
     this.initialize();
