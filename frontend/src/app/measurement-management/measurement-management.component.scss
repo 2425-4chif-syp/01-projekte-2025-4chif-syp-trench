@@ -1,14 +1,80 @@
-.tolerance {
-    width: 100px;
-    height: 100px; 
+.sensor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
 
-    &.bad {
-        background-color: red;
+.sensor-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  
+  .sensor-content {
+    text-align: center;
+    color: black;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
     }
-    &.medium {
-        background-color: orange;
+    
+    .value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
     }
-    &.good {
-        background-color: lime;
-    }
+  }
+}
+
+.update-time {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  margin: 0;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+  p {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+  }
+}
+
+.header {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-button {
+  background-color: #003c7c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  &:hover {
+    background-color: #0056b3;
+  }
 }
