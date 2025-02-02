@@ -5,11 +5,13 @@ import { MeasurementManagementComponent } from './measurement-management/measure
 import { CoilListComponent } from './coil-management/coil-list/coil-list.component';
 import { CoilParentComponent } from './coil-management/coil-parent/coil-parent.component';
 import { CoiltypeParentComponent } from './coiltype-management/coiltype-parent/coiltype-parent.component';
+import { MeasurementSettingsComponent } from './measurement-settings/measurement-settings.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: 'home', component: HomeComponent},
     {path: 'coil-management', component: CoilParentComponent},
     {path: 'coiltype-management', component: CoiltypeParentComponent},
-    {path: 'measurement-management', component: MeasurementManagementComponent}
+    {path: 'measurement-management', component: MeasurementManagementComponent},
+    {path: 'measurement-settings', component: MeasurementSettingsComponent}
 ];

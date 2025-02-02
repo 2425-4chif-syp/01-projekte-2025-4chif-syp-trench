@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Coil } from './data/coil-data/coil';
 import { Coiltype } from './data/coiltype-data/coiltype';
+import { measurementSettings } from './data/measurement-settings/measurement-settings';
 
 @Injectable({
   providedIn: 'root'
@@ -104,6 +105,7 @@ export class BackendService {
       dm: coiltype.dm,
     };
   }
+
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
       spuleTypId: coiltype.id,
@@ -115,6 +117,25 @@ export class BackendService {
     };
   }
 
+  private measurementSettingsBackendToFrontend(measurementSettings: any): measurementSettings {
+    return {
+      bemessungsSpannung: measurementSettings.bemessungsSpannung,
+      bemessungsFrequenz: measurementSettings.bemessungsFrequenz,
+      sondenProSchenkel: measurementSettings.sondenProSchenkel,
+      messStärke: measurementSettings.messStärke,
+      zeitstempel: measurementSettings.zeitstempel
+    };
+  }
+
+  private measurementSettingsFrontendToBackend(measurementSettings: measurementSettings): any{
+    return {
+      bemessungsSpannung: measurementSettings.bemessungsSpannung,
+      bemessungsFrequenz: measurementSettings.bemessungsFrequenz,
+      sondenProSchenkel: measurementSettings.sondenProSchenkel,
+      messStärke: measurementSettings.messStärke,
+      zeitstempel: measurementSettings.zeitstempel
+    }
+  }
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
@@ -161,5 +182,10 @@ export class BackendService {
 
   public async deleteCoiltype(coiltype: Coiltype): Promise<void> {
     await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
+  }
+
+  public async addMeasurementSettings(measurementSettings: measurementSettings): Promise<measurementSettings>{
+    const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));
+    return this.measurementSettingsBackendToFrontend(response);
   }
 }

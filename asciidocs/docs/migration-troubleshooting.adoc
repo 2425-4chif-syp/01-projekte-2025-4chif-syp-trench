@@ -1,0 +1,42 @@
+= Entity Framework Core Migration Troubleshooting Guide
+:toc:
+:toc-title: Inhaltsverzeichnis
+:source-highlighter: highlight.js
+
+== Schritte zur Behebung von Migrationsproblemen
+
+[arabic]
+- Überprüfen Sie das Projekt auf Naming-Fehler
+* Stellen Sie sicher, dass die ID-Properties korrekt definiert sind:
+[source,csharp]
+----
+public class Example
+{
+    [Key]
+    public int ExampleId { get; set; }  // Konvention: ClassnameId
+}
+----
+
+- Löschen Sie den Migrations-Ordner
+[source,bash]
+----
+rm -rf Migrations/
+----
+
+- Stoppen und entfernen Sie alle Docker-Container und Volumes (im Root-Verzeichnis des Projekts)
+[source,bash]
+----
+docker-compose down -v
+----
+
+- Erstellen Sie eine neue initiale Migration (im backend-Projekt)
+[source,bash]
+----
+dotnet ef migrations add InitialMigrate
+----
+
+- Starten Sie die Docker-Container neu (im Root-Verzeichnis des Projekts)
+[source,bash]
+----
+docker-compose up --build
+----

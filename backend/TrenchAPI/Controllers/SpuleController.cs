@@ -26,10 +26,7 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Spule>>> GetSpule()
         {
-            var spule = _context.Spule
-                .Include(s => s.SpuleTyp) // Eagerly load the SpuleTyp navigation property
-                .ToList();
-            return await _context.Spule.ToListAsync();
+            return await _context.Spule.Include(s => s.SpuleTyp).ToListAsync();
         }
 
         // GET: api/Spule/5
@@ -95,7 +92,7 @@ namespace TrenchAPI.Controllers
             var spule = new Spule
             {
                 SpuleId = spuleDto.SpuleId,
-                SpuleTypId = spuleDto.SpuleTypId,
+                SpuleTypID = spuleDto.SpuleTypId,
                 Ur = spuleDto.Ur,
                 Einheit = spuleDto.Einheit,
                 Auftragsnummer = spuleDto.Auftragsnummer,
@@ -103,7 +100,7 @@ namespace TrenchAPI.Controllers
                 omega = spuleDto.omega
             };
 
-            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypId);
+            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypID);
             if (existingSpuleTyp == null)
             {
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");
