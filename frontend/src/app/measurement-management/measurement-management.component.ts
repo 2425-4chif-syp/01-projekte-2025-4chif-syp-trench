@@ -2,11 +2,18 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import mqtt from 'mqtt';
+import { RouterModule } from '@angular/router';
+
+interface SensorTolerance {
+  name: string;
+  greenMax: number;
+  yellowMax: number;
+}
 
 @Component({
   selector: 'app-measurement-management',
   standalone: true,
-  imports: [CommonModule, FormsModule] as const,
+  imports: [CommonModule, FormsModule, RouterModule] as const,
   templateUrl: './measurement-management.component.html',
   styleUrl: './measurement-management.component.scss'
 })
@@ -74,5 +81,24 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
 
   getSensorKeys(): string[] {
     return Object.keys(this.sensorValues);
+  }
+
+  getBackgroundColor(value: number, sensorName: string): string {
+    const tolerances = JSON.parse(localStorage.getItem('sensorTolerances') || '[]') as SensorTolerance[];
+    const sensorTolerance = tolerances.find(t => t.name === sensorName);
+    
+
+    if (!sensorTolerance) {
+      // Standardwerte falls keine Toleranzen gesetzt sind
+      if (value >= 0 && value <= 0.4) return 'green';
+      if (value >= 0.41 && value <= 0.7) return 'yellow';
+      if (value >= 0.71 && value <= 1) return 'red';
+      return 'gray';
+    }
+
+    if (value >= 0 && value <= sensorTolerance.greenMax) return 'green';
+    if (value > sensorTolerance.greenMax && value <= sensorTolerance.yellowMax) return 'yellow';
+    if (value > sensorTolerance.yellowMax && value <= 1) return 'red';
+    return 'gray';
   }
 }
