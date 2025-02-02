@@ -27,9 +27,9 @@ using (var scope = app.Services.CreateScope())
         if (app.Environment.IsDevelopment())
         {
             // Statt die Datenbank zu löschen, löschen wir nur die Tabellen
-            context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"Messeinstellung\" CASCADE");
-            context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"Spule\" CASCADE");
-            context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"SpuleTyp\" CASCADE");
+            //context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"Messeinstellung\" CASCADE");
+            //context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"Spule\" CASCADE");
+            //context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"SpuleTyp\" CASCADE");
             
             Console.WriteLine("Erstelle Datenbank neu...");
             context.Database.EnsureCreated();
