@@ -1,19 +1,21 @@
-<div class="container">
-  <h1>MQTT Data</h1>
+<div class="header">
+  <button class="settings-button" routerLink="/tolerance-settings">⚙️ Einstellungen</button>
+</div>
 
-  @if (hasConnected) {
-    @if (json === undefined) {
-      <p>Waiting for MQTT data...</p>
-    }
-    @else {
-      <pre>{{ json }}</pre>
-      <p>Last update: {{lastUpdate}}</p>
-      <div class="tolerance" [ngClass]="tolerance">
-      </div>
-      <p>Tolerance: {{tolerance}}</p>
-    }
-    }
-   @else {
-    <p>Waiting for MQTT connection...</p>
-   }
+<div class="sensor-container" *ngIf="hasConnected">
+  <div *ngFor="let sensor of getSensorKeys()" 
+       class="sensor-box"
+       [style.background-color]="getBackgroundColor(sensorValues[sensor], sensor)">
+    <div class="sensor-content">
+      <h3>{{ sensor }}</h3>
+      <p class="value">{{ sensorValues[sensor] | number:'1.4-4' }}</p>
+    </div>
+  </div>
+  <p class="update-time" *ngIf="lastUpdate">
+    Letzte Aktualisierung: {{ lastUpdate | date:'mediumTime' }}
+  </p>
+</div>
+
+<div class="loading" *ngIf="!hasConnected">
+  <p>Verbindung zum MQTT Broker wird hergestellt...</p>
 </div>

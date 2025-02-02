@@ -1,59 +1,42 @@
 <div class="coiltype-container">
-  <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect"
-          [(ngModel)]="selectedCoiltypeId" (ngModelChange)="onCoiltypeSelectionChange($event)">
-    <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
-      Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
-    </option>
-  </select>
-  <button class="btn btn-primary new-coiltype-button"
-          id="new-coiltype-button"
-          (click)="addNewCoiltype()">
-    Neuer Spulentyp
-  </button>
+  @if (coiltypesService.selectedCoiltypeIsNew) {
+    <h2>Neuer Spulentyp</h2>
+  }
+  @else {
+    <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
+      (ngModelChange)="onCoiltypeSelectionChange($event)">
+      <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
+        Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
+      </option>
+    </select>
+  }
 </div>
 
 <div class="container">
   <div class="panel" *ngIf="selectedCoiltype !== null">
     <div class="input-container">
       <label for="nameInput">Spulentyp-Name:</label>
-      <input type="text"
-             class="form-control inputField"
-             id="name"
-             placeholder="Spulenname eingeben"
-             [(ngModel)]="selectedCoiltype.tK_Name">
+      <input type="text" class="form-control inputField" id="name" placeholder="Spulenname eingeben"
+        [(ngModel)]="selectedCoiltype.tK_Name">
 
       <label for="numberSelect">Schenkelanzahl:</label>
-      <select class="form-control form-select"
-              id="numberSelect"
-              [(ngModel)]="selectedCoiltype.schenkel">
+      <select class="form-control form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel">
         <option [value]="2">2</option>
         <option [value]="3">3</option>
         <option [value]="4">4</option>
       </select>
 
       <label for="diameterInput">Bandbreite (mm):</label>
-      <input type="number"
-             class="form-control inputField"
-             id="bandbreite"
-             placeholder="Bandbreite in mm"
-             [(ngModel)]="selectedCoiltype.bb"
-             min="0">
+      <input type="number" class="form-control inputField" id="bandbreite" placeholder="Bandbreite in mm"
+        [(ngModel)]="selectedCoiltype.bb" min="0">
 
       <label for="arcLengthInput">Schichthöhe (mm):</label>
-      <input type="number"
-             class="form-control inputField"
-             id="schichthoehe"
-             placeholder="Schichthöhe in mm"
-             [(ngModel)]="selectedCoiltype.sh"
-             min="0">
+      <input type="number" class="form-control inputField" id="schichthoehe" placeholder="Schichthöhe in mm"
+        [(ngModel)]="selectedCoiltype.sh" min="0">
 
       <label for="endAreaInput">Durchmesser (mm)</label>
-      <input type="number"
-             class="form-control inputField"
-             id="durchmesser"
-             placeholder="Durchmesser in mm"
-             [(ngModel)]="selectedCoiltype.dm"
-             min="0">
+      <input type="number" class="form-control inputField" id="durchmesser" placeholder="Durchmesser in mm"
+        [(ngModel)]="selectedCoiltype.dm" min="0">
     </div>
 
     <div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
@@ -71,25 +54,21 @@
       </div>
     </div>
 
-    <div class="container no-coiltype-selected"
-         *ngIf="coiltypesService.selectedCoiltypeCopy === null">
+    <div class="container no-coiltype-selected" *ngIf="coiltypesService.selectedCoiltypeCopy === null">
       <p>Bitte wählen Sie einen Spulentypen aus.</p>
     </div>
 
-  </div> 
+  </div>
 
   <div *ngIf="selectedCoiltype === null">
     <span class="text-danger">
-      Fehler: Spule konnte nicht geladen werden. 
+      Fehler: Spule konnte nicht geladen werden.
     </span>
   </div>
-</div> 
+</div>
 
-<div class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     [ngClass]="{'show': showDeleteModal}"
-     [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
+  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -102,14 +81,10 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button"
-                class="btn btn-secondary"
-                (click)="showDeleteModal = false">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
           Abbrechen
         </button>
-        <button type="button"
-                class="btn btn-danger"
-                (click)="deleteCoiltype()">
+        <button type="button" class="btn btn-danger" (click)="deleteCoiltype()">
           Löschen
         </button>
       </div>

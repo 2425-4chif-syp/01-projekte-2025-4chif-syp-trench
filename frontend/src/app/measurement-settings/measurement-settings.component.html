@@ -1,0 +1,32 @@
+<div class="container">
+    <h1>Messeinstellungen</h1>
+    <div class="input-container">
+        <label for="bemessungs-spannung">Bemessunngsspannung:</label>
+            <input type="number" class="form-control inputField" id="bemessungs-spannung" placeholder="Bemessungsspannung"
+             [(ngModel)]="measurementSettings.bemessungsSpannung" min="0">
+    
+        <label for="bemessungs-frequez">Bemessungsfrequenz:</label>
+            <input type="number" class="form-control inputField" id="bemessungs-frequez" placeholder="Bemessungsfrequenz"
+                 [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
+
+        <label for="sonden-pro-schenkel">Sonden pro Schenkel:</label>
+            <select class="form-control form-select" id="sonden-pro-schenkel" [(ngModel)]="measurementSettings.sondenProSchenkel">
+                @for (amount of schenkelAnzahl(); track $index) {
+                    <option [value]="amount">{{amount}}</option>
+                }
+            </select>
+        <label for="mess-stärke">Messstärke:</label>
+            <input type="number" class="form-control inputField" id="mess-stärke" placeholder="Messstärke"
+                 [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
+
+        <div class="button-container">
+            <div class="buttons-row">
+                <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
+            </div>
+
+            <div class="saveMessage">
+                {{saveMessage}}
+            </div>
+            
+    </div>
+</div>

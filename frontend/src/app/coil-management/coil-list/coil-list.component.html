@@ -3,17 +3,19 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Spule</th>
-                    <th>AuftragsNr</th>
-                    <th>AuftragsPosNr</th>
-                    <th>UR</th>
-                    <th>Einheit</th>
-                    <th>Omega</th>
+                    <th (click)="sortTable('id')">Spule</th>
+                    <th (click)="sortTable('coiltypeId')">Spulentyp</th>
+                    <th (click)="sortTable('auftragsnummer')">AuftragsNr</th>
+                    <th (click)="sortTable('auftragsPosNr')">AuftragsPosNr</th>
+                    <th (click)="sortTable('ur')">UR</th>
+                    <th (click)="sortTable('einheit')">Einheit</th>
+                    <th (click)="sortTable('omega')">Omega</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let coil of coilsService.coils" class="clickable-row" (click)="openCoil(coil.id!)">
+                <tr *ngFor="let coil of sortedCoils" class="clickable-row" (click)="openCoil(coil.id!)">
                     <td>Spule #{{ coil.id }}</td>
+                    <td>{{ coil.coiltype?.tK_Name }}</td>
                     <td>{{ coil.auftragsnummer }}</td>
                     <td>{{ coil.auftragsPosNr }}</td>
                     <td>{{ coil.ur }}</td>
