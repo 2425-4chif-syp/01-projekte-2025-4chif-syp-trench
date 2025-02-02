@@ -22,7 +22,7 @@ jobs:
       - name: Deploy via SSH
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /pfad/zu/deinem/repo
+            cd TrenchProv1/01-projekte-2025-4chif-syp-trench/
             echo "Pulling latest changes..."
             git pull origin main
             echo "Updating Docker containers..."
