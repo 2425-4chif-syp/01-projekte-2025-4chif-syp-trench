@@ -92,7 +92,7 @@ namespace TrenchAPI.Controllers
             var spule = new Spule
             {
                 SpuleId = spuleDto.SpuleId,
-                SpuleTypID = spuleDto.SpuleTypId,
+                SpuleTypId = spuleDto.SpuleTypId,
                 Ur = spuleDto.Ur,
                 Einheit = spuleDto.Einheit,
                 Auftragsnummer = spuleDto.Auftragsnummer,
@@ -100,7 +100,7 @@ namespace TrenchAPI.Controllers
                 omega = spuleDto.omega
             };
 
-            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypID);
+            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypId);
             if (existingSpuleTyp == null)
             {
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");
