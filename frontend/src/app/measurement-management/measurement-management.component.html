@@ -1,19 +1,10 @@
-<div class="container">
-  <h1>MQTT Data</h1>
-
-  @if (hasConnected) {
-    @if (json === undefined) {
-      <p>Waiting for MQTT data...</p>
-    }
-    @else {
-      <pre>{{ json }}</pre>
-      <p>Last update: {{lastUpdate}}</p>
-      <div class="tolerance" [ngClass]="tolerance">
-      </div>
-      <p>Tolerance: {{tolerance}}</p>
-    }
-    }
-   @else {
-    <p>Waiting for MQTT connection...</p>
-   }
+<div *ngIf="hasConnected">
+  <h2>Sensor Values</h2>
+  <div *ngFor="let sensor of getSensorKeys()">
+    <strong>{{ sensor }}:</strong> {{ sensorValues[sensor] }}
+  </div>
+  <p *ngIf="lastUpdate">Last updated: {{ lastUpdate | date:'mediumTime' }}</p>
+</div>
+<div *ngIf="!hasConnected">
+  <p>Connecting to MQTT broker...</p>
 </div>
