@@ -31,7 +31,7 @@ using (var scope = app.Services.CreateScope())
             //context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"Spule\" CASCADE");
             //context.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS \"SpuleTyp\" CASCADE");
             
-            Console.WriteLine("Erstelle Datenbank neu...");
+            //Console.WriteLine("Erstelle Datenbank neu...");
             context.Database.EnsureCreated();
             
             // Überprüfe, welche Tabellen erstellt wurden

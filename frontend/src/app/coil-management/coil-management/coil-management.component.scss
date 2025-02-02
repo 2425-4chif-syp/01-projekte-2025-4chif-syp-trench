@@ -1,8 +1,9 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: calc(50vh - 220px);
+  //align-items: center;
+  max-height: 70vh;
+  min-height: 30vh;
   padding: 20px;
 }
 
@@ -10,9 +11,10 @@
   display: flex;
   flex-direction: column;
   background-color: rgba(159, 159, 159, 0.333);
+  box-shadow: 0px 0px 7.5px rgb(0, 0, 0.1);
   border-radius: 15px;
   padding: 20px;
-  max-width: 850px;
+  max-width: 650px;
   width: 100%;
 }
 
@@ -26,8 +28,8 @@
 .coil-container {
   display: flex;
   align-items: center;
-  margin: 10px;
   justify-content: center;
+  margin: 10px;
 
   #coilSelect {
     margin: 10px;
@@ -37,7 +39,7 @@
   }
 
   #new-coil-button {
-    padding: 5px 100px;
+    padding: 5px 25px;
     white-space: nowrap;
   }
 }
@@ -52,6 +54,8 @@
 
 .buttons-row {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -79,19 +83,18 @@
   margin-left: 2px;
 }
 
-.saveMessage {
-  position: absolute;
-  top: 100%;
+.save-success {
+  color: green;
   font-size: 1.3em;
   margin-top: 25px;
-
-  &.error {
-    color: #dc3545;
-  }
-  &:not(.error) {
-    color: #28a745;
-  }
 }
+
+.save-fail {
+  color: red;
+  font-size: 1.3em;
+  margin-top: 25px;
+}
+
 
 .modal.show {
   display: block;
@@ -122,7 +125,7 @@
       transform: translateY(-50%);
       font-size: 0.75rem;
       color: #6c757d;
-      transition: transform 0.2s ease; 
+      transition: transform 0.2s ease;
     }
   }
 

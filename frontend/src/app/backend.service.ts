@@ -122,7 +122,7 @@ export class BackendService {
       bemessungsSpannung: measurementSettings.bemessungsSpannung,
       bemessungsFrequenz: measurementSettings.bemessungsFrequenz,
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
-      messStärke: measurementSettings.messStärke,
+      messStaerke: measurementSettings.messStärke,
       zeitstempel: measurementSettings.zeitstempel
     };
   }
@@ -132,7 +132,7 @@ export class BackendService {
       bemessungsSpannung: measurementSettings.bemessungsSpannung,
       bemessungsFrequenz: measurementSettings.bemessungsFrequenz,
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
-      messStärke: measurementSettings.messStärke,
+      messStärke: measurementSettings.messStaerke,
       zeitstempel: measurementSettings.zeitstempel
     }
   }

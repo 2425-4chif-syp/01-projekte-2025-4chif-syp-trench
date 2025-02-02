@@ -1,32 +1,40 @@
-<div class="container">
+<div class="measurementsettings-container">
     <h1>Messeinstellungen</h1>
-    <div class="input-container">
-        <label for="bemessungs-spannung">Bemessunngsspannung:</label>
-            <input type="number" class="form-control inputField" id="bemessungs-spannung" placeholder="Bemessungsspannung"
-             [(ngModel)]="measurementSettings.bemessungsSpannung" min="0">
-    
-        <label for="bemessungs-frequez">Bemessungsfrequenz:</label>
-            <input type="number" class="form-control inputField" id="bemessungs-frequez" placeholder="Bemessungsfrequenz"
-                 [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
+</div>
+<div class="container">
+    <div class="panel">
+        <div class="input-container">
+            <label for="bemessungs-spannung">Bemessunngsspannung:</label>
+            <input type="number" class="form-control inputField" id="bemessungs-spannung"
+                placeholder="Bemessungsspannung" [(ngModel)]="measurementSettings.bemessungsSpannung"
+                [class.invalid]="isFieldInvalid('bemessungsSpannung')" min="0">
 
-        <label for="sonden-pro-schenkel">Sonden pro Schenkel:</label>
-            <select class="form-control form-select" id="sonden-pro-schenkel" [(ngModel)]="measurementSettings.sondenProSchenkel">
+            <label for="bemessungs-frequez">Bemessungsfrequenz:</label>
+            <input type="number" class="form-control inputField" id="bemessungs-frequez"
+                placeholder="Bemessungsfrequenz" [(ngModel)]="measurementSettings.bemessungsFrequenz"
+                [class.invalid]="isFieldInvalid('bemessungsFrequenz')" min="0">
+
+            <label for="sonden-pro-schenkel">Sonden pro Schenkel:</label>
+            <select class="form-control form-select" id="sonden-pro-schenkel"
+                [(ngModel)]="measurementSettings.sondenProSchenkel"
+                [class.invalid]="isFieldInvalid('sondenProSchenkel')">
                 @for (amount of schenkelAnzahl(); track $index) {
-                    <option [value]="amount">{{amount}}</option>
+                <option [value]="amount">{{amount}}</option>
                 }
             </select>
-        <label for="mess-stärke">Messstärke:</label>
+            <label for="mess-stärke">Messstärke:</label>
             <input type="number" class="form-control inputField" id="mess-stärke" placeholder="Messstärke"
-                 [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
+                [(ngModel)]="measurementSettings.messStaerke" [class.invalid]="isFieldInvalid('messStaerke')" min="0">
+
+        </div>
 
         <div class="button-container">
             <div class="buttons-row">
                 <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
             </div>
-
-            <div class="saveMessage">
+            <div *ngIf="saveMessage"
+                [ngClass]="{'save-success': saveMessage === 'Änderungen gespeichert!', 'save-fail': saveMessage === 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus'}">
                 {{saveMessage}}
             </div>
-            
+        </div>
     </div>
-</div>

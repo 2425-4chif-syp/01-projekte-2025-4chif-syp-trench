@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
+import { Coil } from '../../data/coil-data/coil';
 
 @Component({
   selector: 'app-coiltype-management',
@@ -16,6 +17,7 @@ export class CoiltypeManagementComponent {
 
     }
     saveMessage: string | null = null;
+    hasSaved: boolean = false;
 
     public get selectedCoiltype():Coiltype|null {
       return this.coiltypesService.selectedCoiltypeCopy;
@@ -28,15 +30,28 @@ export class CoiltypeManagementComponent {
     }
 
     isFieldInvalid(field: string): boolean {
-      /*if (field === 'bandbreite' && this.bandbreite === null) {
+      if(!this.hasSaved) return false;
+      if(!this.selectedCoiltype) return true;
+
+      let value = this.selectedCoiltype[field as keyof Coiltype]
+
+      if (field === 'numberSelect' && this.selectedCoiltype.schenkel == 0){
         return true;
       }
-      if (field === 'schichthoehe' && this.schichthoehe === null) {
+
+      if (value === null || value === undefined && field != 'numberSelect'){
         return true;
       }
-      if (field === 'durchmesser' && this.durchmesser === null) {
+
+
+      if (typeof value === 'string' && field == 'tK_Name' && value === ''){
         return true;
-      }*/
+      }
+
+      if (typeof value === 'number' && (field === 'bb' || field === 'sh' || field === 'dm')) {
+        return value <= 0;
+      }
+    
       return false;
     }
 
@@ -49,29 +64,25 @@ export class CoiltypeManagementComponent {
         // This can happen if Angular sets selectedCoiltypeId to a string for some reason
         throw new Error('selectedCoiltypeId is not of type number');
       }
+        try{
+          if(this.selectedCoiltype?.tK_Name.length == 0){
+            throw new Error("Name ist leer");
+          }
+          await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
 
-      // TODO: Fix invalid fields
-      //const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
-
-      //if (invalidFields.length > 0) {
-      //  alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
-      //  return;
-      //}
-
-      //const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
-
-      /*if (coiltype === undefined) {
-        throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
-      }*/
-
-      await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
-
-      this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
-
-      this.saveMessage = 'Änderungen gespeichert!';
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
+          this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
+    
+          this.saveMessage = 'Änderungen gespeichert!';
+          this.hasSaved = true;
+          setTimeout(() => {
+            this.saveMessage = null;
+          }, 3000);
+        }catch(e){
+          this.saveMessage = 'Speichern fehlgeschlagen! Fülle alle Pflichtfelder aus';
+        setTimeout(() => {
+          this.saveMessage = null;
+        }, 5000);
+        }
     }
 
     async onCoiltypeSelectionChange(coiltypeId: number) {
@@ -99,5 +110,7 @@ export class CoiltypeManagementComponent {
     backToListing():void {
       this.coiltypesService.selectedCoiltypeCopy = null;
     }
+
+    
 }
 
