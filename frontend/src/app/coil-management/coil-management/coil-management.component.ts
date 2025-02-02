@@ -37,8 +37,10 @@ export class CoilManagementComponent {
   }
 
   public get selectedCoiltype(): Coiltype|null {
-    if (this.selectedCoil?.coiltypeId === null){
-      return null;
+    console.log(this.selectedCoil);
+
+    if (this.selectedCoil?.coiltype ?? null !== null) {
+      return this.selectedCoil?.coiltype!;
     }
 
     return this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
@@ -132,7 +134,7 @@ export class CoilManagementComponent {
   showCoiltypeDropdown: boolean = false;
 
   toggleCoiltypeDropdown() {
-    console.log(this.coilsService.selectCoil)
+    //console.log(this.coilsService.selectCoil);
     this.showCoiltypeDropdown = !this.showCoiltypeDropdown;
   }
 
