@@ -23,7 +23,9 @@ export class CoilVisualizationComponent {
   public getNTransform(n:number):any {
     return {
       n: n,
-      rotate: 360 / this.n * n
+      rotate: 360 / this.n * n,
+      width: 80 - 8 * this.n,
+      distanceFromRadius: 14 + 16 * (this.n - 2),
     }
   }
 }

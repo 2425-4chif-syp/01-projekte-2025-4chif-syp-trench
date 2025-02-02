@@ -10,8 +10,8 @@
             3. Translate to the middle of the circle
     -->
     @for (n of nTransforms; track n.n) {
-    <g [attr.transform]="'translate(256, 256) rotate('+n.rotate+') translate(0, 50)'">
-        <polyline points="-40,0 -40,80 40,80 40,0" 
+    <g [attr.transform]="'translate(256, 256) rotate('+n.rotate+') translate(0, '+n.distanceFromRadius+')'">
+        <polyline [attr.points]="'-'+n.width+',0 -'+n.width+',80 '+n.width+',80 '+n.width+',0'" 
         fill="none" stroke="black" stroke-width="5"
         />
     </g>
