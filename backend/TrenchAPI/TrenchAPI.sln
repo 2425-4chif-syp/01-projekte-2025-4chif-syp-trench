@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrenchAPI", "TrenchAPI.csproj", "{F2EAF273-A437-4825-B5B8-BD7F709B1C60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttTestingData", "MqttTestingData\MqttTestingData.csproj", "{6ADBAB49-7030-4A2D-BAA6-83E379A0F031}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2EAF273-A437-4825-B5B8-BD7F709B1C60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ADBAB49-7030-4A2D-BAA6-83E379A0F031}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ADBAB49-7030-4A2D-BAA6-83E379A0F031}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ADBAB49-7030-4A2D-BAA6-83E379A0F031}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ADBAB49-7030-4A2D-BAA6-83E379A0F031}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

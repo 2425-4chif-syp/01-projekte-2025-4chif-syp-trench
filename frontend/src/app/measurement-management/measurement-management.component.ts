@@ -11,9 +11,9 @@ import mqtt from 'mqtt';
   styleUrl: './measurement-management.component.scss'
 })
 export class MeasurementManagementComponent implements OnInit, OnDestroy {
-  public hasConnected:boolean = false;
-  public measurements: Array<{name: string, value: any, tolerance: string}> = [];
-  public lastUpdate:Date|undefined = undefined;
+  public hasConnected: boolean = false;
+  public sensorValues: { [key: string]: number } = {}; // Store sensor values
+  public lastUpdate: Date | undefined = undefined;
 
   private client!: mqtt.MqttClient;
 
@@ -23,7 +23,7 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
     const host = 'vm90.htl-leonding.ac.at';
     const username = 'student';
     const password = 'passme';
-    const topic = 'SmartHome/Sun_Power/Data_json';
+    const baseTopic = 'trench_test/#';
 
     this.client = mqtt.connect(`ws://${host}:9001/ws`, {
       username: username,
@@ -32,37 +32,34 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
 
     this.client.on('connect', () => {
       console.log('Connected to MQTT broker');
-      // Subscribe to the updated topic SmartHome/Sun_Power
-      this.client.subscribe(topic, { qos: 1 }, (err:any, granted:any) => {
+
+      this.client.subscribe(baseTopic, { qos: 1 }, (err: any, granted: any) => {
         if (err) {
           console.error('Subscription error:', err);
         } else {
-          console.log(`Subscribed to topic: `, topic);
+          console.log(`Subscribed to topic: ${baseTopic}`);
           this.hasConnected = true;
         }
       });
     });
 
-    this.client.on('message', (topic: any, message: any) => {
+    this.client.on('message', (topic: string, message: Buffer) => {
       try {
-        const messageData = JSON.parse(message.toString());
-        
-        // Nehme die ersten 5 Attribute aus dem messageData Objekt
-        this.measurements = Object.entries(messageData)
-          .slice(0, 5)
-          .map(([name, value]) => ({
-            name,
-            value,
-            tolerance: ['bad', 'medium', 'good'][Math.floor(Math.random() * 3)]
-          }));
+        const sensorKey = topic.split('/').pop()!;
+
+        const sensorValue = parseFloat(message.toString());
+
+        this.sensorValues[sensorKey] = sensorValue;
 
         this.lastUpdate = new Date();
+
+        console.log(`Received value for ${sensorKey}:`, sensorValue);
       } catch (error) {
-        console.error('Failed to parse message:', error);
+        console.error('Failed to process message:', error);
       }
     });
 
-    this.client.on('error', (err:any) => {
+    this.client.on('error', (err: any) => {
       console.error('MQTT connection error:', err);
     });
 
@@ -72,16 +69,10 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Close the MQTT connection when the component is destroyed
     this.client.end();
   }
 
-  getToleranceColor(tolerance: string): string {
-    switch(tolerance) {
-      case 'bad': return 'red';
-      case 'medium': return 'yellow';
-      case 'good': return 'green';
-      default: return 'gray';
-    }
+  getSensorKeys(): string[] {
+    return Object.keys(this.sensorValues);
   }
 }

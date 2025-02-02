@@ -1,24 +1,10 @@
-<div class="container">
-  <h1>MQTT Data</h1>
-
-  @if (hasConnected) {
-    @if (measurements.length === 0) {
-      <p>Waiting for MQTT data...</p>
-    }
-    @else {
-      <p>Last update: {{lastUpdate}}</p>
-    }
-  }
-  @else {
-    <p>Waiting for MQTT connection...</p>
-  }
-</div>
-
-<div class="measurements-container">
-  <div *ngFor="let measurement of measurements" 
-       class="measurement-box"
-       [style.background-color]="getToleranceColor(measurement.tolerance)">
-    <h3>{{measurement.name}}</h3>
-    <p>{{measurement.value}}</p>
+<div *ngIf="hasConnected">
+  <h2>Sensor Values</h2>
+  <div *ngFor="let sensor of getSensorKeys()">
+    <strong>{{ sensor }}:</strong> {{ sensorValues[sensor] }}
   </div>
+  <p *ngIf="lastUpdate">Last updated: {{ lastUpdate | date:'mediumTime' }}</p>
+</div>
+<div *ngIf="!hasConnected">
+  <p>Connecting to MQTT broker...</p>
 </div>
