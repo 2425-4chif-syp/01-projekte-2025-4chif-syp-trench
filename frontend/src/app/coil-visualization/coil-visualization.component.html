@@ -1,0 +1,40 @@
+<div class="container">
+    @if (coreRadius > 0 && bb > 0 && n >= 2) {
+        <svg width="512px" height="512px">
+            <!-- Center cirle -->
+            <circle [attr.r]="coreRadius" cx="256" cy="256" fill="none" stroke="black" stroke-width="5" />
+            <!-- Yokes -->
+            @for (n of nTransforms; track n.n) {
+                <!-- 
+                First the polyline gets drawn at the origin (0, 0)
+                Then it gets transformed (order is from left to right):
+                    1. Translate upwards
+                    2. Rotate by n.rotate degrees around the origin
+                    3. Translate to the middle of the circle
+                -->
+                <g [attr.transform]="'translate(256, 256) rotate('+n.rotate+') translate(0, '+n.distanceFromRadius+')'">
+                    <!-- Left and right lines -->
+                    <line [attr.x1]="-n.width" [attr.y1]="0"    [attr.x2]="-n.width" [attr.y2]="n.height+1"   
+                    fill="none" stroke="black" stroke-width="5"
+                    />
+                    <line [attr.x1]="n.width" [attr.y1]="0"    [attr.x2]="n.width" [attr.y2]="n.height+1"   
+                    fill="none" stroke="black" stroke-width="5"
+                    />
+
+                    <!-- Arc between those lines -->
+                    <path [attr.d]="'M '+(-n.width)+','+n.height+' A '+coreRadius+','+coreRadius+' 0 0 0 '+n.width+','+n.height"
+                    fill="none" stroke="black" stroke-width="5"/> 
+                </g>
+
+                <!-- Center dot -->
+                <circle r="3" cx="256" cy="256" 
+                fill="none" stroke="black" stroke-width="2" />
+            }
+        </svg>
+    }
+    @else {
+        <div style="width: 512px; height: 512px;">
+            <p class="text-danger">Eingabe ist nicht zeichenbar</p>
+        </div>
+    }
+</div>

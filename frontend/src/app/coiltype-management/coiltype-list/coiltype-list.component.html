@@ -16,7 +16,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let coiltype of sortedCoiltypes" class="clickable-row" (click)="openCoiltype(coiltype.id!)">
+                <tr *ngFor="let coiltype of sortedCoiltypes" class="clickable-row" 
+                (click)="openCoiltype(coiltype.id!)" 
+                (mouseenter)="onElementHoverStart(coiltype)"
+                (mouseleave)="onElementHoverEnd(coiltype)">
                     <td scope="row">Spulentyp #{{coiltype.id}}</td>
                     <td>{{ coiltype.tK_Name }}</td>
                     <td>{{ coiltype.schenkel }}</td>
@@ -32,3 +35,11 @@
     }
 </div>
 
+@if (hoveredCoiltype !== null && mousePosition !== null) {
+    <div class="hover-tooltip" [ngStyle]="{
+        'top.px': mousePosition.y,
+        'left.px': mousePosition.x,
+    }">
+        <app-coil-visualization [n]="hoveredCoiltype.schenkel" [bb]="hoveredCoiltype.bb!" [dm]="hoveredCoiltype.dm!"></app-coil-visualization>
+    </div>  
+}
