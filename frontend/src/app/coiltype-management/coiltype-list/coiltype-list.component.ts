@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
 import { CoilsService } from '../../data/coil-data/coils.service';
 import { Router } from '@angular/router';
+import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
 
 @Component({
   selector: 'app-coiltype-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CoilVisualizationComponent],
   templateUrl: './coiltype-list.component.html',
   styleUrl: './coiltype-list.component.scss'
 })
@@ -16,6 +17,10 @@ export class CoiltypeListComponent {
   public sortedCoiltypes: Coiltype[] = [];
 
   private sortDirection: { [key: string]: boolean } = {};
+
+  public hoveredCoiltype: Coiltype | null = null;
+
+  public mousePosition: { x: number, y: number }|null = null;
 
   constructor(public coiltypesService:CoiltypesService, public coilsService:CoilsService, private router:Router) {
     this.initialize();
@@ -30,6 +35,14 @@ export class CoiltypeListComponent {
     this.sortedCoiltypes = [...this.coiltypesService.coiltypes]
   }
 
+  onElementHoverStart(coiltype:Coiltype) {
+    this.hoveredCoiltype = coiltype;
+  }
+  onElementHoverEnd(coiltype:Coiltype) {
+    if (this.hoveredCoiltype === coiltype) {
+      this.hoveredCoiltype = null;
+    }
+  }
 
   async addNewCoiltype() {
     const newCoiltype:Coiltype = {
@@ -69,5 +82,11 @@ export class CoiltypeListComponent {
       }
       return 0;
     });
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    console.log('Mouse posiotion:', event.clientX, event.clientY);
+    this.mousePosition = { x: event.clientX, y: event.clientY };
   }
 }

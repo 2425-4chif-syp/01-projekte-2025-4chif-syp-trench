@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
+import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
 
 @Component({
   selector: 'app-coiltype-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, CoilVisualizationComponent],
   templateUrl: './coiltype-management.component.html',
   styleUrl: './coiltype-management.component.scss'
 })
