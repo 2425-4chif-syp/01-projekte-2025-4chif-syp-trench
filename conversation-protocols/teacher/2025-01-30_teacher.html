@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 11.12.2024 (1)</title>
+<title>Besprechungsprotokoll 30.01.2025</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 11.12.2024 (1)</h1>
+<h1>Besprechungsprotokoll 30.01.2025</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -450,7 +450,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 11.12.2024 (1)</strong></p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 30.01.2025</strong></p>
 </div>
 <div class="paragraph">
 <p>Emil Silber</p>
@@ -491,11 +491,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 11.12.2024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 30.01.2025</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20 Minuten</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">25 Minuten</p></td>
 </tr>
 </tbody>
 </table>
@@ -507,13 +507,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Messungen</p>
+<p>MQTT-Kommunikation</p>
 </li>
 <li>
-<p>Technologien</p>
+<p>Toleranz</p>
 </li>
 <li>
-<p>Schnittstellen</p>
+<p>Sensoren</p>
 </li>
 </ul>
 </div>
@@ -537,102 +537,201 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Nach einem Anruf mit Dr. Köck hat sich folgendes ergeben:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Er wird keine USB-Schnittstelle geben, deswegen werden wir MQTT verwenden.</p>
-</li>
-<li>
-<p>Das Backend soll in C# geschrieben werden</p>
-</li>
-<li>
-<p>Die Messung wird periodisch sein, der Intervall ist mit 5-10 Sekunden zu erwarten</p>
-</li>
-<li>
-<p>Die Messungen werden folgend stattfinden:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha">
-<li>
-<p>Der Tauchkern wird ganz oben gemessen</p>
-</li>
-<li>
-<p>Der Tauchkern wird ganz unten gemessen</p>
-</li>
-<li>
-<p>Der Tauchkern wird in der Mitte gemessen</p>
-</li>
-<li>
-<p>Abweichungen möglich</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Folgende relevante Informationen wurden gegeben:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Positionen der Sensoren werden in der Konfigurationsphase festgestellt.</p>
-</li>
-<li>
-<p>Sensoren werden 0-3 Volt machen.</p>
-</li>
-<li>
-<p>Sensoren werden mit einem ESP32 verbunden. Entweder werden alle eine individuell bekommen oder sie werden alle an eine ESP32 gebunden.</p>
-</li>
-<li>
-<p>Die Daten, die gesendet werden müssen, wir noch genauer ausmachen mit Prof. Stütz, möglicher Format:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha">
-<li>
-<p>Sensor: 1</p>
-</li>
-<li>
-<p>Value (Entfernung): 23 mm</p>
-</li>
-<li>
-<p>Time:</p>
-</li>
-<li>
-<p>Description:</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="protocol-images/2024-12-11_diagram.png" alt="x">
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="/01-projekte-2025-4chif-syp-trench/conversation-protocols/protocol-images/2024-12-11_diagram.png" alt="x">
-</div>
-</div>
-<div class="paragraph">
-<p>Erklärung:</p>
-</div>
-<div class="paragraph">
-<p>Das WLAN-Box in der ESP32, schickt die Daten an MQTT, welches dann mithilfe eines MQTT-Brokers es an das C# Backend weiterleitet. Das Backend verarbeitet die Daten und speichert sie in der Datenbank und schickt es, mit NGINX, an das Frontend, dies wird dann von Angular im Browser dargestellt.</p>
-</div>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="sect1">
+<h2 id="_1_mqtt_kommunikation"><a class="anchor" href="#_1_mqtt_kommunikation"></a>1. 1. MQTT-Kommunikation</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Stütz wird uns das C# Backend von Aitenbichler gebenden. Wir sollen die benutzten Libraries und Methoden analysieren, dann selbst schreiben.</p>
+<p><strong>MQTT-Topic:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Es soll ein Topic mit dem Präfix <code>Trench</code> an den MQTT-Broker gesendet werden, um relevante Steuerungs- und Statusinformationen zu übertragen.</p>
 </li>
 </ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_toleranzbearbeitung_und_farbliche_darstellung"><a class="anchor" href="#_2_toleranzbearbeitung_und_farbliche_darstellung"></a>2. 2. Toleranzbearbeitung und Farbliche Darstellung</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Toleranzbearbeitung:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Die Toleranzwerte sollen auf der Website bearbeitet und angezeigt werden.</p>
+</li>
+<li>
+<p><strong>Farbkennzeichnung:</strong></p>
+</li>
+<li>
+<p><strong>Rot:</strong> Werte, die unterhalb des definierten Mindestwerts liegen</p>
+</li>
+<li>
+<p><strong>Gelb:</strong> Werte im Grenzbereich</p>
+</li>
+<li>
+<p><strong>Grün:</strong> Werte im akzeptablen Bereich</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Interaktive Steuerung:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Eine zweite Website soll einen Schieberegler zur Anpassung der Toleranzwerte bereitstellen.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3_netzwerkinfrastruktur_und_access_points"><a class="anchor" href="#_3_netzwerkinfrastruktur_und_access_points"></a>3. 3. Netzwerkinfrastruktur und Access Points</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Eigenes Netzwerk:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Es wird ein eigenes Netzwerk mit einem Access Point namens <code>Trench-AP1</code> eingerichtet.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>ESP32-Integration:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Sobald der ESP32 verfügbar ist, soll dieser einen eigenen Access Point bereitstellen, um eine nahtlose Integration in das System zu gewährleisten.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_4_sensorintegration_und_schwellwertanzeige"><a class="anchor" href="#_4_sensorintegration_und_schwellwertanzeige"></a>4. 4. Sensorintegration und Schwellwertanzeige</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Sensordaten und Schwellwerte:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Das System umfasst 5 Bereiche zur Erfassung von Sensorwerten und deren zugehörigen Schwellwerten.</p>
+</li>
+<li>
+<p>Darstellung:</p>
+</li>
+<li>
+<p>Werte, die unterhalb eines definierten Schwellenwerts liegen, werden in <strong>Rot</strong> angezeigt.</p>
+</li>
+<li>
+<p>Jeder Sensorwert wird in einer auffälligen, großen Darstellung präsentiert, um die Übersichtlichkeit zu erhöhen.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Bereichs-/Stufeneinteilung:</strong></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Stufe 1</p>
+</li>
+<li>
+<p>Stufe 2</p>
+</li>
+<li>
+<p>Stufe 3</p>
+</li>
+<li>
+<p>Stufe 4</p>
+</li>
+<li>
+<p>Stufe 5</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_spuletypverwaltung_und_visualisierung"><a class="anchor" href="#_5_spuletypverwaltung_und_visualisierung"></a>5. 5. Spuletypverwaltung und Visualisierung</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Visualisierung:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Die Spule wird von oben dargestellt, sodass die Schenkel (Seitenansicht) klar erkennbar sind.</p>
+</li>
+<li>
+<p>Ein Durchmesser wird gemessen und mit einem definierten Maßstab (z. B. menschliche Größe) verglichen, um eine intuitive Einschätzung zu ermöglichen.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Integration und Konsistenz:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Die Visualisierung soll als „roter Faden“ dienen, damit stets klar ersichtlich ist, in welchem Zustand oder Bereich sich das System befindet.</p>
+</li>
+<li>
+<p>Es wird darauf geachtet, dass die Visualisierung in der Spuletypverwaltung konsistent wiederverwendet wird.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_6_user_stories_und_aufgabenverwaltung"><a class="anchor" href="#_6_user_stories_und_aufgabenverwaltung"></a>6. 6. User Stories und Aufgabenverwaltung</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Anforderungen an User Stories:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Jede User Story muss einen klar definierten Assignee haben.</p>
+</li>
+<li>
+<p>Die Beschreibungen der User Stories sollen sehr prägnant und in einer einfachen, nahezu primitiven Sprache verfasst sein, um Missverständnisse zu vermeiden.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
 </div></div></td>
 </tr>
 </tbody>

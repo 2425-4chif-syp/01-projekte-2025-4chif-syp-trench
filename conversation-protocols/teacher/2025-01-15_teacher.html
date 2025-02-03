@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 08.01.2025</title>
+<title>Besprechungsprotokoll 15.01.2025</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 08.01.2025</h1>
+<h1>Besprechungsprotokoll 15.01.2025</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -450,7 +450,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 08.01.2025</strong></p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 15.01.2025</strong></p>
 </div>
 <div class="paragraph">
 <p>Emil Silber</p>
@@ -469,11 +469,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backend-Team</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Bucek</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -491,11 +491,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Di. 08.01.2025</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 15.01.2025</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10 Minuten</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1 Stunde</p></td>
 </tr>
 </tbody>
 </table>
@@ -507,7 +507,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>EntityFramework</p>
+<p>ERD</p>
+</li>
+<li>
+<p>Sensoren</p>
 </li>
 </ul>
 </div>
@@ -530,44 +533,101 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Bucek</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="sect1">
-<h2 id="_ziel"><a class="anchor" href="#_ziel"></a>1. Ziel</h2>
+<h2 id="_1_hardware_messkomponenten"><a class="anchor" href="#_1_hardware_messkomponenten"></a>1. 1. Hardware &amp; Messkomponenten</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Single Responsibility Principle</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Analog-Digitalkonverter</p>
+</li>
+<li>
+<p>ESP-32</p>
+</li>
+<li>
+<p>Batterie (Messobjekt)</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_änderungen"><a class="anchor" href="#_änderungen"></a>2. Änderungen</h2>
+<h2 id="_2_anforderungen_user_story"><a class="anchor" href="#_2_anforderungen_user_story"></a>2. 2. Anforderungen / User Story</h2>
 <div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Anforderung</strong></p>
+<div class="paragraph">
+<p><strong>User Story:</strong>
+"Als Benutzer möchte ich Schwellwerte eingeben können, damit ich weiß, ob die Position passt."
+- Die Auswertung erfolgt farblich (z. B. Rot, Gelb, Grün) zur einfachen Interpretation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3_plattform_software"><a class="anchor" href="#_3_plattform_software"></a>3. 3. Plattform &amp; Software</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Jede Komponente (Modelle, Steuerung, Datenzugriff) wird klar getrennt.</p>
-</li>
+<p>Zielplattform:*</p>
+<div class="ulist">
+<ul>
 <li>
-<p>Jede Datei übernimmt nur eine spezifische Aufgabe.</p>
+<p>Die Anwendung soll auf einem Tablet laufen.</p>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p><strong>Umsetzung</strong></p>
+<p>Software &amp; Tools:*</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Bestehender Backend Code wird neu organisiert.</p>
+<p>Einsatz von esphome.</p>
+</li>
+<li>
+<p>Beschaffung eines Windows-Pads durch den zuständigen Verantwortlichen.</p>
 </li>
 </ul>
 </div>
 </li>
-</ol>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_4_systemarchitektur_nächste_schritte"><a class="anchor" href="#_4_systemarchitektur_nächste_schritte"></a>4. 4. Systemarchitektur &amp; Nächste Schritte</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Insellösung:*</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Einrichtung einer Insellösung mit MQTT (Mosquitto).</p>
+</li>
+<li>
+<p>Das Tablet (unter Windows) greift über nginx und mittels Tastatureingabe auf den vm102-Server zu.</p>
+</li>
+<li>
+<p>Aktuell ist der Server noch nicht von zentraler Bedeutung, da in der ersten Phase alle Prozesse lokal auf dem Tablet laufen.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_zielsetzung"><a class="anchor" href="#_5_zielsetzung"></a>5. 5. Zielsetzung</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Einsatz so wenig Komponenten wie möglich, um den Aufwand und vor allem potenzielle Fehlerquellen zu minimieren.</p>
+</li>
+</ul>
 </div>
 </div>
 </div></div></td>
@@ -579,7 +639,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-03 07:06:49 UTC
+Last updated 2025-02-03 09:16:02 UTC
 </div>
 </div>
 </body>
