@@ -42,9 +42,13 @@ https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Proje
 | Epic, User stories, Tasks, Nach Weihnachten
 | Emil Silber, Prof. Palitsch-Infanger
 
-| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-08_teacher[08.01.2025]*
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-08_teacher_1[08.01.2025 (1)]*
 | EntityFramework
 | Emil Silber, Prof. Bucek
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-08_teacher_2[08.01.2025 (2)]*
+| EntityFramework
+| Trench-Team, Prof. Stütz
 |===
 
 == Project Meetings

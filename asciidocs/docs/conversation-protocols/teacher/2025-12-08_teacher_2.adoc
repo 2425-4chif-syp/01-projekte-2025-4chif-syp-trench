@@ -1,0 +1,98 @@
+= Besprechungsprotokoll 08.01.2025 (2)
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 08.01.2025 (2)*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Trench-Team
+|Trench-Team
+
+|Prof. Stütz
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Di. 08.01.2025
+|Dauer
+|25 Minuten
+|===
+
+
+
+== Besprochene Themen
+
+* Akuteller Stand
+* Teamstruktur
+* MQTT
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a| 
+
+== 1. Aktueller Stand
+
+*Daten-Mocking:*  
+Simulierung von Daten (Mocking) zur Überprüfung des Datenflusses.
+
+*Visualisierung:*  
+Direkte Einbindung in eine JavaScript-Bibliothek, um Messwerte als Zahlen auf der Website anzuzeigen und den Datenfluss zu überwachen.
+
+== 2. Teamstruktur und Arbeitsweise
+
+*Parallelarbeit:*  
+An allen Teilbereichen wird gleichzeitig gearbeitet.
+
+*Teamgröße:*  
+Mindestens zwei Personen, mit besonderem Fokus auf den Bereich "Messung Visualisierung".
+
+*Planung und Dokumentation:*  
+- Definition der Use Cases und deren Eintragung in YouTrack.  
+- Klärung der Verantwortlichkeiten ("wer arbeitet an was") und Festlegung der Fertigstellungstermine.
+
+== 3. Datenfluss und Architektur
+
+*Sensorik:*  
+Die Sensoren senden Daten über MQTT, welche anschließend auf Tablets bzw. der Website dargestellt werden.
+
+== 4. MQTT-spezifische Hinweise
+
+*Wildcards:*  
+- **+ (Plus):** Single-Level Wildcard  
+- **# (Raute):** Multi-Level Wildcard
+
+*Virtualisierung der MQTT-Daten:*  
+- Sun Power MQTT-Daten werden virtualisiert.  
+- Der Epoch-Timestamp wird auf der Website in ein lesbares Format konvertiert angezeigt.  
+- Änderungen bei abonnierten MQTT-Werten sollen automatisch zu einer Aktualisierung der Nginx-Seite führen.
+
+*Serverinfrastruktur:*  
+Für die Virtualisierung der MQTT-Daten wird eine Ubuntu-Server-VM eingesetzt. Bitte den zuständigen Systemadministrator für die Bereitstellung anfragen.
+
+== 5. Tools und Zugänge
+
+*MQTT Explorer:*  
+- Server: `vm90.htl-leonding.ac.at`  
+- Benutzername: `Student`  
+- Passwort: `passme`
+
+*Dateitransfer:*  
+- **FileZilla:** Funktioniert unter Linux.  
+- **WinSCP:** Für Windows.
+|===
