@@ -89,9 +89,9 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
     const sensorTolerance = tolerances.find(t => t.name === fullSensorName);
 
     if (!sensorTolerance) {
-      if (value >= 0 && value <= 0.4) return 'green';
-      if (value >= 0.41 && value <= 0.7) return 'yellow';
-      if (value >= 0.71 && value <= 1) return 'red';
+      if (value >= 0 && value < 0.4) return 'green';
+      if (value >= 0.401 && value < 0.7) return 'yellow';
+      if (value >= 0.701 && value <= 1) return 'red';
       return 'gray';
     }
 

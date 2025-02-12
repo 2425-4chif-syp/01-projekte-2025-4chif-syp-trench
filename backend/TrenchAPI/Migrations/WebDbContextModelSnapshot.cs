@@ -72,7 +72,7 @@ namespace TrenchAPI.Migrations
                     b.Property<int>("Einheit")
                         .HasColumnType("int");
 
-                    b.Property<int>("SpuleTypID")
+                    b.Property<int>("SpuleTypId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Ur")
@@ -83,7 +83,7 @@ namespace TrenchAPI.Migrations
 
                     b.HasKey("SpuleId");
 
-                    b.HasIndex("SpuleTypID");
+                    b.HasIndex("SpuleTypId");
 
                     b.ToTable("Spule");
                 });
@@ -132,7 +132,7 @@ namespace TrenchAPI.Migrations
                 {
                     b.HasOne("TrenchAPI.Models.SpuleTyp", "SpuleTyp")
                         .WithMany()
-                        .HasForeignKey("SpuleTypID")
+                        .HasForeignKey("SpuleTypId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -142,4 +142,3 @@ namespace TrenchAPI.Migrations
         }
     }
 }
-

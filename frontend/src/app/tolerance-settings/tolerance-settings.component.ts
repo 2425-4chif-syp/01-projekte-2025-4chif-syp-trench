@@ -20,11 +20,12 @@ export class ToleranceSettingsComponent implements OnInit {
   tolerances: SensorTolerance[] = [];
 
   getBackgroundColor(value: number, sensorName: string): string {
-    if (value >= 0 && value <= 0.4) return 'green';
-    if (value >= 0.41 && value <= 0.7) return 'yellow';
-    if (value >= 0.71 && value <= 1) return 'red';
-    return 'gray';
+    if (value >= 0 && value < 0.4) return 'green';
+    if (value >= 0.401 && value < 0.7) return 'yellow';
+    if (value >= 0.701 && value <= 1) return 'red';
+    return "gray";
   }
+
 
   ngOnInit() {
     // Lade existierende Toleranzen oder initialisiere mit neuen Standardwerten
