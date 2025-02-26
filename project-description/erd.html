@@ -439,15 +439,79 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 </div>
 <div id="content">
-<div class="imageblock">
-<div class="content">
-<img src="images/diag-plantuml-md5-59b5b5b95605a0b1e64f58e0d1e7a8d2.svg" alt="Diagram" width="525" height="772">
+<div class="paragraph">
+<p>@startuml</p>
 </div>
+<div class="paragraph">
+<p>entity SpulenTyp {
+  + ID : integer <a href="#PK">[PK]</a>
+ &#8201;&#8212;&#8201;  Name : varchar
+  Schenkelanzahl : integer
+  Bandbreite : decimal
+  Schichthöhe : decimal
+  Durchmesser : decimal
+}</p>
+</div>
+<div class="paragraph">
+<p>entity Spule {
+  + ID : integer <a href="#PK">[PK]</a>
+ &#8201;&#8212;&#8201;  SpulenTypID : integer <a href="#FK">[FK]</a>
+  AuftragsNr : varchar
+  AuftragsPosNr : integer
+  UR : decimal
+  Einheit : integer
+  Omega : decimal
+}</p>
+</div>
+<div class="paragraph">
+<p>entity Messung {
+  + ID : integer <a href="#PK">[PK]</a>
+ &#8201;&#8212;&#8201;  SpuleID : integer <a href="#FK">[FK]</a>
+  Summe : decimal
+  Zeit : timestamp
+}</p>
+</div>
+<div class="paragraph">
+<p>entity Messeinstellung {
+  + ID : integer <a href="#PK">[PK]</a>
+ &#8201;&#8212;&#8201;  MessungID : integer <a href="#FK">[FK]</a>
+  Bemessunngsspannung : decimal
+  Bemessungsfrequenz : decimal
+  Sensoren : integer
+  Toleranz : integer
+}</p>
+</div>
+<div class="paragraph">
+<p>entity Sensor {
+  + ID : integer <a href="#PK">[PK]</a>
+ &#8201;&#8212;&#8201;  SensorTypID : integer <a href="#FK">[FK]</a>
+  MessungID : integer <a href="#FK">[FK]</a>
+  Schenkel : integer
+  Position : integer
+  Wert : decimal
+  Zeit : timestamp
+}</p>
+</div>
+<div class="paragraph">
+<p>entity SensorTyp {
+  + ID : integer <a href="#PK">[PK]</a>
+ &#8201;&#8212;&#8201;  Wicklungszahl : integer
+}</p>
+</div>
+<div class="paragraph">
+<p>SpulenTyp ||--|{ Spule : "defines"
+Spule ||--|{ Messung : "records"
+Messung ||--|{ Messeinstellung : "configured with"
+Messung ||--|{ Sensor : "has"
+SensorTyp ||--|{ Sensor : "used by"</p>
+</div>
+<div class="paragraph">
+<p>@enduml</p>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-03 09:16:02 UTC
+Last updated 2025-02-26 10:52:06 UTC
 </div>
 </div>
 </body>
