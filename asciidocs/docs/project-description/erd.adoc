@@ -1,3 +1,5 @@
+[plantuml, format="svg"]
+----
 @startuml
 
 entity SpulenTyp {
