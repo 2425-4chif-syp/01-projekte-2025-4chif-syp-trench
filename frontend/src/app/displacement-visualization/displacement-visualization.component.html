@@ -9,7 +9,8 @@
       placeholder="Schenkelanzahl"
       [(ngModel)]="displacementCalculation.branchAmount"
       min="1"
-      (ngModelChange)="updateBranches()"/>
+      (ngModelChange)="updateBranches()"
+    />
 
     <label for="sensor-amount">Sondenanzahl:</label>
     <input
@@ -19,26 +20,56 @@
       placeholder="Sondenanzahl"
       [(ngModel)]="displacementCalculation.sensorAmount"
       min="1"
-      (ngModelChange)="updateBranches()"/>
+      (ngModelChange)="updateBranches()"
+    />
   </div>
 </div>
 
 <!-- Display the branches and sensors -->
-<div class="container">
-  <h1>Branches</h1>
-  <div class="input-container">
-    <div *ngFor="let branch of branches; let i = index" class="branch">
-      <h3>Branch {{ i + 1 }}</h3>
-      <div *ngFor="let sensor of branch.sensors; let j = index" class="sensor">
-        <label for="sensor-{{i}}-{{j}}">Sensor {{ j + 1 }}:</label>
-        <input
-          type="number"
-          class="form-control inputField"
-          id="sensor-{{i}}-{{j}}"
-          placeholder="Sensor {{ j + 1 }}"
-          [(ngModel)]="branch.sensors[j]"
-        />
-      </div>
+<div class="branches-container">
+  <h2>Branches</h2>
+  <div *ngFor="let branch of branches; let i = index; trackBy: trackByBranch" class="branch">
+    <h3>Branch {{ i + 1 }}</h3>
+    <div *ngFor="let sensor of branch.sensors; let j = index; trackBy: trackBySensor" class="sensor">
+      <label for="sensor-{{i}}-{{j}}">Sensor {{ j + 1 }}:</label>
+      <input
+        type="text"
+        class="form-control inputField"
+        id="sensor-{{i}}-{{j}}"
+        placeholder="Sensor {{ j + 1 }}"
+        [(ngModel)]="branch.sensors[j]"
+        (input)="onSensorInput(i, j, $event)"
+        pattern="[0-9]*"
+        inputmode="numeric"
+      />
     </div>
   </div>
+</div>
+
+<!-- Display the calculated x and y values -->
+<div class="results-container">
+  <h2>Results</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Branch</th>
+      <th>X Value</th>
+      <th>Y Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let result of branchResults; let i = index">
+      <td>Branch {{ i + 1 }}</td>
+      <td>{{ result[0].x | number: '1.2-2' }}</td>
+      <td>{{ result[0].y | number: '1.2-2' }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Display the Final Vector -->
+<div class="final-vector-container">
+  <h2>Final Vector</h2>
+  <p>X: {{ finalVector.x | number: '1.2-2' }}</p>
+  <p>Y: {{ finalVector.y | number: '1.2-2' }}</p>
 </div>
