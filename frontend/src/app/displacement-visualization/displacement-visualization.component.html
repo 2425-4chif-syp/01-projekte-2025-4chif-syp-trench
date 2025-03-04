@@ -1,0 +1,44 @@
+<div class="container">
+  <h1>Berechnung von Abweichung</h1>
+  <div class="input-container">
+    <label for="branch-amount">Schenkelanzahl:</label>
+    <input
+      type="number"
+      class="form-control inputField"
+      id="branch-amount"
+      placeholder="Schenkelanzahl"
+      [(ngModel)]="displacementCalculation.branchAmount"
+      min="1"
+      (ngModelChange)="updateBranches()"/>
+
+    <label for="sensor-amount">Sondenanzahl:</label>
+    <input
+      type="number"
+      class="form-control inputField"
+      id="sensor-amount"
+      placeholder="Sondenanzahl"
+      [(ngModel)]="displacementCalculation.sensorAmount"
+      min="1"
+      (ngModelChange)="updateBranches()"/>
+  </div>
+</div>
+
+<!-- Display the branches and sensors -->
+<div class="container">
+  <h1>Branches</h1>
+  <div class="input-container">
+    <div *ngFor="let branch of branches; let i = index" class="branch">
+      <h3>Branch {{ i + 1 }}</h3>
+      <div *ngFor="let sensor of branch.sensors; let j = index" class="sensor">
+        <label for="sensor-{{i}}-{{j}}">Sensor {{ j + 1 }}:</label>
+        <input
+          type="number"
+          class="form-control inputField"
+          id="sensor-{{i}}-{{j}}"
+          placeholder="Sensor {{ j + 1 }}"
+          [(ngModel)]="branch.sensors[j]"
+        />
+      </div>
+    </div>
+  </div>
+</div>
