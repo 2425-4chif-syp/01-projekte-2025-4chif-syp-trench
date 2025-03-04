@@ -1,0 +1,68 @@
+= Besprechungsprotokoll 10.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 10.01.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Emil Silber
+|Trench-Team
+
+|Prof. Stütz
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Mi. 10.01.2025
+|Dauer
+|1 Stunde
+|===
+
+
+
+== Besprochene Themen
+
+* ERD
+* Sensoren
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a|
+== 1. ERD und Datenbank: Vorgehensweise
+Es gilt zu klären, in welche Richtung der Entwicklungsprozess ablaufen soll:
+* **ERD → Datenbank:**  
+  Die Datenbank wird auf Basis eines zuvor erstellten Entity-Relationship-Diagramms (ERD) entwickelt.
+* **Datenbank → ERD:**  
+  Das ERD wird anhand einer bereits bestehenden Datenbank erstellt.
+
+Es sollte evaluiert werden, welche Herangehensweise unter den aktuellen Projektbedingungen und zukünftigen Erweiterungsmöglichkeiten die beste ist.
+
+== 2. Sensorintegration basierend auf dem DM von Spulentyp oder Spule
+
+*Ziel:*  
+Einen Vorschlag zu erarbeiten, wie viele Sensoren maximal integriert werden können – basierend auf dem Datenmodell (DM) des jeweiligen Spulentyps oder der einzelnen Spule.
+
+*Anforderungen und Einschränkungen:*
+- **Maximalwert:**  
+  Das Datenmodell definiert einen Höchstwert für die Anzahl der Sensoren.
+- **Reduktion:**  
+  Es ist ausschließlich zulässig, von diesem Maximalwert ausgehend die Anzahl der Sensoren zu reduzieren (d. h. keine Erweiterung über den definierten Maximalwert hinaus).
+
+- Einsatz so wenig Komponenten wie möglich, um den Aufwand und vor allem potenzielle Fehlerquellen zu minimieren.
+|===

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Coil } from './data/coil-data/coil';
 import { Coiltype } from './data/coiltype-data/coiltype';
+import { measurementSettings } from './data/measurement-settings/measurement-settings';
 
 @Injectable({
   providedIn: 'root'
@@ -66,52 +67,37 @@ export class BackendService {
   }
 
   private coilBackendToFrontend(coil: any): Coil {
-    console.log('Backend-Daten für Coil:', coil);
-    //console.log(coil.spulenTyp.tK_Name)
-    return {
-      id: coil.spuleID,
-      coiltype: coil.spulenTyp ? { // Falls spulenTyp existiert
-        id: coil.spulenTyp.spulenTypID,
-        tK_Name: coil.spulenTyp.tK_Name,
-        schenkel: coil.spulenTyp.schenkel,
-        bb: coil.spulenTyp.bb,
-        sh: coil.spulenTyp.sh,
-        dm: coil.spulenTyp.dm,
-      } : null,
-      coiltypeId: coil.spulenTypID, // Direkte Referenz, falls nur die ID benötigt wird
+    const newCoil: Coil = {
+      id: coil.spuleId,
+      coiltype: coil.spuleTyp,
+      coiltypeId: coil.spuleTypID,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
       auftragsPosNr: coil.auftragsPosNr,
       omega: coil.omega,
     };
+
+    //console.log('Coil:', newCoil);
+
+    return newCoil;
   }
   
   private coilFrontendToBackend(coil: Coil): any {
     return {
-      spuleID: coil.id,
-      spulenTypenID: coil.coiltypeId,
+      spuleId: coil.id,
+      spuleTypId: coil.coiltypeId,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
       auftragsPosNr: coil.auftragsPosNr,
-      omega: coil.omega,
+      omega: coil.omega
     };
   }
   
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
-      id: coiltype.spulenTypId,
-      tK_Name: coiltype.tK_Name,
-      schenkel: coiltype.schenkel,
-      bb: coiltype.bb,
-      sh: coiltype.sh,
-      dm: coiltype.dm,
-    };
-  }
-  private coiltypeFrontendToBackend(coiltype: Coiltype): any {
-    return {
-      spulenTypId: coiltype.id,
+      id: coiltype.spuleTypId,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -120,10 +106,39 @@ export class BackendService {
     };
   }
 
+  private coiltypeFrontendToBackend(coiltype: Coiltype): any {
+    return {
+      spuleTypId: coiltype.id,
+      tK_Name: coiltype.tK_Name,
+      schenkel: coiltype.schenkel,
+      bb: coiltype.bb,
+      sh: coiltype.sh,
+      dm: coiltype.dm,
+    };
+  }
+
+  private measurementSettingsBackendToFrontend(measurementSettings: any): measurementSettings {
+    return {
+      bemessungsSpannung: measurementSettings.bemessungsSpannung,
+      bemessungsFrequenz: measurementSettings.bemessungsFrequenz,
+      sondenProSchenkel: measurementSettings.sondenProSchenkel,
+      messStärke: measurementSettings.messStärke,
+      zeitstempel: measurementSettings.zeitstempel
+    };
+  }
+
+  private measurementSettingsFrontendToBackend(measurementSettings: measurementSettings): any{
+    return {
+      bemessungsSpannung: measurementSettings.bemessungsSpannung,
+      bemessungsFrequenz: measurementSettings.bemessungsFrequenz,
+      sondenProSchenkel: measurementSettings.sondenProSchenkel,
+      messStärke: measurementSettings.messStärke,
+      zeitstempel: measurementSettings.zeitstempel
+    }
+  }
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
-    console.log(response.map((coil: any) => coil));
     return response.map((coil: any) => (this.coilBackendToFrontend(coil)));
   }
 
@@ -167,5 +182,10 @@ export class BackendService {
 
   public async deleteCoiltype(coiltype: Coiltype): Promise<void> {
     await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
+  }
+
+  public async addMeasurementSettings(measurementSettings: measurementSettings): Promise<measurementSettings>{
+    const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));
+    return this.measurementSettingsBackendToFrontend(response);
   }
 }

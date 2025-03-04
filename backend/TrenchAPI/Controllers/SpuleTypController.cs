@@ -23,16 +23,16 @@ namespace TrenchAPI.Controllers
 
         // GET: api/SpuleTyp
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SpulenTyp>>> GetSpuleTyp()
+        public async Task<ActionResult<IEnumerable<SpuleTyp>>> GetSpuleTyp()
         {
-            return await _context.SpulenTyp.ToListAsync();
+            return await _context.SpuleTyp.ToListAsync();
         }
 
         // GET: api/SpuleTyp/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<SpulenTyp>> GetSpuleTyp(int id)
+        public async Task<ActionResult<SpuleTyp>> GetSpuleTyp(int id)
         {
-            var spuleTyp = await _context.SpulenTyp.FindAsync(id);
+            var spuleTyp = await _context.SpuleTyp.FindAsync(id);
 
             if (spuleTyp == null)
             {
@@ -45,9 +45,9 @@ namespace TrenchAPI.Controllers
         // PUT: api/SpuleTyp/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSpuleTyp(int id, SpulenTyp spuleTyp)
+        public async Task<IActionResult> PutSpuleTyp(int id, SpuleTyp spuleTyp)
         {
-            if (id != spuleTyp.SpulenTypID)
+            if (id != spuleTyp.SpuleTypId)
             {
                 return BadRequest();
             }
@@ -76,25 +76,58 @@ namespace TrenchAPI.Controllers
         // POST: api/SpuleTyp
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SpulenTyp>> PostSpuleTyp(SpulenTyp spuleTyp)
+        public async Task<ActionResult<SpuleTyp>> PostSpuleTyp(SpuleTyp spuleTyp)
         {
-            _context.SpulenTyp.Add(spuleTyp);
+            _context.SpuleTyp.Add(spuleTyp);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpulenTypID }, spuleTyp);
+            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpuleTypId }, spuleTyp);
         }
 
         // DELETE: api/SpuleTyp/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpuleTyp(int id)
         {
-            var spuleTyp = await _context.SpulenTyp.FindAsync(id);
+            var spuleTyp = await _context.SpuleTyp.FindAsync(id);
             if (spuleTyp == null)
             {
                 return NotFound();
             }
 
-            _context.SpulenTyp.Remove(spuleTyp);
+            _context.SpuleTyp.Remove(spuleTyp);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteSpuleTypen()
+        {
+            var spulenTypen = await _context.SpuleTyp.ToListAsync();
+            if (spulenTypen == null)
+            {
+                return NotFound();
+            }
+
+            foreach (var spuleTyp in spulenTypen)
+            {
+                _context.SpuleTyp.Remove(spuleTyp);
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.Database.ExecuteSqlRaw("ALTER SEQUENCE \"YourTableName_Id_seq\" RESTART WITH 1");
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +135,7 @@ namespace TrenchAPI.Controllers
 
         private bool SpuleTypExists(int id)
         {
-            return _context.SpulenTyp.Any(e => e.SpulenTypID == id);
+            return _context.SpuleTyp.Any(e => e.SpuleTypId == id);
         }
     }
 }

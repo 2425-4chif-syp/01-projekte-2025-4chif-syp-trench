@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Models
 {
-    public class SpulenTyp
+    public class SpuleTyp
     {
         [Key]
-        public int SpulenTypID { get; set; }
+        public int SpuleTypId { get; set; }
         
         [Column(TypeName = "VARCHAR(100)")]
         public string TK_Name { get; set; } = "";

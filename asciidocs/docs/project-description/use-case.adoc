@@ -3,14 +3,16 @@
 @startuml
 left to right direction
 
-actor User
+actor Monteur
 actor Admin
 
-User --> (Aktuelle Ausrichtung ansehen)
-User --> (Richtige Ausrichtung finden)
-User --> (Visualisierte Daten ansehen)
+Monteur --> (Messen)
+Monteur --> (Messung Visualisieren)
 
-Admin --> (Daten auslesen und vergleichen)
+Admin --> (SpulenTyp erstellen)
+Admin --> (Spule erstellen)
+Admin --> (Sensoren verwalten)
+Admin --> (Messung einstellen)
 
 @enduml
 ----

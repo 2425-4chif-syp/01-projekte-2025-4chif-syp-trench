@@ -6,30 +6,28 @@ EXPOSE 5127
 # Schritt 2: SDK-Image für den Build-Prozess
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
 
-# Wechsel ins Backend/TrenchAPI Verzeichnis
-WORKDIR /src/TrenchAPI
-
-# Kopiere die .csproj-Datei und stelle sicher, dass alle Abhängigkeiten wiederhergestellt werden
+# Kopiere die Projektdateien
 COPY ["TrenchAPI.csproj", "./"]
+COPY ["MqttTestingData/MqttTestingData.csproj", "./MqttTestingData/"]
 
-# Führe den Restore-Befehl aus, um alle NuGet-Abhängigkeiten zu laden
+# Restore NuGet-Pakete
 RUN dotnet restore "TrenchAPI.csproj"
+RUN dotnet restore "MqttTestingData/MqttTestingData.csproj"
 
-# Kopiere den Rest des Codes in das Container-Dateisystem
+# Kopiere den restlichen Source Code
 COPY . .
 
-# Baue das Projekt und gib das Zielverzeichnis für die Ausgabe an
-RUN dotnet build "TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
+# Build und Publish
+RUN dotnet publish "TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish/api
+RUN dotnet publish "MqttTestingData/MqttTestingData.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mqtt
 
-# Schritt 3: Veröffentliche das Projekt
-FROM build AS publish
-RUN dotnet publish "TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish
-
-# Schritt 4: Bereitstellung des veröffentlichten Projekts
+# Final stage
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish/api ./api
+COPY --from=build /app/publish/mqtt ./mqtt
 
-# Definiere den Einstiegspunkt für den Container
-ENTRYPOINT ["dotnet", "TrenchAPI.dll"]
+# Starte beide Anwendungen
+CMD ["sh", "-c", "dotnet ./mqtt/MqttTestingData.dll & dotnet ./api/TrenchAPI.dll"]

@@ -1,0 +1,34 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd TrenchProv1/01-projekte-2025-4chif-syp-trench/
+            echo "Pulling latest changes..."
+            git pull origin main
+            echo "Updating Docker containers..."
+            docker compose pull  # Falls sich das Image geändert hat, wird es aktualisiert
+            docker compose up -d --build  # Startet geänderte Container neu, andere bleiben aktiv
+            echo "Cleaning up old images..."
+            docker image prune -af  # Löscht nicht mehr genutzte Docker-Images
+            echo "Deployment complete!"
+          EOF

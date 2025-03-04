@@ -1,0 +1,104 @@
+= Besprechungsprotokoll 30.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 30.01.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Trench-Team
+|Trench-Team
+
+|Prof. Stütz
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Mi. 30.01.2025
+|Dauer
+|25 Minuten
+|===
+
+
+
+== Besprochene Themen
+
+* MQTT-Kommunikation
+* Toleranz
+* Sensoren
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a|
+
+== 1. MQTT-Kommunikation
+
+* **MQTT-Topic:**  
+  - Es soll ein Topic mit dem Präfix `Trench` an den MQTT-Broker gesendet werden, um relevante Steuerungs- und Statusinformationen zu übertragen.
+
+== 2. Toleranzbearbeitung und Farbliche Darstellung
+
+* **Toleranzbearbeitung:**  
+  - Die Toleranzwerte sollen auf der Website bearbeitet und angezeigt werden.  
+  - **Farbkennzeichnung:**  
+    - **Rot:** Werte, die unterhalb des definierten Mindestwerts liegen  
+    - **Gelb:** Werte im Grenzbereich  
+    - **Grün:** Werte im akzeptablen Bereich
+
+* **Interaktive Steuerung:**  
+  - Eine zweite Website soll einen Schieberegler zur Anpassung der Toleranzwerte bereitstellen.
+
+== 3. Netzwerkinfrastruktur und Access Points
+
+* **Eigenes Netzwerk:**  
+  - Es wird ein eigenes Netzwerk mit einem Access Point namens `Trench-AP1` eingerichtet.
+
+* **ESP32-Integration:**  
+  - Sobald der ESP32 verfügbar ist, soll dieser einen eigenen Access Point bereitstellen, um eine nahtlose Integration in das System zu gewährleisten.
+
+== 4. Sensorintegration und Schwellwertanzeige
+
+* **Sensordaten und Schwellwerte:**  
+  - Das System umfasst 5 Bereiche zur Erfassung von Sensorwerten und deren zugehörigen Schwellwerten.
+  - Darstellung:
+    - Werte, die unterhalb eines definierten Schwellenwerts liegen, werden in **Rot** angezeigt.
+    - Jeder Sensorwert wird in einer auffälligen, großen Darstellung präsentiert, um die Übersichtlichkeit zu erhöhen.
+
+* **Bereichs-/Stufeneinteilung:**  
+  1. Stufe 1  
+  2. Stufe 2  
+  3. Stufe 3  
+  4. Stufe 4  
+  5. Stufe 5
+
+== 5. Spuletypverwaltung und Visualisierung
+
+* **Visualisierung:**  
+  - Die Spule wird von oben dargestellt, sodass die Schenkel (Seitenansicht) klar erkennbar sind.
+  - Ein Durchmesser wird gemessen und mit einem definierten Maßstab (z. B. menschliche Größe) verglichen, um eine intuitive Einschätzung zu ermöglichen.
+  
+* **Integration und Konsistenz:**  
+  - Die Visualisierung soll als „roter Faden“ dienen, damit stets klar ersichtlich ist, in welchem Zustand oder Bereich sich das System befindet.
+  - Es wird darauf geachtet, dass die Visualisierung in der Spuletypverwaltung konsistent wiederverwendet wird.
+
+== 6. User Stories und Aufgabenverwaltung
+
+* **Anforderungen an User Stories:**  
+  - Jede User Story muss einen klar definierten Assignee haben.
+  - Die Beschreibungen der User Stories sollen sehr prägnant und in einer einfachen, nahezu primitiven Sprache verfasst sein, um Missverständnisse zu vermeiden.
+|===

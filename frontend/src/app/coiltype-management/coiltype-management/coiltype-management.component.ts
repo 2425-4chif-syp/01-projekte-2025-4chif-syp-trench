@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
+import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
 
 @Component({
   selector: 'app-coiltype-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, CoilVisualizationComponent],
   templateUrl: './coiltype-management.component.html',
   styleUrl: './coiltype-management.component.scss'
 })
@@ -25,12 +26,6 @@ export class CoiltypeManagementComponent {
     }
     public set selectedCoiltypeId(id:number) {
       this.coiltypesService.selectCoiltype(Number(id));
-    }
-
-    async addNewCoiltype() {
-      const newCoiltype: Coiltype = await this.coiltypesService.addNewCoiltype();
-      this.coiltypesService.selectCoiltype(newCoiltype.id!);
-      this.onCoiltypeSelectionChange(newCoiltype.id!);
     }
 
     isFieldInvalid(field: string): boolean {
@@ -64,13 +59,13 @@ export class CoiltypeManagementComponent {
       //  return;
       //}
 
-      const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
+      //const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
 
-      if (coiltype === undefined) {
+      /*if (coiltype === undefined) {
         throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
-      }
+      }*/
 
-      await this.coiltypesService.updateCoiltype(this.selectedCoiltype!);
+      await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
 
       this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
 

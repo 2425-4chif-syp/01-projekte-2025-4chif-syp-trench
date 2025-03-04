@@ -1,0 +1,79 @@
+= Besprechungsprotokoll 15.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 15.01.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Trench-Team
+|Trench-Team
+
+|Prof. Stütz
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Mi. 15.01.2025
+|Dauer
+|1 Stunde
+|===
+
+
+
+== Besprochene Themen
+
+* ERD
+* Sensoren
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a|
+
+== 1. Hardware & Messkomponenten
+
+* Analog-Digitalkonverter
+* ESP-32
+* Batterie (Messobjekt)
+
+== 2. Anforderungen / User Story
+
+*User Story:*  
+"Als Benutzer möchte ich Schwellwerte eingeben können, damit ich weiß, ob die Position passt."  
+- Die Auswertung erfolgt farblich (z. B. Rot, Gelb, Grün) zur einfachen Interpretation.
+
+== 3. Plattform & Software
+
+* Zielplattform:*
+- Die Anwendung soll auf einem Tablet laufen.
+
+* Software & Tools:*
+- Einsatz von esphome.
+- Beschaffung eines Windows-Pads durch den zuständigen Verantwortlichen.
+
+== 4. Systemarchitektur & Nächste Schritte
+
+* Insellösung:*
+- Einrichtung einer Insellösung mit MQTT (Mosquitto).
+- Das Tablet (unter Windows) greift über nginx und mittels Tastatureingabe auf den vm102-Server zu.
+- Aktuell ist der Server noch nicht von zentraler Bedeutung, da in der ersten Phase alle Prozesse lokal auf dem Tablet laufen.
+
+== 5. Zielsetzung
+
+- Einsatz so wenig Komponenten wie möglich, um den Aufwand und vor allem potenzielle Fehlerquellen zu minimieren.
+|===
