@@ -7,6 +7,7 @@ import { CoilParentComponent } from './coil-management/coil-parent/coil-parent.c
 import { CoiltypeParentComponent } from './coiltype-management/coiltype-parent/coiltype-parent.component';
 import { MeasurementSettingsComponent } from './measurement-settings/measurement-settings.component';
 import { ToleranceSettingsComponent } from './tolerance-settings/tolerance-settings.component';
+import {DisplacementVisualizationComponent} from "./displacement-visualization/displacement-visualization.component";
 
 export const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -15,5 +16,6 @@ export const routes: Routes = [
     {path: 'coiltype-management', component: CoiltypeParentComponent},
     {path: 'measurement-management', component: MeasurementManagementComponent},
     {path: 'measurement-settings', component: MeasurementSettingsComponent},
-    {path: 'tolerance-settings', component: ToleranceSettingsComponent}
+    {path: 'tolerance-settings', component: ToleranceSettingsComponent},
+    {path: 'displacement-visualization', component: DisplacementVisualizationComponent}
 ];
