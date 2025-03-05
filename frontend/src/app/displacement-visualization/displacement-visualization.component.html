@@ -77,22 +77,28 @@
 <!-- Visualization -->
 
 <svg
-  width="100"
-  height="100"
+  width="512"
+  height="512"
   viewBox="0 0 24 24"
   fill="none"
 >
-@for (branch of branchResults; track $index) {
   <g>
-    <circle cx="12" cy="12" r="10" fill="none" stroke="black" stroke-width="1" />
-    <line
-      x1="12"
-      y1="12"
-      [attr.x2]="12 + branch.x"
-      [attr.y2]="12 + branch.y"
-      stroke="black"
-      stroke-width="1"
-    />
+    <!-- Outline circle -->
+    <circle cx="12" cy="12" r="10" fill="none" stroke="black" stroke-width="0.5" />
+
+    <!-- Vectors -->
+    @for (branch of branchResults; track $index) {
+      <line
+        x1="12"
+        y1="12"
+        [attr.x2]="12 + branch.x"
+        [attr.y2]="12 + branch.y"
+        [attr.stroke]="getArrowColor($index)"
+        stroke-width="0.5"
+      />
+    }
+
+    <!-- Center circle -->
+    <circle cx="12" cy="12" r="0.5" fill="black" />
   </g>
-}
 </svg>

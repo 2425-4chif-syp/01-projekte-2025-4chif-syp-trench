@@ -15,7 +15,7 @@ export class DisplacementVisualizationComponent {
 
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
-    branchAmount: 1,
+    branchAmount: 3,
     sensorAmount: 1,
   };
 
@@ -88,5 +88,15 @@ export class DisplacementVisualizationComponent {
 
   trackBySensor(index: number, sensor: number): number {
     return index; // Use the index as the unique identifier
+  }
+
+  public getArrowColor(index:number):string {
+    switch (index % 4) {
+      case 0: return 'red';
+      case 1: return 'lime';
+      case 2: return 'blue';
+      case 3: return 'yellow';
+      default: return 'black';
+    }
   }
 }
