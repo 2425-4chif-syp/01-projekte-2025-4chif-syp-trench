@@ -14,9 +14,10 @@ import { AppComponent } from '../../app.component';
   styleUrl: './measurement-probe-management.component.scss',
 })
 export class MeasurementProbeManagementComponent {
-  private yokeAmount = 4;
+  yokeAmount = 4;
   selectedProbe: MeasurementProbe | undefined;
   modal: any;
+  errorMessage: string | null = null;
 
   measurementProbes: MeasurementProbe[] = [
     { id: 1, width: 50, yoke: 1, position: 1 },
@@ -66,16 +67,29 @@ export class MeasurementProbeManagementComponent {
   }
 
   saveChanges(): void {
-    // Hier kannst du die Änderungen speichern
     const index = this.measurementProbes.findIndex((probe) => probe.id === this.selectedProbe!.id);
 
-     if (index !== -1 && this.selectedProbe) {
+    if(!this.isValidProbe(this.selectedProbe!)){
+      this.errorMessage = "Bitte gültige Werte eingeben! Keine leeren Felder, keine 0 oder negativen Zahlen.";
+      return;
+    }
+
+    if (index !== -1 && this.selectedProbe) {
       this.measurementProbes[index] = { ...this.selectedProbe };
-     }
-    // Zum Beispiel: Die Änderungen in die probes-Liste übernehmen oder an einen Service senden
+    }
+
     this.closeModal();
     this.groupSensors();
 
     console.log(this.measurementProbes[index]);
+  }
+
+  isValidProbe(probe: MeasurementProbe): boolean {
+    return (
+      probe.width > 0 &&
+      probe.position > 0 &&
+      probe.yoke > 0 &&
+      probe.yoke <= this.yokeAmount
+    );
   }
 }
