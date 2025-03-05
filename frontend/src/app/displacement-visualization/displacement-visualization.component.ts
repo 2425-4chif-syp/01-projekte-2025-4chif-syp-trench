@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DisplacementService } from '../displacement-calculation.service';
 import {DecimalPipe, NgForOf} from "@angular/common";
@@ -11,6 +11,8 @@ import {DecimalPipe, NgForOf} from "@angular/common";
   styleUrl: './displacement-visualization.component.scss',
 })
 export class DisplacementVisualizationComponent {
+  @Input() size:number = 512;
+
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
     branchAmount: 1,
@@ -21,7 +23,7 @@ export class DisplacementVisualizationComponent {
   branches: { sensors: number[] }[] = [];
 
   // Array to store the calculated x and y values for each branch
-  branchResults: { x: number; y: number }[][] = [];
+  branchResults: { x: number; y: number }[] = [];
 
   // Final Vector (sum of all x and y values)
   finalVector: { x: number; y: number } = { x: 0, y: 0 };
@@ -59,8 +61,8 @@ export class DisplacementVisualizationComponent {
   calculateFinalVector(): void {
     this.finalVector = this.branchResults.reduce(
       (acc, branch) => {
-        acc.x += branch[0].x;
-        acc.y += branch[0].y;
+        acc.x += branch.x;
+        acc.y += branch.y;
         return acc;
       },
       { x: 0, y: 0 } // Initial value for the accumulator
