@@ -2,55 +2,66 @@
 ----
 @startuml
 
-entity "Sensordaten" as Sensordaten {
-    *mess_id: number
-    -sensor_id: number
-    -messeinstellung_id: number
-    --
-    messZeitpunkt: Timestamp
-    messErgebnis: number
+entity SpulenTyp {
+  + ID : integer <<PK>>
+  --
+  Name : varchar
+  Schenkelanzahl : integer
+  Bandbreite : decimal
+  Schichthöhe : decimal
+  Durchmesser : decimal
 }
 
-entity "Sensortyp" as Sensortyp {
-    *sensor_id: number
-    --
-    wicklungsBreite: number
+entity Spule {
+  + ID : integer <<PK>>
+  --
+  SpulenTypID : integer <<FK>>
+  AuftragsNr : varchar
+  AuftragsPosNr : integer
+  UR : decimal
+  Einheit : integer
+  Omega : decimal
 }
 
-entity "Messeinstellung" as Messeinstellung {
-    *einstellungs_id: number
-    -anlage_id: number
-    --
-    bemessungsSpannung (U_m): number
-    bemessungsFrequenz (f_m): number
-    sondenProSchenkel: number
-    messStärke (I_m): number
-    uhrzeit: DateTIme
+entity Messung {
+  + ID : integer <<PK>>
+  --
+  SpuleID : integer <<FK>>
+  Summe : decimal
+  Zeit : timestamp
 }
 
-entity "Anlage (Spule)" as Anlage {
-    *anlage_id: number
-    -typ_id: number
-    --
-    messSpannung: number
-    serienNummer (SN): varchar
-    auftragsNummer: varchar
-    auftragsPosition: varchar
+entity Messeinstellung {
+  + ID : integer <<PK>>
+  --
+  MessungID : integer <<FK>>
+  Bemessunngsspannung : decimal
+  Bemessungsfrequenz : decimal
+  Sensoren : integer
+  Toleranz : integer
 }
 
-entity "Anlagetyp" as Anlagetyp {
-    *typ_id: int
-    --
-    schenkelZahl (RJ): number
-    bandBreite (BB): number
-    schichtHöhe (SH): number
-    toleranz: number
+entity Sensor {
+  + ID : integer <<PK>>
+  --
+  SensorTypID : integer <<FK>>
+  MessungID : integer <<FK>>
+  Schenkel : integer
+  Position : integer
+  Wert : decimal
+  Zeit : timestamp
 }
 
+entity SensorTyp {
+  + ID : integer <<PK>>
+  --
+  Wicklungszahl : integer
+}
 
-Messeinstellung <-- Sensordaten 
-Sensordaten <-- Sensortyp
-Anlage <--- Messeinstellung
-Anlage ---> Anlagetyp
+SpulenTyp ||--|{ Spule : "defines"
+Spule ||--|{ Messung : "records"
+Messung ||--|{ Messeinstellung : "configured with"
+Messung ||--|{ Sensor : "has"
+SensorTyp ||--|{ Sensor : "used by"
+
 @enduml
-----

@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" modified="2024-03-21">
+  <diagram name="Page-1" id="rrQP919ft8qjJtRZRfxK">
+    <mxGraphModel dx="724" dy="1597" grid="1" gridSize="10">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Frontend Box -->
+        <mxCell id="frontend_box" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="357" y="-779" width="262" height="167" as="geometry"/>
+        </mxCell>
+        <mxCell id="frontend_label" value="Frontend" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="456.51" y="-809" width="60" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Frontend Technologies -->
+        <mxCell id="angular_logo" value="Angular" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://angular.io/assets/images/logos/angular/angular.svg;" vertex="1" parent="1">
+          <mxGeometry x="380" y="-750" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="typescript_logo" value="TypeScript" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://raw.githubusercontent.com/remojansen/logo.ts/master/ts.png;" vertex="1" parent="1">
+          <mxGeometry x="520" y="-750" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend Box -->
+        <mxCell id="backend_box" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="357" y="-500" width="262" height="167" as="geometry"/>
+        </mxCell>
+        <mxCell id="backend_label" value="Backend" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="458" y="-529" width="60" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend Technologies -->
+        <mxCell id="csharp_logo" value="C#" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/0/0d/C_Sharp_wordmark.svg;" vertex="1" parent="1">
+          <mxGeometry x="380" y="-470" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="dotnet_logo" value=".NET" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/7/7d/Microsoft_.NET_logo.svg;" vertex="1" parent="1">
+          <mxGeometry x="520" y="-470" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- MQTT Box -->
+        <mxCell id="mqtt_box" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="700" y="-446.75" width="95" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="mqtt_label" value="MQTT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="717.5" y="-431.75" width="60" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Connection Arrows -->
+        <mxCell id="frontend_backend_arrow" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="backend_box" target="frontend_box">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="488" y="-500" as="sourcePoint"/>
+            <mxPoint x="488" y="-612" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- MQTT Connection with Topics -->
+        <mxCell id="backend_mqtt_arrow" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="backend_box" target="mqtt_box">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="619" y="-416.75" as="sourcePoint"/>
+            <mxPoint x="700" y="-416.75" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- MQTT Topics Label -->
+        <mxCell id="mqtt_topics" value="publish: htl/pos/if190113/sensor&#xa;subscribe: htl/pos/if190113/led" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="619" y="-480" width="80" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Labels -->
+        <mxCell id="rest_label" value="REST" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="488" y="-580" width="60" height="30" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,77 @@
+= Besprechungsprotokoll 27.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 27.01.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Trench-Team
+|Trench-Team
+
+|Prof. Stütz
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Mo. 27.01.2025
+|Dauer
+|1 Stunde
+|===
+
+
+
+== Besprochene Themen
+
+* ERD
+* Sensoren
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Stütz
+a|
+
+== 1. Systemkonfiguration
+
+* **Betriebssystem:**  
+  Der Laptop wird ohne Docker betrieben.
+
+* **Webserver und MQTT-Broker:**  
+  - NGINX soll als Webserver direkt auf dem Laptop laufen (ohne Docker).  
+  - Mosquitto muss ebenfalls nativ auf dem Laptop betrieben werden.
+
+== 2. Backend-Entwicklung
+
+* **Backend:**  
+  - Es wird kein dediziertes Backend benötigt.  
+  - Der Einsatz von C# ist wahrscheinlich nicht erforderlich.
+
+== 3. WLAN-Infrastruktur
+
+* **Access Point:**  
+  - Der Laptop muss als Access Point fungieren.  
+  - Die WLAN-Infrastruktur soll unter dem Namen **TrenchAPI-1** laufen.
+
+== 4. Voltmeter-Integration und Toleranzgrenzen
+
+* **Voltmeter:**  
+  - Ein Voltmeter wird am Laptop angeschlossen, um Messwerte zu erfassen.
+  
+* **Toleranzgrenzen und Farbanzeige:**  
+  - Die Toleranzgrenzen können variabel sein.  
+  - Änderungen der Toleranzgrenzen führen zu entsprechenden Farbänderungen (z. B. rot, gelb, grün) zur besseren visuellen Darstellung.
+|===

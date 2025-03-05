@@ -42,9 +42,29 @@ https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Proje
 | Epic, User stories, Tasks, Nach Weihnachten
 | Emil Silber, Prof. Palitsch-Infanger
 
-| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-08_teacher[08.01.2025]*
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-08_teacher_1[08.01.2025 (1)]*
 | EntityFramework
 | Emil Silber, Prof. Bucek
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-08_teacher_2[08.01.2025 (2)]*
+| Akuteller Stand, Teamstruktur, MQTT
+| Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-10_teacher[10.01.2025]*
+| Hardware, User Story, Software, Windows-Laptop
+| Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-15_teacher[15.01.2025]*
+| Hardware, User Story, Software, Windows-Laptop
+| Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-27_teacher[27.01.2025]*
+| ERD, Sensoren
+| Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-30_teacher[30.01.2025]*
+| MQTT-Kommunikation, Toleranzen, Sensoren
+| Trench-Team, Prof. Stütz
 |===
 
 == Project Meetings
