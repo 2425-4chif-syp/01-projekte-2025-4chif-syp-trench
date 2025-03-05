@@ -12,6 +12,7 @@ export class CoilVisualizationComponent {
   @Input() n:number = 0;
   @Input() bb:number = 0;
   @Input() dm:number = 0;
+  @Input() size:number = 512;
 
   public get nTransforms():any[] {
     let polylines = [];
@@ -23,7 +24,10 @@ export class CoilVisualizationComponent {
   }
 
   public get coreRadius():number {
-    return (this.dm - this.bb*2) / 4;
+    return ((this.dm - this.bb*2) / 4) / 512 * this.size;
+  }
+  public get strokeWidth():number {
+    return 5 / 512 * this.size;
   }
 
   public getNTransform(n:number):any {
@@ -31,10 +35,10 @@ export class CoilVisualizationComponent {
 
     return {
       n: n,
-      radius: 64,
+      radius: 64 / 512 * this.size,
       rotate: 360 / this.n * n,
       width: (80 - 8 * this.n) * delta,
-      height: this.bb / 4,
+      height: (this.bb / 4) / 512 * this.size,
       distanceFromRadius: (32 * Math.sqrt(this.n - 2)) * delta,
     }
   }

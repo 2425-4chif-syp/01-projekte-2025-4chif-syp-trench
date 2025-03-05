@@ -86,7 +86,6 @@ export class CoiltypeListComponent {
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
-    console.log('Mouse posiotion:', event.clientX, event.clientY);
-    this.mousePosition = { x: event.clientX, y: event.clientY };
+    this.mousePosition = { x: event.pageX, y: event.pageY };
   }
 }

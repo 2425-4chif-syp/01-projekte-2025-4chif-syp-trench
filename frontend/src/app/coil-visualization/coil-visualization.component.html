@@ -1,8 +1,8 @@
 <div class="container">
     @if (coreRadius > 0 && bb > 0 && n >= 2) {
-        <svg width="512px" height="512px">
+        <svg [attr.width]="size + 'px'" [attr.height]="size + 'px'">
             <!-- Center cirle -->
-            <circle [attr.r]="coreRadius" cx="256" cy="256" fill="none" stroke="black" stroke-width="5" />
+            <circle [attr.r]="coreRadius" [attr.cx]="size/2" [attr.cy]="size/2" fill="none" stroke="black" [attr.stroke-width]="strokeWidth" />
             <!-- Yokes -->
             @for (n of nTransforms; track n.n) {
                 <!-- 
@@ -12,28 +12,28 @@
                     2. Rotate by n.rotate degrees around the origin
                     3. Translate to the middle of the circle
                 -->
-                <g [attr.transform]="'translate(256, 256) rotate('+n.rotate+') translate(0, '+n.distanceFromRadius+')'">
+                <g [attr.transform]="'translate('+size/2+', '+size/2+') rotate('+n.rotate+') translate(0, '+n.distanceFromRadius+')'">
                     <!-- Left and right lines -->
                     <line [attr.x1]="-n.width" [attr.y1]="0"    [attr.x2]="-n.width" [attr.y2]="n.height+1"   
-                    fill="none" stroke="black" stroke-width="5"
+                    fill="none" stroke="black" [attr.stroke-width]="strokeWidth"
                     />
                     <line [attr.x1]="n.width" [attr.y1]="0"    [attr.x2]="n.width" [attr.y2]="n.height+1"   
-                    fill="none" stroke="black" stroke-width="5"
+                    fill="none" stroke="black" [attr.stroke-width]="strokeWidth"
                     />
 
                     <!-- Arc between those lines -->
                     <path [attr.d]="'M '+(-n.width)+','+n.height+' A '+coreRadius+','+coreRadius+' 0 0 0 '+n.width+','+n.height"
-                    fill="none" stroke="black" stroke-width="5"/> 
+                    fill="none" stroke="black" [attr.stroke-width]="strokeWidth"/> 
                 </g>
-
-                <!-- Center dot -->
-                <circle r="3" cx="256" cy="256" 
-                fill="none" stroke="black" stroke-width="2" />
             }
+            
+            <!-- Center dot -->
+            <circle [attr.r]="3/512*size" [attr.cx]="size/2" [attr.cy]="size/2" 
+            fill="none" stroke="black" [attr.stroke-width]="strokeWidth / 5 * 2" />
         </svg>
     }
     @else {
-        <div style="width: 512px; height: 512px;">
+        <div [style]="'width: '+size+'px; height: '+size+'px;'">
             <p class="text-danger">Eingabe ist nicht zeichenbar</p>
         </div>
     }
