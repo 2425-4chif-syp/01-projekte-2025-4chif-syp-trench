@@ -1,0 +1,21 @@
+// sensor-dashboard.component.scss
+
+.card {
+    border-radius: 8px;
+    overflow: hidden;
+    min-height: 40vh;
+  
+    .card-header {
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }   
+  
+    table {
+      th,
+      td {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  
