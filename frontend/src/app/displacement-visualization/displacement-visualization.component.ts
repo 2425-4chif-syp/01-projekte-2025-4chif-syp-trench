@@ -25,6 +25,8 @@ export class DisplacementVisualizationComponent {
   // Array to store the calculated x and y values for each branch
   branchResults: { x: number; y: number, angle:number, length:number }[] = [];
 
+  averageLength:number = 0;
+
   // Final Vector (sum of all x and y values)
   finalVector: { x: number; y: number, angle:number, length:number } = { x: 0, y: 0, angle:0, length:0 };
 
@@ -59,6 +61,9 @@ export class DisplacementVisualizationComponent {
       this.branches,
       this.displacementCalculation.branchAmount
     );
+
+    this.averageLength = this.branchResults
+      .reduce((acc, branch) => acc + branch.length, 0) / this.branchResults.length;
 
     this.calculateFinalVector(); 
   }
