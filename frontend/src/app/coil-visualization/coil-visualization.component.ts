@@ -12,6 +12,7 @@ export class CoilVisualizationComponent {
   @Input() n:number = 0;
   @Input() bb:number = 0;
   @Input() dm:number = 0;
+  @Input() size:number = 1024;
 
   public get nTransforms():any[] {
     let polylines = [];
