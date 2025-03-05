@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DisplacementService } from '../displacement-calculation.service';
-import {DecimalPipe, NgForOf} from "@angular/common";
+import {CommonModule, DecimalPipe, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-displacement-visualization',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, NgForOf],
+  imports: [FormsModule, DecimalPipe, NgForOf, CommonModule],
   templateUrl: './displacement-visualization.component.html',
   styleUrl: './displacement-visualization.component.scss',
 })
 export class DisplacementVisualizationComponent {
+  @Input() size:number = 512;
+
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
-    branchAmount: 1,
+    branchAmount: 3,
     sensorAmount: 1,
   };
 
@@ -21,10 +23,15 @@ export class DisplacementVisualizationComponent {
   branches: { sensors: number[] }[] = [];
 
   // Array to store the calculated x and y values for each branch
-  branchResults: { x: number; y: number }[][] = [];
+  branchResults: { x: number; y: number, angle:number, length:number }[] = [];
 
   // Final Vector (sum of all x and y values)
-  finalVector: { x: number; y: number } = { x: 0, y: 0 };
+  finalVector: { x: number; y: number, angle:number, length:number } = { x: 0, y: 0, angle:0, length:0 };
+
+  public readonly radToDeg = 180 / Math.PI;
+
+  public hoveredArrow:number|null = null;
+  public mousePosition: { x: number, y: number }|null = null;
 
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array
@@ -52,19 +59,27 @@ export class DisplacementVisualizationComponent {
       this.branches,
       this.displacementCalculation.branchAmount
     );
-    this.calculateFinalVector(); // Calculate the Final Vector
+
+    this.calculateFinalVector(); 
   }
 
   // Function to calculate the Final Vector
   calculateFinalVector(): void {
-    this.finalVector = this.branchResults.reduce(
+    let vector = this.branchResults.reduce(
       (acc, branch) => {
-        acc.x += branch[0].x;
-        acc.y += branch[0].y;
+        acc.x += branch.x;
+        acc.y += branch.y;
         return acc;
       },
       { x: 0, y: 0 } // Initial value for the accumulator
     );
+
+    this.finalVector = {
+      x: vector.x,
+      y: vector.y,
+      angle: Math.atan2(vector.y, vector.x),
+      length: this.displacementService.calculateVectorLength(vector.x, vector.y),
+    }
   }
 
   // Function to handle sensor input changes
@@ -86,5 +101,27 @@ export class DisplacementVisualizationComponent {
 
   trackBySensor(index: number, sensor: number): number {
     return index; // Use the index as the unique identifier
+  }
+
+  public getArrowColor(index:number):string {
+    switch (index % 4) {
+      case 0: return 'red';
+      case 1: return 'lime';
+      case 2: return 'blue';
+      case 3: return 'yellow';
+      default: return 'black';
+    }
+  }
+
+  public onArrowMouseEnter(index:number):void {
+    this.hoveredArrow = index;
+  }
+  public onArrowMouseLeave(index:number):void {
+    this.hoveredArrow = null;
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  private onMouseMove(event: MouseEvent) {
+    this.mousePosition = { x: event.pageX, y: event.pageY };
   }
 }
