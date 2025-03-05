@@ -35,6 +35,8 @@ export class DisplacementVisualizationComponent {
   public hoveredArrow:number|null = null;
   public mousePosition: { x: number, y: number }|null = null;
 
+  public isHoveringOverBorder:boolean = false;
+
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array
 
@@ -131,6 +133,13 @@ export class DisplacementVisualizationComponent {
   }
   public onArrowMouseLeave(index:number):void {
     this.hoveredArrow = null;
+  }
+
+  public onBorderMouseEnter():void {
+    this.isHoveringOverBorder = true;
+  }
+  public onBorderMouseLeave():void {
+    this.isHoveringOverBorder = false;
   }
 
   @HostListener('document:mousemove', ['$event'])

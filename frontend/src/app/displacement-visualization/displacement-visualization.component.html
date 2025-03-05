@@ -83,8 +83,10 @@
   fill="none"
 >
   <g>
-    <!-- Outline circle -->
-    <circle cx="12" cy="12" r="6" fill="none" stroke="#00000080" stroke-width="0.125" />
+    <!-- Border circle -->
+    <circle cx="12" cy="12" r="6" fill="none" stroke="#00000080" [attr.stroke-width]="isHoveringOverBorder ? '0.25' : '0.125'" 
+      (mouseenter)="onBorderMouseEnter()" (mouseleave)="onBorderMouseLeave()"
+    />
 
     <!-- Vectors -->
     @for (branch of branchResults; track $index) {
@@ -150,11 +152,12 @@
 </svg>
 
 
-@if (hoveredArrow !== null && mousePosition !== null) {
+@if (mousePosition !== null && (hoveredArrow !== null || isHoveringOverBorder)) {
   <div class="hover-tooltip" [ngStyle]="{
       'top.px': mousePosition.y,
       'left.px': mousePosition.x,
   }">
+    @if (hoveredArrow !== null) {
       <ul>
         <li>
           <strong>Branch</strong>: {{ (hoveredArrow === -1 ? 'Final Vector' : 'Branch ' + (hoveredArrow + 1)) }}
@@ -169,8 +172,15 @@
           <strong>Length</strong>: {{ (hoveredArrow === -1 ? finalVector.length : branchResults[hoveredArrow].length ) | number: '1.2-2' }}
         </li>
         <li>
+          <strong>Difference from average</strong>: {{ ((hoveredArrow === -1 ? finalVector.length : branchResults[hoveredArrow].length) - averageLength) | number: '1.2-2' }}
+        </li>
+        <li>
           <strong>Angle</strong>: {{ (hoveredArrow === -1 ? finalVector.angle : branchResults[hoveredArrow].angle)*radToDeg | number: '1.2-2' }}°
         </li>
       </ul>
+    }
+    @if (isHoveringOverBorder) {
+      <p><strong>Border radius</strong> (average length): {{averageLength | number: '1.2-2'}}</p>
+    }
   </div>  
 }
