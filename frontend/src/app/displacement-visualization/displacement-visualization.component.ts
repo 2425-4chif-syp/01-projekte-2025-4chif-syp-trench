@@ -16,7 +16,7 @@ export class DisplacementVisualizationComponent {
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
     branchAmount: 3,
-    sensorAmount: 1,
+    sensorAmount: 6,
   };
 
   // Array to store the values of each branch and its sensors
@@ -24,6 +24,8 @@ export class DisplacementVisualizationComponent {
 
   // Array to store the calculated x and y values for each branch
   branchResults: { x: number; y: number, angle:number, length:number }[] = [];
+
+  averageLength:number = 0;
 
   // Final Vector (sum of all x and y values)
   finalVector: { x: number; y: number, angle:number, length:number } = { x: 0, y: 0, angle:0, length:0 };
@@ -33,8 +35,18 @@ export class DisplacementVisualizationComponent {
   public hoveredArrow:number|null = null;
   public mousePosition: { x: number, y: number }|null = null;
 
+  public isHoveringOverBorder:boolean = false;
+
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array
+
+    this.branches = [
+      { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
+      { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
+      { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
+    ];
+
+    this.calculateResults();
   }
 
   // Function to generate the branches and sensors structure
@@ -59,6 +71,9 @@ export class DisplacementVisualizationComponent {
       this.branches,
       this.displacementCalculation.branchAmount
     );
+
+    this.averageLength = this.branchResults
+      .reduce((acc, branch) => acc + branch.length, 0) / this.branchResults.length;
 
     this.calculateFinalVector(); 
   }
@@ -118,6 +133,13 @@ export class DisplacementVisualizationComponent {
   }
   public onArrowMouseLeave(index:number):void {
     this.hoveredArrow = null;
+  }
+
+  public onBorderMouseEnter():void {
+    this.isHoveringOverBorder = true;
+  }
+  public onBorderMouseLeave():void {
+    this.isHoveringOverBorder = false;
   }
 
   @HostListener('document:mousemove', ['$event'])
