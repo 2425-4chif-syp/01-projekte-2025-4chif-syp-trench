@@ -13,8 +13,7 @@ export class CoiltypesService {
   public isCoilSelector:boolean = false;
 
   constructor(private backendService:BackendService) {
-
-}
+  }
 public sortDirection: { [key: string]: boolean } = {};
 
   public getCopyCoiltype(id:number):Coiltype {
