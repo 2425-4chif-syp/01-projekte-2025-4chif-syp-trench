@@ -1,9 +1,10 @@
 == Branch Name Guidelines
 
-The branch names follow a similar pattern to the link:./commit-message-guidelines[commit messages], however without special characters and with the type being followed by an underscore, the words being separated by hyphens and the tense being in the present.
+The branch names follow a similar pattern to the link:./commit-message-guidelines[commit messages], however without special characters. 
+Starting with the Youtrack ID and the type of the task seperated by an underscore, the short description is preceeded by another underscore, the words being separated by hyphens and the tense being in the present.
 
 For example, a branch name could look like this:
 
 ----
-feat_add-navbar
+trench-2_feat_add-navbar
 ----
