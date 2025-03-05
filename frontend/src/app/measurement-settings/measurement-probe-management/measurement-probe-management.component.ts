@@ -40,19 +40,13 @@ export class MeasurementProbeManagementComponent {
     this.groupSensors();
   }
 
-  // Gruppierung der Sensoren anhand ihrer 'position'
   groupSensors() {
     if (this.measurementProbes.length > 0) {
-      // Gesamtzahl der Jochs (alle Sensoren haben denselben Wert)
       const yokeCount = this.measurementProbes[0];
-      // Initialisiere das Array für die Gruppen (z. B. 3 leere Arrays)
       this.groupedProbes.set(Array.from({ length: this.yokeAmount }, () => []));
 
-      // Gehe alle Sensoren durch und sortiere sie in die jeweilige Gruppe ein
       for (const probe of this.measurementProbes) {
-        // Da 'position' 1-indexiert ist, ziehen wir 1 ab
         const index = probe.yoke - 1;
-        // Sensor in die entsprechende Gruppe einfügen
         this.groupedProbes()[index].push(probe);
       } 
     }
