@@ -7,7 +7,7 @@ export class DisplacementService {
   constructor() {}
 
   // Function to calculate the x and y values of the vectors
-  calculateBranchData(branches: { sensors: number[] }[], numberOfBranches: number): { x: number; y: number, angle:number }[] {
+  calculateBranchData(branches: { sensors: number[] }[], numberOfBranches: number): { x: number; y: number, angle:number, length:number }[] {
     return branches.map((branch, index) => {
       // Calculate the average value of sensors for the current branch
       const sum = branch.sensors.reduce((acc, sensor) => acc + sensor, 0);
@@ -20,8 +20,11 @@ export class DisplacementService {
       const x = Math.cos(angle) * average;
       const y = Math.sin(angle) * average;
 
-      // Return the x and y values for the current branch
-      return { x, y, angle };
+      return { x: x, y: y, angle: angle, length: average };
     });
+  }
+
+  public calculateVectorLength(x: number, y: number): number {
+    return Math.sqrt(x * x + y * y);
   }
 }

@@ -1,0 +1,12 @@
+.hover-tooltip {
+    position: absolute;
+    background-color: #c0c0c0c0;
+    color: black;
+    margin: 5px;
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-right: 20px;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 1000;
+}

@@ -1,12 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DisplacementService } from '../displacement-calculation.service';
-import {DecimalPipe, NgForOf} from "@angular/common";
+import {CommonModule, DecimalPipe, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-displacement-visualization',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, NgForOf],
+  imports: [FormsModule, DecimalPipe, NgForOf, CommonModule],
   templateUrl: './displacement-visualization.component.html',
   styleUrl: './displacement-visualization.component.scss',
 })
@@ -23,14 +23,15 @@ export class DisplacementVisualizationComponent {
   branches: { sensors: number[] }[] = [];
 
   // Array to store the calculated x and y values for each branch
-  branchResults: { x: number; y: number, angle:number }[] = [];
+  branchResults: { x: number; y: number, angle:number, length:number }[] = [];
 
   // Final Vector (sum of all x and y values)
-  finalVector: { x: number; y: number, angle:number } = { x: 0, y: 0, angle:0 };
+  finalVector: { x: number; y: number, angle:number, length:number } = { x: 0, y: 0, angle:0, length:0 };
 
   public readonly radToDeg = 180 / Math.PI;
 
   public hoveredArrow:number|null = null;
+  public mousePosition: { x: number, y: number }|null = null;
 
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array
@@ -58,7 +59,8 @@ export class DisplacementVisualizationComponent {
       this.branches,
       this.displacementCalculation.branchAmount
     );
-    this.calculateFinalVector(); // Calculate the Final Vector
+
+    this.calculateFinalVector(); 
   }
 
   // Function to calculate the Final Vector
@@ -76,6 +78,7 @@ export class DisplacementVisualizationComponent {
       x: vector.x,
       y: vector.y,
       angle: Math.atan2(vector.y, vector.x),
+      length: this.displacementService.calculateVectorLength(vector.x, vector.y),
     }
   }
 
@@ -115,5 +118,10 @@ export class DisplacementVisualizationComponent {
   }
   public onArrowMouseLeave(index:number):void {
     this.hoveredArrow = null;
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  private onMouseMove(event: MouseEvent) {
+    this.mousePosition = { x: event.pageX, y: event.pageY };
   }
 }
