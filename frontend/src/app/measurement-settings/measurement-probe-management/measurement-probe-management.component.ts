@@ -2,17 +2,21 @@ import { Component, signal } from '@angular/core';
 import { MeasurementProbe } from '../../data/measurement-probes/measurement-probes';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-measurement-probe-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule], 
   templateUrl: './measurement-probe-management.component.html',
-  styleUrl: './measurement-probe-management.component.scss'
+  styleUrl: './measurement-probe-management.component.scss',
 })
 export class MeasurementProbeManagementComponent {
   private yokeAmount = 4;
-
+  selectedProbe: MeasurementProbe | undefined;
+  modal: any;
 
   measurementProbes: MeasurementProbe[] = [
     { id: 1, width: 50, yoke: 1, position: 1 },
@@ -51,5 +55,27 @@ export class MeasurementProbeManagementComponent {
         this.groupedProbes()[index].push(probe);
       } 
     }
+  }
+
+  openModal(probe: any): void {
+    this.selectedProbe = {...probe};
+  }
+
+  closeModal(): void {
+    this.selectedProbe = undefined;
+  }
+
+  saveChanges(): void {
+    // Hier kannst du die Änderungen speichern
+    const index = this.measurementProbes.findIndex((probe) => probe.id === this.selectedProbe!.id);
+
+     if (index !== -1 && this.selectedProbe) {
+      this.measurementProbes[index] = { ...this.selectedProbe };
+     }
+    // Zum Beispiel: Die Änderungen in die probes-Liste übernehmen oder an einen Service senden
+    this.closeModal();
+    this.groupSensors();
+
+    console.log(this.measurementProbes[index]);
   }
 }
