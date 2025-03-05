@@ -23,10 +23,12 @@ export class DisplacementVisualizationComponent {
   branches: { sensors: number[] }[] = [];
 
   // Array to store the calculated x and y values for each branch
-  branchResults: { x: number; y: number }[] = [];
+  branchResults: { x: number; y: number, angle:number }[] = [];
 
   // Final Vector (sum of all x and y values)
   finalVector: { x: number; y: number } = { x: 0, y: 0 };
+
+  public readonly radToDeg = 180 / Math.PI;
 
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array

@@ -88,14 +88,22 @@
 
     <!-- Vectors -->
     @for (branch of branchResults; track $index) {
-      <line
-        x1="12"
-        y1="12"
-        [attr.x2]="12 + branch.x"
-        [attr.y2]="12 + branch.y"
-        [attr.stroke]="getArrowColor($index)"
-        stroke-width="0.5"
-      />
+      <g transform="translate(12, 12)">
+        <line
+          x1="0"
+          y1="0"
+          [attr.x2]="branch.x"
+          [attr.y2]="branch.y"
+          [attr.stroke]="getArrowColor($index)"
+          stroke-width="0.5"
+        />
+
+        <polygon
+          points="1,0 0,-0.5 0,0.5"
+          [attr.fill]="getArrowColor($index)"
+          [attr.transform]="'translate('+branch.x+', '+branch.y+') rotate('+(branch.angle * radToDeg)+')'"
+          />
+      </g>
     }
 
     <!-- Center circle -->
