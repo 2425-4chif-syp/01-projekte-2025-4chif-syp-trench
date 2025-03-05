@@ -26,7 +26,7 @@ export class DisplacementVisualizationComponent {
   branchResults: { x: number; y: number, angle:number }[] = [];
 
   // Final Vector (sum of all x and y values)
-  finalVector: { x: number; y: number } = { x: 0, y: 0 };
+  finalVector: { x: number; y: number, angle:number } = { x: 0, y: 0, angle:0 };
 
   public readonly radToDeg = 180 / Math.PI;
 
@@ -61,7 +61,7 @@ export class DisplacementVisualizationComponent {
 
   // Function to calculate the Final Vector
   calculateFinalVector(): void {
-    this.finalVector = this.branchResults.reduce(
+    let vector = this.branchResults.reduce(
       (acc, branch) => {
         acc.x += branch.x;
         acc.y += branch.y;
@@ -69,6 +69,12 @@ export class DisplacementVisualizationComponent {
       },
       { x: 0, y: 0 } // Initial value for the accumulator
     );
+
+    this.finalVector = {
+      x: vector.x,
+      y: vector.y,
+      angle: Math.atan2(vector.y, vector.x),
+    }
   }
 
   // Function to handle sensor input changes

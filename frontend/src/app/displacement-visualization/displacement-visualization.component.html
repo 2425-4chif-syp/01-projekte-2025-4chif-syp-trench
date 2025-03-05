@@ -88,6 +88,7 @@
 
     <!-- Vectors -->
     @for (branch of branchResults; track $index) {
+      <!-- TODO: The arrow should point towards the actual vector; currently the line goes to the vector, then the triangle goes beyond it -->
       <g transform="translate(12, 12)">
         <line
           x1="0"
@@ -105,6 +106,24 @@
           />
       </g>
     }
+
+    <!-- Result vector -->
+    <g transform="translate(12, 12)">
+      <line
+        x1="0"
+        y1="0"
+        [attr.x2]="finalVector.x"
+        [attr.y2]="finalVector.y"
+        stroke="black"
+        stroke-width="0.5"
+      />
+
+      <polygon
+        points="1,0 0,-0.5 0,0.5"
+        fill="black"
+        [attr.transform]="'translate('+finalVector.x+', '+finalVector.y+') rotate('+(finalVector.angle * radToDeg)+')'"
+        />
+    </g>
 
     <!-- Center circle -->
     <circle cx="12" cy="12" r="0.5" fill="black" />
