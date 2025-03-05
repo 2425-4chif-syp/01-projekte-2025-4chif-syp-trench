@@ -33,7 +33,7 @@
         </svg>
     }
     @else {
-        <div style="width: 512px; height: 512px;">
+        <div [style]="'width: '+size+'px; height: '+size+'px;'">
             <p class="text-danger">Eingabe ist nicht zeichenbar</p>
         </div>
     }
