@@ -107,4 +107,11 @@ export class DisplacementVisualizationComponent {
       default: return 'black';
     }
   }
+
+  public onArrowMouseEnter(index:number):void {
+    console.log('Arrow', index, 'entered');
+  }
+  public onArrowMouseLeave(index:number):void {
+    console.log('Arrow', index, 'left');  
+  }
 }
