@@ -30,6 +30,8 @@ export class DisplacementVisualizationComponent {
 
   public readonly radToDeg = 180 / Math.PI;
 
+  public hoveredArrow:number|null = null;
+
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array
   }
@@ -109,9 +111,9 @@ export class DisplacementVisualizationComponent {
   }
 
   public onArrowMouseEnter(index:number):void {
-    console.log('Arrow', index, 'entered');
+    this.hoveredArrow = index;
   }
   public onArrowMouseLeave(index:number):void {
-    console.log('Arrow', index, 'left');  
+    this.hoveredArrow = null;
   }
 }

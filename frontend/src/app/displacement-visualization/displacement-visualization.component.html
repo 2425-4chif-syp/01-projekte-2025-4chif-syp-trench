@@ -100,15 +100,15 @@
           [attr.x2]="branch.x"
           [attr.y2]="branch.y"
           [attr.stroke]="getArrowColor($index)"
-          stroke-width="0.25"
-          stroke-dasharray="0.25,0.25"
+          [attr.stroke-width]="hoveredArrow === $index ? '0.5' : '0.25'"
+          [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.25,0.25'"
         /> 
 
         <!-- Arrow triangle -->
         <polygon
           points="0.5,0 0,-0.25 0,0.25"
           [attr.fill]="getArrowColor($index)"
-          [attr.transform]="'translate('+branch.x+', '+branch.y+') rotate('+(branch.angle * radToDeg)+')'"
+          [attr.transform]="'translate('+branch.x+', '+branch.y+') rotate('+(branch.angle * radToDeg)+') scale('+(hoveredArrow === $index ? '1.5' : '1')+')'"
           />
 
         <!-- Arrow hitbox -->
