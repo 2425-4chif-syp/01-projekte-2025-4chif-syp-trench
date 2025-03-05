@@ -124,20 +124,23 @@
     }
 
     <!-- Result vector -->
-    <g transform="translate(12, 12)">
+    <g 
+      transform="translate(12, 12)"
+      (mouseenter)="onArrowMouseEnter(-1)" (mouseleave)="onArrowMouseLeave(-1)"
+      >
       <line
         x1="0"
         y1="0"
         [attr.x2]="finalVector.x"
         [attr.y2]="finalVector.y"
+        [attr.stroke-width]="hoveredArrow === -1 ? '0.75' : '0.5'"
         stroke="black"
-        stroke-width="0.5"
       />
 
       <polygon
         points="1,0 0,-0.5 0,0.5"
         fill="black"
-        [attr.transform]="'translate('+finalVector.x+', '+finalVector.y+') rotate('+(finalVector.angle * radToDeg)+')'"
+        [attr.transform]="'translate('+finalVector.x+', '+finalVector.y+') rotate('+(finalVector.angle * radToDeg)+') scale('+(hoveredArrow === -1 ? '1.5' : '1')+')'"
         />
     </g>
 
