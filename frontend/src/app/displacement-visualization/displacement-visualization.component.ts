@@ -16,7 +16,7 @@ export class DisplacementVisualizationComponent {
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
     branchAmount: 3,
-    sensorAmount: 1,
+    sensorAmount: 6,
   };
 
   // Array to store the values of each branch and its sensors
@@ -37,6 +37,14 @@ export class DisplacementVisualizationComponent {
 
   constructor(private displacementService: DisplacementService) {
     this.generateBranches(); // Initialize the branches array
+
+    this.branches = [
+      { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
+      { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
+      { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
+    ];
+
+    this.calculateResults();
   }
 
   // Function to generate the branches and sensors structure
