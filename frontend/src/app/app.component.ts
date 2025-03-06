@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'asc-visualization';
-  isLoginPage = false; 
+  isLoginPage = true; 
 
   constructor(public authService: AuthService, private router: Router) {
     this.router.events.subscribe(event => {
