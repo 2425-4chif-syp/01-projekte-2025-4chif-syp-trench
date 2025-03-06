@@ -7,15 +7,18 @@ import { CoilParentComponent } from './coil-management/coil-parent/coil-parent.c
 import { CoiltypeParentComponent } from './coiltype-management/coiltype-parent/coiltype-parent.component';
 import { MeasurementSettingsComponent } from './measurement-settings/measurement-settings.component';
 import { ToleranceSettingsComponent } from './tolerance-settings/tolerance-settings.component';
-import {DisplacementVisualizationComponent} from "./displacement-visualization/displacement-visualization.component";
+import { DisplacementVisualizationComponent } from "./displacement-visualization/displacement-visualization.component";
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
-    {path: '', redirectTo: '/home', pathMatch: 'full'},
-    {path: 'home', component: HomeComponent},
-    {path: 'coil-management', component: CoilParentComponent},
-    {path: 'coiltype-management', component: CoiltypeParentComponent},
-    {path: 'measurement-management', component: MeasurementManagementComponent},
-    {path: 'measurement-settings', component: MeasurementSettingsComponent},
-    {path: 'tolerance-settings', component: ToleranceSettingsComponent},
-    {path: 'displacement-visualization', component: DisplacementVisualizationComponent}
+    {path: '', redirectTo: '/login', pathMatch: 'full'},
+    {path: 'login', component: LoginComponent},
+    {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+    {path: 'coil-management', component: CoilParentComponent, canActivate: [AuthGuard]},
+    {path: 'coiltype-management', component: CoiltypeParentComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-management', component: MeasurementManagementComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
+    {path: 'tolerance-settings', component: ToleranceSettingsComponent, canActivate: [AuthGuard]},
+    {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]}
 ];
