@@ -17,4 +17,7 @@
         <div class="image-text">Messungsverwaltung</div>
       </div>    
   </div>
+  <button *ngIf="!isLoginPage" (click)="logout($event)" class="logout-btn">
+    Logout
+  </button>
 </div>
