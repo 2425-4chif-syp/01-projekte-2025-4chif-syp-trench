@@ -16,6 +16,7 @@ import { AppComponent } from '../../app.component';
 export class MeasurementProbeManagementComponent {
   yokeAmount = 4;
   selectedProbe: MeasurementProbe | undefined;
+  probeToDelete: MeasurementProbe | undefined;
   modal: any;
   errorMessage: string | null = null;
   isNewProbe = false;
@@ -60,6 +61,22 @@ export class MeasurementProbeManagementComponent {
   closeModal(): void {
     this.selectedProbe = undefined;
     this.isNewProbe = false;
+  }
+  
+  confirmDelete(probe: MeasurementProbe): void {
+    this.probeToDelete = probe;
+  }
+
+  cancelDelete(): void {
+    this.probeToDelete = undefined;
+  }
+
+  deleteProbe(): void {
+    if (this.probeToDelete) {
+      this.measurementProbes = this.measurementProbes.filter(probe => probe.id !== this.probeToDelete!.id);
+      this.probeToDelete = undefined;
+      this.groupSensors();
+    }
   }
 
   saveChanges(): void {
