@@ -18,7 +18,7 @@ export class MeasurementProbeManagementComponent {
   selectedProbe: MeasurementProbe | undefined;
   modal: any;
   errorMessage: string | null = null;
-  isNewProbe = false;
+  isNewProbe = true;
 
   measurementProbes: MeasurementProbe[] = [
     { id: 1, width: 50, yoke: 1, position: 1 },
@@ -55,11 +55,11 @@ export class MeasurementProbeManagementComponent {
 
   openModal(probe: any): void {
     this.selectedProbe = {...probe};
-    this.isNewProbe = false;
   }
 
   closeModal(): void {
     this.selectedProbe = undefined;
+    this.isNewProbe = false;
   }
 
   saveChanges(): void {
@@ -90,11 +90,16 @@ export class MeasurementProbeManagementComponent {
   }
 
   addMeasurementProbe(yoke: number): void{
+    const existingProbes = this.measurementProbes.filter(probe => probe.yoke === (yoke + 1));
+    const maxPosition = existingProbes.length > 0 
+        ? Math.max(...existingProbes.map(probe => probe.position)) 
+        : 0;
+
     const newProbe = {
       id: this.measurementProbes.length + 1,
-      width: 0,
+      width: 50,
       yoke: yoke + 1,
-      position: 0
+      position: maxPosition + 1
     };
     this.isNewProbe = true;
 
