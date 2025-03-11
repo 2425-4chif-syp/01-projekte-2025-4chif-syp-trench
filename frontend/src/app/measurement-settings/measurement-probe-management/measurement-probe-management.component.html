@@ -61,7 +61,7 @@
                     <div class="mb-3">
                         <label for="probeYoke" class="form-label">Schenkel</label>
                         <input type="number" id="probeYoke" class="form-control" [(ngModel)]="selectedProbe!.yoke"
-                            name="probeYoke" min="1" [max]="yokeAmount" required [readOnly]="isNewProbe"/>
+                            name="probeYoke" min="1" [max]="yokeAmount" required [disabled]="isNewProbe"/>
                         <small class="text-danger" *ngIf="selectedProbe!.yoke < 1 || selectedProbe!.yoke > yokeAmount">
                             Wert muss zwischen 1 und {{ yokeAmount }} liegen!
                         </small>

@@ -18,7 +18,7 @@ export class MeasurementProbeManagementComponent {
   selectedProbe: MeasurementProbe | undefined;
   modal: any;
   errorMessage: string | null = null;
-  isNewProbe = true;
+  isNewProbe = false;
 
   measurementProbes: MeasurementProbe[] = [
     { id: 1, width: 50, yoke: 1, position: 1 },
