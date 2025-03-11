@@ -21,9 +21,12 @@
                                 <td>{{ probe.id }}</td>
                                 <td>{{ probe.width }}</td>
                                 <td>{{ probe.position }}</td>
-
+                               
                             </tr>
                             }
+                            <div class="text-center p-3">
+                                <button class="btn btn-success" (click)="addMeasurementProbe($index)">Spule hinzufügen</button>
+                            </div>
                         </tbody>
                     </table>
                 </div>
@@ -58,7 +61,7 @@
                     <div class="mb-3">
                         <label for="probeYoke" class="form-label">Schenkel</label>
                         <input type="number" id="probeYoke" class="form-control" [(ngModel)]="selectedProbe!.yoke"
-                            name="probeYoke" min="1" [max]="yokeAmount" required />
+                            name="probeYoke" min="1" [max]="yokeAmount" required [readOnly]="isNewProbe"/>
                         <small class="text-danger" *ngIf="selectedProbe!.yoke < 1 || selectedProbe!.yoke > yokeAmount">
                             Wert muss zwischen 1 und {{ yokeAmount }} liegen!
                         </small>

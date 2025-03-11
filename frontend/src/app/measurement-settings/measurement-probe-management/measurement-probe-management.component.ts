@@ -18,6 +18,7 @@ export class MeasurementProbeManagementComponent {
   selectedProbe: MeasurementProbe | undefined;
   modal: any;
   errorMessage: string | null = null;
+  isNewProbe = false;
 
   measurementProbes: MeasurementProbe[] = [
     { id: 1, width: 50, yoke: 1, position: 1 },
@@ -54,6 +55,7 @@ export class MeasurementProbeManagementComponent {
 
   openModal(probe: any): void {
     this.selectedProbe = {...probe};
+    this.isNewProbe = false;
   }
 
   closeModal(): void {
@@ -85,5 +87,22 @@ export class MeasurementProbeManagementComponent {
       probe.yoke > 0 &&
       probe.yoke <= this.yokeAmount
     );
+  }
+
+  addMeasurementProbe(yoke: number): void{
+    const newProbe = {
+      id: this.measurementProbes.length + 1,
+      width: 0,
+      yoke: yoke + 1,
+      position: 0
+    };
+    this.isNewProbe = true;
+
+    this.openModal(newProbe);
+
+    if (this.isValidProbe(newProbe)) {
+      this.measurementProbes.push(newProbe);
+      this.groupSensors();
+    }
   }
 }
