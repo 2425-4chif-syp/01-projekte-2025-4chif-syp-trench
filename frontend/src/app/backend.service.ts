@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Coil } from './data/coil-data/coil';
 import { Coiltype } from './data/coiltype-data/coiltype';
 import { measurementSettings } from './data/measurement-settings/measurement-settings';
+import { MeasurementProbe } from './data/measurement-probes/measurement-probes';
 
 @Injectable({
   providedIn: 'root'
@@ -134,6 +135,24 @@ export class BackendService {
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
       messStärke: measurementSettings.messStärke,
       zeitstempel: measurementSettings.zeitstempel
+    }
+  }
+
+  private measurementProbeBackendToFrontend(measurementProbe: any): MeasurementProbe {
+    return {
+      id: measurementProbe.Id,
+      width: measurementProbe.width,
+      yoke: measurementProbe.yoke,
+      position: measurementProbe.position
+    }
+  }
+
+  private measurementProbeFrontendToBackend(measurementProbe: MeasurementProbe): any {
+    return {
+      Id: measurementProbe.id,
+      width: measurementProbe.width,
+      yoke: measurementProbe.yoke,
+      position: measurementProbe.position
     }
   }
 
