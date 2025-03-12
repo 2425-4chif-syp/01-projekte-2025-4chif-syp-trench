@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthGuard } from '../auth/auth.guard';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private isAuthenticated = false;
-  private readonly hashedPassword = '31e8b4136c0ab53e17620cf45bc738837eb5560297dc8b51061466ccb739dcf3'; 
+  private readonly apiUrl = 'http://localhost:5127/api/auth/verify';
 
   constructor(private router: Router) {
     const token = localStorage.getItem('isAuthenticated');
@@ -15,12 +14,22 @@ export class AuthService {
   }
 
   async login(password: string): Promise<boolean> {
-    const hashedInput = await this.hashPassword(password);
-    if (hashedInput === this.hashedPassword) {
+    const hashedPasswordFromDB = '$2a$11$5V4maOVUU79dt5DyGPObs.j3HRh1svEte5KSJzkVMpzi6/zYUv8mW'; 
+
+    const response = await fetch(this.apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, hashedPassword: hashedPasswordFromDB })
+    });
+
+    const data = await response.json();
+    
+    if (data.isValid) {
       this.isAuthenticated = true;
       localStorage.setItem('isAuthenticated', 'true');
       return true;
     }
+
     return false;
   }
 
@@ -31,18 +40,8 @@ export class AuthService {
       window.history.replaceState({}, '', '/login'); 
     });
   }
-  
 
   isLoggedIn(): boolean {
     return this.isAuthenticated;
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer))
-      .map(byte => byte.toString(16).padStart(2, '0'))
-      .join('');
   }
 }
