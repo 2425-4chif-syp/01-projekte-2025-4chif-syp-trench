@@ -9,10 +9,6 @@ public class PasswordHasher
 
     public static bool VerifyPassword(string password, string hashedPassword)
     {
-        if (hashedPassword == null || !BCrypt.Net.BCrypt.Verify(password, hashedPassword))
-        {
-            return false;
-        }
-        return true;
+        return hashedPassword is not null && BCrypt.Net.BCrypt.Verify(password, hashedPassword)
     }
 }
