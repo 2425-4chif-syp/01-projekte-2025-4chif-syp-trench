@@ -14,12 +14,10 @@ export class AuthService {
   }
 
   async login(password: string): Promise<boolean> {
-    const hashedPasswordFromDB = '$2a$11$5V4maOVUU79dt5DyGPObs.j3HRh1svEte5KSJzkVMpzi6/zYUv8mW'; 
-
     const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password, hashedPassword: hashedPasswordFromDB })
+      body: JSON.stringify(password) 
     });
 
     const data = await response.json();
@@ -45,3 +43,4 @@ export class AuthService {
     return this.isAuthenticated;
   }
 }
+
