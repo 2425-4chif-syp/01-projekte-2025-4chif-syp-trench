@@ -207,4 +207,27 @@ export class BackendService {
     const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));
     return this.measurementSettingsBackendToFrontend(response);
   }
+  
+  public async getAllMeasurementProbes(): Promise<MeasurementProbe[]> {
+    const response:any = await this.httpGetRequest('sensoren');
+    return response.map((measurementProbe: any) => (this.measurementProbeBackendToFrontend(measurementProbe)));
+  }
+
+  public async getMeasurementProbe(id: number): Promise<MeasurementProbe> {
+    const response:any = await this.httpGetRequest('sensoren/' + id);
+    return this.measurementProbeBackendToFrontend(response);
+  }
+  
+  public async addMeasurementProbe(measurementProbe: MeasurementProbe): Promise<MeasurementProbe> {
+    const response:any = await this.httpPostRequest('sensoren', this.measurementProbeFrontendToBackend(measurementProbe));
+    return this.measurementProbeBackendToFrontend(response);
+  }
+
+  public async updateMeasurementProbe(measurementProbe: MeasurementProbe): Promise<void> {
+    await this.httpPutRequest('sensoren/' + measurementProbe.id, this.measurementProbeFrontendToBackend(measurementProbe));
+  }
+
+  public async deleteMeasurementProbe(measurementProbe: MeasurementProbe): Promise<void> {
+    await this.httpDeleteRequest('sensoren/' + measurementProbe.id);
+  }
 }
