@@ -90,8 +90,8 @@ export class MeasurementManagementComponent implements OnInit, OnDestroy {
 
     if (!sensorTolerance) {
       if (value >= 0 && value <= 0.4) return 'green';
-      if (value >= 0.41 && value <= 0.7) return 'yellow';
-      if (value >= 0.71 && value <= 1) return 'red';
+      else if (value > 0.4 && value <= 0.7) return 'yellow';
+      else if (value > 0.7 && value <= 1) return 'red';
       return 'gray';
     }
 
