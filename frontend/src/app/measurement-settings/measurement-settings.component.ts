@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { measurementSettings } from '../data/measurement-settings/measurement-settings';
+import { MeasurementProbeManagementComponent } from './measurement-probe-management/measurement-probe-management.component';
 
 
 @Component({
   selector: 'app-measurement-settings',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, MeasurementProbeManagementComponent],
   templateUrl: './measurement-settings.component.html',
   styleUrl: './measurement-settings.component.scss'
 })

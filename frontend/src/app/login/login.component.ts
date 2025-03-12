@@ -1,4 +1,3 @@
-// login.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -15,11 +14,11 @@ import { CommonModule } from '@angular/common';
 export class LoginComponent implements OnInit {
   password: string = '';
   error: string = '';
-  
+
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.password = '';  
+    this.password = '';
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/home']);
     }
@@ -30,12 +29,12 @@ export class LoginComponent implements OnInit {
       this.error = 'Passwort darf nicht leer sein';
       return;
     }
-    
+
     const success = await this.authService.login(this.password);
     if (success) {
       this.router.navigate(['/home']);
     } else {
       this.error = 'Falsches Passwort';
     }
-  }  
+  }
 }
