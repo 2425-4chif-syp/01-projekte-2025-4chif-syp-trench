@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
   password: string = '';
   error: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.password = '';
@@ -32,6 +33,7 @@ export class LoginComponent implements OnInit {
 
     const success = await this.authService.login(this.password);
     if (success) {
+      this.cdr.detectChanges();
       this.router.navigate(['/home']);
     } else {
       this.error = 'Falsches Passwort';

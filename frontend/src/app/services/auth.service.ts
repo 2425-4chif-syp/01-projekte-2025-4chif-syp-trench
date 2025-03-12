@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = false;
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private readonly apiUrl = 'http://localhost:5127/api/auth/verify';
 
   constructor(private router: Router) {
     const token = localStorage.getItem('isAuthenticated');
-    this.isAuthenticated = token === 'true';
+    this.isAuthenticatedSubject.next(token === 'true'); 
   }
 
   async login(password: string): Promise<boolean> {
@@ -23,8 +25,9 @@ export class AuthService {
     const data = await response.json();
     
     if (data.isValid) {
-      this.isAuthenticated = true;
       localStorage.setItem('isAuthenticated', 'true');
+      this.isAuthenticatedSubject.next(true);
+      this.router.navigateByUrl('/home');
       return true;
     }
 
@@ -32,15 +35,14 @@ export class AuthService {
   }
 
   logout(): void {
-    this.isAuthenticated = false;
     localStorage.removeItem('isAuthenticated');
+    this.isAuthenticatedSubject.next(false);
     this.router.navigateByUrl('/login').then(() => {
       window.history.replaceState({}, '', '/login'); 
     });
   }
 
   isLoggedIn(): boolean {
-    return this.isAuthenticated;
+    return this.isAuthenticatedSubject.value; 
   }
 }
-
