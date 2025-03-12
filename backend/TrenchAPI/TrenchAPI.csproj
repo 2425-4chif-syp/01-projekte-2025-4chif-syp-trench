@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>   
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,5 +25,4 @@
     <Folder Include="Migrations\SpuleTyp\" />
     <Folder Include="Migrations\Spule\" />
   </ItemGroup>
-
 </Project>
