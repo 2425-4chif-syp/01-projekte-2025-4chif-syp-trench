@@ -47,7 +47,12 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Sensor bearbeiten</h5>
+                @if(isNewProbe){
+                    <h5 class="modal-title">Messsonde erstellen</h5>
+                }
+                @else{
+                    <h5 class="modal-title">Messsonde bearbeiten</h5>
+                }
             </div>
             <div class="modal-body">
                 <div *ngIf="errorMessage" class="alert alert-danger">
