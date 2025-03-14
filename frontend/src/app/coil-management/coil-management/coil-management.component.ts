@@ -22,7 +22,9 @@ export class CoilManagementComponent {
     this.coiltypesService.reloadCoiltypes();
   }
 
-  saveMessage: string | null = null;
+  saveMessage: string | null = null;  
+  saveError: boolean = false;
+  selectedCoilIsNew: boolean = false;
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);

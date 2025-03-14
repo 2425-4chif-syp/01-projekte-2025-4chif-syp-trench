@@ -1,121 +1,58 @@
-<div class="coil-container">
-  @if (coilsService.selectedCoilIsNew) {
-    <h2>Neue Spule</h2>
-  }
-  @else {
-    <select *ngIf="coilsService.coils.length > 0" id="coilSelect" [(ngModel)]="selectedCoilId"
-      (ngModelChange)="onCoilSelectionChange($event)">
+<div class="container mt-4">
+  <div class="text-center mb-5 mt-5">
+    <h2 *ngIf="coilsService.selectedCoilIsNew">Neue Spule</h2>
+    <select *ngIf="!coilsService.selectedCoilIsNew && coilsService.coils.length > 0" class="form-select w-50 mx-auto" id="coilSelect" [(ngModel)]="selectedCoilId" (ngModelChange)="onCoilSelectionChange($event)">
       <option *ngFor="let coil of coilsService.coils" [value]="coil.id">Spule #{{ coil.id }}</option>
-    </select> 
-  }
-</div>
+    </select>
+  </div>
 
-<div class="container">
-  <div class="panel" *ngIf="selectedCoil !== null">
-    <div class="input-container">
-      <label for="coiltypeSelect">Spulentyp: <span class="required">*</span></label>
-      <div id="coiltypeSelect">
-        @if (selectedCoil.coiltype !== null) {
-          <div>
-            ID: {{selectedCoiltype!.id}} <br />
-            Name: {{ selectedCoiltype!.tK_Name }}
-          </div>
-        }
-        @else {
-          <div class="text-danger">
-            Kein Spulentyp ausgewählt
-          </div>
-        }
-
-        <button class="btn btn-sm btn-outline-secondary" (click)="openCoiltypeSelect()">Spulentyp ändern...</button>
-      </div>
-
-      <label for="arcLengthInput">Auftrags-Nummer: <span class="required">*</span></label>
-      <input type="number" class="form-control inputField" id="auftragsNr" placeholder="Auftrags-Nummer"
-        [(ngModel)]="selectedCoil.auftragsnummer" [class.invalid]="isFieldInvalid('auftragsnummer')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('auftragsnummer')">
-        Bitte geben Sie eine Auftragsnummer ein
-      </div>
-
-      <label for="endAreaInput">AuftragsPosNr <span class="required">*</span></label>
-      <input type="number" class="form-control inputField" id="auftragsPosNr" placeholder="AuftragsPosNr"
-        [(ngModel)]="selectedCoil.auftragsPosNr" [class.invalid]="isFieldInvalid('auftragsPosNr')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('auftragsPosNr')">
-        Bitte geben Sie eine AuftragsPosNr ein
-      </div>
-
-      <label>UR: <span class="required">*</span></label>
-      <input type="number" class="form-control inputField" id="ur" placeholder="UR eingeben"
-         [(ngModel)]="selectedCoil.ur" [class.invalid]="isFieldInvalid('ur')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('ur')">
-        Bitte geben Sie einen UR-Wert ein
-      </div>
-
-      <label for="diameterInput">Einheit: <span class="required">*</span></label>
-      <input type="number" class="form-control inputField" id="einheit" placeholder="Einheit"
-        [(ngModel)]="selectedCoil.einheit" [class.invalid]="isFieldInvalid('einheit')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('einheit')">
-        Bitte geben Sie eine Einheit ein
-      </div>
-
-      <label for="endAreaInput">Omega <span class="required">*</span></label>
-      <input type="number" class="form-control inputField" id="omega" placeholder="Omega"
-        [(ngModel)]="selectedCoil.omega" [class.invalid]="isFieldInvalid('omega')" min="0" required>
-      <div class="error-message" *ngIf="isFieldInvalid('omega')">
-        Bitte geben Sie einen Omega-Wert ein
-      </div>
-    </div>
-
-    <!--<app-measuring-probe-measurement *ngIf=""/>-->
-
-    <div class="container">
-      <div class="input-container">
-        <div class="buttonContainer">
-          <div class="buttons-row">
-            <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
-            <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
-            <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spule Löschen</button>
-          </div>
-          <div class="saveMessage" *ngIf="saveMessage">
-            {{saveMessage}}
-          </div>
+  <div *ngIf="selectedCoil" class="card shadow p-4 mx-auto" style="max-width: 850px; min-height: 500px;">
+    <div class="mb-3">
+      <label class="form-label">Spulentyp: <span class="text-danger">*</span></label>
+      <div class="border p-2 rounded">
+        <div *ngIf="selectedCoil.coiltype">
+          <strong>ID:</strong> {{ selectedCoiltype!.id }} <br />
+          <strong>Name:</strong> {{ selectedCoiltype!.tK_Name }}
         </div>
+        <div *ngIf="!selectedCoil.coiltype" class="text-danger">Kein Spulentyp ausgewählt</div>
+        <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openCoiltypeSelect()">Spulentyp ändern...</button>
       </div>
+    </div>
+
+    <div *ngFor="let field of ['auftragsnummer', 'auftragsPosNr', 'ur', 'einheit', 'omega']" class="mb-3">
+      <label class="form-label">{{ field | titlecase }}: <span class="text-danger">*</span></label>
+      <input type="number" class="form-control" [id]="field" [(ngModel)]="selectedCoil" [class.is-invalid]="saveError && isFieldInvalid(field)" min="0" required>
+      <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid(field)">Bitte geben Sie einen gültigen Wert ein</div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-primary me-2" (click)="saveChanges()">Speichern</button>
+      <button class="btn btn-secondary me-2" (click)="backToListing()">Zurück</button>
+      <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spule Löschen</button>
+    </div>
+    
+    <div class="text-center mt-3" *ngIf="saveMessage">
+      <span class="fw-bold" [ngClass]="{'text-success': !saveError, 'text-danger': saveError}">{{ saveMessage }}</span>
     </div>
   </div>
 
-  <div *ngIf="selectedCoil === null">
-    <span class="text-danger">
-      Fehler: Spule konnte nicht geladen werden.
-    </span>
-  </div>
-</div>
-
-<div class="container no-coil-selected" *ngIf="coilsService.selectedCoilCopy === null">
-  <p>Bitte wählen Sie eine Spule aus.</p>
+  <div *ngIf="!selectedCoil" class="alert alert-danger text-center mt-3">Fehler: Spule konnte nicht geladen werden.</div>
+  <div *ngIf="!coilsService.selectedCoilCopy" class="alert alert-warning text-center mt-3">Bitte wählen Sie eine Spule aus.</div>
 </div>
 
 <!-- Bestätigungs-Modal -->
-<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}" [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-
       <div class="modal-header">
         <h5 class="modal-title">Spule löschen?</h5>
       </div>
-
       <div class="modal-body">
         <p>Sind Sie sicher, dass Sie diese Spule löschen möchten?</p>
       </div>
-
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
-          Abbrechen
-        </button>
-        <button type="button" class="btn btn-danger" (click)="deleteCoil()">
-          Löschen
-        </button>
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">Abbrechen</button>
+        <button type="button" class="btn btn-danger" (click)="deleteCoil()">Löschen</button>
       </div>
     </div>
   </div>

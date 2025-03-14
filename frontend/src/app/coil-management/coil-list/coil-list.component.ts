@@ -29,12 +29,12 @@ export class CoilListComponent {
     const newCoil:Coil = {
       id: 0,
       coiltype: null,
-      coiltypeId: 0,
-      ur: 0, 
-      einheit: 0,
-      auftragsnummer: 0,
-      auftragsPosNr: 0,
-      omega: 0
+      coiltypeId: null,
+      ur: null, 
+      einheit: null,
+      auftragsnummer: null,
+      auftragsPosNr: null,
+      omega: null
     };
 
     this.coilsService.selectedCoilCopy = newCoil;
