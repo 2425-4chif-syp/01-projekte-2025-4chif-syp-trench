@@ -1,23 +1,50 @@
-<div class="home-container">
-  <img src="/assets/logo-black.png" alt="Trench Logo" class="logo">
-  <h1>Trench ASC Sensor Visualization</h1>
-  <div class="image-group">
-      <div class="image-container" (click)="navigateToCoilTypeManagement()">
-        <img src="/assets/tmp-coil.png" alt="Coil Management" class="clickable-image">
-        <div class="image-text">Spulentypenverwaltung</div>
-      </div>
-
-      <div class="image-container" (click)="navigateToCoilManagement()">
-        <img src="/assets/tmp-coil.png" alt="New Feature" class="clickable-image">
-        <div class="image-text">Spulenverwaltung</div>
-      </div>
-      
-      <div class="image-container" (click)="navigateToMeasurementManagement()">
-        <img src="/assets/tmp-sensor.png" alt="Measurement Management" class="clickable-image">
-        <div class="image-text">Messungsverwaltung</div>
-      </div>    
+<div class="container text-center vh-90 d-flex flex-column align-items-center justify-content-center">
+  <div class="mb-5 mt-5">
+    <img src="/assets/logo-black.png" alt="Trench Logo" class="img-fluid mb-4" style="max-width: 400px;">
+    <h1 class="mb-4">Trench ASC Sensor Visualization</h1>
   </div>
-  <button *ngIf="!isLoginPage" (click)="logout($event)" class="logout-btn">
+   
+  <div class="row row-cols-1 row-cols-md-3 g-4 w-80">
+    <div class="col">
+      <div class="card shadow-sm h-100 border-0 hover-effect" (click)="navigateToCoilTypeManagement()" style="cursor: pointer;">
+        <img src="/assets/tmp-coil.png" class="card-img-top" alt="Coil Management">
+        <div class="card-body text-center">
+          <h5 class="card-title">Spulentypenverwaltung</h5>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col">
+      <div class="card shadow-sm h-100 border-0 hover-effect" (click)="navigateToCoilManagement()" style="cursor: pointer;">
+        <img src="/assets/tmp-coil.png" class="card-img-top" alt="New Feature">
+        <div class="card-body text-center">
+          <h5 class="card-title">Spulenverwaltung</h5>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col">
+      <div class="card shadow-sm h-100 border-0 hover-effect" (click)="navigateToMeasurementManagement()" style="cursor: pointer;">
+        <img src="/assets/tmp-sensor.png" class="card-img-top" alt="Measurement Management">
+        <div class="card-body text-center">
+          <h5 class="card-title">Messungsverwaltung</h5>
+        </div>
+      </div>
+    </div>
+
+    <!--
+    <div class="col">
+      <div class="card shadow-sm h-100 border-0 hover-effect" (click)="navigateToMeasurementManagement()" style="cursor: pointer;">
+        <img src="/assets/tmp-sensor.png" class="card-img-top" alt="Measurement Management">
+        <div class="card-body text-center">
+          <h5 class="card-title">Messungsverwaltung</h5>
+        </div>
+      </div>
+    </div>
+      -->
+  </div>
+
+  <button *ngIf="!isLoginPage" (click)="logout($event)" class="btn btn-danger position-fixed bottom-0 start-0 m-3 shadow">
     Logout
   </button>
 </div>
