@@ -9,7 +9,6 @@ namespace TrenchAPI.Models
         [Key]
         public int SensorID { get; set; }
 
-        [Required]
         [ForeignKey(nameof(SensorTypID))]
         public SensorTyp? SensorTyp { get; set; }
 
