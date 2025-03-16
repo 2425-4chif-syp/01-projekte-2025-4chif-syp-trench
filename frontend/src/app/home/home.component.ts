@@ -30,8 +30,12 @@ export class HomeComponent {
     this.router.navigate(['/coiltype-management']);
   }
 
-  navigateToMeasurementManagement() {
-    this.router.navigate(['/measurement-management']);
+  navigateToMeasurementResult() {
+    this.router.navigate(['/measurement-result']);
+  }
+
+  navigateToMeasureMentSettings(){
+    this.router.navigate(['/measurement-settings']);
   }
 
   logout(event: Event): void {
