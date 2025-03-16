@@ -47,7 +47,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSpuleTyp(int id, SpuleTyp spuleTyp)
         {
-            if (id != spuleTyp.SpuleTypId)
+            if (id != spuleTyp.SpuleTypID)
             {
                 return BadRequest();
             }
@@ -81,7 +81,7 @@ namespace TrenchAPI.Controllers
             _context.SpuleTyp.Add(spuleTyp);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpuleTypId }, spuleTyp);
+            return CreatedAtAction("GetSpuleTyp", new { id = spuleTyp.SpuleTypID }, spuleTyp);
         }
 
         // DELETE: api/SpuleTyp/5
@@ -118,7 +118,7 @@ namespace TrenchAPI.Controllers
             {
                 try
                 {
-                    _context.Database.ExecuteSqlRaw("ALTER SEQUENCE \"YourTableName_Id_seq\" RESTART WITH 1");
+                    _context.Database.ExecuteSqlRaw("ALTER SEQUENCE \"YourTableName_ID_seq\" RESTART WITH 1");
 
                     transaction.Commit();
                 }
@@ -135,7 +135,7 @@ namespace TrenchAPI.Controllers
 
         private bool SpuleTypExists(int id)
         {
-            return _context.SpuleTyp.Any(e => e.SpuleTypId == id);
+            return _context.SpuleTyp.Any(e => e.SpuleTypID == id);
         }
     }
 }

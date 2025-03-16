@@ -17,51 +17,144 @@ namespace TrenchAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TrenchAPI.Models.Messeinstellung", b =>
+            modelBuilder.Entity("TrenchAPI.Models.Gesamtmessung", b =>
                 {
-                    b.Property<int>("MesseinstellungId")
+                    b.Property<int>("GesamtmessungID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MesseinstellungId"));
-
-                    b.Property<int>("SpuleId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("bemessungsFrequenz")
-                        .HasColumnType("decimal(8,3)");
-
-                    b.Property<decimal>("bemessungsSpannung")
-                        .HasColumnType("decimal(8,3)");
-
-                    b.Property<decimal>("messStärke")
-                        .HasColumnType("decimal(8,3)");
-
-                    b.Property<int>("sondenProSchenkel")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("zeitstempel")
-                        .HasColumnType("timestamp with time zone");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GesamtmessungID"));
 
-                    b.HasKey("MesseinstellungId");
+                    b.Property<decimal>("GesamtVektor")
+                        .HasColumnType("decimal(8,3)");
 
-                    b.HasIndex("SpuleId");
+                    b.Property<int>("SpuleID")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Zeit")
+                        .HasColumnType("timestamp");
+
+                    b.HasKey("GesamtmessungID");
+
+                    b.HasIndex("SpuleID");
+
+                    b.ToTable("Gesamtmessung");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Messeinstellung", b =>
+                {
+                    b.Property<int>("MesseinstellungID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MesseinstellungID"));
+
+                    b.Property<decimal>("Bemessungsfrequenz")
+                        .HasColumnType("decimal(8,3)");
+
+                    b.Property<decimal>("Bemessungsspannung")
+                        .HasColumnType("decimal(8,3)");
+
+                    b.Property<int>("GesamtmessungID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sensoren")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Toleranz")
+                        .HasColumnType("int");
+
+                    b.HasKey("MesseinstellungID");
+
+                    b.HasIndex("GesamtmessungID");
 
                     b.ToTable("Messeinstellung");
                 });
 
-            modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
+            modelBuilder.Entity("TrenchAPI.Models.Sensor", b =>
                 {
-                    b.Property<int>("SpuleId")
+                    b.Property<int>("SensorID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SensorID"));
+
+                    b.Property<decimal>("Durchmesser")
+                        .HasColumnType("decimal(8,3)");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Schenkel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SensorTypID")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SensorID");
+
+                    b.HasIndex("SensorTypID");
+
+                    b.ToTable("Sensor");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.SensorTyp", b =>
+                {
+                    b.Property<int>("SensorTypID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SensorTypID"));
+
+                    b.Property<int>("Wicklungszahl")
+                        .HasColumnType("int");
+
+                    b.HasKey("SensorTypID");
+
+                    b.ToTable("SensorTyp");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Sensormessung", b =>
+                {
+                    b.Property<int>("SensormessungID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SensormessungID"));
+
+                    b.Property<int>("GesamtmessungID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SensorId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Wert")
+                        .HasColumnType("decimal(8,3)");
+
+                    b.Property<DateTime>("Zeit")
+                        .HasColumnType("timestamp");
+
+                    b.HasKey("SensormessungID");
+
+                    b.HasIndex("GesamtmessungID");
+
+                    b.HasIndex("SensorId");
+
+                    b.ToTable("Sensormessung");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
+                {
+                    b.Property<int>("SpuleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleID"));
 
                     b.Property<int>("AuftragsPosNr")
                         .HasColumnType("int");
@@ -81,7 +174,7 @@ namespace TrenchAPI.Migrations
                     b.Property<decimal>("omega")
                         .HasColumnType("decimal(8,5)");
 
-                    b.HasKey("SpuleId");
+                    b.HasKey("SpuleID");
 
                     b.HasIndex("SpuleTypID");
 
@@ -90,11 +183,11 @@ namespace TrenchAPI.Migrations
 
             modelBuilder.Entity("TrenchAPI.Models.SpuleTyp", b =>
                 {
-                    b.Property<int>("SpuleTypId")
+                    b.Property<int>("SpuleTypID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleTypId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SpuleTypID"));
 
                     b.Property<int>("BB")
                         .HasColumnType("int");
@@ -112,20 +205,61 @@ namespace TrenchAPI.Migrations
                     b.Property<int>("dm")
                         .HasColumnType("int");
 
-                    b.HasKey("SpuleTypId");
+                    b.HasKey("SpuleTypID");
 
                     b.ToTable("SpuleTyp");
                 });
 
-            modelBuilder.Entity("TrenchAPI.Models.Messeinstellung", b =>
+            modelBuilder.Entity("TrenchAPI.Models.Gesamtmessung", b =>
                 {
                     b.HasOne("TrenchAPI.Models.Spule", "Spule")
                         .WithMany()
-                        .HasForeignKey("SpuleId")
+                        .HasForeignKey("SpuleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Spule");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Messeinstellung", b =>
+                {
+                    b.HasOne("TrenchAPI.Models.Gesamtmessung", "Gesamtmessung")
+                        .WithMany()
+                        .HasForeignKey("GesamtmessungID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gesamtmessung");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Sensor", b =>
+                {
+                    b.HasOne("TrenchAPI.Models.SensorTyp", "SensorTyp")
+                        .WithMany()
+                        .HasForeignKey("SensorTypID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SensorTyp");
+                });
+
+            modelBuilder.Entity("TrenchAPI.Models.Sensormessung", b =>
+                {
+                    b.HasOne("TrenchAPI.Models.Gesamtmessung", "Gesamtmessung")
+                        .WithMany()
+                        .HasForeignKey("GesamtmessungID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TrenchAPI.Models.Sensor", "Sensor")
+                        .WithMany()
+                        .HasForeignKey("SensorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gesamtmessung");
+
+                    b.Navigation("Sensor");
                 });
 
             modelBuilder.Entity("TrenchAPI.Models.Spule", b =>
@@ -142,4 +276,3 @@ namespace TrenchAPI.Migrations
         }
     }
 }
-

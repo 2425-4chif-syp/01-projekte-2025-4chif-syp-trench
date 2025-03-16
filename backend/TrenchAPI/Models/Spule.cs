@@ -7,12 +7,12 @@ namespace TrenchAPI.Models
     {
         [Required]
         [Key]
-        public int SpuleId { get; set; }
+        public int SpuleID { get; set; }
 
-        [ForeignKey(nameof(SpuleTypId))]
+        [ForeignKey(nameof(SpuleTypID))]
         public SpuleTyp? SpuleTyp { get; set; }
 
-        public int SpuleTypId { get; set; }
+        public int SpuleTypID { get; set; }
         
         [Column(TypeName = "decimal(8,3)")]
         public decimal Ur { get; set; }
