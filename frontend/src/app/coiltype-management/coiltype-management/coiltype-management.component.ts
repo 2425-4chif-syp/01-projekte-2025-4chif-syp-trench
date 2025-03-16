@@ -13,9 +13,8 @@ import { CoilVisualizationComponent } from '../../coil-visualization/coil-visual
   styleUrl: './coiltype-management.component.scss'
 })
 export class CoiltypeManagementComponent {
-    constructor(public coiltypesService:CoiltypesService) {
-
-    }
+    constructor(public coiltypesService:CoiltypesService) { }
+    saveError: boolean = false;
     saveMessage: string | null = null;
 
     public get selectedCoiltype():Coiltype|null {
@@ -29,51 +28,43 @@ export class CoiltypeManagementComponent {
     }
 
     isFieldInvalid(field: string): boolean {
-      /*if (field === 'bandbreite' && this.bandbreite === null) {
-        return true;
-      }
-      if (field === 'schichthoehe' && this.schichthoehe === null) {
-        return true;
-      }
-      if (field === 'durchmesser' && this.durchmesser === null) {
-        return true;
-      }*/
-      return false;
+      if (!this.selectedCoiltype) return false;
+      let value = this.selectedCoiltype[field as keyof Coiltype];
+      return value === null || value === undefined || (typeof value === 'number' && value <= 0);
     }
-
+    
     async saveChanges() {
-      if (this.coiltypesService.selectedCoiltypeCopy === null) {
-        return;
+      if (!this.selectedCoiltype) {
+          return;
       }
-
-      if (typeof this.coiltypesService.selectedCoiltypeCopy.id !== 'number') {
-        // This can happen if Angular sets selectedCoiltypeId to a string for some reason
-        throw new Error('selectedCoiltypeId is not of type number');
+  
+      this.saveError = true; // Fehlerprüfung aktivieren
+  
+      // Pflichtfelder prüfen
+      const requiredFields = ['tK_Name', 'bb', 'sh', 'dm'];
+      const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
+  
+      if (invalidFields.length > 0) {
+          this.saveMessage = "Bitte füllen Sie alle Pflichtfelder korrekt aus.";
+          return;
       }
-
-      // TODO: Fix invalid fields
-      //const invalidFields = ['ur', 'einheit', 'auftragsNr', 'auftragsPosNr', 'omega'].filter(field => this.isFieldInvalid(field));
-
-      //if (invalidFields.length > 0) {
-      //  alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
-      //  return;
-      //}
-
-      //const coiltype: Coiltype | undefined = this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoiltypeId!);
-
-      /*if (coiltype === undefined) {
-        throw new Error(`Coiltype with ID ${this.selectedCoiltypeId} not found`);
-      }*/
-
-      await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype!);
-
-      this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
-
-      this.saveMessage = 'Änderungen gespeichert!';
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
-    }
+  
+      try {
+          await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype);
+          this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
+  
+          this.saveMessage = "Änderungen gespeichert!";
+          setTimeout(() => {
+              this.saveMessage = null;
+          }, 1500);
+          this.backToListing();
+          this.saveError = false; // Fehlerprüfung zurücksetzen
+      } catch (error) {
+          console.error("Fehler beim Speichern:", error);
+          this.saveMessage = "Fehler beim Speichern!";
+      }
+  }
+  
 
     async onCoiltypeSelectionChange(coiltypeId: number) {
       const coiltypeIdNumber:number = Number(coiltypeId);

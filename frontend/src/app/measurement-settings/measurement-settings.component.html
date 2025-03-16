@@ -1,40 +1,49 @@
-<div class="row">
-    <div class="container col-6">
-        <h1>Messeinstellungen</h1>
-        <div class="input-container">
-            <label for="bemessungs-spannung">Bemessunngsspannung:</label>
-            <input type="number" class="form-control inputField" id="bemessungs-spannung"
-                placeholder="Bemessungsspannung" [(ngModel)]="measurementSettings.bemessungsSpannung" min="0">
-
-            <label for="bemessungs-frequez">Bemessungsfrequenz:</label>
-            <input type="number" class="form-control inputField" id="bemessungs-frequez"
-                placeholder="Bemessungsfrequenz" [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
-
-            <label for="sonden-pro-schenkel">Sonden pro Schenkel:</label>
-            <select class="form-control form-select" id="sonden-pro-schenkel"
-                [(ngModel)]="measurementSettings.sondenProSchenkel">
-                @for (amount of schenkelAnzahl(); track $index) {
-                <option [value]="amount">{{amount}}</option>
-                }
-            </select>
-            <label for="mess-stärke">Messstärke:</label>
-            <input type="number" class="form-control inputField" id="mess-stärke" placeholder="Messstärke"
-                [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
-
-            <div class="button-container">
-                <div class="buttons-row">
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-6">
+            <h1 class="mb-4 text-center">Messeinstellungen</h1>
+            <div class="card shadow-sm p-4" >
+                <div class="mb-3">
+                    <label for="bemessungs-spannung" class="form-label">Bemessungsspannung:</label>
+                    <input type="number" class="form-control" id="bemessungs-spannung"
+                        placeholder="Bemessungsspannung" [(ngModel)]="measurementSettings.bemessungsSpannung" min="0">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz:</label>
+                    <input type="number" class="form-control" id="bemessungs-frequenz"
+                        placeholder="Bemessungsfrequenz" [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="sonden-pro-schenkel" class="form-label">Sonden pro Schenkel:</label>
+                    <select class="form-select" id="sonden-pro-schenkel"
+                        [(ngModel)]="measurementSettings.sondenProSchenkel">
+                        @for (amount of schenkelAnzahl(); track $index) {
+                        <option [value]="amount">{{amount}}</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="mess-stärke" class="form-label">Messstärke:</label>
+                    <input type="number" class="form-control" id="mess-stärke" placeholder="Messstärke"
+                        [(ngModel)]="measurementSettings.bemessungsFrequenz" min="0">
+                </div>
+                
+                <div class="text-center mt-4">
                     <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
                 </div>
-
-                <div class="saveMessage">
-                    {{saveMessage}}
+                
+                <div class="text-center mt-3" *ngIf="saveMessage">
+                    <span class="fw-bold text-success">{{saveMessage}}</span>
                 </div>
-
             </div>
         </div>
-    </div>
-    <div class="col-6">
-        <app-measurement-probe-management />
-    </div>
 
+        
+        <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+            <app-measurement-probe-management></app-measurement-probe-management>
+        </div>
+    </div>
 </div>

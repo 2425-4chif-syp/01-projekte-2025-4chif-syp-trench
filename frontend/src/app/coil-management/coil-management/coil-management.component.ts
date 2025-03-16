@@ -22,7 +22,9 @@ export class CoilManagementComponent {
     this.coiltypesService.reloadCoiltypes();
   }
 
-  saveMessage: string | null = null;
+  saveMessage: string | null = null;  
+  saveError: boolean = false;
+  selectedCoilIsNew: boolean = false;
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
@@ -96,13 +98,14 @@ export class CoilManagementComponent {
     this.onCoilSelectionChange(this.selectedCoilId!);
 
     this.writeSaveMessage('Änderungen gespeichert!');
+    this.backToListing();
   }
 
   writeSaveMessage(message:string) {
     this.saveMessage = message;
     setTimeout(() => {
       this.saveMessage = null;
-    }, 3000);
+    }, 1500);
   }
 
   async onCoilSelectionChange(coilId: number) {
