@@ -1,97 +1,96 @@
-<div class="coiltype-container">
-  @if (coiltypesService.selectedCoiltypeIsNew) {
-    <h2>Neuer Spulentyp</h2>
-  }
-  @else {
-    <select *ngIf="coiltypesService.coiltypes.length > 0" id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
-      (ngModelChange)="onCoiltypeSelectionChange($event)">
-      <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
-        Spulentyp #{{ coiltype.id }} ("{{ coiltype.tK_Name }}")
-      </option>
-    </select>
-  }
-</div>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+      <!-- Spulentyp Verwaltung -->
+      <div class="col-lg-5 col-md-6">
+          <h2 class="mb-4 text-center">
+              {{ coiltypesService.selectedCoiltypeIsNew ? 'Neuer Spulentyp' : 'Spulentyp auswählen' }}
+          </h2>
 
-<div class="container">
-  <div class="row">
-    @if (selectedCoiltype !== null) {
-      <div class="col panel">
-        <div class="input-container">
-          <label for="nameInput">Spulentyp-Name:</label>
-          <input type="text" class="form-control inputField" id="name" placeholder="Spulenname eingeben"
-            [(ngModel)]="selectedCoiltype.tK_Name">
-
-          <label for="numberSelect">Schenkelanzahl:</label>
-          <select class="form-control form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel">
-            <option [value]="2">2</option>
-            <option [value]="3">3</option>
-            <option [value]="4">4</option>
-          </select>
-
-          <label for="diameterInput">Bandbreite (mm):</label>
-          <input type="number" class="form-control inputField" id="bandbreite" placeholder="Bandbreite in mm"
-            [(ngModel)]="selectedCoiltype.bb" min="0">
-
-          <label for="arcLengthInput">Schichthöhe (mm):</label>
-          <input type="number" class="form-control inputField" id="schichthoehe" placeholder="Schichthöhe in mm"
-            [(ngModel)]="selectedCoiltype.sh" min="0">
-
-          <label for="endAreaInput">Durchmesser (mm)</label>
-          <input type="number" class="form-control inputField" id="durchmesser" placeholder="Durchmesser in mm"
-            [(ngModel)]="selectedCoiltype.dm" min="0">
-        </div>
-
-        <div class="container" *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
-          <div class="input-container">
-            <div class="buttonContainer">
-              <div class="buttons-row">
-                <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
-                <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
-                <button class="btn btn-outline-danger" (click)="openDeleteModal()">Spulentyp Löschen</button>
-              </div>
-              <div class="saveMessage" *ngIf="saveMessage">
-                {{saveMessage}}
-              </div>
-            </div>
+          <!-- Dropdown zur Auswahl eines Spulentypen -->
+          <div class="mb-3 text-center">
+              <select *ngIf="!coiltypesService.selectedCoiltypeIsNew" class="form-select w-75 mx-auto"
+                  id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
+                  (ngModelChange)="onCoiltypeSelectionChange($event)">
+                  <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
+                      Spulentyp #{{ coiltype.id }} ({{ coiltype.tK_Name }})
+                  </option>
+              </select>
           </div>
-        </div>
+
+          <!-- Spulentyp Eingabe -->
+          <div *ngIf="selectedCoiltype" class="card shadow-sm p-4" style="min-height: 600px;">
+              <div class="mb-3">
+                  <label for="name" class="form-label">Spulentyp-Name:</label>
+                  <input type="text" class="form-control" id="name" placeholder="Spulenname eingeben"
+                      [(ngModel)]="selectedCoiltype.tK_Name"
+                      [class.is-invalid]="saveError && isFieldInvalid('tK_Name')">
+                  <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
+              </div>
+
+              <div class="mb-3">
+                  <label for="numberSelect" class="form-label">Schenkelanzahl:</label>
+                  <select class="form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel">
+                      <option [value]="2">2</option>
+                      <option [value]="3">3</option>
+                      <option [value]="4">4</option>
+                  </select>
+              </div>
+
+              <div class="mb-3">
+                  <label for="bandbreite" class="form-label">Bandbreite (mm):</label>
+                  <input type="number" class="form-control" id="bandbreite" placeholder="Bandbreite in mm"
+                      [(ngModel)]="selectedCoiltype.bb" min="0"
+                      [class.is-invalid]="saveError && isFieldInvalid('bb')">
+                  <div class="invalid-feedback">Bitte geben Sie eine gültige Bandbreite ein.</div>
+              </div>
+
+              <div class="mb-3">
+                  <label for="schichthoehe" class="form-label">Schichthöhe (mm):</label>
+                  <input type="number" class="form-control" id="schichthoehe" placeholder="Schichthöhe in mm"
+                      [(ngModel)]="selectedCoiltype.sh" min="0"
+                      [class.is-invalid]="saveError && isFieldInvalid('sh')">
+                  <div class="invalid-feedback">Bitte geben Sie eine gültige Schichthöhe ein.</div>
+              </div>
+
+              <div class="mb-3">
+                  <label for="durchmesser" class="form-label">Durchmesser (mm):</label>
+                  <input type="number" class="form-control" id="durchmesser" placeholder="Durchmesser in mm"
+                      [(ngModel)]="selectedCoiltype.dm" min="0"
+                      [class.is-invalid]="saveError && isFieldInvalid('dm')">
+                  <div class="invalid-feedback">Bitte geben Sie einen gültigen Durchmesser ein.</div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+                  <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+                  <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+              </div>
+
+              <!-- Erfolgsmeldung -->
+              <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+                  {{ saveMessage }}
+              </div>
+          </div>
+
+          <p class="text-danger text-center mt-3" *ngIf="!selectedCoiltype">
+              Bitte wählen Sie einen Spulentypen aus.
+          </p>
       </div>
 
-      <div class="col">
-        <div class="m-4">
-          <app-coil-visualization [n]="selectedCoiltype.schenkel" [bb]="selectedCoiltype.bb!" [dm]="selectedCoiltype.dm!" [size]="512"></app-coil-visualization>
-        </div>
-      </div>
-    }
-    @else {
-      <div class="container no-coiltype-selected" *ngIf="coiltypesService.selectedCoiltypeCopy === null">
-        <p>Bitte wählen Sie einen Spulentypen aus.</p>
-      </div>
-    }
-  </div>
-</div>
-
-<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Spulentyp löschen?</h5>
+      <!-- Trennlinie -->
+      <div class="col-lg-1 d-none d-lg-flex align-items-center justify-content-center">
+          <div class="border-end" style="height: 100%; width: 2px; background-color: #ccc;"></div>
       </div>
 
-      <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diesen Spulentypen löschen möchten?</p>
+      <!-- Visualisierung -->
+      <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+          <app-coil-visualization *ngIf="selectedCoiltype"
+              [n]="selectedCoiltype.schenkel"
+              [bb]="selectedCoiltype.bb!"
+              [dm]="selectedCoiltype.dm!"
+              [size]="512">
+          </app-coil-visualization>
       </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
-          Abbrechen
-        </button>
-        <button type="button" class="btn btn-danger" (click)="deleteCoiltype()">
-          Löschen
-        </button>
-      </div>
-    </div>
   </div>
 </div>
