@@ -15,6 +15,7 @@ namespace TrenchAPI.Context
         public DbSet<Sensormessung> Sensormessung { get; set; }
         public DbSet<Gesamtmessung> Gesamtmessung { get; set; }
         public DbSet<Sensor> Sensor { get; set; }
+        public DbSet<SensorTyp> SensorTyp { get; set; }
 
         public void onModelCreating(ModelBuilder modelBuilder)
         {
