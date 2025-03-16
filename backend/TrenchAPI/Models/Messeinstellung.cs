@@ -9,9 +9,7 @@ namespace TrenchAPI.Models
         [Column(TypeName = "int")]
         public int MesseinstellungID { get; set; }
 
-        [Required]
         [ForeignKey(nameof(GesamtmessungID))]
-        [Column(TypeName = "int")]
         public Gesamtmessung? Gesamtmessung { get; set; }
 
         public int GesamtmessungID { get; set; }
