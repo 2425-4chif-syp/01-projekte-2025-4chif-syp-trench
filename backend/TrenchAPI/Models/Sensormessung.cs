@@ -10,16 +10,12 @@ namespace TrenchAPI.Models
         [Column(TypeName = "int")]
         public int SensormessungID { get; set; }
 
-        [Required]
         [ForeignKey(nameof(GesamtmessungID))]
-        [Column(TypeName = "int")]
         public Gesamtmessung? Gesamtmessung { get; set; }
 
         public int GesamtmessungID { get; set; }
 
-        [Required]
         [ForeignKey(nameof(SensorId))]
-        [Column(TypeName = "int")]
         public Sensor? Sensor { get; set; }
 
         public int SensorId { get; set; }

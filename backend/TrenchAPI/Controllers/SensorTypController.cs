@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Context;
@@ -33,7 +32,6 @@ namespace TrenchAPI.Controllers
         public async Task<ActionResult<SensorTyp>> GetSensorTyp(int id)
         {
             var sensorTyp = await _context.SensorTyp.FindAsync(id);
-
             if (sensorTyp == null)
             {
                 return NotFound();
@@ -43,7 +41,6 @@ namespace TrenchAPI.Controllers
         }
 
         // PUT: api/SensorTyp/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSensorTyp(int id, SensorTyp sensorTyp)
         {
@@ -53,7 +50,6 @@ namespace TrenchAPI.Controllers
             }
 
             _context.Entry(sensorTyp).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -69,12 +65,10 @@ namespace TrenchAPI.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
         // POST: api/SensorTyp
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<SensorTyp>> PostSensorTyp(SensorTyp sensorTyp)
         {

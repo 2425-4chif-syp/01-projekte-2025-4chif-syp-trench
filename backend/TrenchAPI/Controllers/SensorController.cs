@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Context;
+using TrenchAPI.DTO;
 using TrenchAPI.Models;
 
 namespace TrenchAPI.Controllers
@@ -25,15 +25,16 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sensor>>> GetSensor()
         {
-            return await _context.Sensor.ToListAsync();
+            // Include SensorTyp in the query
+            return await _context.Sensor.Include(s => s.SensorTyp).ToListAsync();
         }
 
         // GET: api/Sensor/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Sensor>> GetSensor(int id)
         {
-            var sensor = await _context.Sensor.FindAsync(id);
-
+            var sensor = await _context.Sensor.Include(s => s.SensorTyp)
+                                              .FirstOrDefaultAsync(s => s.SensorID == id);
             if (sensor == null)
             {
                 return NotFound();
@@ -43,7 +44,6 @@ namespace TrenchAPI.Controllers
         }
 
         // PUT: api/Sensor/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSensor(int id, Sensor sensor)
         {
@@ -74,10 +74,31 @@ namespace TrenchAPI.Controllers
         }
 
         // POST: api/Sensor
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Sensor>> PostSensor(Sensor sensor)
+        public async Task<ActionResult<Sensor>> PostSensor(SensorCreateDto sensorDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check that the referenced SensorTyp exists
+            if (!_context.SensorTyp.Any(st => st.SensorTypID == sensorDto.SensorTypID))
+            {
+                return BadRequest("The specified SensorTyp does not exist.");
+            }
+
+            var sensor = new Sensor
+            {
+                SensorTypID = sensorDto.SensorTypID,
+                Durchmesser = sensorDto.Durchmesser,
+                Schenkel = sensorDto.Schenkel,
+                Position = sensorDto.Position
+            };
+
+            // Assign the navigation property
+            sensor.SensorTyp = _context.SensorTyp.Find(sensor.SensorTypID);
+
             _context.Sensor.Add(sensor);
             await _context.SaveChangesAsync();
 
