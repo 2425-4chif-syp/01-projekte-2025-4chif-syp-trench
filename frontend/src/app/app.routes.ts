@@ -17,7 +17,7 @@ export const routes: Routes = [
     {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
     {path: 'coil-management', component: CoilParentComponent, canActivate: [AuthGuard]},
     {path: 'coiltype-management', component: CoiltypeParentComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-management', component: MeasurementManagementComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-result', component: MeasurementManagementComponent, canActivate: [AuthGuard]},
     {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
     {path: 'tolerance-settings', component: ToleranceSettingsComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]}
