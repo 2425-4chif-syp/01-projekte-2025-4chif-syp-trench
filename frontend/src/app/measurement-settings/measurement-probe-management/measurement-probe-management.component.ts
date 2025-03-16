@@ -79,47 +79,30 @@ export class MeasurementProbeManagementComponent {
   }
 
   saveChanges(): void {
-    const index = this.measurementProbes.findIndex((probe) => probe.id === this.selectedProbe!.id);
-
     if (!this.isValidProbe(this.selectedProbe!)) {
       this.errorMessage = "Bitte gültige Werte eingeben! Keine leeren Felder, keine 0 oder negativen Zahlen.";
       return;
     }
-
+  
     if (this.isNewProbe) {
-      this.measurementProbeService.addMeasurementProbe(this.selectedProbe!);
-      this.measurementProbeService.loadAllMeasurementProbes();
-      this.groupSensors();
-
-      /*this.measurementProbes.push({
-        id: this.selectedProbe!.id!,
-        width: this.selectedProbe!.width!,
-        probeType: this.selectedProbe!.probeType!,
-        probeTypeId: this.selectedProbe!.probeTypeId!,
-        yoke: this.selectedProbe!.yoke!,
-        position: this.selectedProbe!.position!
-      } as MeasurementProbe);*/
+      this.measurementProbeService.addMeasurementProbe(this.selectedProbe!).then(() => {
+        return this.measurementProbeService.loadAllMeasurementProbes();
+      }).then(() => {
+        this.measurementProbes = this.measurementProbeService.measurementProbes;
+        this.groupSensors();
+      });
     } else {
       const index = this.measurementProbes.findIndex(probe => probe.id === this.selectedProbe!.id);
       if (index !== -1) {
-        this.measurementProbes[index] = {
-          id: this.selectedProbe!.id!,
-          width: this.selectedProbe!.width!,
-          probeType: this.selectedProbe!.probeType!,
-          probeTypeId: this.selectedProbe!.probeTypeId!,
-          yoke: this.selectedProbe!.yoke!,
-          position: this.selectedProbe!.position!
-        } as MeasurementProbe;
-
+        this.measurementProbes[index] = { ...this.selectedProbe! };
         this.measurementProbeService.updateMeasurementProbe(this.selectedProbe!);
+        this.groupSensors();
       }
     }
-
+  
     this.closeModal();
-    this.groupSensors();
-
-    console.log(this.measurementProbes[index]);
   }
+  
 
   isValidProbe(probe: MeasurementProbe): boolean {
     return (
