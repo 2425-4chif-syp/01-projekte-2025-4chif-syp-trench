@@ -140,19 +140,19 @@ export class BackendService {
 
   private measurementProbeBackendToFrontend(measurementProbe: any): MeasurementProbe {
     return {
-      id: measurementProbe.Id,
-      width: measurementProbe.width,
-      yoke: measurementProbe.yoke,
-      position: measurementProbe.position
+      id: measurementProbe.SensorID,
+      width: measurementProbe.Durchmesser,
+      yoke: measurementProbe.Schenkel,
+      position: measurementProbe.Position
     }
   }
 
   private measurementProbeFrontendToBackend(measurementProbe: MeasurementProbe): any {
     return {
-      Id: measurementProbe.id,
-      width: measurementProbe.width,
-      yoke: measurementProbe.yoke,
-      position: measurementProbe.position
+      SensorID: measurementProbe.id,
+      Durchmesser: measurementProbe.width,
+      Schenkel: measurementProbe.yoke,
+      Position: measurementProbe.position
     }
   }
 
