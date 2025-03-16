@@ -98,13 +98,14 @@ export class CoilManagementComponent {
     this.onCoilSelectionChange(this.selectedCoilId!);
 
     this.writeSaveMessage('Änderungen gespeichert!');
+    this.backToListing();
   }
 
   writeSaveMessage(message:string) {
     this.saveMessage = message;
     setTimeout(() => {
       this.saveMessage = null;
-    }, 3000);
+    }, 1500);
   }
 
   async onCoilSelectionChange(coilId: number) {
