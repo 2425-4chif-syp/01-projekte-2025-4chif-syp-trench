@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from '../../app.component';
+import { MeasurementProbeService } from '../../data/measurement-probes/measurement-probe.service';
 
 @Component({
   selector: 'app-measurement-probe-management',
@@ -14,6 +15,9 @@ import { AppComponent } from '../../app.component';
   styleUrl: './measurement-probe-management.component.scss',
 })
 export class MeasurementProbeManagementComponent {
+
+  constructor(private measurementProbeService: MeasurementProbeService) { }
+
   yokeAmount = 4;
   selectedProbe: MeasurementProbe | undefined;
   probeToDelete: MeasurementProbe | undefined;
@@ -21,25 +25,16 @@ export class MeasurementProbeManagementComponent {
   errorMessage: string | null = null;
   isNewProbe = false;
 
-  measurementProbes: MeasurementProbe[] = [
-    { id: 1, width: 50, yoke: 1, position: 1 },
-    { id: 2, width: 50, yoke: 1, position: 2 },
-    { id: 3, width: 50, yoke: 1, position: 3 },
-    { id: 4, width: 50, yoke: 2, position: 1 },
-    { id: 5, width: 50, yoke: 2, position: 2 },
-    { id: 6, width: 50, yoke: 2, position: 3 },
-    { id: 7, width: 50, yoke: 3, position: 1 },
-    { id: 8, width: 50, yoke: 3, position: 2 },
-    { id: 9, width: 50, yoke: 3, position: 3 },
-    { id: 10, width: 50, yoke: 4, position: 1 },
-    { id: 11, width: 50, yoke: 4, position: 2 },
-    { id: 12, width: 50, yoke: 4, position: 3 },
-  ];
-
+  measurementProbes: MeasurementProbe[] = [];
   groupedProbes = signal<MeasurementProbe[][]>([]);
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.measurementProbeService.loadAllMeasurementProbes().then(() => {
+    console.log("Component", this.measurementProbeService.measurementProbes);
+    this.measurementProbes = this.measurementProbeService.measurementProbes;
     this.groupSensors();
+    console.log("Grouped Probes", this.groupedProbes());
+    });
   }
 
   groupSensors() {
@@ -51,6 +46,9 @@ export class MeasurementProbeManagementComponent {
         const index = probe.yoke - 1;
         this.groupedProbes()[index].push(probe);
       }
+    }
+    else{
+      console.log("No probes found");
     }
   }
 
@@ -74,6 +72,7 @@ export class MeasurementProbeManagementComponent {
   deleteProbe(): void {
     if (this.probeToDelete) {
       this.measurementProbes = this.measurementProbes.filter(probe => probe.id !== this.probeToDelete!.id);
+      this.measurementProbeService.deleteMeasurementProbe(this.probeToDelete!);
       this.probeToDelete = undefined;
       this.groupSensors();
     }
@@ -88,21 +87,31 @@ export class MeasurementProbeManagementComponent {
     }
 
     if (this.isNewProbe) {
-      this.measurementProbes.push({
+      this.measurementProbeService.addMeasurementProbe(this.selectedProbe!);
+      this.measurementProbeService.loadAllMeasurementProbes();
+      this.groupSensors();
+
+      /*this.measurementProbes.push({
         id: this.selectedProbe!.id!,
         width: this.selectedProbe!.width!,
+        probeType: this.selectedProbe!.probeType!,
+        probeTypeId: this.selectedProbe!.probeTypeId!,
         yoke: this.selectedProbe!.yoke!,
         position: this.selectedProbe!.position!
-      } as MeasurementProbe);
+      } as MeasurementProbe);*/
     } else {
       const index = this.measurementProbes.findIndex(probe => probe.id === this.selectedProbe!.id);
       if (index !== -1) {
         this.measurementProbes[index] = {
           id: this.selectedProbe!.id!,
           width: this.selectedProbe!.width!,
+          probeType: this.selectedProbe!.probeType!,
+          probeTypeId: this.selectedProbe!.probeTypeId!,
           yoke: this.selectedProbe!.yoke!,
           position: this.selectedProbe!.position!
         } as MeasurementProbe;
+
+        this.measurementProbeService.updateMeasurementProbe(this.selectedProbe!);
       }
     }
 
@@ -131,6 +140,8 @@ export class MeasurementProbeManagementComponent {
       id: this.measurementProbes.length + 1,
       width: 50,
       yoke: yoke + 1,
+      probeType: { probeTypeID: 1, windingNumber: 15 },
+      probeTypeId: 1,
       position: maxPosition + 1
     };
     this.isNewProbe = true;
