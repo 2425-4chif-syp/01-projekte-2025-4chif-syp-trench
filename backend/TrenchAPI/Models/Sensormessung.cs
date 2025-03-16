@@ -1,13 +1,14 @@
+﻿using NuGet.Packaging.Signing;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Models
 {
-    public class Messeinstellung
+    public class Sensormessung
     {
         [Key]
         [Column(TypeName = "int")]
-        public int MesseinstellungID { get; set; }
+        public int SensormessungID { get; set; }
 
         [Required]
         [ForeignKey(nameof(GesamtmessungID))]
@@ -17,19 +18,18 @@ namespace TrenchAPI.Models
         public int GesamtmessungID { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(8,3)")]
-        public decimal Bemessungsspannung { get; set; }
-
-        [Required]
-        [Column(TypeName = "decimal(8,3)")]
-        public decimal Bemessungsfrequenz { get; set; }
-
-        [Required]
+        [ForeignKey(nameof(SensorId))]
         [Column(TypeName = "int")]
-        public int Sensoren { get; set; }
+        public Sensor? Sensor { get; set; }
+
+        public int SensorId { get; set; }
 
         [Required]
-        [Column(TypeName = "int")]
-        public int Toleranz { get; set; }
+        [Column(TypeName = "decimal(8,3)")]
+        public decimal Wert { get; set; }
+
+        [Required]
+        [Column(TypeName = "timestamp")]
+        public DateTime Zeit { get; set; }
     }
 }
