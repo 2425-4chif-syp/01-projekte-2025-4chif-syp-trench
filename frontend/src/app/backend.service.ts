@@ -140,19 +140,23 @@ export class BackendService {
 
   private measurementProbeBackendToFrontend(measurementProbe: any): MeasurementProbe {
     return {
-      id: measurementProbe.SensorID,
-      width: measurementProbe.Durchmesser,
-      yoke: measurementProbe.Schenkel,
-      position: measurementProbe.Position
+      id: measurementProbe.sensorID,
+      probeTypeId: measurementProbe.sensorTypID,
+      probeType: measurementProbe.sensorTyp,
+      width: measurementProbe.durchmesser,
+      yoke: measurementProbe.schenkel,
+      position: measurementProbe.position
     }
   }
 
   private measurementProbeFrontendToBackend(measurementProbe: MeasurementProbe): any {
     return {
-      SensorID: measurementProbe.id,
-      Durchmesser: measurementProbe.width,
-      Schenkel: measurementProbe.yoke,
-      Position: measurementProbe.position
+      sensorID: measurementProbe.id,
+      sensorTypID: measurementProbe.probeTypeId,
+      sensorTyp: measurementProbe.probeType,
+      durchmesser: measurementProbe.width,
+      schenkel: measurementProbe.yoke,
+      position: measurementProbe.position
     }
   }
 
@@ -178,7 +182,6 @@ export class BackendService {
   public async deleteCoil(coil: Coil): Promise<void> {
     await this.httpDeleteRequest('Spule/' + coil.id);
   }
-  
 
   public async getAllCoiltypes(): Promise<Coiltype[]> {
     const response:any = await this.httpGetRequest('SpuleTyp');
@@ -209,25 +212,26 @@ export class BackendService {
   }
   
   public async getAllMeasurementProbes(): Promise<MeasurementProbe[]> {
-    const response:any = await this.httpGetRequest('sensoren');
+    const response:any = await this.httpGetRequest('Sensor');
     return response.map((measurementProbe: any) => (this.measurementProbeBackendToFrontend(measurementProbe)));
   }
 
   public async getMeasurementProbe(id: number): Promise<MeasurementProbe> {
-    const response:any = await this.httpGetRequest('sensoren/' + id);
+    const response:any = await this.httpGetRequest('Sensor/' + id);
     return this.measurementProbeBackendToFrontend(response);
   }
   
   public async addMeasurementProbe(measurementProbe: MeasurementProbe): Promise<MeasurementProbe> {
-    const response:any = await this.httpPostRequest('sensoren', this.measurementProbeFrontendToBackend(measurementProbe));
+    console.log("Frontend to Backend,", this.measurementProbeFrontendToBackend(measurementProbe));
+    const response:any = await this.httpPostRequest('Sensor', this.measurementProbeFrontendToBackend(measurementProbe));
     return this.measurementProbeBackendToFrontend(response);
   }
 
   public async updateMeasurementProbe(measurementProbe: MeasurementProbe): Promise<void> {
-    await this.httpPutRequest('sensoren/' + measurementProbe.id, this.measurementProbeFrontendToBackend(measurementProbe));
+    await this.httpPutRequest('Sensor/' + measurementProbe.id, this.measurementProbeFrontendToBackend(measurementProbe));
   }
 
   public async deleteMeasurementProbe(measurementProbe: MeasurementProbe): Promise<void> {
-    await this.httpDeleteRequest('sensoren/' + measurementProbe.id);
+    await this.httpDeleteRequest('Sensor/' + measurementProbe.id);
   }
 }
