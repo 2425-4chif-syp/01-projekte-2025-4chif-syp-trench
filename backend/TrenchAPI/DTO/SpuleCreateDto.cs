@@ -4,8 +4,8 @@ namespace TrenchAPI.DTO
 {
     public class SpuleCreateDto
     {
-        public int SpuleId { get; set; }
-        public int SpuleTypId { get; set; }
+        public int SpuleID { get; set; }
+        public int SpuleTypID { get; set; }
         public decimal Ur { get; set; }
         public int Einheit { get; set; }
         public int Auftragsnummer { get; set; }
