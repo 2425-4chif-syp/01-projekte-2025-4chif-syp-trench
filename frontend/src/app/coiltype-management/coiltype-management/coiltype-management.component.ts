@@ -16,6 +16,7 @@ export class CoiltypeManagementComponent {
     constructor(public coiltypesService:CoiltypesService) { }
     saveError: boolean = false;
     saveMessage: string | null = null;
+    originalCoiltype: Coiltype | null = null; 
 
     public get selectedCoiltype():Coiltype|null {
       return this.coiltypesService.selectedCoiltypeCopy;
@@ -27,20 +28,28 @@ export class CoiltypeManagementComponent {
       this.coiltypesService.selectCoiltype(Number(id));
     }
 
+    ngOnInit() {
+      if (this.selectedCoiltype) {
+          this.originalCoiltype = { ...this.selectedCoiltype }; 
+      }
+    }
+
     isFieldInvalid(field: string): boolean {
       if (!this.selectedCoiltype) return false;
       let value = this.selectedCoiltype[field as keyof Coiltype];
       return value === null || value === undefined || (typeof value === 'number' && value <= 0);
     }
+
+    hasChanges(): boolean {
+      if (!this.originalCoiltype || !this.selectedCoiltype) return false;
+      return JSON.stringify(this.originalCoiltype) !== JSON.stringify(this.selectedCoiltype);
+    }
     
     async saveChanges() {
-      if (!this.selectedCoiltype) {
-          return;
-      }
+      if (!this.selectedCoiltype) return;
   
-      this.saveError = true; // Fehlerprüfung aktivieren
+      this.saveError = true; 
   
-      // Pflichtfelder prüfen
       const requiredFields = ['tK_Name', 'bb', 'sh', 'dm'];
       const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
   
@@ -58,12 +67,14 @@ export class CoiltypeManagementComponent {
               this.saveMessage = null;
           }, 1500);
           this.backToListing();
-          this.saveError = false; // Fehlerprüfung zurücksetzen
+  
+          this.saveError = false;
+          this.originalCoiltype = { ...this.selectedCoiltype }; 
       } catch (error) {
           console.error("Fehler beim Speichern:", error);
           this.saveMessage = "Fehler beim Speichern!";
       }
-  }
+    }
   
 
     async onCoiltypeSelectionChange(coiltypeId: number) {
