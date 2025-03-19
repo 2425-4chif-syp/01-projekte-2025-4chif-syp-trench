@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
 import { Coiltype } from '../../data/coiltype-data/coiltype';
 import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-coiltype-management',
@@ -66,10 +67,13 @@ export class CoiltypeManagementComponent {
           setTimeout(() => {
               this.saveMessage = null;
           }, 1500);
-          this.backToListing();
   
           this.saveError = false;
-          this.originalCoiltype = { ...this.selectedCoiltype }; 
+          this.originalCoiltype = { ...this.selectedCoiltype };
+
+          setTimeout(() => {
+            this.backToListing();
+        }, 10);
       } catch (error) {
           console.error("Fehler beim Speichern:", error);
           this.saveMessage = "Fehler beim Speichern!";
