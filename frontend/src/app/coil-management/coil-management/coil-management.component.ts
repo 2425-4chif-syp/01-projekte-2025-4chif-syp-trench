@@ -25,12 +25,20 @@ export class CoilManagementComponent {
   saveMessage: string | null = null;  
   saveError: boolean = false;
   selectedCoilIsNew: boolean = false;
+  originalCoil: Coil | null = null;
+
+  ngOnInit() {
+    if (this.selectedCoil) {
+        this.originalCoil = { ...this.selectedCoil }; // Erstellt eine Kopie der Originalwerte
+    }
+}
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
     //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)! 
     return this.coilsService.selectedCoilCopy;
   }
+
   public get selectedCoilId(): number | undefined {
     return this.coilsService.selectedCoilCopy?.id!;
   }
@@ -47,6 +55,11 @@ export class CoilManagementComponent {
 
     return this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
   }
+
+  hasChanges(): boolean {
+    if (!this.originalCoil || !this.selectedCoil) return false;
+    return JSON.stringify(this.originalCoil) !== JSON.stringify(this.selectedCoil);
+}
 
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return false;
@@ -67,7 +80,6 @@ export class CoilManagementComponent {
 
     this.saveError = true; // Fehlerprüfung aktivieren
 
-    // Pflichtfelder prüfen
     const requiredFields = ['ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
@@ -85,12 +97,14 @@ export class CoilManagementComponent {
             this.saveMessage = null;
         }, 3000);
 
-        this.saveError = false; // Fehlerprüfung zurücksetzen
+        this.saveError = false;
+        this.originalCoil = { ...this.selectedCoil }; // Speichern der neuen Originalwerte
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
         this.saveMessage = "Fehler beim Speichern!";
     }
-  }
+}
+
 
 
   writeSaveMessage(message:string) {
