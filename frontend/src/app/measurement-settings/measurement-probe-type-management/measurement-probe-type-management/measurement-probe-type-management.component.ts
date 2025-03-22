@@ -13,4 +13,16 @@ export class MeasurementProbeTypeManagementComponent {
   hoehe: number = 250;
   breite: number = 150;
   wicklungszahl: number = 10;
+
+  get scale(): number {
+    return 2; // Faktor für die Skalierung der Zeichnung
+  }
+
+  get scaledWidth(): number {
+    return this.breite * this.scale;
+  }
+
+  get scaledHeight(): number {
+    return this.hoehe * this.scale;
+  }
 }

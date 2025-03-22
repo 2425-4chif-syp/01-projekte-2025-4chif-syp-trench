@@ -18,5 +18,46 @@
                 </div>
             </div>
         </div>
+    </div> 
+    <div class="col-5 mt-5">
+        <!-- SVG-Zeichnung -->
+        <div class="d-flex justify-content-center align-items-center mt-5">
+            <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
+                <!-- Rechteck der Sonde -->
+                <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="green" fill="none"
+                    stroke-width="2"></rect>
+
+                <!-- Pfeil für die Breite (horizontale Linie unterhalb der Sonde) -->
+                <line [attr.x1]="40" [attr.y1]="scaledHeight + 60" [attr.x2]="40 + scaledWidth"
+                    [attr.y2]="scaledHeight + 60" stroke="black" stroke-width="2"></line>
+                <!-- Pfeilspitzen für die Breite -->
+                <polygon [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + 
+                              (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + 
+                              (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)" fill="black"></polygon>
+                <polygon
+                    [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
+                    fill="black"></polygon>
+                <!-- Beschriftung für die Breite -->
+                <text [attr.x]="40 + scaledWidth / 2" [attr.y]="scaledHeight + 75" font-size="14" text-anchor="middle">
+                    {{ breite }} mm
+                </text>
+
+                <!-- Pfeil für die Höhe (vertikale Linie rechts neben der Sonde) -->
+                <line [attr.x1]="scaledWidth + 60" [attr.y1]="40" [attr.x2]="scaledWidth + 60"
+                    [attr.y2]="40 + scaledHeight" stroke="black" stroke-width="2"></line>
+                <!-- Pfeilspitzen für die Höhe -->
+                <polygon
+                    [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
+                    fill="black"></polygon>
+                <polygon [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + 
+                              (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + 
+                              (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)" fill="black"></polygon>
+                <!-- Beschriftung für die Höhe -->
+                <text [attr.x]="scaledWidth + 55" [attr.y]="20 + scaledHeight / 2" font-size="14" text-anchor="middle"
+                    [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'">
+                    {{ hoehe }} mm
+                </text>
+            </svg>
+        </div>
     </div>
 </div>
