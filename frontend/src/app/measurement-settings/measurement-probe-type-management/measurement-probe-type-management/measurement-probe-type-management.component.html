@@ -1,7 +1,7 @@
 <div class="row mt-5 justify-content-center">
-    <div class="card col-5 mt-5">
+    <div class="card col-5 mt-5 d-flex flex-column">
         <h2 class="text-center mt-5">Messsondentypen Verwaltung</h2>
-        <div class="row">
+        <div class="row flex-grow-1">
             <!-- Eingabefelder -->
             <div class="col-md-12 mt-5">
                 <div class="mb-3">
@@ -17,6 +17,13 @@
                     <input id="wicklungszahl" type="number" class="form-control" [(ngModel)]="wicklungszahl">
                 </div>
             </div>
+            <div class="mt-auto mb-4 px-3">
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary w-100 me-2">Speichern</button>
+                    <button class="btn btn-secondary w-100 me-2">Zurück</button>
+                    <button class="btn btn-danger w-100">Löschen</button>
+                </div>
+            </div>
         </div>
     </div> 
 
@@ -25,7 +32,7 @@
         <div class="d-flex justify-content-center align-items-center mt-5">
             <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
                 <!-- Rechteck der Sonde -->
-                <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="green" fill="none"
+                <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="red" fill="none"
                     stroke-width="2"></rect>
 
                 <!-- Pfeil für die Breite (horizontale Linie unterhalb der Sonde) -->
