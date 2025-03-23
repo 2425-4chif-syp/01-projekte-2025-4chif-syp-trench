@@ -11,5 +11,11 @@ namespace TrenchAPI.Models
 
         [Column(TypeName = "int")]
         public int Wicklungszahl { get; set; }
+
+        [Column(TypeName = "decimal(8,1)")]
+        public decimal Breite { get; set; }
+
+        [Column(TypeName = "decimal(8,1)")]
+        public decimal Höhe { get; set; }
     }
 }
