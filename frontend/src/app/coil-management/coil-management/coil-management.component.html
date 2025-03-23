@@ -79,3 +79,28 @@
 
   <p class="text-danger text-center mt-3" *ngIf="!selectedCoil">Fehler: Spule konnte nicht geladen werden.</p>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
+  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Spule löschen?</h5>
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Spule löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteCoil()">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
