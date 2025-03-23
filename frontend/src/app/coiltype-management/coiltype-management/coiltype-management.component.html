@@ -3,15 +3,15 @@
       <!-- Spulentyp Verwaltung -->
       <div class="col-lg-5 col-md-6">
           <h2 class="mb-4 text-center">
-              {{ coiltypesService.selectedCoiltypeIsNew ? 'Neuer Spulentyp' : 'Spulentyp auswählen' }}
+              {{ coiltypesService.selectedElementIsNew ? 'Neuer Spulentyp' : 'Spulentyp auswählen' }}
           </h2>
 
           <!-- Dropdown zur Auswahl eines Spulentypen -->
           <div class="mb-3 text-center">
-              <select *ngIf="!coiltypesService.selectedCoiltypeIsNew" class="form-select w-75 mx-auto"
+              <select *ngIf="!coiltypesService.selectedElementIsNew" class="form-select w-75 mx-auto"
                   id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
                   (ngModelChange)="onCoiltypeSelectionChange($event)">
-                  <option *ngFor="let coiltype of coiltypesService.coiltypes" [value]="coiltype.id">
+                  <option *ngFor="let coiltype of coiltypesService.elements" [value]="coiltype.id">
                       Spulentyp #{{ coiltype.id }} ({{ coiltype.tK_Name }})
                   </option>
               </select>
