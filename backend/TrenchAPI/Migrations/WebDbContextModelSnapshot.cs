@@ -111,6 +111,12 @@ namespace TrenchAPI.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SensorTypID"));
 
+                    b.Property<decimal>("Breite")
+                        .HasColumnType("decimal(8,1)");
+
+                    b.Property<decimal>("Höhe")
+                        .HasColumnType("decimal(8,1)");
+
                     b.Property<int>("Wicklungszahl")
                         .HasColumnType("int");
 
