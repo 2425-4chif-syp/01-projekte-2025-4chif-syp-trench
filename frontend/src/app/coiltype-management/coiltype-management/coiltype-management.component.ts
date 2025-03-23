@@ -70,10 +70,6 @@ export class CoiltypeManagementComponent {
   
           this.saveError = false; // Fehlerprüfung zurücksetzen
           this.originalCoiltype = { ...this.selectedCoiltype };
-
-          setTimeout(() => {
-            this.backToListing();
-        }, 10);
       } catch (error) {
           console.error("Fehler beim Speichern:", error);
           this.saveMessage = "Fehler beim Speichern!";

@@ -99,10 +99,6 @@ export class CoilManagementComponent {
 
         this.saveError = false;
         this.originalCoil = { ...this.selectedCoil };
-
-        setTimeout(() => {
-          this.backToListing();
-      }, 10);
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
         this.saveMessage = "Fehler beim Speichern!";
