@@ -16,7 +16,9 @@
                 (mouseenter)="onElementHoverStart(element)"
                 (mouseleave)="onElementHoverEnd(element)">
                     @for (elementKey of elementKeys; track $index) {
-                        <td scope="row">{{ getElementValue(element, elementKey) }}</td>
+                        @if (keysAsColumns[elementKey] !== undefined) {
+                            <td scope="row">{{ getElementValue(element, elementKey) }}</td>
+                        }
                     }
                 </tr>
             }
