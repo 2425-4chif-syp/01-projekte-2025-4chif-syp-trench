@@ -1,81 +1,51 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Input, Type } from '@angular/core';
-import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
-import { Coiltype } from '../../data/coiltype-data/coiltype';
-import { CoilsService } from '../../data/coil-data/coils.service';
+import { Component, HostListener, Inject, InjectionToken, Input, Type } from '@angular/core';
 import { Router } from '@angular/router';
-import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
+import { LIST_SERVICE_TOKEN, ListService } from '../data/list-service';
 
 @Component({
-  selector: 'app-coiltype-list',
+  selector: 'app-generic-list',
   standalone: true,
-  imports: [CommonModule, CoilVisualizationComponent],
-  templateUrl: './coiltype-list.component.html',
-  styleUrl: './coiltype-list.component.scss'
+  imports: [CommonModule],
+  templateUrl: './generic-list.component.html',
+  styleUrl: './generic-list.component.scss'
 })
-export class GenericListComponent<T> {
-  @Input() elements:T[] = []; 
-
-  public sortedElements:T[] = [];
+export class GenericListComponent<TElement, TListService extends ListService<TElement>> {
+  public sortedElements:TElement[] = [];
 
   private sortDirection: { [key: string]: boolean } = {};
 
-  public hoveredElement: T | null = null;
+  public hoveredElement: TElement | null = null;
 
   public mousePosition: { x: number, y: number }|null = null;
 
-  constructor(public coiltypesService:CoiltypesService, public coilsService:CoilsService, private router:Router) {
+  constructor(@Inject(LIST_SERVICE_TOKEN) public elementsService:TListService, private router:Router) {
     this.initialize();
   }
 
-  public get isCoilSelector(): boolean { 
-    return this.coiltypesService.isCoilSelector;
-  }
-
   async initialize() {
-    await this.coiltypesService.reloadCoiltypes();
-    this.sortedCoiltypes = [...this.coiltypesService.coiltypes]
+    await this.elementsService.reloadElements();
+    this.sortedElements = [...this.elementsService.elements]
   }
 
-  onElementHoverStart(coiltype:Coiltype) {
-    this.hoveredCoiltype = coiltype;
+  public onElementHoverStart(element:TElement) {
+    this.hoveredElement = element;
   }
-  onElementHoverEnd(coiltype:Coiltype) {
-    if (this.hoveredCoiltype === coiltype) {
-      this.hoveredCoiltype = null;
+  public onElementHoverEnd(element:TElement) {
+    if (this.hoveredElement === element) {
+      this.hoveredElement = null;
     }
   }
 
-  async addNewCoiltype() {
-    const newCoiltype:Coiltype = {
-      id: 0,
-      tK_Name: '',
-      schenkel: 0,
-      bb: 0,
-      sh: 0,
-      dm: 0
-    };
-
-    this.coiltypesService.selectedCoiltypeCopy = newCoiltype;
-    this.coiltypesService.selectedCoiltypeIsNew = true; 
+  public async addNewElement() {
+    this.elementsService.selectedElementCopy = this.elementsService.newElement;
+    this.elementsService.selectedElementIsNew = true; 
   }
 
-  openCoiltype(coiltypeId:number) {
-    if (this.coiltypesService.isCoilSelector) {
-      this.coilsService.selectedCoilCopy!.coiltypeId = coiltypeId;
-      this.coilsService.selectedCoilCopy!.coiltype = this.coiltypesService.getCopyCoiltype(coiltypeId);
+  public sortTable(column:string) {
+    const direction:boolean = this.sortDirection[column] = !this.sortDirection[column];
 
-      this.router.navigate(['/coil-management']);
-      return;
-    }
-
-    this.coiltypesService.selectCoiltype(coiltypeId);
-  }
-
-  sortTable(column: keyof Coiltype) {
-    const direction = this.sortDirection[column] = !this.sortDirection[column];
-
-    this.sortedCoiltypes.sort((a, b) => {
+    this.sortedElements.sort((a:any, b:any) => {
       if (a[column]! < b[column]!) {
         return direction ? -1 : 1;
       }
@@ -87,7 +57,7 @@ export class GenericListComponent<T> {
   }
 
   @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
+  private onMouseMove(event: MouseEvent) {
     this.mousePosition = { x: event.pageX, y: event.pageY };
   }
 }

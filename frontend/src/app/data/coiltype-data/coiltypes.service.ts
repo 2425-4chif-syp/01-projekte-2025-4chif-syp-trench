@@ -17,6 +17,17 @@ export class CoiltypesService implements ListService<Coiltype> {
   }
   public sortDirection: { [key: string]: boolean } = {};
 
+  public get newElement(): Coiltype {
+    return {
+      id: 0,
+      tK_Name: '',
+      schenkel: 0,
+      bb: 0,
+      sh: 0,
+      dm: 0
+    };
+  }
+
   public getCopyElement(id:number):Coiltype {
     id = Number(id);
 

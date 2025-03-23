@@ -1,13 +1,19 @@
-export interface ListService<T> {
-    elements: T[];
-    selectedElementCopy: T | null;
-    selectedElementIsNew: boolean;
+import { Injectable, InjectionToken } from "@angular/core";
 
-    getCopyElement(id: number): T;
-    reloadElements(): Promise<void>;
-    reloadElementWithId(id: number): Promise<T>;
-    updateOrCreateElement(element: T): Promise<void>;
-    postSelectedElement(): Promise<T>;
-    deleteElement(id: number): Promise<void>;
-    selectElement(id: number): void;
+// Needed to inject generic ListService into the component
+export const LIST_SERVICE_TOKEN = new InjectionToken<ListService<any>>('ListServiceToken');
+
+export abstract class ListService<T> {
+    abstract elements: T[];
+    abstract get newElement(): T;
+    abstract selectedElementCopy: T | null;
+    abstract selectedElementIsNew: boolean;
+
+    abstract getCopyElement(id: number): T;
+    abstract reloadElements(): Promise<void>;
+    abstract reloadElementWithId(id: number): Promise<T>;
+    abstract updateOrCreateElement(element: T): Promise<void>;
+    abstract postSelectedElement(): Promise<T>;
+    abstract deleteElement(id: number): Promise<void>;
+    abstract selectElement(id: number): void;
 }

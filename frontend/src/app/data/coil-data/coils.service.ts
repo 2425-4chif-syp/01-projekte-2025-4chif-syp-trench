@@ -14,6 +14,19 @@ export class CoilsService implements ListService<Coil> {
 
   constructor(private backendService:BackendService) { }
 
+  public get newElement(): Coil {
+    return {
+      id: 0,
+      coiltype: null,
+      coiltypeId: null,
+      ur: null, 
+      einheit: null,
+      auftragsnummer: null,
+      auftragsPosNr: null,
+      omega: null
+    };
+  }
+
   public getCopyElement(id:number):Coil {
     id = Number(id);
 
