@@ -10,6 +10,7 @@ svg {
  
 .card{
   background-color: rgba(225, 225, 225);
-  max-height: 60vh;
-  min-height: 60vh;
+  max-height: 600;
+  min-height: 600px;
+  overflow-y: auto;
 }
