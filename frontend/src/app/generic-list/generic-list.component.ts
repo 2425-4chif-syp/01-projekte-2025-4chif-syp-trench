@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Inject, InjectionToken, Input, Type } from '@angular/core';
+import { Component, HostListener, Inject, InjectionToken, Input, Output, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import { LIST_SERVICE_TOKEN, ListService } from '../data/list-service';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-generic-list',
@@ -11,6 +12,13 @@ import { LIST_SERVICE_TOKEN, ListService } from '../data/list-service';
   styleUrl: './generic-list.component.scss'
 })
 export class GenericListComponent<TElement, TListService extends ListService<TElement>> {
+  @Input() public keysAsColumns: { [key: string]: string } = {};
+  @Input() public isSelector: boolean = false;
+  @Input() public newElementButtonLabel: string = 'New Element';
+
+  @Output() onElementClick = new EventEmitter<TElement>();
+  @Output() hoveringElement = new EventEmitter<{element:TElement|null, mousePosition:{x:number, y:number}|null}>();
+
   public sortedElements:TElement[] = [];
 
   private sortDirection: { [key: string]: boolean } = {};
@@ -18,6 +26,13 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   public hoveredElement: TElement | null = null;
 
   public mousePosition: { x: number, y: number }|null = null;
+
+  public get elementKeys():string[] {
+    return Object.keys(this.elementsService.newElement as any);
+  }
+  public getElementValue(element:TElement, key:string):string {
+    return (element as any)[key];
+  }
 
   constructor(@Inject(LIST_SERVICE_TOKEN) public elementsService:TListService, private router:Router) {
     this.initialize();
@@ -35,6 +50,7 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
     if (this.hoveredElement === element) {
       this.hoveredElement = null;
     }
+    this.hoveringElement.emit({element:null, mousePosition:null});
   }
 
   public async addNewElement() {
@@ -59,5 +75,9 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   @HostListener('document:mousemove', ['$event'])
   private onMouseMove(event: MouseEvent) {
     this.mousePosition = { x: event.pageX, y: event.pageY };
+
+    if (this.hoveredElement !== null) {
+      this.hoveringElement.emit({element:this.hoveredElement, mousePosition:this.mousePosition});
+    }
   }
 }
