@@ -57,7 +57,7 @@ export class CoiltypeManagementComponent {
           setTimeout(() => {
               this.saveMessage = null;
           }, 1500);
-          this.backToListing();
+          
           this.saveError = false; // Fehlerprüfung zurücksetzen
       } catch (error) {
           console.error("Fehler beim Speichern:", error);
