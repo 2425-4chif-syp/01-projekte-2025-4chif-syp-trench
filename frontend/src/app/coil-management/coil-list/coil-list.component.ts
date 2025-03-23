@@ -3,61 +3,41 @@ import { Component } from '@angular/core';
 import { CoilsService } from '../../data/coil-data/coils.service';
 import { Coil } from '../../data/coil-data/coil';
 import { BackendService } from '../../backend.service';
+import { GenericListComponent } from '../../generic-list/generic-list.component';
+import { LIST_SERVICE_TOKEN } from '../../data/list-service';
 
 @Component({
   selector: 'app-coil-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, GenericListComponent],
+  providers: [
+    {
+      provide: LIST_SERVICE_TOKEN,
+      useExisting: CoilsService
+    }
+  ],
   templateUrl: './coil-list.component.html',
   styleUrl: './coil-list.component.scss'
 })
 export class CoilListComponent {
-  public sortedCoils: Coil[] = [];
+  public hoveredCoiltype: Coil | null = null;
+  public mousePosition: { x: number, y: number }|null = null;
 
-  private sortDirection: { [key: string]: boolean } = {};
-
-  constructor(public coilsService: CoilsService) {
-    this.initialize();
+  public readonly keysAsColumns: { [key: string]: string } = {
+    'id': 'Spule',
+    'coiltypeId': 'Spulentyp',
+    'auftragsnummer': 'AuftragsNr',
+    'auftragsPosNr': 'AuftragsPosNr',
+    'ur': 'UR',
+    'einheit': 'Einheit',
+    'omega': 'Omega'
   }
 
-  async initialize() {
-    await this.coilsService.reloadElements();
-    this.sortedCoils = [...this.coilsService.elements];
-  }
+  constructor(public coilsService:CoilsService) {
 
-  async addNewCoil() {
-    const newCoil:Coil = {
-      id: 0,
-      coiltype: null,
-      coiltypeId: null,
-      ur: null, 
-      einheit: null,
-      auftragsnummer: null,
-      auftragsPosNr: null,
-      omega: null
-    };
-
-    this.coilsService.selectedElementCopy = newCoil;
-    this.coilsService.selectedElementIsNew = true;
   }
 
   openCoil(coilId: number) {
     this.coilsService.selectElement(coilId);
   }
-
-  sortTable(column: keyof Coil) {
-    const direction = this.sortDirection[column] = !this.sortDirection[column];
-
-    this.sortedCoils.sort((a, b) => {
-      if (a[column]! < b[column]!) {
-        return direction ? -1 : 1;
-      }
-      if (a[column]! > b[column]!) {
-        return direction ? 1 : -1;
-      }
-      return 0;
-    });
-  }
 }
-
-
