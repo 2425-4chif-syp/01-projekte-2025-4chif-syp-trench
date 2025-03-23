@@ -20,13 +20,13 @@ export class CoiltypeManagementComponent {
     originalCoiltype: Coiltype | null = null; 
 
     public get selectedCoiltype():Coiltype|null {
-      return this.coiltypesService.selectedCoiltypeCopy;
+      return this.coiltypesService.selectedElementCopy;
     }
     public get selectedCoiltypeId():number|undefined {
-      return this.coiltypesService.selectedCoiltypeCopy?.id!;
+      return this.coiltypesService.selectedElementCopy?.id!;
     }
     public set selectedCoiltypeId(id:number) {
-      this.coiltypesService.selectCoiltype(Number(id));
+      this.coiltypesService.selectElement(Number(id));
     }
 
     ngOnInit() {
@@ -60,7 +60,7 @@ export class CoiltypeManagementComponent {
       }
   
       try {
-          await this.coiltypesService.updateOrCreateCoiltype(this.selectedCoiltype);
+          await this.coiltypesService.updateOrCreateElement(this.selectedCoiltype);
           this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
   
           this.saveMessage = "Änderungen gespeichert!";
@@ -80,7 +80,7 @@ export class CoiltypeManagementComponent {
     async onCoiltypeSelectionChange(coiltypeId: number) {
       const coiltypeIdNumber:number = Number(coiltypeId);
 
-      await this.coiltypesService.selectCoiltype(coiltypeIdNumber);
+      await this.coiltypesService.selectElement(coiltypeIdNumber);
     }
 
     showDeleteModal = false;
@@ -92,15 +92,15 @@ export class CoiltypeManagementComponent {
     async deleteCoiltype(): Promise<void> {
       this.showDeleteModal = false;
 
-      if (this.coiltypesService.selectedCoiltypeCopy === null) {
+      if (this.coiltypesService.selectedElementCopy === null) {
         return;
       }
 
-      await this.coiltypesService.deleteCoiltype(this.coiltypesService.selectedCoiltypeCopy.id!);
+      await this.coiltypesService.deleteElement(this.coiltypesService.selectedElementCopy.id!);
     }
 
     backToListing():void {
-      this.coiltypesService.selectedCoiltypeCopy = null;
+      this.coiltypesService.selectedElementCopy = null;
     }
 }
 

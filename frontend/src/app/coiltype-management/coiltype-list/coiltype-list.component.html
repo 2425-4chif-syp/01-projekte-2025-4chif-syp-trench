@@ -1,38 +1,10 @@
 <div class="container">
-    @if (isCoilSelector) {
-        <h2>Spulentyp für Spule #{{coilsService.selectedCoilCopy!.id}} auswählen</h2>
-    }
-
-    <div class="scrollable-list">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th (click)="sortTable('id')">Spulentyp</th>
-                    <th (click)="sortTable('tK_Name')">Name</th>
-                    <th (click)="sortTable('schenkel')">Schenkelanzahl</th>
-                    <th (click)="sortTable('bb')">Bandbreite</th>
-                    <th (click)="sortTable('sh')">Schichthöhe</th>
-                    <th (click)="sortTable('dm')">Durchmesser</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let coiltype of sortedCoiltypes" class="clickable-row" 
-                (click)="openCoiltype(coiltype.id!)" 
-                (mouseenter)="onElementHoverStart(coiltype)"
-                (mouseleave)="onElementHoverEnd(coiltype)">
-                    <td scope="row">Spulentyp #{{coiltype.id}}</td>
-                    <td>{{ coiltype.tK_Name }}</td>
-                    <td>{{ coiltype.schenkel }}</td>
-                    <td>{{ coiltype.bb }}</td>
-                    <td>{{ coiltype.sh }}</td>
-                    <td>{{ coiltype.dm }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    @if (!isCoilSelector) {
-        <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoiltype()">Neuer Spulentyp</button>
-    }
+    <app-generic-list 
+    [keysAsColumns]="keysAsColumns"
+    [isSelector]="isCoilSelector"
+    [newElementButtonLabel]="'Neuer Spulentyp'"
+    (onElementClick)="openCoiltype($event)"
+    (hoveringElement)="updateHoveredCoiltype($event)" />
 </div>
 
 @if (hoveredCoiltype !== null && mousePosition !== null) {

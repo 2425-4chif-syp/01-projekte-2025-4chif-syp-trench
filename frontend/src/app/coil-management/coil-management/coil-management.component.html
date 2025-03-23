@@ -1,10 +1,10 @@
 <div class="container mt-4 d-flex flex-column align-items-center">
   <div class="coil-container text-center mb-3">
-      <h2 *ngIf="coilsService.selectedCoilIsNew">Neue Spule</h2>
-      <select *ngIf="!coilsService.selectedCoilIsNew && coilsService.coils.length > 0"
+      <h2 *ngIf="coilsService.selectedElementIsNew">Neue Spule</h2>
+      <select *ngIf="!coilsService.selectedElementIsNew && coilsService.elements.length > 0"
           class="coil-selector form-select w-150 mx-auto" id="coilSelect"
           [(ngModel)]="selectedCoilId" (ngModelChange)="onCoilSelectionChange($event)">
-          <option *ngFor="let coil of coilsService.coils" [value]="coil.id">Spule #{{ coil.id }}</option>
+          <option *ngFor="let coil of coilsService.elements" [value]="coil.id">Spule #{{ coil.id }}</option>
       </select>
   </div>
 
@@ -68,7 +68,7 @@
       <div class="d-flex justify-content-between mt-4">
           <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
           <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-          <button *ngIf="!coilsService.selectedCoilIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+          <button *ngIf="!coilsService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
       </div>
 
       <!-- Erfolgsmeldung -->

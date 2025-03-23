@@ -1,6 +1,6 @@
-<div *ngIf="coiltypesService.selectedCoiltypeCopy === null">
+@if (coiltypesService.selectedElementCopy === null) {
     <app-coiltype-list />
-</div>
-<div *ngIf="coiltypesService.selectedCoiltypeCopy !== null">
+}
+@else {
     <app-coiltype-management />
-</div>
+}
