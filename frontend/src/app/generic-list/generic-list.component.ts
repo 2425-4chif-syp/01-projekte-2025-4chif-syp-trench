@@ -13,6 +13,7 @@ import { EventEmitter } from '@angular/core';
 })
 export class GenericListComponent<TElement, TListService extends ListService<TElement>> {
   @Input() public keysAsColumns: { [key: string]: string } = {};
+  @Input() public elementValueToStringMethods: { [key: string]: (element:TElement) => string } = {};
   @Input() public isSelector: boolean = false;
   @Input() public newElementButtonLabel: string = 'New Element';
 
@@ -31,7 +32,12 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
     return Object.keys(this.elementsService.newElement as any);
   }
   public getElementValue(element:TElement, key:string):string {
-    return (element as any)[key];
+    const value = (element as any)[key];
+
+    if (this.elementValueToStringMethods[key]) {
+      return this.elementValueToStringMethods[key](element);
+    }
+    return value;
   }
 
   constructor(@Inject(LIST_SERVICE_TOKEN) public elementsService:TListService, private router:Router) {

@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CoilsService } from '../../data/coil-data/coils.service';
 import { Coil } from '../../data/coil-data/coil';
-import { BackendService } from '../../backend.service';
 import { GenericListComponent } from '../../generic-list/generic-list.component';
 import { LIST_SERVICE_TOKEN } from '../../data/list-service';
 
@@ -25,19 +24,23 @@ export class CoilListComponent {
 
   public readonly keysAsColumns: { [key: string]: string } = {
     'id': 'Spule',
-    'coiltypeId': 'Spulentyp',
+    'coiltype': 'Spulentyp',
     'auftragsnummer': 'AuftragsNr',
     'auftragsPosNr': 'AuftragsPosNr',
     'ur': 'UR',
     'einheit': 'Einheit',
     'omega': 'Omega'
   }
+  public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
+    'coiltype': (element:Coil) => element.coiltype?.tK_Name ?? `Unnamed Coiltype (ID ${element.coiltypeId})`
+  }
 
   constructor(public coilsService:CoilsService) {
 
   }
 
-  openCoil(coilId: number) {
+  openCoil(coil:Coil) {
+    const coilId = coil.id!;
     this.coilsService.selectElement(coilId);
   }
 }

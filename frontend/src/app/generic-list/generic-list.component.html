@@ -3,7 +3,9 @@
         <thead>
             <tr>
                 @for (elementKey of elementKeys; track $index) {
-                    <th (click)="sortTable(elementKey)">{{keysAsColumns[elementKey]}}</th>
+                    @if (keysAsColumns[elementKey] !== undefined) {
+                        <th (click)="sortTable(elementKey)">{{keysAsColumns[elementKey]}}</th>
+                    }
                 }
             </tr>
         </thead>
