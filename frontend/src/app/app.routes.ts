@@ -10,6 +10,8 @@ import { ToleranceSettingsComponent } from './tolerance-settings/tolerance-setti
 import { DisplacementVisualizationComponent } from "./displacement-visualization/displacement-visualization.component";
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth/auth.guard';
+import { MeasurementProbeManagementComponent } from './measurement-settings/measurement-probe-management/measurement-probe-management.component';
+import { MeasurementProbeTypeManagementComponent } from './measurement-settings/measurement-probe-type-management/measurement-probe-type-management/measurement-probe-type-management.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -17,8 +19,9 @@ export const routes: Routes = [
     {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
     {path: 'coil-management', component: CoilParentComponent, canActivate: [AuthGuard]},
     {path: 'coiltype-management', component: CoiltypeParentComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-management', component: MeasurementManagementComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-result', component: MeasurementManagementComponent, canActivate: [AuthGuard]},
     {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
     {path: 'tolerance-settings', component: ToleranceSettingsComponent, canActivate: [AuthGuard]},
-    {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]}
+    {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-probe-type-management', component: MeasurementProbeTypeManagementComponent, canActivate: [AuthGuard]}
 ];

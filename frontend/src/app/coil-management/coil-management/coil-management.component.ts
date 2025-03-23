@@ -19,21 +19,31 @@ import { Router } from '@angular/router';
 export class CoilManagementComponent {
   constructor(public coilsService: CoilsService, private coiltypesService: CoiltypesService, private router:Router) {
     this.coiltypesService.isCoilSelector = false;
-    this.coiltypesService.reloadCoiltypes();
+    this.coiltypesService.reloadElements();
   }
 
-  saveMessage: string | null = null;
+  saveMessage: string | null = null;  
+  saveError: boolean = false;
+  selectedCoilIsNew: boolean = false;
+  originalCoil: Coil | null = null;
+
+  ngOnInit() {
+    if (this.selectedCoil) {
+        this.originalCoil = { ...this.selectedCoil }; // Erstellt eine Kopie der Originalwerte
+    }
+}
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
     //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)! 
-    return this.coilsService.selectedCoilCopy;
+    return this.coilsService.selectedElementCopy;
   }
+
   public get selectedCoilId(): number | undefined {
-    return this.coilsService.selectedCoilCopy?.id!;
+    return this.coilsService.selectedElementCopy?.id!;
   }
   public set selectedCoilId(id: number) {
-    this.coilsService.selectCoil(Number(id));
+    this.coilsService.selectElement(Number(id));
   }
 
   public get selectedCoiltype(): Coiltype|null {
@@ -43,72 +53,71 @@ export class CoilManagementComponent {
       return this.selectedCoil?.coiltype!;
     }
 
-    return this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
+    return this.coiltypesService.elements.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
   }
+
+  hasChanges(): boolean {
+    if (!this.originalCoil || !this.selectedCoil) return false;
+    return JSON.stringify(this.originalCoil) !== JSON.stringify(this.selectedCoil);
+}
 
   isFieldInvalid(field: string): boolean {
-    if (!this.selectedCoil) return true;
-  
+    if (!this.selectedCoil) return false;
     let value = this.selectedCoil[field as keyof Coil];
-
-    if (value === null || value === undefined) {
-        return true;
-    }
-    
-    if (typeof value === 'number' && (field === 'ur' || field === 'einheit' || field === 'auftragsnummer' || field === 'auftragsPosNr' || field === 'omega')) {
-      return value <= 0;
-    }
-  
-    // Allgemeine Prüfung für alle anderen Fälle
-    return false;
+    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
+
   
   openCoiltypeSelect() {
-    this.coiltypesService.selectedCoiltypeCopy = null;
+    this.coiltypesService.selectedElementCopy = null;
     this.coiltypesService.isCoilSelector = true;
 
     this.router.navigate(['/coiltype-management']);
   }
 
   async saveChanges() {
-    if (this.coilsService.selectedCoilCopy === null) {
-      return;
-    }
+    if (!this.selectedCoil) return;
 
-    if (typeof this.coilsService.selectedCoilCopy.id !== 'number') {
-      throw new Error('selectedCoilId is not of type number');
-    }
+    this.saveError = true; // Fehlerprüfung aktivieren
 
-    // Check all required fields
-    if (this.selectedCoiltype === null) {
-      this.writeSaveMessage('Bitte wählen Sie einen Spulentypen aus.');
-    }
-
-    const requiredFields = ['coiltype', 'ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
+    const requiredFields = ['ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-      this.writeSaveMessage('Bitte füllen Sie alle Pflichtfelder aus.');
-      return;
+        this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+        return;
     }
 
-    await this.coilsService.updateOrCreateCoil(this.selectedCoil!);
-    this.onCoilSelectionChange(this.selectedCoilId!);
+    try {
+        await this.coilsService.updateOrCreateElement(this.selectedCoil);
+        this.onCoilSelectionChange(this.selectedCoilId!);
 
-    this.writeSaveMessage('Änderungen gespeichert!');
-  }
+        this.saveMessage = "Änderungen gespeichert!";
+        setTimeout(() => {
+            this.saveMessage = null;
+        }, 3000);
+
+        this.saveError = false;
+        this.originalCoil = { ...this.selectedCoil };
+    } catch (error) {
+        console.error("Fehler beim Speichern:", error);
+        this.saveMessage = "Fehler beim Speichern!";
+    }
+}
+
+
 
   writeSaveMessage(message:string) {
     this.saveMessage = message;
     setTimeout(() => {
       this.saveMessage = null;
-    }, 3000);
+    }, 1500);
   }
 
   async onCoilSelectionChange(coilId: number) {
     const coilIdNumber: number = Number(coilId);
 
-    await this.coilsService.selectCoil(coilIdNumber);
+    await this.coilsService.selectElement(coilIdNumber);
   }
 
   showDeleteModal = false;
@@ -120,15 +129,15 @@ export class CoilManagementComponent {
   async deleteCoil(): Promise<void> {
     this.showDeleteModal = false;
 
-    if (this.coilsService.selectedCoilCopy === null) {
+    if (this.coilsService.selectedElementCopy === null) {
       return;
     }
 
-    await this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id!);
+    await this.coilsService.deleteElement(this.coilsService.selectedElementCopy.id!);
   }
 
   backToListing(): void {
-    this.coilsService.selectedCoilCopy = null;
+    this.coilsService.selectedElementCopy = null;
   }
 
   showCoiltypeDropdown: boolean = false;
@@ -150,8 +159,8 @@ export class CoilManagementComponent {
 
   getCoiltypeName(): string {
     if (!this.selectedCoilId) return 'Spulentyp auswählen';
-    const coil = this.coilsService.coils.find(coil => coil.id === this.selectedCoilId);
-    const coiltype = this.coiltypesService.coiltypes.find(type => type.id === this.selectedCoil?.coiltypeId);
+    const coil = this.coilsService.elements.find(coil => coil.id === this.selectedCoilId);
+    const coiltype = this.coiltypesService.elements.find(type => type.id === this.selectedCoil?.coiltypeId);
     return coiltype ? coiltype.tK_Name : 'Spulentyp auswählen';
   }
 
@@ -161,7 +170,7 @@ export class CoilManagementComponent {
     const direction = !this.coiltypesService.sortDirection[column];
     this.coiltypesService.sortDirection[column] = direction;
 
-    this.coiltypesService.coiltypes.sort((a, b) => {
+    this.coiltypesService.elements.sort((a, b) => {
       if (a[column]! < b[column]!) {
         return direction ? -1 : 1;
       }

@@ -1,29 +1,7 @@
 <div class="container">
-    <div class="scrollable-list">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th (click)="sortTable('id')">Spule</th>
-                    <th (click)="sortTable('coiltypeId')">Spulentyp</th>
-                    <th (click)="sortTable('auftragsnummer')">AuftragsNr</th>
-                    <th (click)="sortTable('auftragsPosNr')">AuftragsPosNr</th>
-                    <th (click)="sortTable('ur')">UR</th>
-                    <th (click)="sortTable('einheit')">Einheit</th>
-                    <th (click)="sortTable('omega')">Omega</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let coil of sortedCoils" class="clickable-row" (click)="openCoil(coil.id!)">
-                    <td>Spule #{{ coil.id }}</td>
-                    <td>{{ coil.coiltype?.tK_Name }}</td>
-                    <td>{{ coil.auftragsnummer }}</td>
-                    <td>{{ coil.auftragsPosNr }}</td>
-                    <td>{{ coil.ur }}</td>
-                    <td>{{ coil.einheit }}</td>
-                    <td>{{ coil.omega }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <button class="btn btn-primary new-coil-button" id="new-coil-button" (click)="addNewCoil()">Neue Spule</button>
+    <app-generic-list 
+    [keysAsColumns]="keysAsColumns"
+    [elementValueToStringMethods]="elementValueToStringMethods"
+    [newElementButtonLabel]="'Neuer Spulentyp'"
+    (onElementClick)="openCoil($event)" />
 </div>

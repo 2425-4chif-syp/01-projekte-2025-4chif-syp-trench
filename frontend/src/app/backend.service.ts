@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Coil } from './data/coil-data/coil';
 import { Coiltype } from './data/coiltype-data/coiltype';
 import { measurementSettings } from './data/measurement-settings/measurement-settings';
+import { MeasurementProbe } from './data/measurement-probes/measurement-probes';
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +69,7 @@ export class BackendService {
 
   private coilBackendToFrontend(coil: any): Coil {
     const newCoil: Coil = {
-      id: coil.spuleId,
+      id: coil.spuleID,
       coiltype: coil.spuleTyp,
       coiltypeId: coil.spuleTypID,
       ur: coil.ur,
@@ -85,8 +86,8 @@ export class BackendService {
   
   private coilFrontendToBackend(coil: Coil): any {
     return {
-      spuleId: coil.id,
-      spuleTypId: coil.coiltypeId,
+      spuleID: coil.id,
+      spuleTypID: coil.coiltypeId,
       ur: coil.ur,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnummer,
@@ -97,7 +98,7 @@ export class BackendService {
   
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
-      id: coiltype.spuleTypId,
+      id: coiltype.spuleTypID,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -108,7 +109,7 @@ export class BackendService {
 
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      spuleTypId: coiltype.id,
+      spuleTypID: coiltype.id,
       tK_Name: coiltype.tK_Name,
       schenkel: coiltype.schenkel,
       bb: coiltype.bb,
@@ -137,6 +138,27 @@ export class BackendService {
     }
   }
 
+  private measurementProbeFrontendToBackend(measurementProbe: MeasurementProbe): any {
+    return {
+      sensorID: measurementProbe.id,
+      sensorTypID: measurementProbe.probeTypeId,
+      durchmesser: measurementProbe.width,
+      schenkel: measurementProbe.yoke,
+      position: measurementProbe.position
+    }
+  }
+
+  private measurementProbeBackendToFrontend(measurementProbe: any): MeasurementProbe {
+    return {
+      id: measurementProbe.sensorID,
+      probeTypeId: measurementProbe.sensorTypID,
+      probeType: measurementProbe.sensorTyp,
+      width: measurementProbe.durchmesser,
+      yoke: measurementProbe.schenkel,
+      position: measurementProbe.position
+    }
+  }
+
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
     return response.map((coil: any) => (this.coilBackendToFrontend(coil)));
@@ -159,7 +181,6 @@ export class BackendService {
   public async deleteCoil(coil: Coil): Promise<void> {
     await this.httpDeleteRequest('Spule/' + coil.id);
   }
-  
 
   public async getAllCoiltypes(): Promise<Coiltype[]> {
     const response:any = await this.httpGetRequest('SpuleTyp');
@@ -187,5 +208,29 @@ export class BackendService {
   public async addMeasurementSettings(measurementSettings: measurementSettings): Promise<measurementSettings>{
     const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));
     return this.measurementSettingsBackendToFrontend(response);
+  }
+  
+  public async getAllMeasurementProbes(): Promise<MeasurementProbe[]> {
+    const response:any = await this.httpGetRequest('Sensor');
+    return response.map((measurementProbe: any) => (this.measurementProbeBackendToFrontend(measurementProbe)));
+  }
+
+  public async getMeasurementProbe(id: number): Promise<MeasurementProbe> {
+    const response:any = await this.httpGetRequest('Sensor/' + id);
+    return this.measurementProbeBackendToFrontend(response);
+  }
+  
+  public async addMeasurementProbe(measurementProbe: MeasurementProbe): Promise<MeasurementProbe> {
+    console.log("Frontend to Backend,", this.measurementProbeFrontendToBackend(measurementProbe));
+    const response:any = await this.httpPostRequest('Sensor', this.measurementProbeFrontendToBackend(measurementProbe));
+    return this.measurementProbeBackendToFrontend(response);
+  }
+
+  public async updateMeasurementProbe(measurementProbe: MeasurementProbe): Promise<void> {
+    await this.httpPutRequest('Sensor/' + measurementProbe.id, this.measurementProbeFrontendToBackend(measurementProbe));
+  }
+
+  public async deleteMeasurementProbe(measurementProbe: MeasurementProbe): Promise<void> {
+    await this.httpDeleteRequest('Sensor/' + measurementProbe.id);
   }
 }
