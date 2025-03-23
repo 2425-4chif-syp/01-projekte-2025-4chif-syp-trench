@@ -68,7 +68,7 @@ export class CoiltypeManagementComponent {
               this.saveMessage = null;
           }, 1500);
   
-          this.saveError = false;
+          this.saveError = false; // Fehlerprüfung zurücksetzen
           this.originalCoiltype = { ...this.selectedCoiltype };
 
           setTimeout(() => {

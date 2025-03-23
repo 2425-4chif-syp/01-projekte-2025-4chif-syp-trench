@@ -1,0 +1,16 @@
+svg {
+    background-color: #f8f9fa; // Heller Hintergrund für bessere Sichtbarkeit
+    border-radius: 8px;
+    padding: 0px;
+  }
+  
+  rect {
+    transition: all 0.3s ease-in-out;
+}
+ 
+.card{
+  background-color: rgba(225, 225, 225);
+  max-height: 600;
+  min-height: 600px;
+  overflow-y: auto;
+}
