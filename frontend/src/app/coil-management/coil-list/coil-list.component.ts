@@ -21,8 +21,8 @@ export class CoilListComponent {
   }
 
   async initialize() {
-    await this.coilsService.reloadCoils();
-    this.sortedCoils = [...this.coilsService.coils];
+    await this.coilsService.reloadElements();
+    this.sortedCoils = [...this.coilsService.elements];
   }
 
   async addNewCoil() {
@@ -37,12 +37,12 @@ export class CoilListComponent {
       omega: null
     };
 
-    this.coilsService.selectedCoilCopy = newCoil;
-    this.coilsService.selectedCoilIsNew = true;
+    this.coilsService.selectedElementCopy = newCoil;
+    this.coilsService.selectedElementIsNew = true;
   }
 
   openCoil(coilId: number) {
-    this.coilsService.selectCoil(coilId);
+    this.coilsService.selectElement(coilId);
   }
 
   sortTable(column: keyof Coil) {

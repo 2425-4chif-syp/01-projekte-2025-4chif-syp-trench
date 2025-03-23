@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 export class CoilManagementComponent {
   constructor(public coilsService: CoilsService, private coiltypesService: CoiltypesService, private router:Router) {
     this.coiltypesService.isCoilSelector = false;
-    this.coiltypesService.reloadCoiltypes();
+    this.coiltypesService.reloadElements();
   }
 
   saveMessage: string | null = null;  
@@ -36,14 +36,14 @@ export class CoilManagementComponent {
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
     //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)! 
-    return this.coilsService.selectedCoilCopy;
+    return this.coilsService.selectedElementCopy;
   }
 
   public get selectedCoilId(): number | undefined {
-    return this.coilsService.selectedCoilCopy?.id!;
+    return this.coilsService.selectedElementCopy?.id!;
   }
   public set selectedCoilId(id: number) {
-    this.coilsService.selectCoil(Number(id));
+    this.coilsService.selectElement(Number(id));
   }
 
   public get selectedCoiltype(): Coiltype|null {
@@ -53,7 +53,7 @@ export class CoilManagementComponent {
       return this.selectedCoil?.coiltype!;
     }
 
-    return this.coiltypesService.coiltypes.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
+    return this.coiltypesService.elements.find(c => c.id === this.selectedCoil?.coiltypeId) ?? null;
   }
 
   hasChanges(): boolean {
@@ -69,7 +69,7 @@ export class CoilManagementComponent {
 
   
   openCoiltypeSelect() {
-    this.coiltypesService.selectedCoiltypeCopy = null;
+    this.coiltypesService.selectedElementCopy = null;
     this.coiltypesService.isCoilSelector = true;
 
     this.router.navigate(['/coiltype-management']);
@@ -89,7 +89,7 @@ export class CoilManagementComponent {
     }
 
     try {
-        await this.coilsService.updateOrCreateCoil(this.selectedCoil);
+        await this.coilsService.updateOrCreateElement(this.selectedCoil);
         this.onCoilSelectionChange(this.selectedCoilId!);
 
         this.saveMessage = "Änderungen gespeichert!";
@@ -117,7 +117,7 @@ export class CoilManagementComponent {
   async onCoilSelectionChange(coilId: number) {
     const coilIdNumber: number = Number(coilId);
 
-    await this.coilsService.selectCoil(coilIdNumber);
+    await this.coilsService.selectElement(coilIdNumber);
   }
 
   showDeleteModal = false;
@@ -129,15 +129,15 @@ export class CoilManagementComponent {
   async deleteCoil(): Promise<void> {
     this.showDeleteModal = false;
 
-    if (this.coilsService.selectedCoilCopy === null) {
+    if (this.coilsService.selectedElementCopy === null) {
       return;
     }
 
-    await this.coilsService.deleteCoil(this.coilsService.selectedCoilCopy.id!);
+    await this.coilsService.deleteElement(this.coilsService.selectedElementCopy.id!);
   }
 
   backToListing(): void {
-    this.coilsService.selectedCoilCopy = null;
+    this.coilsService.selectedElementCopy = null;
   }
 
   showCoiltypeDropdown: boolean = false;
@@ -159,8 +159,8 @@ export class CoilManagementComponent {
 
   getCoiltypeName(): string {
     if (!this.selectedCoilId) return 'Spulentyp auswählen';
-    const coil = this.coilsService.coils.find(coil => coil.id === this.selectedCoilId);
-    const coiltype = this.coiltypesService.coiltypes.find(type => type.id === this.selectedCoil?.coiltypeId);
+    const coil = this.coilsService.elements.find(coil => coil.id === this.selectedCoilId);
+    const coiltype = this.coiltypesService.elements.find(type => type.id === this.selectedCoil?.coiltypeId);
     return coiltype ? coiltype.tK_Name : 'Spulentyp auswählen';
   }
 
@@ -170,7 +170,7 @@ export class CoilManagementComponent {
     const direction = !this.coiltypesService.sortDirection[column];
     this.coiltypesService.sortDirection[column] = direction;
 
-    this.coiltypesService.coiltypes.sort((a, b) => {
+    this.coiltypesService.elements.sort((a, b) => {
       if (a[column]! < b[column]!) {
         return direction ? -1 : 1;
       }

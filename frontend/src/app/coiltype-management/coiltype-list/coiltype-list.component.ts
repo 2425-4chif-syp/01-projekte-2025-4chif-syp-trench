@@ -31,8 +31,8 @@ export class CoiltypeListComponent {
   }
 
   async initialize() {
-    await this.coiltypesService.reloadCoiltypes();
-    this.sortedCoiltypes = [...this.coiltypesService.coiltypes]
+    await this.coiltypesService.reloadElements();
+    this.sortedCoiltypes = [...this.coiltypesService.elements]
   }
 
   onElementHoverStart(coiltype:Coiltype) {
@@ -54,20 +54,20 @@ export class CoiltypeListComponent {
       dm: 0
     };
 
-    this.coiltypesService.selectedCoiltypeCopy = newCoiltype;
-    this.coiltypesService.selectedCoiltypeIsNew = true; 
+    this.coiltypesService.selectedElementCopy = newCoiltype;
+    this.coiltypesService.selectedElementIsNew = true; 
   }
 
   openCoiltype(coiltypeId:number) {
     if (this.coiltypesService.isCoilSelector) {
-      this.coilsService.selectedCoilCopy!.coiltypeId = coiltypeId;
-      this.coilsService.selectedCoilCopy!.coiltype = this.coiltypesService.getCopyCoiltype(coiltypeId);
+      this.coilsService.selectedElementCopy!.coiltypeId = coiltypeId;
+      this.coilsService.selectedElementCopy!.coiltype = this.coiltypesService.getCopyElement(coiltypeId);
 
       this.router.navigate(['/coil-management']);
       return;
     }
 
-    this.coiltypesService.selectCoiltype(coiltypeId);
+    this.coiltypesService.selectElement(coiltypeId);
   }
 
   sortTable(column: keyof Coiltype) {
