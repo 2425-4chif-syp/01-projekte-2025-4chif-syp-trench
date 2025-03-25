@@ -7,7 +7,7 @@ namespace TrenchAPI.Models
     {
         [Required]
         [Key]
-        public int SpuleID { get; set; }
+        public int ID { get; set; }
 
         [ForeignKey(nameof(SpuleTypID))]
         public SpuleTyp? SpuleTyp { get; set; }
@@ -26,7 +26,19 @@ namespace TrenchAPI.Models
         [Column(TypeName = "int")]
         public int AuftragsPosNr { get; set; }
 
-        [Column(TypeName = "decimal(8,5)")]
+        [Column(TypeName = "decimal(8,3)")]
         public decimal omega { get; set; }
     }
 }
+
+/*
+ Table spule {
+  id integer [primary key]
+  spuletyp_id integer [not null, ref: > spuletyp.id]
+  auftragsnr varchar
+  auftragsposnr integer
+  ur decimal
+  einheit integer
+  omega decimal
+  notiz string
+}*/

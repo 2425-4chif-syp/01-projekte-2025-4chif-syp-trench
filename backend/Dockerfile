@@ -13,7 +13,7 @@ COPY ["TrenchAPI.sln", "./"]
 
 # Copy project files so we can restore them
 COPY ["TrenchAPI/TrenchAPI.csproj", "TrenchAPI/"]
-COPY ["MQTT/MQTT.csproj", "MQTT/"]
+COPY ["ConsoleMQTT/ConsoleMQTT.csproj", "ConsoleMQTT/"]
 
 # Restore the solution (restores all projects in it)
 RUN dotnet restore "TrenchAPI.sln"
@@ -23,7 +23,7 @@ COPY . .
 
 # Build & Publish each project separately (or you could build the entire solution)
 RUN dotnet publish "TrenchAPI/TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish/api
-RUN dotnet publish "MQTT/MQTT.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mqtt
+RUN dotnet publish "ConsoleMQTT/ConsoleMQTT.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mqtt
 
 # 3) Final stage: copy published files and run
 FROM base AS final
@@ -33,4 +33,4 @@ COPY --from=build /app/publish/api ./api
 COPY --from=build /app/publish/mqtt ./mqtt
 
 # Run both apps in one container
-CMD ["sh", "-c", "dotnet ./mqtt/MQTT.dll & dotnet ./api/TrenchAPI.dll"]
+CMD ["sh", "-c", "dotnet ./mqtt/ConsoleMQTT.dll & dotnet ./api/TrenchAPI.dll"]
