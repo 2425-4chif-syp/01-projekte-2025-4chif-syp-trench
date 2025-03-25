@@ -9,14 +9,14 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy the solution file
-COPY ["TrenchAPI.sln", "./"]
+COPY ["backend.sln", "./"]
 
 # Copy project files so we can restore them
 COPY ["TrenchAPI/TrenchAPI.csproj", "TrenchAPI/"]
 COPY ["ConsoleMQTT/ConsoleMQTT.csproj", "ConsoleMQTT/"]
 
 # Restore the solution (restores all projects in it)
-RUN dotnet restore "TrenchAPI.sln"
+RUN dotnet restore "backend.sln"
 
 # Copy the rest of the source code
 COPY . .

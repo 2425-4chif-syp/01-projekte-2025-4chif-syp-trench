@@ -37,7 +37,7 @@ services:
   backend:
     container_name: backend_container
     build:
-      context: ./backend/backend
+      context: ./backend
     ports:
       - "5127:5127" 
     expose:
@@ -47,7 +47,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5127 
       - ConnectionStrings__DevConnection=Host=postgres;Port=5432;Database=postgres;Username=postgres;Password=TRENCH123;
     volumes:
-      - ./backend/backend:/src 
+      - ./backend:/src 
     depends_on:
       - postgres
     networks:
