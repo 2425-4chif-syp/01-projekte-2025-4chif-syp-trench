@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TrenchAPI.Context;
-using TrenchAPI.DTO;
-using TrenchAPI.Models;
+using TrenchAPI.Core.Entities;
+using TrenchAPI.Persistence;
+using TrenchAPI.Persistence.DTO;
 
 namespace TrenchAPI.Controllers
 {

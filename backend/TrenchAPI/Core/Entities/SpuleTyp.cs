@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TrenchAPI.Models
+namespace TrenchAPI.Core.Entities
 {
-    public class SpuleTyp
+    public class SpuleTyp : EntityObject
     {
-        [Key]
-        public int SpuleTypID { get; set; }
-        
         [Column(TypeName = "VARCHAR(100)")]
         public string Name { get; set; } = "";
 

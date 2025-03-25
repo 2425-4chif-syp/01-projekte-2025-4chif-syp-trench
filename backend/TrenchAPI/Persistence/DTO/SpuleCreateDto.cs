@@ -1,6 +1,6 @@
 ﻿using TrenchAPI.Models;
 
-namespace TrenchAPI.DTO
+namespace TrenchAPI.Persistence.DTO
 {
     public class SpuleCreateDto
     {

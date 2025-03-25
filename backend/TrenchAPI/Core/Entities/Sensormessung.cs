@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TrenchAPI.Models
+namespace TrenchAPI.Core.Entities
 {
     public class Sensormessung
     {

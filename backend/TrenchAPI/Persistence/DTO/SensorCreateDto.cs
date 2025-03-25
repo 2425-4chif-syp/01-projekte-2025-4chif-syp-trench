@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using TrenchAPI.Models;
 
-namespace TrenchAPI.DTO
+namespace TrenchAPI.Persistence.DTO
 {
     public class SensorCreateDto
     {

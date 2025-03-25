@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TrenchAPI.Models;
+using TrenchAPI.Core.Entities;
 
 namespace TrenchAPI.Context
 {
