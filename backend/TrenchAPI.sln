@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrenchAPI", "TrenchAPI.csproj", "{F2EAF273-A437-4825-B5B8-BD7F709B1C60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrenchAPI", "TrenchAPI/TrenchAPI.csproj", "{F2EAF273-A437-4825-B5B8-BD7F709B1C60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTT", "..\MQTT\MQTT.csproj", "{AA6FADD5-0138-4BA7-A4FE-8B050CC45EA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQTT", "MQTT\MQTT.csproj", "{AA6FADD5-0138-4BA7-A4FE-8B050CC45EA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
