@@ -1,33 +1,36 @@
-# Schritt 1: Basis-Image für den ASP.NET Core Web-Server
+# 1) Base image for running .NET
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 5127
 
-# Schritt 2: SDK-Image für den Build-Prozess
+# 2) SDK image for building
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Kopiere die Projektdateien
-COPY ["TrenchAPI.csproj", "./"]
-COPY ["MqttTestingData/MqttTestingData.csproj", "./MqttTestingData/"]
+# Copy the solution file
+COPY ["TrenchAPI.sln", "./"]
 
-# Restore NuGet-Pakete
-RUN dotnet restore "TrenchAPI.csproj"
-RUN dotnet restore "MqttTestingData/MqttTestingData.csproj"
+# Copy project files so we can restore them
+COPY ["TrenchAPI/TrenchAPI.csproj", "TrenchAPI/"]
+COPY ["MQTT/MQTT.csproj", "MQTT/"]
 
-# Kopiere den restlichen Source Code
+# Restore the solution (restores all projects in it)
+RUN dotnet restore "TrenchAPI.sln"
+
+# Copy the rest of the source code
 COPY . .
 
-# Build und Publish
-RUN dotnet publish "TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish/api
-RUN dotnet publish "MqttTestingData/MqttTestingData.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mqtt
+# Build & Publish each project separately (or you could build the entire solution)
+RUN dotnet publish "TrenchAPI/TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish/api
+RUN dotnet publish "MQTT/MQTT.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mqtt
 
-# Final stage
+# 3) Final stage: copy published files and run
 FROM base AS final
 WORKDIR /app
+
 COPY --from=build /app/publish/api ./api
 COPY --from=build /app/publish/mqtt ./mqtt
 
-# Starte beide Anwendungen
-CMD ["sh", "-c", "dotnet ./mqtt/MqttTestingData.dll & dotnet ./api/TrenchAPI.dll"]
+# Run both apps in one container
+CMD ["sh", "-c", "dotnet ./mqtt/MQTT.dll & dotnet ./api/TrenchAPI.dll"]
