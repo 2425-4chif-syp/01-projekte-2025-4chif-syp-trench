@@ -12,6 +12,7 @@ namespace TrenchAPI.Persistence
         public DbSet<Messeinstellung> Messeinstellung { get; set; }
         public DbSet<Messsonde> Messsonde { get; set; }
         public DbSet<MesssondenTyp> MesssondenTyp { get; set; }
+        public DbSet<Messung> Messung { get; set; }
         public DbSet<Messwert> Messwert { get; set; }
         public DbSet<Spule> Spule { get; set; }
         public DbSet<SpuleTyp> SpuleTyp { get; set; }
