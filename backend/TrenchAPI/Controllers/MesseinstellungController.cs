@@ -46,7 +46,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMesseinstellung(int id, Messeinstellung messeinstellung)
         {
-            if (id != messeinstellung.MesseinstellungID)
+            if (id != messeinstellung.ID)
             {
                 return BadRequest();
             }
@@ -79,7 +79,7 @@ namespace TrenchAPI.Controllers
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMesseinstellung", new { id = messeinstellung.MesseinstellungID }, messeinstellung);
+            return CreatedAtAction("GetMesseinstellung", new { id = messeinstellung.ID }, messeinstellung);
         }
 
         // DELETE: api/Messeinstellung/5
@@ -100,7 +100,7 @@ namespace TrenchAPI.Controllers
 
         private bool MesseinstellungExists(int id)
         {
-            return _context.Messeinstellung.Any(e => e.MesseinstellungID == id);
+            return _context.Messeinstellung.Any(e => e.ID == id);
         }
     }
 }
