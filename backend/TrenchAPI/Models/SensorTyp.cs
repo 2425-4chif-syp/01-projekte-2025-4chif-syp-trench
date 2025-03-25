@@ -16,6 +16,6 @@ namespace TrenchAPI.Models
         public decimal Breite { get; set; }
 
         [Column(TypeName = "decimal(8,1)")]
-        public decimal Höhe { get; set; }
+        public decimal Hoehe { get; set; }
     }
 }
