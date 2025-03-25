@@ -1,6 +1,6 @@
-﻿using TrenchAPI.Models;
+﻿using TrenchAPI.Core.Entities;
 
-namespace TrenchAPI.DTO
+namespace TrenchAPI.Persistence.DTO
 {
     public class SpuleCreateDto
     {
@@ -10,6 +10,6 @@ namespace TrenchAPI.DTO
         public int Einheit { get; set; }
         public int Auftragsnummer { get; set; }
         public int AuftragsPosNr { get; set; }
-        public decimal omega { get; set; }
+        public decimal Omega { get; set; }
     }
 }

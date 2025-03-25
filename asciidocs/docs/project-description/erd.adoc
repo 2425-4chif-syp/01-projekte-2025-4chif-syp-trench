@@ -2,8 +2,9 @@
 ----
 @startuml
 
+' Group: Master data
 entity SpulenTyp {
-  + ID : integer <<PK>>
+  * ID : integer <<PK>>
   --
   Name : varchar
   Schenkelanzahl : integer
@@ -12,8 +13,17 @@ entity SpulenTyp {
   Durchmesser : decimal
 }
 
+entity SensorTyp {
+  * ID : integer <<PK>>
+  --
+  Wicklungszahl : integer
+  Breite : decimal
+  Höhe : decimal
+}
+
+' Group: Main objects
 entity Spule {
-  + ID : integer <<PK>>
+  * ID : integer <<PK>>
   --
   SpulenTypID : integer <<FK>>
   AuftragsNr : varchar
@@ -23,45 +33,51 @@ entity Spule {
   Omega : decimal
 }
 
-entity Messung {
-  + ID : integer <<PK>>
+entity Sensor {
+  * ID : integer <<PK>>
+  --
+  SensorTypID : integer <<FK>>
+  Durchmesser : decimal
+  Schenkel : integer
+  Position : integer
+}
+
+' Group: Measurements
+entity Gesamtmessung {
+  * ID : integer <<PK>>
   --
   SpuleID : integer <<FK>>
-  Summe : decimal
+  GesamtVektor : decimal
   Zeit : timestamp
 }
 
 entity Messeinstellung {
-  + ID : integer <<PK>>
+  * ID : integer <<PK>>
   --
   MessungID : integer <<FK>>
-  Bemessunngsspannung : decimal
-  Bemessungsfrequenz : decimal
-  Sensoren : integer
-  Toleranz : integer
+  SensorTypID : integer <<FK>>
+  sonden_pro_schenkel: int
+  bemessungsspannung: float
+  bemessungsfrequenz: float
 }
 
-entity Sensor {
-  + ID : integer <<PK>>
+entity Sensormessung {
+  * ID : integer <<PK>>
   --
-  SensorTypID : integer <<FK>>
-  MessungID : integer <<FK>>
-  Schenkel : integer
-  Position : integer
+  GesamtmessungID : integer <<FK>>
+  SensorID : integer <<FK>>
   Wert : decimal
   Zeit : timestamp
 }
 
-entity SensorTyp {
-  + ID : integer <<PK>>
-  --
-  Wicklungszahl : integer
-}
+' Relationships with cardinalities for clarity
+Spule }|..|| SpulenTyp : "SpulenTypID"
+Sensor }|..|| SensorTyp : "SensorTypID"
 
-SpulenTyp ||--|{ Spule : "defines"
-Spule ||--|{ Messung : "records"
-Messung ||--|{ Messeinstellung : "configured with"
-Messung ||--|{ Sensor : "has"
-SensorTyp ||--|{ Sensor : "used by"
+Gesamtmessung }|..|| Spule : "SpuleID"
+Messeinstellung }|..|| Gesamtmessung : "MessungID"
+
+Sensormessung }|..|| Gesamtmessung : "GesamtmessungID"
+Sensormessung }|..|| Sensor : "SensorID"
 
 @enduml

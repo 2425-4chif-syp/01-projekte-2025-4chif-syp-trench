@@ -64,7 +64,7 @@
               <div class="d-flex justify-content-between mt-4">
                   <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
                   <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-                  <button *ngIf="!coiltypesService.selectedCoiltypeIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+                  <button *ngIf="!coiltypesService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
               </div>
 
               <!-- Erfolgsmeldung -->

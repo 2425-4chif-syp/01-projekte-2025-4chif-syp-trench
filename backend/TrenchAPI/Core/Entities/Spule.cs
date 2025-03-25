@@ -1,19 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TrenchAPI.Models
+namespace TrenchAPI.Core.Entities
 {
-    public class Spule
+    public class Spule : EntityObject
     {
-        [Required]
-        [Key]
-        public int SpuleID { get; set; }
-
         [ForeignKey(nameof(SpuleTypID))]
         public SpuleTyp? SpuleTyp { get; set; }
 
         public int SpuleTypID { get; set; }
-        
+
         [Column(TypeName = "decimal(8,3)")]
         public decimal Ur { get; set; }
 
@@ -26,7 +22,10 @@ namespace TrenchAPI.Models
         [Column(TypeName = "int")]
         public int AuftragsPosNr { get; set; }
 
-        [Column(TypeName = "decimal(8,5)")]
-        public decimal omega { get; set; }
+        [Column(TypeName = "decimal(8,3)")]
+        public decimal Omega { get; set; }
+
+        [Column(TypeName = "VARCHAR(250)")]
+        public string Notiz { get; set; } = "";
     }
 }
