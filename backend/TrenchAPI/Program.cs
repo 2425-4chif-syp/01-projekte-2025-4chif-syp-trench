@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using TrenchAPI.Models;
 using TrenchAPI.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
