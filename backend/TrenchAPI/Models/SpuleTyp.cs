@@ -9,18 +9,21 @@ namespace TrenchAPI.Models
         public int SpuleTypID { get; set; }
         
         [Column(TypeName = "VARCHAR(100)")]
-        public string TK_Name { get; set; } = "";
+        public string Name { get; set; } = "";
 
         [Column(TypeName = "int")]
         public int Schenkel { get; set; }
 
-        [Column(TypeName = "int")]
-        public int BB { get; set; }
+        [Column(TypeName = "decimal(8,3)")]
+        public int Bandbreite { get; set; }
 
-        [Column(TypeName = "int")]
-        public int SH { get; set; }
+        [Column(TypeName = "decimal(8,3)")]
+        public int Schichthoehe { get; set; }
 
-        [Column(TypeName = "int")]
-        public int dm { get; set; }
+        [Column(TypeName = "decimal(8,3)")]
+        public int Durchmesser { get; set; }
+
+        [Column(TypeName = "VARCHAR(250)")]
+        public string Notiz { get; set; } = "";
     }
 }
