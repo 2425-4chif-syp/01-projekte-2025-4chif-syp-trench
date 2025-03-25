@@ -7,7 +7,7 @@ namespace TrenchAPI.Core.Entities
     public class EntityObject : IEntityObject
     {
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [Timestamp]
         public byte[]? RowVersion
