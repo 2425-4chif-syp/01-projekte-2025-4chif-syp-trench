@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TrenchAPI.Core.Entities;
 
 namespace TrenchAPI.Persistence
@@ -11,6 +12,7 @@ namespace TrenchAPI.Persistence
 
         public DbSet<Messeinstellung> Messeinstellung { get; set; }
         public DbSet<Messsonde> Messsonde { get; set; }
+        public DbSet<Messsondenkalibrierung> Messsondenkalibrierung { get; set; }
         public DbSet<MesssondenTyp> MesssondenTyp { get; set; }
         public DbSet<Messung> Messung { get; set; }
         public DbSet<Messwert> Messwert { get; set; }
