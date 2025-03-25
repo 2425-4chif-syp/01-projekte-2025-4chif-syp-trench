@@ -3,12 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
-    public class SensorTyp
+    public class MesssondenTyp : EntityObject
     {
-        [Required]
-        [Key]
-        public int SensorTypID { get; set; }
-
         [Column(TypeName = "int")]
         public int Wicklungszahl { get; set; }
 
@@ -17,5 +13,8 @@ namespace TrenchAPI.Core.Entities
 
         [Column(TypeName = "decimal(8,1)")]
         public decimal Hoehe { get; set; }
+
+        [Column(TypeName = "VARCHAR(250)")]
+        public string Notiz { get; set; } = "";
     }
 }
