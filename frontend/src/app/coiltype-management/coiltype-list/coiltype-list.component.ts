@@ -27,11 +27,11 @@ export class CoiltypeListComponent {
 
   public readonly keysAsColumns: { [key: string]: string } = {
     'id': 'ID',
-    'tK_Name': 'Name',
+    'name': 'Name',
     'schenkel': 'Schenkelanzahl',
-    'bb': 'Bandbreite',
-    'sh': 'Schichthöhe',
-    'dm': 'Durchmesser'
+    'bandbreite': 'Bandbreite',
+    'schichthoehe': 'Schichthöhe',
+    'durchmesser': 'Durchmesser'
   }
 
   constructor(public coiltypesService:CoiltypesService, public coilsService:CoilsService, private router:Router) {

@@ -40,7 +40,7 @@
                   <label for="bandbreite" class="form-label">Bandbreite (mm):</label>
                   <input type="number" class="form-control" id="bandbreite" placeholder="Bandbreite in mm"
                       [(ngModel)]="selectedCoiltype.bandbreite" min="0"
-                      [class.is-invalid]="saveError && isFieldInvalid('bb')">
+                      [class.is-invalid]="saveError && isFieldInvalid('bandbreite')">
                   <div class="invalid-feedback">Bitte geben Sie eine gültige Bandbreite ein.</div>
               </div>
 
@@ -48,7 +48,7 @@
                   <label for="schichthoehe" class="form-label">Schichthöhe (mm):</label>
                   <input type="number" class="form-control" id="schichthoehe" placeholder="Schichthöhe in mm"
                       [(ngModel)]="selectedCoiltype.schichthoehe" min="0"
-                      [class.is-invalid]="saveError && isFieldInvalid('sh')">
+                      [class.is-invalid]="saveError && isFieldInvalid('schichthoehe')">
                   <div class="invalid-feedback">Bitte geben Sie eine gültige Schichthöhe ein.</div>
               </div>
 
@@ -56,7 +56,7 @@
                   <label for="durchmesser" class="form-label">Durchmesser (mm):</label>
                   <input type="number" class="form-control" id="durchmesser" placeholder="Durchmesser in mm"
                       [(ngModel)]="selectedCoiltype.durchmesser" min="0"
-                      [class.is-invalid]="saveError && isFieldInvalid('dm')">
+                      [class.is-invalid]="saveError && isFieldInvalid('durchmesser')">
                   <div class="invalid-feedback">Bitte geben Sie einen gültigen Durchmesser ein.</div>
               </div>
 
