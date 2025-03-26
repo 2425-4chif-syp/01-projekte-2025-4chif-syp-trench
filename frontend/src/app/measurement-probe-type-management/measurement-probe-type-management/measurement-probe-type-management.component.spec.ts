@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MeasurementProbeTypeManagementComponent } from './measurement-probe-type-management.component';
+import { MeasurementProbeTypeManagementComponent } from '../measurement-probe-type-management.component';
 
 describe('MeasurementProbeTypeManagementComponent', () => {
   let component: MeasurementProbeTypeManagementComponent;
