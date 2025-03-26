@@ -32,7 +32,7 @@ export class CoilListComponent {
     'omega': 'Omega'
   }
   public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
-    'coiltype': (element:Coil) => element.coiltype?.tK_Name ?? `Unnamed Coiltype (ID ${element.coiltypeId})`
+    'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coiltype (ID ${element.coiltypeId})`
   }
 
   constructor(public coilsService:CoilsService) {

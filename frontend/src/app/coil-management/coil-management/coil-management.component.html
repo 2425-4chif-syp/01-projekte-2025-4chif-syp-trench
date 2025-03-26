@@ -14,7 +14,7 @@
           <div class="border p-2 rounded bg-light">
               <div *ngIf="selectedCoil.coiltype; else noCoiltype">
                   <p class="mb-1"><strong>ID:</strong> {{ selectedCoiltype!.id }}</p>
-                  <p class="mb-0"><strong>Name:</strong> {{ selectedCoiltype!.tK_Name }}</p>
+                  <p class="mb-0"><strong>Name:</strong> {{ selectedCoiltype!.name }}</p>
               </div>
               <ng-template #noCoiltype>
                   <p class="text-danger mb-0">Kein Spulentyp ausgewählt</p>

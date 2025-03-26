@@ -19,11 +19,12 @@ export class CoilsService implements ListService<Coil> {
       id: 0,
       coiltype: null,
       coiltypeId: null,
-      ur: null, 
+      ur: null,
       einheit: null,
       auftragsnummer: null,
       auftragsPosNr: null,
-      omega: null
+      omega: null,
+      notiz: null
     };
   }
 

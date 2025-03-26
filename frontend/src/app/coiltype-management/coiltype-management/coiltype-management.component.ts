@@ -51,7 +51,7 @@ export class CoiltypeManagementComponent {
   
       this.saveError = true; 
   
-      const requiredFields = ['tK_Name', 'bb', 'sh', 'dm'];
+      const requiredFields = ['name', 'bandbreite', 'schichthoehe', 'durchmesser'];
       const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
   
       if (invalidFields.length > 0) {

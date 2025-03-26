@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { measurementSettings } from '../data/measurement-settings/measurement-settings';
+import { MeasurementSettings } from '../data/measurement-settings/measurement-settings';
 import { MeasurementProbeManagementComponent } from './measurement-probe-management/measurement-probe-management.component';
 import { CommonModule } from '@angular/common';
 
@@ -16,12 +16,16 @@ export class MeasurementSettingsComponent {
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5]) 
   saveMessage: string | null = null
 
-  measurementSettings: measurementSettings = {
-    bemessungsSpannung: 0,
-    bemessungsFrequenz: 0,
-    sondenProSchenkel: 1,
-    messStärke: 0,
-    zeitstempel: null
+  measurementSettings: MeasurementSettings = {
+    coil: null,
+    coilId: null,
+    measurementProbeType: null,
+    measurementProbeTypeId: null,
+    wicklungszahl: null,
+    bemessungsspannung: null,
+    bemessungsfrequenz: null,
+    sondenProSchenkel: null,
+    notiz: null
   };
 
   saveChanges() {

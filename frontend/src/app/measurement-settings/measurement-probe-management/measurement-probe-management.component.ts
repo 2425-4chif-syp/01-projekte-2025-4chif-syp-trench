@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from '../../app.component';
-import { MeasurementProbeService } from '../../data/measurement-probes/measurement-probe.service';
 
 @Component({
   selector: 'app-measurement-probe-management',
@@ -16,7 +15,7 @@ import { MeasurementProbeService } from '../../data/measurement-probes/measureme
 })
 export class MeasurementProbeManagementComponent {
 
-  constructor(private measurementProbeService: MeasurementProbeService) { }
+  constructor() { }
 
   yokeAmount = 4;
   selectedProbe: MeasurementProbe | undefined;
@@ -27,15 +26,6 @@ export class MeasurementProbeManagementComponent {
 
   measurementProbes: MeasurementProbe[] = [];
   groupedProbes = signal<MeasurementProbe[][]>([]);
-
-  ngOnInit() {
-    this.measurementProbeService.loadAllMeasurementProbes().then(() => {
-    console.log("Component", this.measurementProbeService.measurementProbes);
-    this.measurementProbes = this.measurementProbeService.measurementProbes;
-    this.groupSensors();
-    console.log("Grouped Probes", this.groupedProbes());
-    });
-  }
 
   groupSensors() {
     if (this.measurementProbes.length > 0) {
@@ -72,34 +62,13 @@ export class MeasurementProbeManagementComponent {
   deleteProbe(): void {
     if (this.probeToDelete) {
       this.measurementProbes = this.measurementProbes.filter(probe => probe.id !== this.probeToDelete!.id);
-      this.measurementProbeService.deleteMeasurementProbe(this.probeToDelete!);
       this.probeToDelete = undefined;
       this.groupSensors();
     }
   }
 
   saveChanges(): void {
-    if (!this.isValidProbe(this.selectedProbe!)) {
-      this.errorMessage = "Bitte gültige Werte eingeben! Keine leeren Felder, keine 0 oder negativen Zahlen.";
-      return;
-    }
-  
-    if (this.isNewProbe) {
-      this.measurementProbeService.addMeasurementProbe(this.selectedProbe!).then(() => {
-        return this.measurementProbeService.loadAllMeasurementProbes();
-      }).then(() => {
-        this.measurementProbes = this.measurementProbeService.measurementProbes;
-        this.groupSensors();
-      });
-    } else {
-      const index = this.measurementProbes.findIndex(probe => probe.id === this.selectedProbe!.id);
-      if (index !== -1) {
-        this.measurementProbes[index] = { ...this.selectedProbe! };
-        this.measurementProbeService.updateMeasurementProbe(this.selectedProbe!);
-        this.groupSensors();
-      }
-    }
-  
+    alert('Not implemented (measurement probes deleted from backend)');
     this.closeModal();
   }
   

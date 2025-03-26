@@ -161,7 +161,7 @@ export class CoilManagementComponent {
     if (!this.selectedCoilId) return 'Spulentyp auswählen';
     const coil = this.coilsService.elements.find(coil => coil.id === this.selectedCoilId);
     const coiltype = this.coiltypesService.elements.find(type => type.id === this.selectedCoil?.coiltypeId);
-    return coiltype ? coiltype.tK_Name : 'Spulentyp auswählen';
+    return coiltype ? coiltype.name : 'Spulentyp auswählen';
   }
 
 

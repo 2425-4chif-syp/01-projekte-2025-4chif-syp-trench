@@ -12,7 +12,7 @@
                   id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
                   (ngModelChange)="onCoiltypeSelectionChange($event)">
                   <option *ngFor="let coiltype of coiltypesService.elements" [value]="coiltype.id">
-                      Spulentyp #{{ coiltype.id }} ({{ coiltype.tK_Name }})
+                      Spulentyp #{{ coiltype.id }} ({{ coiltype.name }})
                   </option>
               </select>
           </div>
@@ -22,8 +22,8 @@
               <div class="mb-3">
                   <label for="name" class="form-label">Spulentyp-Name:</label>
                   <input type="text" class="form-control" id="name" placeholder="Spulenname eingeben"
-                      [(ngModel)]="selectedCoiltype.tK_Name"
-                      [class.is-invalid]="saveError && isFieldInvalid('tK_Name')">
+                      [(ngModel)]="selectedCoiltype.name"
+                      [class.is-invalid]="saveError && isFieldInvalid('name')">
                   <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
               </div>
 
@@ -39,7 +39,7 @@
               <div class="mb-3">
                   <label for="bandbreite" class="form-label">Bandbreite (mm):</label>
                   <input type="number" class="form-control" id="bandbreite" placeholder="Bandbreite in mm"
-                      [(ngModel)]="selectedCoiltype.bb" min="0"
+                      [(ngModel)]="selectedCoiltype.bandbreite" min="0"
                       [class.is-invalid]="saveError && isFieldInvalid('bb')">
                   <div class="invalid-feedback">Bitte geben Sie eine gültige Bandbreite ein.</div>
               </div>
@@ -47,7 +47,7 @@
               <div class="mb-3">
                   <label for="schichthoehe" class="form-label">Schichthöhe (mm):</label>
                   <input type="number" class="form-control" id="schichthoehe" placeholder="Schichthöhe in mm"
-                      [(ngModel)]="selectedCoiltype.sh" min="0"
+                      [(ngModel)]="selectedCoiltype.schichthoehe" min="0"
                       [class.is-invalid]="saveError && isFieldInvalid('sh')">
                   <div class="invalid-feedback">Bitte geben Sie eine gültige Schichthöhe ein.</div>
               </div>
@@ -55,7 +55,7 @@
               <div class="mb-3">
                   <label for="durchmesser" class="form-label">Durchmesser (mm):</label>
                   <input type="number" class="form-control" id="durchmesser" placeholder="Durchmesser in mm"
-                      [(ngModel)]="selectedCoiltype.dm" min="0"
+                      [(ngModel)]="selectedCoiltype.durchmesser" min="0"
                       [class.is-invalid]="saveError && isFieldInvalid('dm')">
                   <div class="invalid-feedback">Bitte geben Sie einen gültigen Durchmesser ein.</div>
               </div>
@@ -87,8 +87,8 @@
       <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
           <app-coil-visualization *ngIf="selectedCoiltype"
               [n]="selectedCoiltype.schenkel"
-              [bb]="selectedCoiltype.bb!"
-              [dm]="selectedCoiltype.dm!"
+              [bb]="selectedCoiltype.bandbreite!"
+              [dm]="selectedCoiltype.durchmesser!"
               [size]="512">
           </app-coil-visualization>
       </div>

@@ -9,4 +9,5 @@ export interface Coil {
     auftragsnummer: number | null;
     auftragsPosNr: number | null;
     omega: number | null;
+    notiz: string | null;
 }

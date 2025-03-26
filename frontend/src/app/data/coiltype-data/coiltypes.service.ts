@@ -20,11 +20,11 @@ export class CoiltypesService implements ListService<Coiltype> {
   public get newElement(): Coiltype {
     return {
       id: 0,
-      tK_Name: '',
+      name: '',
       schenkel: 0,
-      bb: 0,
-      sh: 0,
-      dm: 0
+      bandbreite: 0,
+      schichthoehe: 0,
+      durchmesser: 0
     };
   }
 
