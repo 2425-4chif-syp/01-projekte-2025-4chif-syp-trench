@@ -11,7 +11,7 @@ import { DisplacementVisualizationComponent } from "./displacement-visualization
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { MeasurementProbeManagementComponent } from './measurement-settings/measurement-probe-management/measurement-probe-management.component';
-import { MeasurementProbeTypeManagementComponent } from './measurement-settings/measurement-probe-type-management/measurement-probe-type-management/measurement-probe-type-management.component';
+import { MeasurementProbeTypeManagementComponent } from './measurement-probe-type-management/measurement-probe-type-management.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
