@@ -24,7 +24,8 @@ export class CoiltypesService implements ListService<Coiltype> {
       schenkel: 0,
       bandbreite: 0,
       schichthoehe: 0,
-      durchmesser: 0
+      durchmesser: 0,
+      notiz: ""
     };
   }
 
