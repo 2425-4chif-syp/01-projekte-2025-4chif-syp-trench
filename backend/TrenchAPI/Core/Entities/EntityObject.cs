@@ -8,12 +8,5 @@ namespace TrenchAPI.Core.Entities
     {
         [Key]
         public int ID { get; set; }
-
-        [Timestamp]
-        public byte[]? RowVersion
-        {
-            get;
-            set;
-        }
     }
 }
