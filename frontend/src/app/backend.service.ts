@@ -103,6 +103,7 @@ export class BackendService {
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      notiz: coiltype.notiz
     };
   }
 
@@ -114,6 +115,7 @@ export class BackendService {
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      notiz: coiltype.notiz
     };
   }
 
