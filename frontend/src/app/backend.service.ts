@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { Coil } from './data/coil-data/coil';
 import { Coiltype } from './data/coiltype-data/coiltype';
 import { MeasurementSettings } from './data/measurement-settings/measurement-settings';
+import { MeasurementProbeType } from './data/measurement-probe-type-data/measurement-probe-type';
 
 @Injectable({
   providedIn: 'root'
@@ -117,6 +118,25 @@ export class BackendService {
     };
   }
 
+  private measurementProbeTypeBackendToFrontend(measurementProbeType: any): MeasurementProbeType {
+    return {
+      id: measurementProbeType.id,
+      breite: measurementProbeType.breite,
+      hoehe: measurementProbeType.hoehe,
+      wicklungszahl: measurementProbeType.wicklungszahl,
+      notiz: measurementProbeType.notiz
+    };
+  }
+  private measurementProbeTypeFrontendToBackend(measurementProbeType: MeasurementProbeType): any { 
+    return {
+      id: measurementProbeType.id,
+      breite: measurementProbeType.breite,
+      hoehe: measurementProbeType.hoehe,
+      wicklungszahl: measurementProbeType.wicklungszahl,
+      notiz: measurementProbeType.notiz
+    };
+  }
+
   private measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSettings {
     return {
       coil: measurementSettings.spule,
@@ -188,6 +208,28 @@ export class BackendService {
   public async deleteCoiltype(coiltype: Coiltype): Promise<void> {
     await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
   }
+
+  public async getAllMeasurementProbeTypes(): Promise<MeasurementProbeType[]> {
+    const response:any = await this.httpGetRequest('MessondenTyp');
+    return response.map((measurementProbeType: any) => (this.measurementProbeTypeBackendToFrontend(measurementProbeType)));
+  }
+  public async getMeasurementProbeType(id: number): Promise<MeasurementProbeType> {
+    const response:any = await this.httpGetRequest('MesssondenTyp/' + id);
+    return this.measurementProbeTypeBackendToFrontend(response);
+  }
+  public async addMeasurementProbeType(measurementProbeType:MeasurementProbeType): Promise<MeasurementProbeType> {
+    const response:any = await this.httpPostRequest('MesssondenTyp', this.measurementProbeTypeBackendToFrontend(measurementProbeType));
+    return this.measurementProbeTypeBackendToFrontend(response);
+  }
+
+  public async updateMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
+    await this.httpPutRequest('MesssondenTyp/' + measurementProbeType.id, this.measurementProbeTypeFrontendToBackend(measurementProbeType));
+  }
+
+  public async deleteMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
+    await this.httpDeleteRequest('MesssondenTyp/' + measurementProbeType.id);
+  }
+
 
   public async addMeasurementSettings(measurementSettings: MeasurementSettings): Promise<MeasurementSettings>{
     const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));
