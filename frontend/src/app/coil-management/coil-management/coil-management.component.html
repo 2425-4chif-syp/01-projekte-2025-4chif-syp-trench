@@ -10,7 +10,7 @@
 
   <div *ngIf="selectedCoil" class="card shadow-sm p-4 w-100" style="max-width: 850px; min-height: 600px;">
       <div class="mb-3">
-          <label for="coiltypeSelect" class="form-label">Spulentyp: <span class="text-danger">*</span></label>
+          <label class="form-label">Spulentyp: <span class="text-danger">*</span></label>
           <div class="border p-2 rounded bg-light">
               <div *ngIf="selectedCoil.coiltype; else noCoiltype">
                   <p class="mb-1"><strong>ID:</strong> {{ selectedCoiltype!.id }}</p>
@@ -63,6 +63,15 @@
               [class.is-invalid]="saveError && isFieldInvalid('omega')">
           <div class="invalid-feedback">Bitte geben Sie einen Omega-Wert ein.</div>
       </div>
+
+    <div class="form-group mb-4">
+      <label for="content">Notiz:</label>
+      <div class="content-editor">
+                    <textarea id="content" class="form-control form-control-lg"
+                              name="content" rows="3" [(ngModel)]="selectedCoil.notiz"
+                              placeholder="Notiz..."></textarea>
+      </div>
+    </div>
 
       <!-- Buttons -->
       <div class="d-flex justify-content-between mt-4">

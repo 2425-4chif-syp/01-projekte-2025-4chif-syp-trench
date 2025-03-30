@@ -109,7 +109,7 @@ export class BackendService {
 
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      spuleTypID: coiltype.id,
+      id: coiltype.id,
       name: coiltype.name,
       schenkel: coiltype.schenkel,
       bandbreite: coiltype.bandbreite,
