@@ -29,7 +29,7 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
 
     const original:MeasurementProbeType|undefined = this.elements.find(c => c.id === id);
     if (original === undefined) {
-      throw new Error(`Coil with ID ${id} not found.`);
+      throw new Error(`Element with ID ${id} not found.`);
     }
     
     return {...original};
@@ -81,7 +81,7 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
 
     const index = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
-      throw new Error(`Coil with ID ${id} not found.`);
+      throw new Error(`Element with ID ${id} not found.`);
     }
 
     await this.backendService.deleteMeasurementProbeType(this.elements[index]);
@@ -98,5 +98,4 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
   
     this.selectedElementCopy = this.getCopyElement(elementIdNumber);
   }
-  
 }

@@ -1,1 +1,7 @@
-<p>measurement-probe-type-list works!</p>
+<div class="container">
+    <app-generic-list 
+    [keysAsColumns]="keysAsColumns"
+    [elementValueToStringMethods]="elementValueToStringMethods"
+    [newElementButtonLabel]="'Neuer Messsondentyp'"
+    (onElementClick)="openProbeType($event)" />
+</div>

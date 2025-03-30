@@ -19,7 +19,7 @@ import { LIST_SERVICE_TOKEN } from '../../data/list-service';
   styleUrl: './coil-list.component.scss'
 })
 export class CoilListComponent {
-  public hoveredCoiltype: Coil | null = null;
+  public hoveredCoil: Coil | null = null;
   public mousePosition: { x: number, y: number }|null = null;
 
   public readonly keysAsColumns: { [key: string]: string } = {
@@ -32,7 +32,7 @@ export class CoilListComponent {
     'omega': 'Omega'
   }
   public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
-    'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coiltype (ID ${element.coiltypeId})`
+    'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coil (ID ${element.coiltypeId})`
   }
 
   constructor(public coilsService:CoilsService) {
