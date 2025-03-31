@@ -1,4 +1,4 @@
-<div class="scrollable-list">
+<div class="scrollable-list mt-5">
     <table class="table table-striped table-hover">
         <thead>
             <tr>
@@ -26,5 +26,8 @@
     </table>
 </div>
 @if (!isSelector) {
-    <button class="btn btn-primary new-coil-button" id="new-element-button" (click)="addNewElement()">{{newElementButtonLabel}}</button>
+    <div class="text-center mt-5">
+        <button class="btn btn-primary new-coil-button mt-5" id="new-element-button" (click)="addNewElement()">{{newElementButtonLabel}}</button>
+    </div>
+
 }
