@@ -25,7 +25,7 @@ asciidocs/
             > The team of the project and what our tasks are.
         use-case.adoc
             > The use case of the project. What are the Roles and what are they allowed to do?
-        erd.adoc
+        erd.puml
             > The entity relationship diagram of the project.
     
     project-guidelines/
