@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
-import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
-import { Coiltype } from '../../data/coiltype-data/coiltype';
-import { CoilsService } from '../../data/coil-data/coils.service';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
-import { GenericListComponent } from '../../generic-list/generic-list.component';
-import { LIST_SERVICE_TOKEN } from '../../data/list-service';
+import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
+import { GenericListComponent } from '../../../../generic-list/components/generic-list.component';
+import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
+import { CoiltypesService } from '../../services/coiltypes.service';
+import { Coiltype } from '../../interfaces/coiltype';
+import { CoilsService } from '../../../coil/services/coils.service';
 
 @Component({
   selector: 'app-coiltype-list',

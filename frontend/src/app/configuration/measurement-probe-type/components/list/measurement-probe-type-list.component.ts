@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { MeasurementProbeType } from '../../data/measurement-probe-type-data/measurement-probe-type';
-import { MeasurementProbeTypesService } from '../../data/measurement-probe-type-data/measurement-probe-types.service';
-import { GenericListComponent } from '../../generic-list/generic-list.component';
-import { LIST_SERVICE_TOKEN } from '../../data/list-service';
+import { GenericListComponent } from '../../../../generic-list/components/generic-list.component';
+import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
+import { MeasurementProbeTypesService } from '../../services/measurement-probe-types.service';
+import { MeasurementProbeType } from '../../interfaces/measurement-probe-type';
 
 @Component({
   selector: 'app-measurement-probe-type-list',

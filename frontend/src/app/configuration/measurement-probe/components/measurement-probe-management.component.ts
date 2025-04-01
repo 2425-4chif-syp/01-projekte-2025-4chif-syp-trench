@@ -1,10 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { MeasurementProbe } from '../../data/measurement-probes/measurement-probes';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppComponent } from '../../app.component';
+import { MeasurementProbe } from '../interfaces/measurement-probes';
 
 @Component({
   selector: 'app-measurement-probe-management',
@@ -29,7 +26,6 @@ export class MeasurementProbeManagementComponent {
 
   groupSensors() {
     if (this.measurementProbes.length > 0) {
-      const yokeCount = this.measurementProbes[0];
       this.groupedProbes.set(Array.from({ length: this.yokeAmount }, () => []));
 
       for (const probe of this.measurementProbes) {

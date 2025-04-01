@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { NonNullAssert } from '@angular/compiler';
-import { BackendService } from '../../backend.service';
-import { ListService } from '../list-service';
-import { MeasurementProbeType } from './measurement-probe-type';
+import { ListService } from '../../../generic-list/services/list-service';
+import { MeasurementProbeType } from '../interfaces/measurement-probe-type';
+import { BackendService } from '../../../backend.service';
 
 @Injectable({
   providedIn: 'root'

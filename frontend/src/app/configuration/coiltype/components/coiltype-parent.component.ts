@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CoiltypeListComponent } from '../coiltype-list/coiltype-list.component';
-import { CoiltypeManagementComponent } from '../coiltype-management/coiltype-management.component';
-import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
+import { CoiltypeListComponent } from './list/coiltype-list.component';
+import { CoiltypeManagementComponent } from './management/coiltype-management.component';
+import { CoiltypesService } from '../services/coiltypes.service';
 
 @Component({
   selector: 'app-coiltype-parent',

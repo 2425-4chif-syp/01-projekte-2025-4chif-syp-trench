@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
-import { Coiltype } from '../../data/coiltype-data/coiltype';
-import { CoilVisualizationComponent } from '../../coil-visualization/coil-visualization.component';
-import { Router } from '@angular/router';
+import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
+import { CoiltypesService } from '../../services/coiltypes.service';
+import { Coiltype } from '../../interfaces/coiltype';
 
 @Component({
   selector: 'app-coiltype-management',

@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
-import { MeasurementProbeTypeListComponent } from '../measurement-probe-type-list/measurement-probe-type-list.component';
-import { MeasurementProbeManagementComponent } from "../../measurement-settings/measurement-probe-management/measurement-probe-management.component";
-import { MeasurementProbeTypeManagementComponent } from '../measurement-probe-type-management/measurement-probe-type-management.component';
-import { MeasurementProbeTypesService } from '../../data/measurement-probe-type-data/measurement-probe-types.service';
-
+import { MeasurementProbeTypesService } from '../services/measurement-probe-types.service';
+import { MeasurementProbeTypeListComponent } from './list/measurement-probe-type-list.component';
+import { MeasurementProbeTypeManagementComponent } from './management/measurement-probe-type-management.component';
 @Component({
   selector: 'app-measurement-probe-type-parent',
   standalone: true,

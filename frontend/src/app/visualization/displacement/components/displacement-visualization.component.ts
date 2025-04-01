@@ -1,7 +1,7 @@
 import { Component, HostListener, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DisplacementService } from '../displacement-calculation.service';
 import {CommonModule, DecimalPipe, NgForOf} from "@angular/common";
+import { DisplacementService } from '../services/displacement-calculation.service';
 
 @Component({
   selector: 'app-displacement-visualization',

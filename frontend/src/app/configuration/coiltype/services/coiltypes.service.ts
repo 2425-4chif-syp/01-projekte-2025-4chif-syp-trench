@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Coiltype } from './coiltype';
-import { BackendService } from '../../backend.service';
-import { ListService } from '../list-service';
-
+import { ListService } from '../../../generic-list/services/list-service';
+import { Coiltype } from '../interfaces/coiltype';
+import { BackendService } from '../../../backend.service';
 @Injectable({
   providedIn: 'root'
 })

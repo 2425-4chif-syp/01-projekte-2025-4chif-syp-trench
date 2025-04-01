@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { Coil } from './data/coil-data/coil';
-import { Coiltype } from './data/coiltype-data/coiltype';
-import { MeasurementSettings } from './data/measurement-settings/measurement-settings';
-import { MeasurementProbeType } from './data/measurement-probe-type-data/measurement-probe-type';
+import { HttpClient } from "@angular/common/http";
+import { Coil } from './configuration/coil/interfaces/coil';
+import { Coiltype } from './configuration/coiltype/interfaces/coiltype';
+import { MeasurementProbeType } from './configuration/measurement-probe-type/interfaces/measurement-probe-type';
+import { MeasurementSettings } from './configuration/measurement-settings/interfaces/measurement-settings';
 
 @Injectable({
   providedIn: 'root'

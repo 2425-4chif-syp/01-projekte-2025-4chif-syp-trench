@@ -1,4 +1,4 @@
-import { Coiltype } from "../coiltype-data/coiltype";
+import { Coiltype } from "../../coiltype/interfaces/coiltype";
 
 export interface Coil {
     id: number | null;

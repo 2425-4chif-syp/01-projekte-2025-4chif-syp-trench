@@ -1,4 +1,4 @@
-import { Injectable, InjectionToken } from "@angular/core";
+import { InjectionToken } from "@angular/core";
 
 // Needed to inject generic ListService into the component
 export const LIST_SERVICE_TOKEN = new InjectionToken<ListService<any>>('ListServiceToken');

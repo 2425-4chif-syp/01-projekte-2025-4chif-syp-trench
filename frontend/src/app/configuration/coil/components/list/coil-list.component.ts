@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { CoilsService } from '../../data/coil-data/coils.service';
-import { Coil } from '../../data/coil-data/coil';
-import { GenericListComponent } from '../../generic-list/generic-list.component';
-import { LIST_SERVICE_TOKEN } from '../../data/list-service';
+import { CoilsService } from '../../services/coils.service';
+import { GenericListComponent } from '../../../../generic-list/components/generic-list.component';
+import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
+import { Coil } from '../../interfaces/coil';
 
 @Component({
   selector: 'app-coil-list',

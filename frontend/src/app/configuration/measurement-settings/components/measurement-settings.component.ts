@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MeasurementSettings } from '../data/measurement-settings/measurement-settings';
-import { MeasurementProbeManagementComponent } from './measurement-probe-management/measurement-probe-management.component';
 import { CommonModule } from '@angular/common';
+import { MeasurementProbeManagementComponent } from '../../measurement-probe/components/measurement-probe-management.component';
+import { MeasurementSettings } from '../interfaces/measurement-settings';
 
 
 @Component({

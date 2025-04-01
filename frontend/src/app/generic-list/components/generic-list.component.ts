@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Inject, InjectionToken, Input, Output, Type } from '@angular/core';
+import { Component, HostListener, Inject, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { LIST_SERVICE_TOKEN, ListService } from '../data/list-service';
 import { EventEmitter } from '@angular/core';
+import { LIST_SERVICE_TOKEN, ListService } from '../services/list-service';
 
 @Component({
   selector: 'app-generic-list',

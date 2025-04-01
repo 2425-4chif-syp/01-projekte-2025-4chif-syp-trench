@@ -1,5 +1,5 @@
-import { Coil } from "../coil-data/coil"
-import { MeasurementProbeType } from "../measurement-probe-type-data/measurement-probe-type"
+import { Coil } from "../../coil/interfaces/coil";
+import { MeasurementProbeType } from "../../measurement-probe-type/interfaces/measurement-probe-type";
 
 export interface MeasurementSettings{
     coil: Coil | null,

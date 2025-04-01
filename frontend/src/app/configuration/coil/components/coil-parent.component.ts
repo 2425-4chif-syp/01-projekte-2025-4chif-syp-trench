@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { CoilManagementComponent } from '../coil-management/coil-management.component';
-import { CoilsService } from '../../data/coil-data/coils.service';
 import { CommonModule } from '@angular/common';
-import { CoilListComponent } from '../coil-list/coil-list.component';
+import { CoilListComponent } from './list/coil-list.component';
+import { CoilManagementComponent } from './management/coil-management.component';
+import { CoilsService } from '../services/coils.service';
 
 @Component({
   selector: 'app-coil-parent',

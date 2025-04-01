@@ -1,13 +1,11 @@
 import { Component, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { CoilsService } from '../../data/coil-data/coils.service';
-import { Coil } from '../../data/coil-data/coil';
-import { CoiltypesService } from '../../data/coiltype-data/coiltypes.service';
-import { Coiltype } from '../../data/coiltype-data/coiltype';
-import { MeasurementManagementComponent } from '../../measurement-management/measurement-management.component';
 import { Router } from '@angular/router';
-//import { MeasuringProbeMeasurementComponent } from "./measuring-probe-measurement/measuring-probe-measurement.component";
+import { CoilsService } from '../../services/coils.service';
+import { CoiltypesService } from '../../../coiltype/services/coiltypes.service';
+import { Coil } from '../../interfaces/coil';
+import { Coiltype } from '../../../coiltype/interfaces/coiltype';
 
 @Component({
   selector: 'app-coil-management',

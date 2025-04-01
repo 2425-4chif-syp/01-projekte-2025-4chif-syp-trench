@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MeasurementProbeTypesService } from '../../data/measurement-probe-type-data/measurement-probe-types.service';
+import { MeasurementProbeTypesService } from '../../services/measurement-probe-types.service';
 
 export interface MeasurementProbeType {
   id: number | null;
@@ -24,7 +23,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
   saveError: boolean = false;
   originalProbeType: MeasurementProbeType | null = null;
 
-  constructor(private measurementProbeTypesService: MeasurementProbeTypesService, private router: Router) {}
+  constructor(private measurementProbeTypesService: MeasurementProbeTypesService) {}
 
   ngOnInit() {
     if (this.selectedProbeType) {
