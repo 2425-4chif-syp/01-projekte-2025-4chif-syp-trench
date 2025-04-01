@@ -1,4 +1,4 @@
-import { MeasurementProbeType } from "./measurement-probe-type"
+import { MeasurementProbeType } from "../measurement-probe-type-data/measurement-probe-type"
 
 export interface MeasurementProbe {
     id: number,

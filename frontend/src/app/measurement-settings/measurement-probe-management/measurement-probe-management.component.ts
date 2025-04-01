@@ -99,6 +99,6 @@ export class MeasurementProbeManagementComponent {
     this.isNewProbe = true;
 
     this.openModal(newProbe);
-    this.selectedProbe = newProbe;
+    //this.selectedProbe = newProbe;
   }
 }

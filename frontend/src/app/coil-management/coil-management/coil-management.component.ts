@@ -163,23 +163,5 @@ export class CoilManagementComponent {
     const coiltype = this.coiltypesService.elements.find(type => type.id === this.selectedCoil?.coiltypeId);
     return coiltype ? coiltype.name : 'Spulentyp auswählen';
   }
-
-
-  sortTable(column: keyof Coiltype) {
-    // Sortierlogik für die Tabelle
-    const direction = !this.coiltypesService.sortDirection[column];
-    this.coiltypesService.sortDirection[column] = direction;
-
-    this.coiltypesService.elements.sort((a, b) => {
-      if (a[column]! < b[column]!) {
-        return direction ? -1 : 1;
-      }
-      if (a[column]! > b[column]!) {
-        return direction ? 1 : -1;
-      }
-      return 0;
-    });
-  }
-
 }
 
