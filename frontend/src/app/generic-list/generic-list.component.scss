@@ -15,7 +15,9 @@
 
 .scrollable-list {
     flex-grow: 1; 
-    max-height: 79%; 
+    //max-height: 79%; 
+    max-height: 60vh;
+    min-height: 60vh;
     width: 100%; 
     overflow-y: auto; 
     margin-bottom: 20px; 

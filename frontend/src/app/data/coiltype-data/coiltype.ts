@@ -5,4 +5,5 @@ export interface Coiltype {
     bandbreite: number | null;
     schichthoehe: number | null;
     durchmesser: number | null;
+    notiz: string | null;
 }

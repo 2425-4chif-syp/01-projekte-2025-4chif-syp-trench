@@ -103,17 +103,19 @@ export class BackendService {
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      notiz: coiltype.notiz
     };
   }
 
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      spuleTypID: coiltype.id,
+      id: coiltype.id,
       name: coiltype.name,
       schenkel: coiltype.schenkel,
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      notiz: coiltype.notiz
     };
   }
 
