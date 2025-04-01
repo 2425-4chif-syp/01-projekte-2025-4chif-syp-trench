@@ -18,7 +18,7 @@ image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-arch
 include::./use-case.adoc[]
 
 == Entity Relationship Diagram
-include::./erd.adoc[]
+include::./erd.puml[]
 
 == File Structure
 include::./file-structure.adoc[]
