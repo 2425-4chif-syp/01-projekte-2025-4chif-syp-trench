@@ -12,6 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth/auth.guard';
 import { MeasurementProbeManagementComponent } from './measurement-settings/measurement-probe-management/measurement-probe-management.component';
 import { MeasurementProbeTypeManagementComponent } from './measurement-settings/measurement-probe-type-management/measurement-probe-type-management/measurement-probe-type-management.component';
+import { MeasurementHistoryComponent } from './measurement-history/measurement-history.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -23,5 +24,6 @@ export const routes: Routes = [
     {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
     {path: 'tolerance-settings', component: ToleranceSettingsComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-probe-type-management', component: MeasurementProbeTypeManagementComponent, canActivate: [AuthGuard]}
+    {path: 'measurement-probe-type-management', component: MeasurementProbeTypeManagementComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]}
 ];
