@@ -1,16 +1,14 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { CoilManagementComponent } from './coil-management/coil-management/coil-management.component';
-import { MeasurementManagementComponent } from './measurement-management/measurement-management.component';
-import { CoilListComponent } from './coil-management/coil-list/coil-list.component';
-import { CoilParentComponent } from './coil-management/coil-parent/coil-parent.component';
-import { CoiltypeParentComponent } from './coiltype-management/coiltype-parent/coiltype-parent.component';
-import { MeasurementSettingsComponent } from './measurement-settings/measurement-settings.component';
-import { ToleranceSettingsComponent } from './tolerance-settings/tolerance-settings.component';
-import { DisplacementVisualizationComponent } from "./displacement-visualization/displacement-visualization.component";
-import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './auth/auth.guard';
-import { MeasurementProbeTypeParentComponent } from './measurement-probe-type-management/measurement-probe-type-parent/measurement-probe-type-parent.component';
+import { LoginComponent } from './auth/login/login.component';
+import { CoilParentComponent } from './configuration/coil/components/coil-parent.component';
+import { CoiltypeParentComponent } from './configuration/coiltype/components/coiltype-parent.component';
+import { MeasurementManagementComponent } from './configuration/measurement/components/measurement-management.component';
+import { MeasurementSettingsComponent } from './configuration/measurement-settings/components/measurement-settings.component';
+import { ToleranceSettingsComponent } from './configuration/tolerance-settings/components/tolerance-settings.component';
+import { DisplacementVisualizationComponent } from './visualization/displacement/components/displacement-visualization.component';
+import { MeasurementProbeTypeParentComponent } from './configuration/measurement-probe-type/components/measurement-probe-type-parent.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
