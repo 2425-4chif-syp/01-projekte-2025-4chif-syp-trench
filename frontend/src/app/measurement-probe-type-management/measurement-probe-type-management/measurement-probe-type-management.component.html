@@ -1,71 +1,81 @@
 <div class="row mt-5 justify-content-center">
     <div class="card col-5 mt-5 d-flex flex-column">
-        <h2 class="text-center mt-5">Messsondentypen Verwaltung</h2>
-        <div class="row flex-grow-1">
-            <!-- Eingabefelder -->
-            <div class="col-md-12 mt-5">
-                <div class="mb-3">
-                    <label for="hoehe" class="form-label">Höhe (mm)</label>
-                    <input id="hoehe" type="number" class="form-control" [(ngModel)]="hoehe">
-                </div>
-                <div class="mb-3">
-                    <label for="breite" class="form-label">Breite (mm)</label>
-                    <input id="breite" type="number" class="form-control" [(ngModel)]="breite">
-                </div>
-                <div class="mb-3">
-                    <label for="wicklungszahl" class="form-label">Wicklungszahl</label>
-                    <input id="wicklungszahl" type="number" class="form-control" [(ngModel)]="wicklungszahl">
-                </div>
-            </div>
-            <div class="mt-auto mb-4 px-3">
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-primary w-100 me-2">Speichern</button>
-                    <button class="btn btn-secondary w-100 me-2">Zurück</button>
-                    <button class="btn btn-danger w-100">Löschen</button>
-                </div>
-            </div>
+      <h2 class="text-center mt-5">Messsondentypen Verwaltung</h2>
+      <div class="row flex-grow-1">
+        <!-- Eingabefelder -->
+        <div class="col-md-12 mt-5">
+          <div class="mb-3">
+            <label for="hoehe" class="form-label">Höhe (mm)</label>
+            <input id="hoehe" type="number" class="form-control" [(ngModel)]="selectedProbeType!.hoehe" min="0"
+              [class.is-invalid]="saveError && isFieldInvalid('hoehe')">
+            <div class="invalid-feedback">Bitte geben Sie eine Höhe ein.</div>
+          </div>
+          <div class="mb-3">
+            <label for="breite" class="form-label">Breite (mm)</label>
+            <input id="breite" type="number" class="form-control" [(ngModel)]="selectedProbeType!.breite" min="0"
+              [class.is-invalid]="saveError && isFieldInvalid('breite')">
+            <div class="invalid-feedback">Bitte geben Sie eine Breite ein.</div>
+          </div>
+          <div class="mb-3">
+            <label for="wicklungszahl" class="form-label">Wicklungszahl</label>
+            <input id="wicklungszahl" type="number" class="form-control" [(ngModel)]="selectedProbeType!.wicklungszahl" min="0"
+              [class.is-invalid]="saveError && isFieldInvalid('wicklungszahl')">
+            <div class="invalid-feedback">Bitte geben Sie eine Wicklungszahl ein.</div>
+          </div>
+          <div class="mb-3">
+            <label for="notiz" class="form-label">Notiz</label>
+            <textarea id="notiz" class="form-control" [(ngModel)]="selectedProbeType!.notiz"></textarea>
+          </div>
         </div>
-    </div> 
-
-    <div class="col-6">
-        <!-- SVG-Zeichnung -->
-        <div class="d-flex justify-content-center align-items-center mt-5">
-            <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
-                <!-- Rechteck der Sonde -->
-                <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="red" fill="none"
-                    stroke-width="2"></rect>
-
-                <!-- Pfeil für die Breite (horizontale Linie unterhalb der Sonde) -->
-                <line [attr.x1]="40" [attr.y1]="scaledHeight + 60" [attr.x2]="40 + scaledWidth"
-                    [attr.y2]="scaledHeight + 60" stroke="black" stroke-width="2"></line>
-                <!-- Pfeilspitzen für die Breite -->
-                <polygon [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + 
-                              (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + 
-                              (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)" fill="black"></polygon>
-                <polygon
-                    [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
-                    fill="black"></polygon>
-                <!-- Beschriftung für die Breite -->
-                <text [attr.x]="40 + scaledWidth / 2" [attr.y]="scaledHeight + 75" font-size="14" text-anchor="middle">
-                    {{ breite }} mm
-                </text>
-
-                <!-- Pfeil für die Höhe (vertikale Linie rechts neben der Sonde) -->
-                <line [attr.x1]="scaledWidth + 60" [attr.y1]="40" [attr.x2]="scaledWidth + 60"
-                    [attr.y2]="40 + scaledHeight" stroke="black" stroke-width="2"></line>
-                <!-- Pfeilspitzen für die Höhe -->
-                <polygon
-                    [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
-                    fill="black"></polygon>
-                <polygon [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + 
-                              (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + 
-                              (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)" fill="black"></polygon>
-                <!-- Beschriftung für die Höhe -->
-                <text [attr.x]="scaledWidth + 55" [attr.y]="20 + scaledHeight / 2" font-size="14" text-anchor="middle"
-                    [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'">
-                    {{ hoehe }} mm
-                </text>
-            </svg>
+        <div class="mt-auto mb-4 px-3">
+          <div class="d-flex justify-content-between">
+            <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+            <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+            <button class="btn btn-danger w-100" (click)="deleteProbeType()">Löschen</button>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  
+    <div class="col-6">
+      <!-- SVG-Zeichnung -->
+      <div class="d-flex justify-content-center align-items-center mt-5">
+        <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
+          <!-- Rechteck der Sonde -->
+          <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="red" fill="none"
+            stroke-width="2"></rect>
+  
+          <!-- Pfeil für die Breite (horizontale Linie unterhalb der Sonde) -->
+          <line [attr.x1]="40" [attr.y1]="scaledHeight + 60" [attr.x2]="40 + scaledWidth"
+            [attr.y2]="scaledHeight + 60" stroke="black" stroke-width="2"></line>
+          <!-- Pfeilspitzen für die Breite -->
+          <polygon [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + 
+                            (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + 
+                            (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)" fill="black"></polygon>
+          <polygon
+            [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
+            fill="black"></polygon>
+          <!-- Beschriftung für die Breite -->
+          <text [attr.x]="40 + scaledWidth / 2" [attr.y]="scaledHeight + 75" font-size="14" text-anchor="middle">
+            {{ selectedProbeType?.breite ?? 0 }} mm
+          </text>
+  
+          <!-- Pfeil für die Höhe (vertikale Linie rechts neben der Sonde) -->
+          <line [attr.x1]="scaledWidth + 60" [attr.y1]="40" [attr.x2]="scaledWidth + 60"
+            [attr.y2]="40 + scaledHeight" stroke="black" stroke-width="2"></line>
+          <!-- Pfeilspitzen für die Höhe -->
+          <polygon
+            [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
+            fill="black"></polygon>
+          <polygon [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + 
+                            (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + 
+                            (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)" fill="black"></polygon>
+          <!-- Beschriftung für die Höhe -->
+          <text [attr.x]="scaledWidth + 55" [attr.y]="20 + scaledHeight / 2" font-size="14" text-anchor="middle"
+            [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'">
+            {{ selectedProbeType?.hoehe ?? 0 }} mm
+          </text>
+        </svg>
+      </div>
+    </div>
+  </div>

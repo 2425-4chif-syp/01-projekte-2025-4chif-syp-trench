@@ -210,7 +210,7 @@ export class BackendService {
   }
 
   public async getAllMeasurementProbeTypes(): Promise<MeasurementProbeType[]> {
-    const response:any = await this.httpGetRequest('MessondenTyp');
+    const response:any = await this.httpGetRequest('MesssondenTyp');
     return response.map((measurementProbeType: any) => (this.measurementProbeTypeBackendToFrontend(measurementProbeType)));
   }
   public async getMeasurementProbeType(id: number): Promise<MeasurementProbeType> {
