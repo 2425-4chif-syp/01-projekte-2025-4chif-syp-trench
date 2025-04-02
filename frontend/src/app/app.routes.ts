@@ -9,12 +9,8 @@ import { MeasurementSettingsComponent } from './configuration/measurement-settin
 import { ToleranceSettingsComponent } from './configuration/tolerance-settings/components/tolerance-settings.component';
 import { DisplacementVisualizationComponent } from './visualization/displacement/components/displacement-visualization.component';
 import { MeasurementProbeTypeParentComponent } from './configuration/measurement-probe-type/components/measurement-probe-type-parent.component';
-import {
-  MeasurementSettingsListComponent
-} from "./configuration/measurement-settings/components/list/measurement-settings-list.component";
-import {
-  MeasurementSettingsParentComponent
-} from "./configuration/measurement-settings/components/measurement-settings-parent.component";
+import { StartMeasurementComponent } from './configuration/start-measurement/start-measurement.component';
+import { MeasurementSettingsParentComponent } from "./configuration/measurement-settings/components/measurement-settings-parent.component";
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -27,5 +23,6 @@ export const routes: Routes = [
     {path: 'tolerance-settings', component: ToleranceSettingsComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
     {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
+    {path: 'start-measurement', component: StartMeasurementComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]}
 ];

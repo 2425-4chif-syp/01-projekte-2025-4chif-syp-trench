@@ -2,10 +2,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 5127
+EXPOSE 8080
 
 # 2) SDK image for building
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy the solution file
@@ -22,8 +22,8 @@ RUN dotnet restore "backend.sln"
 COPY . .
 
 # Build & Publish each project separately (or you could build the entire solution)
-RUN dotnet publish "TrenchAPI/TrenchAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish/api
-RUN dotnet publish "ConsoleMQTT/ConsoleMQTT.csproj" -c $BUILD_CONFIGURATION -o /app/publish/mqtt
+RUN dotnet publish "TrenchAPI/TrenchAPI.csproj" -c Release -o /app/publish/api
+RUN dotnet publish "ConsoleMQTT/ConsoleMQTT.csproj" -c Release -o /app/publish/mqtt
 
 # 3) Final stage: copy published files and run
 FROM base AS final
