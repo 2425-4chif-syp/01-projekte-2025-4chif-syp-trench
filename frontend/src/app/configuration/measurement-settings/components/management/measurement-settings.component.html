@@ -4,17 +4,31 @@
             <h1 class="mb-4 text-center">Messeinstellungen</h1>
             <div class="card shadow-sm p-4" >
                 <div class="mb-3">
+                    <label class="form-label">Spule: <span class="text-danger">*</span></label>
+                    <div class="border p-2 rounded bg-light">
+                        <div *ngIf="true; else noCoiltype">
+                            <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.coilId}}</p>
+                            <p class="mb-0"><strong>Spulentyp:</strong> {{ selectedMeasurementSetting?.coil?.coiltype?.name }}</p>
+                        </div>
+                        <ng-template #noCoiltype>
+                            <p class="text-danger mb-0">Keine Spule ausgewählt</p>
+                        </ng-template>
+                    </div>
+                    <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openCoilSelect()">Spule ändern...</button>
+                </div>
+
+                <div class="mb-3">
                     <label for="bemessungs-spannung" class="form-label">Bemessungsspannung:</label>
                     <input type="number" class="form-control" id="bemessungs-spannung"
                         placeholder="Bemessungsspannung" [(ngModel)]="measurementSettings.bemessungsspannung" min="0">
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz:</label>
                     <input type="number" class="form-control" id="bemessungs-frequenz"
                         placeholder="Bemessungsfrequenz" [(ngModel)]="measurementSettings.bemessungsfrequenz" min="0">
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="sonden-pro-schenkel" class="form-label">Sonden pro Schenkel:</label>
                     <select class="form-select" id="sonden-pro-schenkel"
@@ -24,26 +38,26 @@
                         }
                     </select>
                 </div>
-                
+
                 <div class="mb-3">
                     <label for="mess-stärke" class="form-label">Messstärke:</label>
                     <input type="number" class="form-control" id="mess-stärke" placeholder="Messstärke"
                         [(ngModel)]="measurementSettings.bemessungsfrequenz" min="0">
                 </div>
-                
+
                 <div class="text-center mt-4">
                     <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
                 </div>
-                
+
                 <div class="text-center mt-3" *ngIf="saveMessage">
                     <span class="fw-bold text-success">{{saveMessage}}</span>
                 </div>
             </div>
         </div>
 
-        
-        <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
+
+        <!--<div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
             <app-measurement-probe-management></app-measurement-probe-management>
-        </div>
+        </div> -->
     </div>
 </div>
