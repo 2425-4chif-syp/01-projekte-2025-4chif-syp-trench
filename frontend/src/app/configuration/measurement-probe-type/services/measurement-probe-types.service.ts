@@ -11,6 +11,8 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
   public selectedElementCopy: MeasurementProbeType|null = null;
   public selectedElementIsNew: boolean = false;
 
+  public isProbeSelector: boolean = false;
+
   constructor(private backendService:BackendService) { }
 
   public get newElement(): MeasurementProbeType {
@@ -30,15 +32,15 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
     if (original === undefined) {
       throw new Error(`Element with ID ${id} not found.`);
     }
-    
+
     return {...original};
   }
-  
+
 
   public async reloadElements():Promise<void> {
     this.elements = await this.backendService.getAllMeasurementProbeTypes();
   }
-  
+
   public async reloadElementWithId(id:number):Promise<MeasurementProbeType> {
     id = Number(id);
 
@@ -50,9 +52,9 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
       this.elements[index] = element;
     }
 
-    return element;  
+    return element;
   }
-  
+
   public async updateOrCreateElement(element:MeasurementProbeType):Promise<void> {
     if (this.selectedElementIsNew) {
       this.selectedElementCopy = await this.postSelectedElement();
@@ -61,7 +63,7 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
     }
 
     await this.backendService.updateMeasurementProbeType(element);
-  }  
+  }
 
   public async postSelectedElement():Promise<MeasurementProbeType> {
     if (this.selectedElementCopy === null) {
@@ -94,7 +96,7 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
 
     const elementIdNumber: number = Number(id);
     await this.reloadElementWithId(elementIdNumber);
-  
+
     this.selectedElementCopy = this.getCopyElement(elementIdNumber);
   }
 }
