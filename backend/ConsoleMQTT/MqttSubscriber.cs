@@ -58,7 +58,7 @@ namespace ConsoleMqtt
                     var message = $"{topic}:{value}";
                     var buffer = Encoding.UTF8.GetBytes(message);
                     
-                    foreach (var client in _webSocketClients.ToList())
+                    foreach (var client in _webSocketClients)
                     {
                         if (client.State == WebSocketState.Open)
                         {
