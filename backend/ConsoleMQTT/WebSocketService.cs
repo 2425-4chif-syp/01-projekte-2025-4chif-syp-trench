@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -7,36 +6,42 @@ using System.Threading.Tasks;
 
 public class WebSocketService
 {
-    private readonly List<WebSocket> _clients = new();
+    private readonly ClientWebSocket _webSocket;
 
-    public async Task HandleWebSocketAsync(WebSocket webSocket)
+    public WebSocketService()
     {
-        _clients.Add(webSocket);
-        Console.WriteLine("🔗 Neuer WebSocket-Client verbunden");
-
-        var buffer = new byte[1024 * 4];
-        while (webSocket.State == WebSocketState.Open)
-        {
-            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            if (result.MessageType == WebSocketMessageType.Close)
-            {
-                break;
-            }
-        }
-
-        _clients.Remove(webSocket);
-        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Client getrennt", CancellationToken.None);
+        _webSocket = new ClientWebSocket();
     }
 
-    public async Task BroadcastAsync(string message)
+    public async Task StartWebSocketAsync()
     {
-        var buffer = Encoding.UTF8.GetBytes(message);
-        foreach (var client in _clients)
+        Uri serverUri = new Uri("ws://localhost:5127/ws"); // WebSocket-Server-URL
+        await _webSocket.ConnectAsync(serverUri, CancellationToken.None);
+        Console.WriteLine("✅ WebSocket verbunden!");
+
+        // Empfang von Nachrichten
+        await ReceiveMessagesAsync();
+    }
+
+    public async Task ReceiveMessagesAsync()
+    {
+        byte[] buffer = new byte[1024];
+
+        while (_webSocket.State == WebSocketState.Open)
         {
-            if (client.State == WebSocketState.Open)
+            var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            if (result.MessageType == WebSocketMessageType.Text)
             {
-                await client.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                Console.WriteLine($"📡 Empfangene Nachricht: {message}");
             }
         }
+    }
+
+    public async Task SendMessageAsync(string message)
+    {
+        byte[] buffer = Encoding.UTF8.GetBytes(message);
+        await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        Console.WriteLine($"📤 Gesendete Nachricht: {message}");
     }
 }

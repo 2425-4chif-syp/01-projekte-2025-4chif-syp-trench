@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Client.Options;
 
 public class MqttService
 {
@@ -20,10 +19,14 @@ public class MqttService
 
     public async Task StartAsync()
     {
-        var options = new MqttClientOptionsBuilder()
-            .WithWebSocketServer("ws://vm90.htl-leonding.ac.at:9001/ws")
-            .WithCredentials("student", "passme")
-            .Build();
+        var options = new MqttClientOptions
+        {
+            ChannelOptions = new MqttClientWebSocketOptions
+            {
+                Uri = "ws://vm90.htl-leonding.ac.at:9001/ws"
+            },
+            Credentials = new MqttClientCredentials("student", Encoding.UTF8.GetBytes("passme"))
+        };
 
         _mqttClient.ConnectedAsync += async e =>
         {
@@ -34,7 +37,7 @@ public class MqttService
         _mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
             string topic = e.ApplicationMessage.Topic;
-            string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+            string payload = Encoding.UTF8.GetString(e.ApplicationMessage.PayloadSegment);
             Console.WriteLine($"📡 Empfangene Nachricht: {topic} -> {payload}");
             
             // Senden der Daten über WebSocket an Frontend
