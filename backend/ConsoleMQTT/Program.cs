@@ -53,8 +53,8 @@ namespace MQTTClientApp
                     for (int j = 1; j <= 8; j++)
                     {
                         string topic = $"trench_adc_test/S{i}S{j}";
-                        double randomValue = random.NextDouble(); // Random number between 0 and 1
-                        string payload = randomValue.ToString("F4"); // Format to 4 decimal places
+                        double randomValue = 1000 + random.NextDouble()*1000; // Random number between 1000 and 2000
+                        string payload = randomValue.ToString("F2"); // Format to 4 decimal places
 
                         var message = new MqttApplicationMessageBuilder()
                             .WithTopic(topic)
