@@ -48,20 +48,23 @@ namespace MQTTClientApp
                 var messages = new List<MqttApplicationMessage>();
 
                 // Generate random values for all sensors
-                for (int i = 1; i <= 6; i++)
+                for (int i = 1; i <= 4; i++)
                 {
-                    string topic = $"trench_test/sensor_{i}";
-                    double randomValue = random.NextDouble(); // Random number between 0 and 1
-                    string payload = randomValue.ToString("F4"); // Format to 4 decimal places
+                    for (int j = 1; j <= 8; j++)
+                    {
+                        string topic = $"trench_adc_test/S{i}S{j}";
+                        double randomValue = random.NextDouble(); // Random number between 0 and 1
+                        string payload = randomValue.ToString("F4"); // Format to 4 decimal places
 
-                    var message = new MqttApplicationMessageBuilder()
-                        .WithTopic(topic)
-                        .WithPayload(payload)
-                        .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
-                        .WithRetainFlag()
-                        .Build();
+                        var message = new MqttApplicationMessageBuilder()
+                            .WithTopic(topic)
+                            .WithPayload(payload)
+                            .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
+                            .WithRetainFlag()
+                            .Build();
 
-                    messages.Add(message); // Add the message to the list
+                        messages.Add(message); // Add the message to the list
+                    }
                 }
 
                 // Publish all messages concurrently
