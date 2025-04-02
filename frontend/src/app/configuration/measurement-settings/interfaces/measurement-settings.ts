@@ -10,6 +10,7 @@ export interface MeasurementSetting{
     wicklungszahl: number | null,
     bemessungsspannung: number | null,
     bemessungsfrequenz: number | null,
+    pruefspannung: number | null,
     sondenProSchenkel: number | null,
     notiz: string | null,
 }

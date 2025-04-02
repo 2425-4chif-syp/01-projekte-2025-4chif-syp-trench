@@ -25,6 +25,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       wicklungszahl: null,
       bemessungsspannung: null,
       bemessungsfrequenz: null,
+      pruefspannung: null,
       sondenProSchenkel: null,
       notiz: null
     };

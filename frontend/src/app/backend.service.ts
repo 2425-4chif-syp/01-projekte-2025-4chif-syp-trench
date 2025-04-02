@@ -149,6 +149,7 @@ export class BackendService {
       wicklungszahl: measurementSettings.wicklungszahl,
       bemessungsspannung: measurementSettings.bemessungsspannung,
       bemessungsfrequenz: measurementSettings.bemessungsfrequenz,
+      pruefspannung: measurementSettings.pruefspannung,
       sondenProSchenkel: measurementSettings.sonden_pro_schenkel,
       notiz: measurementSettings.notiz
     };
@@ -162,6 +163,7 @@ export class BackendService {
       wicklungszahl: measurementSettings.wicklungszahl,
       bemessungsspannung: measurementSettings.bemessungsspannung,
       bemessungsfrequenz: measurementSettings.bemessungsfrequenz,
+      pruefspannung: measurementSettings.pruefspannung,
       sonden_pro_schenkel: measurementSettings.sondenProSchenkel,
       notiz: measurementSettings.notiz
     }
