@@ -7,6 +7,7 @@ import { Coil } from '../../../coil/interfaces/coil';
 import { MeasurementSettingsService } from '../../services/measurement-settings.service';
 import { Router } from '@angular/router';
 import { CoilsService } from '../../../coil/services/coils.service';
+import {MeasurementProbeTypesService} from "../../../measurement-probe-type/services/measurement-probe-types.service";
 
 
 @Component({
@@ -23,8 +24,13 @@ export class MeasurementSettingsComponent implements OnInit {
 
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     //console.log(this.coilsService.selectedCoilCopy);
-    //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)!
+
+
     return this.measurementSettingsService.selectedElementCopy;
+  }
+
+  public set selectedMeasurementSetting(value: MeasurementSetting) {
+    this.selectedMeasurementSetting = value;
   }
 
   public get selectedSettingId(): number | undefined {
@@ -34,7 +40,7 @@ export class MeasurementSettingsComponent implements OnInit {
     this.measurementSettingsService.selectElement(Number(id));
   }
 
-  measurementSettings: MeasurementSetting = {
+  /*measurementSettings: MeasurementSetting = {
     id: null,
     coil: null,
     coilId: null,
@@ -46,7 +52,7 @@ export class MeasurementSettingsComponent implements OnInit {
     bemessungsfrequenz: null,
     sondenProSchenkel: null,
     notiz: null
-  };
+  };*/
 
 
   ngOnInit() {
@@ -57,7 +63,7 @@ export class MeasurementSettingsComponent implements OnInit {
     console.log("TestInit")
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsSerivce: CoilsService ,private router: Router){}
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeService: MeasurementProbeTypesService , private router: Router){}
 
   async saveChanges() {
     if (this.originalMeasurementSetting) return;
@@ -73,28 +79,24 @@ export class MeasurementSettingsComponent implements OnInit {
     }*/
 
     try {
-      let tmpSetting: MeasurementSetting = {
-        id: 1,
+      /*let tmpSetting: MeasurementSetting = {
+        id: 0,
         coil: this.selectedMeasurementSetting?.coil!,
         coilId: this.selectedMeasurementSetting?.coilId!,
-        measurementProbeType: {
-          id: 5,
-          breite: 250,
-          hoehe: 150,
-          wicklungszahl: 15,
-          notiz: "",
-        },
-        measurementProbeTypeId: 5,
+        measurementProbeType: this.selectedMeasurementSetting?.measurementProbeType!,
+        measurementProbeTypeId: this.selectedMeasurementSetting?.measurementProbeTypeId!,
         pruefspannung: this.measurementSettings.pruefspannung,
         //wicklungszahl: 15,
         bemessungsspannung: this.measurementSettings.bemessungsspannung,
         bemessungsfrequenz: this.measurementSettings.bemessungsfrequenz,
         sondenProSchenkel: Number(this.measurementSettings.sondenProSchenkel),
         notiz: ""
-      };
+      };*/
 
-      console.log(tmpSetting!);
-      await this.measurementSettingsService.updateOrCreateElement(tmpSetting!);
+      this.selectedMeasurementSetting!.id = 0;
+      this.selectedMeasurementSetting!.notiz = "";
+      console.log(this.selectedMeasurementSetting!);
+      await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting!);
       this.onSettingSelectionChange(this.selectedSettingId!);
 
       this.saveMessage = "Änderungen gespeichert!";
@@ -104,7 +106,7 @@ export class MeasurementSettingsComponent implements OnInit {
 
       //this.saveError = false;
 
-      this.originalMeasurementSetting = {...tmpSetting!};
+      this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
       this.saveMessage = "Fehler beim Speichern!";
@@ -119,10 +121,18 @@ export class MeasurementSettingsComponent implements OnInit {
 
   openCoilSelect()
   {
-    this.coilsSerivce.selectedElementCopy = null;
-    this.coilsSerivce.isCoilSelector = true;
+    this.coilsService.selectedElementCopy = null;
+    this.coilsService.isCoilSelector = true;
 
     this.router.navigate(['/coil-management']);
+  }
+
+  openProbeSelect()
+  {
+    this.probeService.selectedElementCopy = null;
+    this.probeService.isProbeSelector = true;
+
+    this.router.navigate(['/measurement-probe-type-management']);
   }
 
   backToListing(){
