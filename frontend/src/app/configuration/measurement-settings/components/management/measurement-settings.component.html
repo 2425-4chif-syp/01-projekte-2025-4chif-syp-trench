@@ -6,11 +6,11 @@
                 <div class="mb-3">
                     <label class="form-label">Spule: <span class="text-danger">*</span></label>
                     <div class="border p-2 rounded bg-light">
-                        <div *ngIf="true; else noCoiltype">
+                        <div *ngIf="selectedMeasurementSetting?.coil; else noCoil">
                             <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.coilId}}</p>
                             <p class="mb-0"><strong>Spulentyp:</strong> {{ selectedMeasurementSetting?.coil?.coiltype?.name }}</p>
                         </div>
-                        <ng-template #noCoiltype>
+                        <ng-template #noCoil>
                             <p class="text-danger mb-0">Keine Spule ausgewählt</p>
                         </ng-template>
                     </div>
@@ -18,13 +18,13 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="bemessungs-spannung" class="form-label">Bemessungsspannung:</label>
+                    <label for="bemessungs-spannung" class="form-label">Bemessungsspannung [kV]:</label>
                     <input type="number" class="form-control" id="bemessungs-spannung"
                         placeholder="Bemessungsspannung" [(ngModel)]="measurementSettings.bemessungsspannung" min="0">
                 </div>
 
                 <div class="mb-3">
-                    <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz:</label>
+                    <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz [Hz]:</label>
                     <input type="number" class="form-control" id="bemessungs-frequenz"
                         placeholder="Bemessungsfrequenz" [(ngModel)]="measurementSettings.bemessungsfrequenz" min="0">
                 </div>
@@ -40,9 +40,9 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="mess-stärke" class="form-label">Messstärke:</label>
+                    <label for="mess-stärke" class="form-label">Prüfspannung [V]:</label>
                     <input type="number" class="form-control" id="mess-stärke" placeholder="Messstärke"
-                        [(ngModel)]="measurementSettings.bemessungsfrequenz" min="0">
+                        [(ngModel)]="measurementSettings.bemessungsspannung" min="0">
                 </div>
 
                 <div class="text-center mt-4">
