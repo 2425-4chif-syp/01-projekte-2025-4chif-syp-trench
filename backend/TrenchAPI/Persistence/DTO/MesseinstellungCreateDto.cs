@@ -11,6 +11,7 @@ namespace TrenchAPI.Persistence.DTO
         public int Sonden_pro_schenkel { get; set; }
         public decimal Bemessungsspannung { get; set; }
         public decimal Bemessungsfrequenz { get; set; }
+        public decimal Pruefspannung { get; set; }
         public string Notiz { get; set; } = "";
     }
 }

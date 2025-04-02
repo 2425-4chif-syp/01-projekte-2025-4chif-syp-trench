@@ -23,6 +23,8 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "decimal(8,3)")]
         public decimal Bemessungsfrequenz { get; set; }
 
+        public decimal Pruefspannung { get; set; }
+
         public string Notiz { get; set; } = "";
     }
 }

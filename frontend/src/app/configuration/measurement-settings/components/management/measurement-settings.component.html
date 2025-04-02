@@ -1,0 +1,142 @@
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-6">
+            <h1 class="mb-4 text-center">Messeinstellungen</h1>
+            <div class="card shadow-sm p-4" >
+              <div class="row">
+                <div class="mb-3 col-6">
+                  <label class="form-label">Spule: <span class="text-danger">*</span></label>
+                  <div class="border p-2 rounded bg-light">
+                    <div *ngIf="selectedMeasurementSetting?.coil; else noCoil">
+                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.coilId}}</p>
+                      <p class="mb-0"><strong>Spulentyp:</strong> {{ selectedMeasurementSetting?.coil?.coiltype?.name }}</p>
+                    </div>
+                    <ng-template #noCoil>
+                      <p class="text-danger mb-0">Keine Spule ausgewählt</p>
+                    </ng-template>
+                  </div>
+                  <div class="text-center">
+                    <button
+                      class="btn btn-sm mt-2"
+                      [ngClass]="{
+                        'btn-outline-danger': saveError && isFieldInvalid('coilId'),
+                        'btn-outline-secondary': !(saveError && isFieldInvalid('coilId'))
+                      }"
+                      (click)="openCoilSelect()">
+                      Spule ändern...
+                    </button>
+                  </div>
+                </div>
+
+                <div class="mb-3 col-6">
+                  <label class="form-label">Messonden-Typ: <span class="text-danger">*</span></label>
+                  <div class="border p-2 rounded bg-light">
+                    <div *ngIf="selectedMeasurementSetting?.measurementProbeType; else noProbe">
+                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.measurementProbeTypeId}}</p>
+                      <p class="mb-0"><strong>Breite:</strong> {{ selectedMeasurementSetting?.measurementProbeType!.breite }}</p>
+                    </div>
+                    <ng-template #noProbe>
+                      <p class="text-danger mb-0">Kein Messsondentyp ausgewählt</p>
+                    </ng-template>
+                  </div>
+                  <div class="text-center">
+                    <button
+                      class="btn btn-sm mt-2"
+                      [ngClass]="{
+                        'btn-outline-danger': saveError && isFieldInvalid('measurementProbeTypeId'),
+                        'btn-outline-secondary': !(saveError && isFieldInvalid('measurementProbeTypeId'))
+                      }"
+                      (click)="openProbeSelect()">
+                      Messsondentyp ändern...
+                    </button>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="bemessungs-spannung" class="form-label">Bemessungsspannung [kV]: <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="bemessungs-spannung"
+                       placeholder="Bemessungsspannung"
+                       [(ngModel)]="selectedMeasurementSetting!.bemessungsspannung"
+                       min="0"
+                       [class.is-invalid]="saveError && isFieldInvalid('bemessungsspannung')">
+              </div>
+
+
+              <div class="mb-3">
+                <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz [Hz]: <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="bemessungs-frequenz"
+                       placeholder="Bemessungsfrequenz"
+                       [(ngModel)]="selectedMeasurementSetting!.bemessungsfrequenz"
+                       min="0"
+                       [class.is-invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
+              </div>
+
+
+              <div class="mb-3">
+                <label for="sonden-pro-schenkel" class="form-label">Sonden pro Schenkel: <span class="text-danger">*</span></label>
+                <select class="form-select" id="sonden-pro-schenkel"
+                        [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
+                        [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')">
+                  @for (amount of schenkelAnzahl(); track $index) {
+                    <option [value]="amount">{{ amount }}</option>
+                  }
+                </select>
+              </div>
+
+
+              <div class="mb-3">
+                <label for="mess-stärke" class="form-label">Prüfspannung [V]: <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="mess-stärke"
+                       placeholder="Messstärke"
+                       [(ngModel)]="selectedMeasurementSetting!.pruefspannung"
+                       min="0"
+                       [class.is-invalid]="saveError && isFieldInvalid('pruefspannung')">
+              </div>
+
+              <div class="text-center mt-4">
+                 <div class="d-flex justify-content-between mt-4">
+                  <button [disabled]="!hasChanges() && coilOrProbeChanged()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+                  <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+                   <button *ngIf="!measurementSettingsService.selectedElementIsNew"
+                           class="btn btn-danger w-100"
+                           (click)="openDeleteModal()">
+                     Löschen
+                   </button>
+                 </div>
+              </div>
+              <div class="text-danger fw-bold text-center mt-3" *ngIf="saveError && saveMessage">
+                {{ saveMessage }}
+              </div>
+            </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog"
+     [ngClass]="{'show': showDeleteModal}"
+     [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Messeinstellung löschen?</h5>
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Messeinstellung löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteSetting()">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

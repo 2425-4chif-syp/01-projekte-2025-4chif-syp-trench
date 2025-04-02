@@ -76,81 +76,116 @@
 
 <!-- Visualization -->
 
-<svg
-  width="1024"
-  height="1024"
-  viewBox="0 0 24 24"
-  fill="none"
->
-  <g>
-    <!-- Border circle -->
-    <circle cx="12" cy="12" r="6" fill="none" stroke="#00000080" [attr.stroke-width]="isHoveringOverBorder ? '0.25' : '0.125'" 
-      (mouseenter)="onBorderMouseEnter()" (mouseleave)="onBorderMouseLeave()"
-    />
+<div id="visualization-container">
+  <svg
+    width="1024"
+    height="1024"
+    viewBox="0 0 24 24"
+    fill="none"
+    [attr.transform]="'rotate('+coilVisualizationRotation+')'"
+  >
+    <g>
+      <g (mouseenter)="onBorderMouseEnter()" (mouseleave)="onBorderMouseLeave()">
+        <!-- Border circle -->
+        <circle cx="12" cy="12" r="6" 
+        fill="none" 
+        stroke="#000000" 
+        [attr.stroke-width]="isHoveringOverBorder ? '0.125' : '0.0625'"
+        [attr.stroke-opacity]="isHoveringOverBorder ? '1' : '0.5'"
+        stroke-dasharray="0.0625,0.0625" 
+        />
 
-    <!-- Vectors -->
-    @for (branch of branchResults; track $index) {
-      <!-- TODO: The arrow should point towards the actual vector; currently the line goes to the vector, then the triangle goes beyond it -->
+        <!-- Border circle hitbox -->
+        <circle cx="12" cy="12" r="6"
+        stroke="transparent"
+        stroke-width="0.25"
+        />
+      </g>
+
+      <!-- Vectors -->
+      @for (branch of branchResults; track $index) {
+        <!-- TODO: The arrow should point towards the actual vector; currently the line goes to the vector, then the triangle goes beyond it -->
+        <g 
+          transform="translate(12, 12)"
+          (mouseenter)="onArrowMouseEnter($index)" (mouseleave)="onArrowMouseLeave($index)"
+        >
+          <!-- Arrow body -->
+          <line
+            x1="0"
+            y1="0"
+            [attr.x2]="scaledBranchResultX(branch, hoveredArrow === $index ? -0.25 : -0.125)"
+            [attr.y2]="scaledBranchResultY(branch, hoveredArrow === $index ? -0.25 : -0.125)"
+            [attr.stroke]="getArrowColor($index)"
+            [attr.stroke-width]="hoveredArrow === $index ? '0.25' : '0.125'"
+            [attr.stroke-opacity]="hoveredArrow === $index ? '1' : '0.75'"
+          /> <!-- [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.0625,0.0625'" --> 
+
+          <!-- Arrow triangle -->
+          <polygon
+            points="0.25,0 0,-0.125 0,0.125"
+            [attr.fill]="getArrowColor($index)"
+            [attr.transform]="'translate('
+              +scaledBranchResultX(branch, hoveredArrow === $index ? -0.25 : -0.125)+', '
+              +scaledBranchResultY(branch, hoveredArrow === $index ? -0.25 : -0.125)
+              +') rotate('+(branch.angle * radToDeg)+') scale('+(hoveredArrow === $index ? '1.5' : '1')+')'"
+            [attr.fill-opacity]="hoveredArrow === $index ? '1' : '0.75'"
+            />
+
+          <!-- Arrow hitbox -->
+          <line
+            x1="0"
+            y1="0"
+            [attr.x2]="scaledBranchResultX(branch, 0)"
+            [attr.y2]="scaledBranchResultY(branch, 0)"
+            stroke="transparent"
+            stroke-width="0.25"
+          /> 
+        </g>
+      }
+
+      <!-- Result vector -->
       <g 
         transform="translate(12, 12)"
-        (mouseenter)="onArrowMouseEnter($index)" (mouseleave)="onArrowMouseLeave($index)"
-      >
-        <!-- Arrow body -->
-        <line
-          x1="0"
-          y1="0"
-          [attr.x2]="branch.x / averageLength * 6"
-          [attr.y2]="branch.y / averageLength * 6"
-          [attr.stroke]="getArrowColor($index)"
-          [attr.stroke-width]="hoveredArrow === $index ? '0.25' : '0.125'"
-          [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.125,0.125'"
-        /> 
+        (mouseenter)="onArrowMouseEnter(-1)" (mouseleave)="onArrowMouseLeave(-1)"
+        >
+        @if (finalVector.length / averageLength > 0.01) {
+          <!-- Arrow body -->
+          @if (finalVector.length / averageLength >= 0.03) {
+            <line
+              x1="0"
+              y1="0"
+              [attr.x2]="scaledBranchResultX(finalVector, hoveredArrow === -1 ? -0.25 : -0.125)"
+              [attr.y2]="scaledBranchResultY(finalVector, hoveredArrow === -1 ? -0.25 : -0.125)"
+              [attr.stroke-width]="hoveredArrow === -1 ? '0.25' : '0.125'"
+              stroke="black"
+            />
+          }
 
-        <!-- Arrow triangle -->
-        <polygon
-          points="0.25,0 0,-0.125 0,0.125"
-          [attr.fill]="getArrowColor($index)"
-          [attr.transform]="'translate('+branch.x / averageLength * 6+', '+branch.y / averageLength * 6+') rotate('+(branch.angle * radToDeg)+') scale('+(hoveredArrow === $index ? '1.5' : '1')+')'"
-          />
-
-        <!-- Arrow hitbox -->
-        <line
-          x1="0"
-          y1="0"
-          [attr.x2]="branch.x / averageLength * 6"
-          [attr.y2]="branch.y / averageLength * 6"
-          stroke="transparent"
-          stroke-width="0.25"
-        /> 
+          <!-- Arrow triangle -->
+          <polygon
+            [attr.points]="(finalVector.length / averageLength >= 0.05 || hoveredArrow === -1) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
+            fill="black"
+            [attr.transform]="'translate('
+            +scaledBranchResultX(finalVector, hoveredArrow === -1 && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
+            +scaledBranchResultY(finalVector, hoveredArrow === -1 && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
+            +') rotate('+(finalVector.angle * radToDeg)
+            +') scale('+(hoveredArrow === -1 && finalVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
+            />
+          }
+        
+          <!-- Center circle -->
+          <circle cx="0" cy="0" [attr.r]="hoveredArrow === -1 ? '0.125' : '0.0625'" fill="black" />
       </g>
-    }
-
-    <!-- Result vector -->
-    <g 
-      transform="translate(12, 12)"
-      (mouseenter)="onArrowMouseEnter(-1)" (mouseleave)="onArrowMouseLeave(-1)"
-      >
-      <line
-        x1="0"
-        y1="0"
-        [attr.x2]="finalVector.x / averageLength * 6"
-        [attr.y2]="finalVector.y / averageLength * 6"
-        [attr.stroke-width]="hoveredArrow === -1 ? '0.4' : '0.25'"
-        stroke="black"
-      />
-
-      <polygon
-        points="0.5,0 0,-0.25 0,0.25"
-        fill="black"
-        [attr.transform]="'translate('+finalVector.x / averageLength * 6+', '+finalVector.y / averageLength * 6+') rotate('+(finalVector.angle * radToDeg)+') scale('+(hoveredArrow === -1 ? '1.5' : '1')+')'"
-        />
     </g>
+  </svg>
 
-    <!-- Center circle -->
-    <circle cx="12" cy="12" r="0.25" fill="black" />
-  </g>
-</svg>
-
+  <app-coil-visualization
+    [n]="displacementCalculation.branchAmount"
+    [size]="coilVisualizationSize"
+    [style.left.px]="coilVisualizationOffset.x"
+    [style.top.px]="coilVisualizationOffset.y"
+  ></app-coil-visualization>
+</div>
 
 @if (mousePosition !== null && (hoveredArrow !== null || isHoveringOverBorder)) {
   <div class="hover-tooltip" [ngStyle]="{

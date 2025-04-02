@@ -100,6 +100,7 @@ namespace TrenchAPI.Controllers
                 Sonden_pro_schenkel = messeinstellungDto.Sonden_pro_schenkel,
                 Bemessungsspannung = messeinstellungDto.Bemessungsspannung,
                 Bemessungsfrequenz = messeinstellungDto.Bemessungsfrequenz,
+                Pruefspannung = messeinstellungDto.Pruefspannung,
                 Notiz = messeinstellungDto.Notiz
             };
 
