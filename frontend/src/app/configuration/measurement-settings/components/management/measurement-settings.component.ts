@@ -30,7 +30,7 @@ export class MeasurementSettingsComponent implements OnInit {
   }
 
   public set selectedMeasurementSetting(value: MeasurementSetting) {
-    this.selectedMeasurementSetting = value;
+    this.measurementSettingsService.selectedElementCopy = value;
   }
 
   public get selectedSettingId(): number | undefined {
