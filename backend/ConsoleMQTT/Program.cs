@@ -1,41 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MQTTnet;
+using MQTTnet.Client;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MQTTnet;
-using MQTTnet.Client;
 
-namespace MQTTClientApp
+namespace ConsoleMqtt
 {
     class Program
     {
-        private static IMqttClient _mqttClient;
+        private static IMqttClient _mqttPublisherClient;
+        private static MqttSubscriber _subscriber;
 
         static async Task Main(string[] args)
         {
-            // Configure MQTT client options
+            // Create separate factory instances (optional)
             var factory = new MqttFactory();
-            _mqttClient = factory.CreateMqttClient();
 
-            var options = new MqttClientOptionsBuilder()
+            // Configure publisher (using your existing WebSocket config)
+            _mqttPublisherClient = factory.CreateMqttClient();
+            var publisherOptions = new MqttClientOptionsBuilder()
                 .WithWebSocketServer("ws://vm90.htl-leonding.ac.at:9001/ws")
                 .WithCredentials("student", "passme")
                 .Build();
 
-            // Connect to the MQTT broker
-            var connectResult = await _mqttClient.ConnectAsync(options, CancellationToken.None);
+            // Configure subscriber (using TCP/MQTT protocol)
+            var subscriberClient = factory.CreateMqttClient();
+            var subscriberOptions = new MqttClientOptionsBuilder()
+                .WithTcpServer("vm90.htl-leonding.ac.at") // Default port 1883
+                .WithCredentials("student", "passme")
+                .Build();
 
-            if (connectResult.ResultCode == MqttClientConnectResultCode.Success)
+            // Connect publisher
+            var pubConnectResult = await _mqttPublisherClient.ConnectAsync(publisherOptions);
+            if (pubConnectResult.ResultCode != MqttClientConnectResultCode.Success)
             {
-                Console.WriteLine("Connected to MQTT broker.");
+                Console.WriteLine($"Failed to connect publisher: {pubConnectResult.ResultCode}");
+                return;
+            }
 
-                // Start sending messages periodically
-                await SendMessagesPeriodically();
-            }
-            else
+            // Connect subscriber
+            var subConnectResult = await subscriberClient.ConnectAsync(subscriberOptions);
+            if (subConnectResult.ResultCode != MqttClientConnectResultCode.Success)
             {
-                Console.WriteLine($"Failed to connect to MQTT broker: {connectResult.ResultCode}");
+                Console.WriteLine($"Failed to connect subscriber: {subConnectResult.ResultCode}");
+                return;
             }
+
+            Console.WriteLine("Both clients connected successfully");
+
+            // Initialize subscriber
+            _subscriber = new MqttSubscriber();
+            await _subscriber.InitializeWithExistingClient(subscriberClient);
+
+            // Start sending messages
+            await SendMessagesPeriodically();
+
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
+
+            // Cleanup
+            await _subscriber.DisconnectAsync();
+            await _mqttPublisherClient.DisconnectAsync();
         }
 
         private static async Task SendMessagesPeriodically()
@@ -44,17 +69,15 @@ namespace MQTTClientApp
 
             while (true)
             {
-                // Create a list to hold all messages
                 var messages = new List<MqttApplicationMessage>();
 
-                // Generate random values for all sensors
                 for (int i = 1; i <= 4; i++)
                 {
                     for (int j = 1; j <= 8; j++)
                     {
                         string topic = $"trench_adc_test/S{i}S{j}";
-                        double randomValue = 1000 + random.NextDouble()*1000; // Random number between 1000 and 2000
-                        string payload = randomValue.ToString("F2"); // Format to 4 decimal places
+                        double randomValue = 1000 + random.NextDouble() * 1000;
+                        string payload = randomValue.ToString("F2");
 
                         var message = new MqttApplicationMessageBuilder()
                             .WithTopic(topic)
@@ -63,24 +86,19 @@ namespace MQTTClientApp
                             .WithRetainFlag()
                             .Build();
 
-                        messages.Add(message); // Add the message to the list
+                        messages.Add(message);
                     }
                 }
 
-                // Publish all messages concurrently
-                var publishTasks = new List<Task>();
-                foreach (var message in messages)
+                var publishTasks = messages.Select(message => 
                 {
-                    publishTasks.Add(_mqttClient.PublishAsync(message, CancellationToken.None));
-                    Console.WriteLine($"Prepared to publish to {message.Topic}: {System.Text.Encoding.UTF8.GetString(message.Payload)}");
-                }
+                    Console.WriteLine($"Publishing to {message.Topic}: {System.Text.Encoding.UTF8.GetString(message.Payload)}");
+                    return _mqttPublisherClient.PublishAsync(message, CancellationToken.None);
+                });
 
-                // Wait for all messages to be published
                 await Task.WhenAll(publishTasks);
+                Console.WriteLine($"All {messages.Count} messages published at {DateTime.Now:T}");
 
-                Console.WriteLine("All messages published.");
-
-                // Wait for 5 seconds before sending the next set of messages
                 await Task.Delay(5000);
             }
         }
