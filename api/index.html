@@ -450,15 +450,205 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <col style="width: 25%;">
 <col style="width: 25%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Controller</th>
-<th class="tableblock halign-left valign-top">Method</th>
-<th class="tableblock halign-left valign-top">Endpoint</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Controller</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Method</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Description</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/auth/hash</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hash a password</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/auth/verify</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify a password hash</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messeinstellung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messeinstellung</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>Messeinstellung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messeinstellung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messeinstellung</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>Messeinstellung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messeinstellung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messeinstellung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>Messeinstellung</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messeinstellung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messeinstellung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>Messeinstellung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messeinstellung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messeinstellung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>Messeinstellung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messsonde</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messsonde</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>Messsonde</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messsonde</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messsonde</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>Messsonde</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messsonde</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messsonde/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>Messsonde</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messsonde</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messsonde/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>Messsonde</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messsonde</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messsonde/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>Messsonde</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messondenkalibrierung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messondenkalibrierung</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>Messondenkalibrierung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messondenkalibrierung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messondenkalibrierung</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>Messondenkalibrierung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messondenkalibrierung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messondenkalibrierung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>Messondenkalibrierung</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messondenkalibrierung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messondenkalibrierung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>Messondenkalibrierung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messondenkalibrierung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messondenkalibrierung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>Messondenkalibrierung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MesssondenTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/MesssondenTyp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>MesssondenTyp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MesssondenTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/MesssondenTyp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>MesssondenTyp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MesssondenTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/MesssondenTyp/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>MesssondenTyp</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MesssondenTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/MesssondenTyp/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>MesssondenTyp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MesssondenTyp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/MesssondenTyp/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>MesssondenTyp</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messung</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>Messung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messung</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>Messung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>Messung</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>Messung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messung/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>Messung</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messwert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messwert</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get all <code>Messwert</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messwert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">POST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messwert</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create a new <code>Messwert</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messwert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messwert/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get specific <code>Messwert</code> by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messwert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messwert/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Update a <code>Messwert</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Messwert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DELETE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/Messwert/{id}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete a <code>Messwert</code></p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Spule</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GET</p></td>
@@ -524,7 +714,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-24 05:21:30 UTC
+Last updated 2025-04-02 07:59:57 UTC
 </div>
 </div>
 </body>

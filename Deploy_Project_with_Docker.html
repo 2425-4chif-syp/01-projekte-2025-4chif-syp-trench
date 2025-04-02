@@ -748,18 +748,30 @@ pre.rouge .gs {
 <pre class="rouge highlight"><code data-lang="dockerfile"><span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/aspnet:8.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">base</span>
 <span class="k">WORKDIR</span><span class="s"> /app</span>
 <span class="k">EXPOSE</span><span class="s"> 5127</span>
+
 <span class="k">FROM</span><span class="w"> </span><span class="s">mcr.microsoft.com/dotnet/sdk:8.0</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">build</span>
+<span class="k">ARG</span><span class="s"> BUILD_CONFIGURATION=Release</span>
 <span class="k">WORKDIR</span><span class="s"> /src</span>
-<span class="k">COPY</span><span class="s"> ["TrenchAPI.csproj", "./"]</span>
-<span class="k">RUN </span>dotnet restore <span class="s2">"TrenchAPI.csproj"</span>
+
+<span class="k">COPY</span><span class="s"> ["backend.sln", "./"]</span>
+
+<span class="k">COPY</span><span class="s"> ["TrenchAPI/TrenchAPI.csproj", "TrenchAPI/"]</span>
+<span class="k">COPY</span><span class="s"> ["ConsoleMQTT/ConsoleMQTT.csproj", "ConsoleMQTT/"]</span>
+
+<span class="k">RUN </span>dotnet restore <span class="s2">"backend.sln"</span>
+
 <span class="k">COPY</span><span class="s"> . .</span>
-<span class="k">RUN </span>dotnet build <span class="s2">"TrenchAPI.csproj"</span> <span class="nt">-c</span> Release <span class="nt">-o</span> /app/build
-<span class="k">FROM</span><span class="w"> </span><span class="s">build</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">publish</span>
-<span class="k">RUN </span>dotnet publish <span class="s2">"TrenchAPI.csproj"</span> <span class="nt">-c</span> Release <span class="nt">-o</span> /app/publish
+
+<span class="k">RUN </span>dotnet publish <span class="s2">"TrenchAPI/TrenchAPI.csproj"</span> <span class="nt">-c</span> <span class="nv">$BUILD_CONFIGURATION</span> <span class="nt">-o</span> /app/publish/api
+<span class="k">RUN </span>dotnet publish <span class="s2">"ConsoleMQTT/ConsoleMQTT.csproj"</span> <span class="nt">-c</span> <span class="nv">$BUILD_CONFIGURATION</span> <span class="nt">-o</span> /app/publish/mqtt
+
 <span class="k">FROM</span><span class="w"> </span><span class="s">base</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">final</span>
 <span class="k">WORKDIR</span><span class="s"> /app</span>
-<span class="k">COPY</span><span class="s"> --from=publish /app/publish .</span>
-<span class="k">ENTRYPOINT</span><span class="s"> ["dotnet", "TrenchAPI.dll"]</span></code></pre>
+
+<span class="k">COPY</span><span class="s"> --from=build /app/publish/api ./api</span>
+<span class="k">COPY</span><span class="s"> --from=build /app/publish/mqtt ./mqtt</span>
+
+<span class="k">CMD</span><span class="s"> ["sh", "-c", "dotnet ./mqtt/ConsoleMQTT.dll &amp; dotnet ./api/TrenchAPI.dll"]</span></code></pre>
 </div>
 </div>
 </div>
@@ -879,7 +891,7 @@ pre.rouge .gs {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-03-24 05:21:30 UTC
+Last updated 2025-04-02 07:59:57 UTC
 </div>
 </div>
 </body>
