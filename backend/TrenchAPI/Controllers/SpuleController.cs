@@ -91,7 +91,7 @@ namespace TrenchAPI.Controllers
 
             var spule = new Spule
             {
-                ID = spuleDto.SpuleID,
+                ID = spuleDto.ID,
                 SpuleTypID = spuleDto.SpuleTypID,
                 Ur = spuleDto.Ur,
                 Einheit = spuleDto.Einheit,
