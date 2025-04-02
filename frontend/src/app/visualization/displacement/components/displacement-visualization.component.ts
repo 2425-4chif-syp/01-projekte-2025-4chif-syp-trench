@@ -16,7 +16,7 @@ export class DisplacementVisualizationComponent {
 
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
-    branchAmount: 2,
+    branchAmount: 3,
     sensorAmount: 6,
   };
 
@@ -44,7 +44,7 @@ export class DisplacementVisualizationComponent {
     this.branches = [
       { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
       { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
-      //{ sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] },
+      { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] },
       //{ sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     ];
 
@@ -93,6 +93,17 @@ export class DisplacementVisualizationComponent {
       default:
         return 0;
     }
+  }
+
+  public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
+    const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+
+    return Math.cos(branch.angle) * newLength;
+  }
+  public scaledBranchResultY(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
+    const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+
+    return Math.sin(branch.angle) * newLength;
   }
 
   // Function to generate the branches and sensors structure
