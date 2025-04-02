@@ -16,7 +16,7 @@ export class DisplacementVisualizationComponent {
 
   // Initial values for branchAmount and sensorAmount
   displacementCalculation = {
-    branchAmount: 3,
+    branchAmount: 2,
     sensorAmount: 6,
   };
 
@@ -44,7 +44,8 @@ export class DisplacementVisualizationComponent {
     this.branches = [
       { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
       { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
-      { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
+      //{ sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] },
+      //{ sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     ];
 
     this.calculateResults();
@@ -53,25 +54,44 @@ export class DisplacementVisualizationComponent {
   public get coilVisualizationSize(): number {
     switch (this.displacementCalculation.branchAmount) {
       case 2:
-        return 512;
+        return 400;
       case 3:
         return 512;
       case 4:
-        return 512;
+        return 540;
       default:
         return 512;
     }
   }
   public get coilVisualizationOffset(): { x: number, y: number } {
+    const offset = this.coilVisualizationOffsetUnscaled;
+    return {
+      x: offset.x - (this.coilVisualizationSize/2),
+      y: offset.y - (this.coilVisualizationSize/2)
+    };
+  }
+  private get coilVisualizationOffsetUnscaled(): { x: number, y: number } {
     switch (this.displacementCalculation.branchAmount) {
       case 2:
-        return { x: 0, y: 0 };
+        return { x: 425, y: 450 };
       case 3:
-        return { x: 100, y: 200 };
+        return { x: 474.5, y: 524.5 };
       case 4:
-        return { x: -100, y: -100 };
+        return { x: 500, y: 512 };
       default:
-        return { x: 0, y: 0 };
+        return { x: 500, y: 512 };
+    }
+  }
+  public get coilVisualizationRotation(): number {
+    switch (this.displacementCalculation.branchAmount) {
+      case 2:
+        return 0;
+      case 3:
+        return -(45-45/3);
+      case 4:
+        return 0;
+      default:
+        return 0;
     }
   }
 
