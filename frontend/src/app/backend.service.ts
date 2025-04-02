@@ -237,7 +237,6 @@ export class BackendService {
     await this.httpDeleteRequest('MesssondenTyp/' + measurementProbeType.id);
   }
 
-
   public async addMeasurementSettings(measurementSettings: MeasurementSetting): Promise<MeasurementSetting>{
     const response: any = await this.httpPostRequest('Messeinstellung', this.measurementSettingsFrontendToBackend(measurementSettings));
     return this.measurementSettingsBackendToFrontend(response);

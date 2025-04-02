@@ -31,7 +31,7 @@ export class MeasurementSettingsListComponent {
     'bemessungsfrequenz': 'Frequenz',
     'pruefspannung': 'Prüfspannung',
     'sondenProSchenkel': 'Sonden/Schenkel',
-    'notiz': 'Notiz'
+    //'notiz': 'Notiz'
   }
 
   public readonly elementValueToStringMethods: { [key: string]: (element:MeasurementSetting) => string } = {

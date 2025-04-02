@@ -46,6 +46,13 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
 
   public async reloadElements(): Promise<void> {
     this.elements = await this.backendService.getAllMeasurementSettings();
+
+    console.log('Reload elements');
+
+    if (this.selectedElementCopy?.coilId! != null && this.selectedElementCopy?.measurementProbeType! != null) {
+      this.selectedElementCopy!.coil = await this.backendService.getCoil(this.selectedElementCopy?.coilId!);
+      this.selectedElementCopy!.measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy?.measurementProbeTypeId!);
+    }
   }
 
   public async reloadElementWithId(id: number): Promise<MeasurementSetting> {
@@ -63,8 +70,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   }
 
   public async updateOrCreateElement(measurementSetting: MeasurementSetting):Promise<void> {
-    console.log("service")
-    console.log("test", measurementSetting);
+    console.log(this.selectedElementIsNew)
     if (this.selectedElementIsNew) {
       this.selectedElementCopy = measurementSetting;
       this.selectedElementCopy = await this.postSelectedElement();
@@ -99,6 +105,14 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
     await this.reloadElementWithId(measurementIdNumber);
 
     this.selectedElementCopy = this.getCopyElement(measurementIdNumber);
+
+    if (this.selectedElementCopy?.coilId != null) {
+      this.selectedElementCopy.coil = await this.backendService.getCoil(this.selectedElementCopy?.coilId);
+    }
+
+    if (this.selectedElementCopy?.measurementProbeTypeId != null) {
+      this.selectedElementCopy.measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy.measurementProbeTypeId);
+    }
   }
 }
 

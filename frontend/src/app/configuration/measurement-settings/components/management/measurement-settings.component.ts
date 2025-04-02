@@ -24,8 +24,6 @@ export class MeasurementSettingsComponent implements OnInit {
 
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     //console.log(this.coilsService.selectedCoilCopy);
-
-
     return this.measurementSettingsService.selectedElementCopy;
   }
 
@@ -40,30 +38,18 @@ export class MeasurementSettingsComponent implements OnInit {
     this.measurementSettingsService.selectElement(Number(id));
   }
 
-  /*measurementSettings: MeasurementSetting = {
-    id: null,
-    coil: null,
-    coilId: null,
-    measurementProbeType: null,
-    measurementProbeTypeId: null,
-    pruefspannung: null,
-    //wicklungszahl: null,
-    bemessungsspannung: null,
-    bemessungsfrequenz: null,
-    sondenProSchenkel: null,
-    notiz: null
-  };*/
-
-
   ngOnInit() {
     if (this.originalMeasurementSetting) {
       this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
     }
 
-    console.log("TestInit")
+    console.log(this.measurementSettingsService.selectedElementCopy);
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeService: MeasurementProbeTypesService , private router: Router){}
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeService: MeasurementProbeTypesService , private router: Router){
+    this.coilsService.isCoilSelector = false;
+    this.probeService.isProbeSelector = false;
+  }
 
   async saveChanges() {
     if (this.originalMeasurementSetting) return;
@@ -79,21 +65,7 @@ export class MeasurementSettingsComponent implements OnInit {
     }*/
 
     try {
-      /*let tmpSetting: MeasurementSetting = {
-        id: 0,
-        coil: this.selectedMeasurementSetting?.coil!,
-        coilId: this.selectedMeasurementSetting?.coilId!,
-        measurementProbeType: this.selectedMeasurementSetting?.measurementProbeType!,
-        measurementProbeTypeId: this.selectedMeasurementSetting?.measurementProbeTypeId!,
-        pruefspannung: this.measurementSettings.pruefspannung,
-        //wicklungszahl: 15,
-        bemessungsspannung: this.measurementSettings.bemessungsspannung,
-        bemessungsfrequenz: this.measurementSettings.bemessungsfrequenz,
-        sondenProSchenkel: Number(this.measurementSettings.sondenProSchenkel),
-        notiz: ""
-      };*/
-
-      this.selectedMeasurementSetting!.id = 0;
+      this.selectedMeasurementSetting!.id = this.measurementSettingsService.selectedElementCopy?.id! || 0;
       this.selectedMeasurementSetting!.notiz = "";
       console.log(this.selectedMeasurementSetting!);
       await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting!);

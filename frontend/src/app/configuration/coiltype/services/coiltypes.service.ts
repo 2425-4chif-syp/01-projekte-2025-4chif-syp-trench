@@ -35,13 +35,14 @@ export class CoiltypesService implements ListService<Coiltype> {
     if (original === undefined) {
       throw new Error(`Coiltype with ID ${id} not found.`);
     }
-    
+
     return {...original};
   }
 
   public async reloadElements():Promise<void> {
     this.elements = await this.backendService.getAllCoiltypes();
   }
+
   public async reloadElementWithId(id:number):Promise<Coiltype> {
     id = Number(id);
 
@@ -53,9 +54,9 @@ export class CoiltypesService implements ListService<Coiltype> {
       this.elements[index] = coiltype;
     }
 
-    return coiltype;  
+    return coiltype;
   }
-  
+
   public async updateOrCreateElement(coiltype:Coiltype):Promise<void> {
     if (this.selectedElementIsNew) {
       this.selectedElementCopy = await this.postSelectedElement();
@@ -93,11 +94,11 @@ export class CoiltypesService implements ListService<Coiltype> {
   }
 
   public async selectElement(coiltypeId: number) {
-    // Not sure why I have to cast the coiltypeId to a number here, but it seems to be necessary. 
+    // Not sure why I have to cast the coiltypeId to a number here, but it seems to be necessary.
     // Angular seems to pass the coiltypeId as a string, despite what the type definition says.
     const coiltypeIdNumber:number = Number(coiltypeId);
     this.selectedElementIsNew = false;
-    
+
     await this.reloadElementWithId(coiltypeIdNumber);
 
     this.selectedElementCopy = this.getCopyElement(coiltypeIdNumber);
