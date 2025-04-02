@@ -29,12 +29,13 @@ export class MeasurementSettingsListComponent {
     'wicklungszahl': 'Wicklungen',
     'bemessungsspannung': 'Spannung',
     'bemessungsfrequenz': 'Frequenz',
+    'pruefspannung': 'Prüfspannung',
     'sondenProSchenkel': 'Sonden/Schenkel',
     'notiz': 'Notiz'
   }
 
   public readonly elementValueToStringMethods: { [key: string]: (element:MeasurementSetting) => string } = {
-    'coilId': (element) => element.coil?.coiltype?.name ?? `Spule ${element.coilId}`,
+    'coilId': (element) => element.coil?.coiltype?.name ?? `${element.coilId}`,
     //'measurementProbeTypeId': (element) => element.measurementProbeType?.probeTypeID ?? `Sonde ${element.measurementProbeTypeId}`
   }
 

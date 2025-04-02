@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MeasurementProbeManagementComponent } from '../../../measurement-probe/components/measurement-probe-management.component';
@@ -16,10 +16,9 @@ import { CoilsService } from '../../../coil/services/coils.service';
   templateUrl: './measurement-settings.component.html',
   styleUrl: './measurement-settings.component.scss'
 })
-export class MeasurementSettingsComponent {
+export class MeasurementSettingsComponent implements OnInit {
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5])
   saveMessage: string | null = null
-  selectedCoil: Coil | null = null;
   originalMeasurementSetting: MeasurementSetting | null = null;
 
   public get selectedMeasurementSetting(): MeasurementSetting | null {
@@ -34,6 +33,7 @@ export class MeasurementSettingsComponent {
     coilId: null,
     measurementProbeType: null,
     measurementProbeTypeId: null,
+    pruefspannung: null,
     wicklungszahl: null,
     bemessungsspannung: null,
     bemessungsfrequenz: null,
@@ -43,15 +43,17 @@ export class MeasurementSettingsComponent {
 
 
   ngOnInit() {
-    if (this.selectedCoil) {
+    if (this.originalMeasurementSetting) {
       this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
     }
+
+    console.log("TestInit")
   }
 
   constructor(public measurementSettingsService: MeasurementSettingsService, public coilsSerivce: CoilsService ,private router: Router){}
 
   async saveChanges() {
-    if (!this.selectedCoil) return;
+    if (!this.originalMeasurementSetting) return;
 
     //this.saveError = true; // Fehlerprüfung aktivieren
 
