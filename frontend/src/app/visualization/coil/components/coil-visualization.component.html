@@ -1,22 +1,22 @@
-@if (imageLoaded()) {
-    <div class="container">
-        <img
-            class="coil-image"
-            [src]="svgUrl"
-            alt="Coil Visualization"
-            (load)="onImageLoad()"
-            (error)="onImageError()"
-            [style.width.px]="size"
-            [style.height.px]="size"
-        />
-    </div>
-}
-@else {
-    @if (imageLoadError()) {
-        <div class="error-message">Error loading image</div>
-    } @else {
+<div class="container">
+    <img
+        class="coil-image"
+        [src]="svgUrl"
+        alt="Coil Visualization"
+        (loadstart)="onImageLoadStart()"
+        (load)="onImageLoad()"
+        (error)="onImageError()"
+        [style.height.px]="size"
+    />
+</div>
+@if (!imageLoaded()) {
+    @if (!imageLoadError()) {
         <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+        </div>
+    }
+    @else {
+        <div class="alert alert-danger" role="alert">
+            Fehler beim Laden des Bildes.
         </div>
     }
 }

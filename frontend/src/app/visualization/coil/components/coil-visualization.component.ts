@@ -15,7 +15,12 @@ export class CoilVisualizationComponent {
   public imageLoaded = signal<boolean>(false);
 
   public get svgUrl(): string {
-    return `/assets/${this.n}RJ.svg`;
+    return `/assets/svg/${this.n}RJ.svg`;
+  }
+
+  public onImageLoadStart(): void {
+    this.imageLoaded.set(false);
+    this.imageLoadError.set(false);
   }
 
   public onImageLoad(): void {
