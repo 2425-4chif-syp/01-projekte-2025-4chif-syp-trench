@@ -20,6 +20,7 @@ import {MeasurementProbeTypesService} from "../../../measurement-probe-type/serv
 export class MeasurementSettingsComponent implements OnInit {
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5])
   saveMessage: string | null = null
+  saveError: boolean = false;
   originalMeasurementSetting: MeasurementSetting | null = null;
 
   public get selectedMeasurementSetting(): MeasurementSetting | null {
@@ -39,12 +40,11 @@ export class MeasurementSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.originalMeasurementSetting) {
-      this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
+    if (this.selectedMeasurementSetting) {
+      this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
     }
-
-    console.log(this.measurementSettingsService.selectedElementCopy);
   }
+
 
   constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeService: MeasurementProbeTypesService , private router: Router){
     this.coilsService.isCoilSelector = false;
@@ -54,15 +54,23 @@ export class MeasurementSettingsComponent implements OnInit {
   async saveChanges() {
     if (!this.originalMeasurementSetting) return;
 
-    //this.saveError = true; // Fehlerprüfung aktivieren
+    this.saveError = true; // Fehlerprüfung aktivieren
 
-    //const requiredFields = ['ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
-    //const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
+    const requiredFields: (keyof MeasurementSetting)[] = [
+      'coilId',
+      'measurementProbeTypeId',
+      'bemessungsspannung',
+      'bemessungsfrequenz',
+      'pruefspannung',
+      'sondenProSchenkel'
+    ];
+    const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
-    /*if (invalidFields.length > 0) {
+    if (invalidFields.length > 0) {
       this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
       return;
-    }*/
+    }
+
 
     try {
       this.selectedMeasurementSetting!.id = this.measurementSettingsService.selectedElementCopy?.id! || 0;
@@ -76,7 +84,7 @@ export class MeasurementSettingsComponent implements OnInit {
         this.saveMessage = null;
       }, 3000);
 
-      //this.saveError = false;
+      this.saveError = false;
 
       this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
     } catch (error) {
@@ -90,6 +98,13 @@ export class MeasurementSettingsComponent implements OnInit {
 
     await this.measurementSettingsService.selectElement(settingIdNumber);
   }
+
+  isFieldInvalid(field: keyof MeasurementSetting): boolean {
+    if (!this.selectedMeasurementSetting) return false;
+    const value = this.selectedMeasurementSetting[field];
+    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+  }
+
 
   openCoilSelect()
   {
