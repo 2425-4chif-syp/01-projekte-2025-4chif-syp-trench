@@ -5,6 +5,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
 
 namespace ConsoleMqtt
 {
@@ -12,6 +15,7 @@ namespace ConsoleMqtt
     {
         private IMqttClient _mqttClient;
         private readonly ConcurrentDictionary<string, double> _topicValues = new ConcurrentDictionary<string, double>();
+        private List<WebSocket> _webSocketClients = new List<WebSocket>();
 
         public IReadOnlyDictionary<string, double> CurrentValues => _topicValues;
 
@@ -39,7 +43,7 @@ namespace ConsoleMqtt
             Console.WriteLine($"Subscribed to topic: trench_adc_test/# (Result: {subscribeResult.Items.First().ResultCode})");
         }
 
-        private Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs arg)
+        private async Task HandleReceivedMessage(MqttApplicationMessageReceivedEventArgs arg)
         {
             try
             {
@@ -49,28 +53,33 @@ namespace ConsoleMqtt
                 if (double.TryParse(payload, out var value))
                 {
                     _topicValues.AddOrUpdate(topic, value, (_, __) => value);
-                    Console.WriteLine($"Received update - {topic}: {value}");
                     
-                    if (_topicValues.Count == 32)
+                    // WebSocket-Clients benachrichtigen
+                    var message = $"{topic}:{value}";
+                    var buffer = Encoding.UTF8.GetBytes(message);
+                    
+                    foreach (var client in _webSocketClients.ToList())
                     {
-                        Console.WriteLine("\nComplete Set Received:");
-                        foreach (var kvp in _topicValues.OrderBy(x => x.Key))
+                        if (client.State == WebSocketState.Open)
                         {
-                            Console.WriteLine($"{kvp.Key.PadRight(20)}: {kvp.Value:F2}");
+                            await client.SendAsync(
+                                new ArraySegment<byte>(buffer),
+                                WebSocketMessageType.Text,
+                                true,
+                                CancellationToken.None
+                            );
+                        }
+                        else
+                        {
+                            _webSocketClients.Remove(client);
                         }
                     }
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid number in {topic}: {payload}");
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing message: {ex.Message}");
             }
-            
-            return Task.CompletedTask;
         }
 
         public async Task DisconnectAsync()
@@ -81,6 +90,16 @@ namespace ConsoleMqtt
                 await _mqttClient.UnsubscribeAsync("trench_adc_test/#");
             }
             _topicValues.Clear();
+        }
+
+        public void AddWebSocketClient(WebSocket webSocket)
+        {
+            _webSocketClients.Add(webSocket);
+        }
+
+        public void RemoveWebSocketClient(WebSocket webSocket)
+        {
+            _webSocketClients.Remove(webSocket);
         }
     }
 }
