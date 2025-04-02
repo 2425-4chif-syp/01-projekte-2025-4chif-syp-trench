@@ -5,10 +5,16 @@ import { LoginComponent } from './auth/login/login.component';
 import { CoilParentComponent } from './configuration/coil/components/coil-parent.component';
 import { CoiltypeParentComponent } from './configuration/coiltype/components/coiltype-parent.component';
 import { MeasurementManagementComponent } from './configuration/measurement/components/measurement-management.component';
-import { MeasurementSettingsComponent } from './configuration/measurement-settings/components/measurement-settings.component';
+import { MeasurementSettingsComponent } from './configuration/measurement-settings/components/management/measurement-settings.component';
 import { ToleranceSettingsComponent } from './configuration/tolerance-settings/components/tolerance-settings.component';
 import { DisplacementVisualizationComponent } from './visualization/displacement/components/displacement-visualization.component';
 import { MeasurementProbeTypeParentComponent } from './configuration/measurement-probe-type/components/measurement-probe-type-parent.component';
+import {
+  MeasurementSettingsListComponent
+} from "./configuration/measurement-settings/components/list/measurement-settings-list.component";
+import {
+  MeasurementSettingsParentComponent
+} from "./configuration/measurement-settings/components/measurement-settings-parent.component";
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -20,5 +26,6 @@ export const routes: Routes = [
     {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
     {path: 'tolerance-settings', component: ToleranceSettingsComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]}
+    {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
 ];
