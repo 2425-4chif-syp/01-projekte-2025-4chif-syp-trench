@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
 
@@ -6,16 +6,17 @@ import { WebSocketService } from './services/websocket.service';
   selector: 'app-start-measurement',
   standalone: true,
   imports: [CommonModule], 
+  providers: [WebSocketService],
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
 })
-export class StartMeasurementComponent {
+export class StartMeasurementComponent implements OnDestroy {
   sensorValues: { [key: string]: number } = {}; // Speichert Sensorwerte
   isConnected: boolean = false;
 
   constructor(private webSocketService: WebSocketService) {}
 
-  connectWebSocket(): void {
+  startMeasurement(): void {
     this.webSocketService.connect();
     this.isConnected = true;
 
@@ -23,6 +24,16 @@ export class StartMeasurementComponent {
       const [topic, value] = message.split(':'); // "trench_test/sensor_1:0.5678"
       this.sensorValues[topic] = parseFloat(value);
     });
+  }
+
+  stopMeasurement(): void {
+    this.webSocketService.disconnect();
+    this.isConnected = false;
+    this.sensorValues = {};
+  }
+
+  ngOnDestroy(): void {
+    this.stopMeasurement();
   }
 
   getSensorKeys(): string[] {
