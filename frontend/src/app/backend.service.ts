@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { Coil } from './data/coil-data/coil';
-import { Coiltype } from './data/coiltype-data/coiltype';
-import { MeasurementSetting } from './data/measurement-data/measurement-settings/measurement-settings';
+import { HttpClient } from "@angular/common/http";
+import { Coil } from './configuration/coil/interfaces/coil';
+import { Coiltype } from './configuration/coiltype/interfaces/coiltype';
+import { MeasurementProbeType } from './configuration/measurement-probe-type/interfaces/measurement-probe-type';
+import { MeasurementSetting } from './configuration/measurement-settings/interfaces/measurement-settings';
 
 @Injectable({
   providedIn: 'root'
@@ -103,17 +104,38 @@ export class BackendService {
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      notiz: coiltype.notiz
     };
   }
 
   private coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
-      spuleTypID: coiltype.id,
+      id: coiltype.id,
       name: coiltype.name,
       schenkel: coiltype.schenkel,
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      notiz: coiltype.notiz
+    };
+  }
+
+  private measurementProbeTypeBackendToFrontend(measurementProbeType: any): MeasurementProbeType {
+    return {
+      id: measurementProbeType.id,
+      breite: measurementProbeType.breite,
+      hoehe: measurementProbeType.hoehe,
+      wicklungszahl: measurementProbeType.wicklungszahl,
+      notiz: measurementProbeType.notiz
+    };
+  }
+  private measurementProbeTypeFrontendToBackend(measurementProbeType: MeasurementProbeType): any { 
+    return {
+      id: measurementProbeType.id,
+      breite: measurementProbeType.breite,
+      hoehe: measurementProbeType.hoehe,
+      wicklungszahl: measurementProbeType.wicklungszahl,
+      notiz: measurementProbeType.notiz
     };
   }
 
@@ -188,6 +210,28 @@ export class BackendService {
   public async deleteCoiltype(coiltype: Coiltype): Promise<void> {
     await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
   }
+
+  public async getAllMeasurementProbeTypes(): Promise<MeasurementProbeType[]> {
+    const response:any = await this.httpGetRequest('MesssondenTyp');
+    return response.map((measurementProbeType: any) => (this.measurementProbeTypeBackendToFrontend(measurementProbeType)));
+  }
+  public async getMeasurementProbeType(id: number): Promise<MeasurementProbeType> {
+    const response:any = await this.httpGetRequest('MesssondenTyp/' + id);
+    return this.measurementProbeTypeBackendToFrontend(response);
+  }
+  public async addMeasurementProbeType(measurementProbeType:MeasurementProbeType): Promise<MeasurementProbeType> {
+    const response:any = await this.httpPostRequest('MesssondenTyp', this.measurementProbeTypeBackendToFrontend(measurementProbeType));
+    return this.measurementProbeTypeBackendToFrontend(response);
+  }
+
+  public async updateMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
+    await this.httpPutRequest('MesssondenTyp/' + measurementProbeType.id, this.measurementProbeTypeFrontendToBackend(measurementProbeType));
+  }
+
+  public async deleteMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
+    await this.httpDeleteRequest('MesssondenTyp/' + measurementProbeType.id);
+  }
+
 
   public async addMeasurementSettings(measurementSettings: MeasurementSetting): Promise<MeasurementSetting>{
     const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));

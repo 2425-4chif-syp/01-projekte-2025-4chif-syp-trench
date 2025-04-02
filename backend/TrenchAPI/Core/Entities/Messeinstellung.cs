@@ -15,19 +15,14 @@ namespace TrenchAPI.Core.Entities
 
         public int MesssondenTypID { get; set; }
 
-        [Required]
         [Column(TypeName = "int")]
         public int Sonden_pro_schenkel {  get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(8,3)")]
         public decimal Bemessungsspannung { get; set; }
 
-        [Required]
         [Column(TypeName = "decimal(8,3)")]
         public decimal Bemessungsfrequenz { get; set; }
 
-        [Column(TypeName = "VARCHAR(250)")]
         public string Notiz { get; set; } = "";
     }
 }

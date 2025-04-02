@@ -2,9 +2,8 @@
 
 namespace TrenchAPI.Persistence.DTO
 {
-    public class SpuleCreateDto
+    public class SpuleCreateDto : EntityObject
     {
-        public int SpuleID { get; set; }
         public int SpuleTypID { get; set; }
         public decimal Ur { get; set; }
         public int Einheit { get; set; }

@@ -4,7 +4,38 @@ https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Proje
 
 |===
 | Controller     | Method | Endpoint                 | Description
-
+| Auth           | POST   | `/api/auth/hash`         | Hash a password
+| Auth           | POST   | `/api/auth/verify`       | Verify a password hash
+| Messeinstellung| GET    | `/api/Messeinstellung`   | Get all `Messeinstellung`
+| Messeinstellung| POST   | `/api/Messeinstellung`   | Create a new `Messeinstellung`
+| Messeinstellung| GET    | `/api/Messeinstellung/{id}`| Get specific `Messeinstellung` by ID
+| Messeinstellung| PUT    | `/api/Messeinstellung/{id}`| Update a `Messeinstellung`
+| Messeinstellung| DELETE | `/api/Messeinstellung/{id}`| Delete a `Messeinstellung`
+| Messsonde      | GET    | `/api/Messsonde`         | Get all `Messsonde`
+| Messsonde      | POST   | `/api/Messsonde`         | Create a new `Messsonde`
+| Messsonde      | GET    | `/api/Messsonde/{id}`    | Get specific `Messsonde` by ID
+| Messsonde      | PUT    | `/api/Messsonde/{id}`    | Update a `Messsonde`
+| Messsonde      | DELETE | `/api/Messsonde/{id}`    | Delete a `Messsonde`
+| Messondenkalibrierung | GET    | `/api/Messondenkalibrierung`| Get all `Messondenkalibrierung`
+| Messondenkalibrierung | POST   | `/api/Messondenkalibrierung`| Create a new `Messondenkalibrierung`
+| Messondenkalibrierung | GET    | `/api/Messondenkalibrierung/{id}`| Get specific `Messondenkalibrierung` by ID
+| Messondenkalibrierung | PUT    | `/api/Messondenkalibrierung/{id}`| Update a `Messondenkalibrierung`
+| Messondenkalibrierung | DELETE | `/api/Messondenkalibrierung/{id}`| Delete a `Messondenkalibrierung`
+| MesssondenTyp  | GET    | `/api/MesssondenTyp`     | Get all `MesssondenTyp`
+| MesssondenTyp  | POST   | `/api/MesssondenTyp`     | Create a new `MesssondenTyp`
+| MesssondenTyp  | GET    | `/api/MesssondenTyp/{id}`| Get specific `MesssondenTyp` by ID
+| MesssondenTyp  | PUT    | `/api/MesssondenTyp/{id}`| Update a `MesssondenTyp`
+| MesssondenTyp  | DELETE | `/api/MesssondenTyp/{id}`| Delete a `MesssondenTyp`
+| Messung        | GET    | `/api/Messung`           | Get all `Messung`
+| Messung        | POST   | `/api/Messung`           | Create a new `Messung`
+| Messung        | GET    | `/api/Messung/{id}`      | Get specific `Messung` by ID
+| Messung        | PUT    | `/api/Messung/{id}`      | Update a `Messung`
+| Messung        | DELETE | `/api/Messung/{id}`      | Delete a `Messung`
+| Messwert       | GET    | `/api/Messwert`          | Get all `Messwert`
+| Messwert       | POST   | `/api/Messwert`          | Create a new `Messwert`
+| Messwert       | GET    | `/api/Messwert/{id}`     | Get specific `Messwert` by ID
+| Messwert       | PUT    | `/api/Messwert/{id}`     | Update a `Messwert`
+| Messwert       | DELETE | `/api/Messwert/{id}`     | Delete a `Messwert`
 | Spule          | GET    | `/api/Spule`             | Get all `Spule`
 | Spule          | GET    | `/api/Spule/{id}`        | Get specific `Spule` by ID
 | Spule          | POST   | `/api/Spule`             | Create a new `Spule`
