@@ -21,6 +21,7 @@ export class MeasurementSettingsComponent implements OnInit {
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5])
   saveMessage: string | null = null
   saveError: boolean = false;
+  showDeleteModal = false;
   originalMeasurementSetting: MeasurementSetting | null = null;
 
   public get selectedMeasurementSetting(): MeasurementSetting | null {
@@ -44,7 +45,6 @@ export class MeasurementSettingsComponent implements OnInit {
       this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
     }
   }
-
 
   constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeService: MeasurementProbeTypesService , private router: Router){
     this.coilsService.isCoilSelector = false;
@@ -105,6 +105,30 @@ export class MeasurementSettingsComponent implements OnInit {
     return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
 
+  coilOrProbeChanged(): boolean {
+    const changed = JSON.stringify(this.selectedMeasurementSetting) !== JSON.stringify(this.originalMeasurementSetting);
+    console.log("Has Changes:", changed);
+    return changed;
+  }
+
+  hasChanges(): boolean {
+    if (!this.selectedMeasurementSetting || !this.originalMeasurementSetting) return false;
+
+    const fieldsToCompare: (keyof MeasurementSetting)[] = [
+      'coilId',
+      'measurementProbeTypeId',
+      'bemessungsspannung',
+      'bemessungsfrequenz',
+      'pruefspannung',
+      'sondenProSchenkel'
+    ];
+
+    return fieldsToCompare.some(field =>
+      this.selectedMeasurementSetting![field] !== this.originalMeasurementSetting![field]
+    );
+  }
+
+
 
   openCoilSelect()
   {
@@ -124,5 +148,18 @@ export class MeasurementSettingsComponent implements OnInit {
 
   backToListing(){
     this.measurementSettingsService.selectedElementCopy = null;
+  }
+
+  openDeleteModal(): void {
+    this.showDeleteModal = true;
+  }
+
+  async deleteSetting(): Promise<void> {
+    this.showDeleteModal = false;
+
+    if (this.selectedMeasurementSetting?.id == null) return;
+
+    await this.measurementSettingsService.deleteElement(this.selectedMeasurementSetting.id);
+    this.backToListing();
   }
 }

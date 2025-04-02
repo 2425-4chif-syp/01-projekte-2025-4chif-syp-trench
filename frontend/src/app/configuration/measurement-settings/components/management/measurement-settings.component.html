@@ -97,20 +97,46 @@
 
               <div class="text-center mt-4">
                  <div class="d-flex justify-content-between mt-4">
-                  <button class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+                  <button [disabled]="!hasChanges() && coilOrProbeChanged()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
                   <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-                  <!--<button *ngIf="!coilsService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>-->
-                </div>
+                   <button *ngIf="!measurementSettingsService.selectedElementIsNew"
+                           class="btn btn-danger w-100"
+                           (click)="openDeleteModal()">
+                     Löschen
+                   </button>
+                 </div>
               </div>
               <div class="text-danger fw-bold text-center mt-3" *ngIf="saveError && saveMessage">
                 {{ saveMessage }}
               </div>
             </div>
-
-
-        <!--<div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
-            <app-measurement-probe-management></app-measurement-probe-management>
-        </div> -->
     </div>
   </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog"
+     [ngClass]="{'show': showDeleteModal}"
+     [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Messeinstellung löschen?</h5>
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Messeinstellung löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteSetting()">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
