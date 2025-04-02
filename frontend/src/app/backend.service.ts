@@ -253,10 +253,10 @@ export class BackendService {
   }
 
   public async updateMeasurementSettings(measurementSettings: MeasurementSetting): Promise<void>{
-    await this.httpPutRequest('Messeinstellung/' + measurementSettings.coilId, this.measurementSettingsFrontendToBackend(measurementSettings));
+    await this.httpPutRequest('Messeinstellung/' + measurementSettings.id, this.measurementSettingsFrontendToBackend(measurementSettings));
   }
 
   public async deleteMeasurementSettings(measurementSettings: MeasurementSetting): Promise<void>{
-    await this.httpDeleteRequest('Messeinstellung/' + measurementSettings.coilId);
+    await this.httpDeleteRequest('Messeinstellung/' + measurementSettings.id);
   }
 }

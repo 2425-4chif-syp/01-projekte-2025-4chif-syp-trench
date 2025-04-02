@@ -39,7 +39,7 @@ export class MeasurementSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.originalMeasurementSetting) {
+    if (!this.originalMeasurementSetting) {
       this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
     }
 
@@ -52,7 +52,7 @@ export class MeasurementSettingsComponent implements OnInit {
   }
 
   async saveChanges() {
-    if (this.originalMeasurementSetting) return;
+    if (!this.originalMeasurementSetting) return;
 
     //this.saveError = true; // Fehlerprüfung aktivieren
 
