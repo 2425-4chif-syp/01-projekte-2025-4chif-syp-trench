@@ -4,6 +4,7 @@ import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-servi
 import { MeasurementSettingsService } from '../../services/measurement-settings.service';
 import { GenericListComponent } from '../../../../generic-list/components/generic-list.component';
 import { MeasurementSetting } from '../../interfaces/measurement-settings';
+import {Coil} from "../../../coil/interfaces/coil";
 
 @Component({
   selector: 'app-measurement-settings-list',
@@ -31,19 +32,14 @@ export class MeasurementSettingsListComponent {
     'sondenProSchenkel': 'Sonden/Schenkel',
     'notiz': 'Notiz'
   }
-  
+
   public readonly elementValueToStringMethods: { [key: string]: (element:MeasurementSetting) => string } = {
     'coilId': (element) => element.coil?.coiltype?.name ?? `Spule ${element.coilId}`,
     //'measurementProbeTypeId': (element) => element.measurementProbeType?.probeTypeID ?? `Sonde ${element.measurementProbeTypeId}`
   }
-  
-
-  test(){
-
-  }
 
   openSetting(setting: MeasurementSetting) {
-    this.measurementSettingsService.selectElement(setting.coilId!);
+    const settingId = setting.id!;
+    this.measurementSettingsService.selectElement(settingId);
   }
-  
 }
