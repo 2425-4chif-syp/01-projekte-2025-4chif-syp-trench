@@ -146,7 +146,7 @@ export class BackendService {
       coilId: measurementSettings.spuleID,
       measurementProbeType: measurementSettings.messsondenTyp,
       measurementProbeTypeId: measurementSettings.messsondenTypID,
-      wicklungszahl: measurementSettings.wicklungszahl,
+      //wicklungszahl: measurementSettings.wicklungszahl,
       bemessungsspannung: measurementSettings.bemessungsspannung,
       bemessungsfrequenz: measurementSettings.bemessungsfrequenz,
       pruefspannung: measurementSettings.pruefspannung,
@@ -156,11 +156,12 @@ export class BackendService {
   }
 
   private measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{
+    console.log(measurementSettings);
     return {
       id: measurementSettings.id,
       spuleID: measurementSettings.coilId,
       messsondenTypID: measurementSettings.measurementProbeTypeId,
-      wicklungszahl: measurementSettings.wicklungszahl,
+      //wicklungszahl: measurementSettings.wicklungszahl,
       bemessungsspannung: measurementSettings.bemessungsspannung,
       bemessungsfrequenz: measurementSettings.bemessungsfrequenz,
       pruefspannung: measurementSettings.pruefspannung,
