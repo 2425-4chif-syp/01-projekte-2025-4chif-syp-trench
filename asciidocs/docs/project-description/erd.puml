@@ -1,0 +1,96 @@
+[plantuml, format="svg"]
+----
+@startuml
+
+' Group: Master data
+entity spuletyp {
+  * id : integer <<PK>>
+  --
+  name : varchar
+  schenkelzahl : integer
+  bandbreite : decimal
+  schichthoehe : decimal
+  durchmesser : decimal
+  notiz : string
+}
+
+entity messsondentyp {
+  * id : integer <<PK>>
+  --
+  name : varchar
+  breite : decimal
+  hoehe : decimal
+  wicklungszahl : integer
+  notiz : string
+}
+
+' Group: Main objects
+entity spule {
+  * id : integer <<PK>>
+  --
+  spuletyp_id : integer <<FK>>
+  auftragsnr : varchar
+  auftragsposnr : integer
+  ur : decimal
+  einheit : integer
+  omega : decimal
+  notiz : string
+}
+
+' Group: Measurements
+entity messeinstellung {
+  * id : integer <<PK>>
+  --
+  spule_id : integer <<FK>>
+  messsondentyp_id : integer <<FK>>
+  name : varchar
+  sonden_pro_schenkel : integer
+  bemessungsspannung : decimal
+  bemessungsfrequenz : decimal
+  notiz : string
+}
+
+entity messung {
+  * id : integer <<PK>>
+  --
+  messeinstellung_id : integer <<FK>>
+  anfangszeitpunkt : timestamp
+  endzeitpunkt : timestamp
+  notiz : string
+}
+
+entity messsonde {
+  * id : integer <<PK>>
+  --
+  messung_id : integer <<FK>>
+  schenkel : integer
+  position : integer
+}
+
+entity messwert {
+  * id : integer <<PK>>
+  --
+  messsonde_id : integer <<FK>>
+  wert : decimal
+  zeitpunkt : timestamp
+}
+
+entity messsondenkalibrierung {
+  * id : integer <<PK>>
+  --
+  messeinstellung_id : integer <<FK>>
+  schenkel : integer
+  position : integer
+  kalibrierungsfaktor : decimal
+}
+
+' Relationships
+spule }|..|| spuletyp : "spuletyp_id"
+messeinstellung }|..|| spule : "spule_id"
+messeinstellung }|..|| messsondentyp : "messsondentyp_id"
+messung }|..|| messeinstellung : "messeinstellung_id"
+messsonde }|..|| messung : "messung_id"
+messwert }|..|| messsonde : "messsonde_id"
+messsondenkalibrierung }|..|| messeinstellung : "messeinstellung_id"
+
+@enduml

@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\SpuleTyp\" />
-    <Folder Include="Migrations\Spule\" />
+    <Folder Include="Persistence\Migrations\SpuleTyp\" />
+    <Folder Include="Persistence\Migrations\Spule\" />
   </ItemGroup>
 </Project>
