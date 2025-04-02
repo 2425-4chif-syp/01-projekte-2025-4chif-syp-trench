@@ -22,7 +22,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       coilId: null,
       measurementProbeType: null,
       measurementProbeTypeId: null,
-      wicklungszahl: null,
+      //wicklungszahl: null,
       bemessungsspannung: null,
       bemessungsfrequenz: null,
       pruefspannung: null,
@@ -63,7 +63,10 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   }
 
   public async updateOrCreateElement(measurementSetting: MeasurementSetting):Promise<void> {
+    console.log("service")
+    console.log("test", measurementSetting);
     if (this.selectedElementIsNew) {
+      this.selectedElementCopy = measurementSetting;
       this.selectedElementCopy = await this.postSelectedElement();
       this.selectedElementIsNew = false;
       return;

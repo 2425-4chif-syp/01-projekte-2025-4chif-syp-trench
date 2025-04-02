@@ -42,15 +42,15 @@
                 <div class="mb-3">
                     <label for="mess-stärke" class="form-label">Prüfspannung [V]:</label>
                     <input type="number" class="form-control" id="mess-stärke" placeholder="Messstärke"
-                        [(ngModel)]="measurementSettings.bemessungsspannung" min="0">
+                        [(ngModel)]="measurementSettings.pruefspannung" min="0">
                 </div>
 
                 <div class="text-center mt-4">
-                    <button class="btn btn-primary" (click)="saveChanges()">Speichern</button>
-                </div>
 
-                <div class="text-center mt-3" *ngIf="saveMessage">
-                    <span class="fw-bold text-success">{{saveMessage}}</span>
+                <div class="d-flex justify-content-between mt-4">
+                  <button class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+                  <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+                  <!--<button *ngIf="!coilsService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>-->
                 </div>
             </div>
         </div>
@@ -60,4 +60,5 @@
             <app-measurement-probe-management></app-measurement-probe-management>
         </div> -->
     </div>
+  </div>
 </div>

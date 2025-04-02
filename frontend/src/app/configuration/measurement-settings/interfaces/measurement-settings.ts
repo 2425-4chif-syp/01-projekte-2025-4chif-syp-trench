@@ -7,7 +7,7 @@ export interface MeasurementSetting{
     coilId: number | null,
     measurementProbeType: MeasurementProbeType | null,
     measurementProbeTypeId: number | null,
-    wicklungszahl: number | null,
+    //wicklungszahl: number | null,
     bemessungsspannung: number | null,
     bemessungsfrequenz: number | null,
     pruefspannung: number | null,

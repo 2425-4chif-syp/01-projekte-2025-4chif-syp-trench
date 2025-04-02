@@ -12,7 +12,7 @@ import { CoilsService } from '../../../coil/services/coils.service';
 @Component({
   selector: 'app-measurement-settings',
   standalone: true,
-  imports: [FormsModule, MeasurementProbeManagementComponent, CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './measurement-settings.component.html',
   styleUrl: './measurement-settings.component.scss'
 })
@@ -27,6 +27,13 @@ export class MeasurementSettingsComponent implements OnInit {
     return this.measurementSettingsService.selectedElementCopy;
   }
 
+  public get selectedSettingId(): number | undefined {
+    return this.measurementSettingsService.selectedElementCopy?.id!;
+  }
+  public set selectedSettingId(id: number) {
+    this.measurementSettingsService.selectElement(Number(id));
+  }
+
   measurementSettings: MeasurementSetting = {
     id: null,
     coil: null,
@@ -34,7 +41,7 @@ export class MeasurementSettingsComponent implements OnInit {
     measurementProbeType: null,
     measurementProbeTypeId: null,
     pruefspannung: null,
-    wicklungszahl: null,
+    //wicklungszahl: null,
     bemessungsspannung: null,
     bemessungsfrequenz: null,
     sondenProSchenkel: null,
@@ -53,7 +60,7 @@ export class MeasurementSettingsComponent implements OnInit {
   constructor(public measurementSettingsService: MeasurementSettingsService, public coilsSerivce: CoilsService ,private router: Router){}
 
   async saveChanges() {
-    if (!this.originalMeasurementSetting) return;
+    if (this.originalMeasurementSetting) return;
 
     //this.saveError = true; // Fehlerprüfung aktivieren
 
@@ -66,8 +73,29 @@ export class MeasurementSettingsComponent implements OnInit {
     }*/
 
     try {
-      await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting!);
-      //this.onCoilSelectionChange(this.selectedCoilId!);
+      let tmpSetting: MeasurementSetting = {
+        id: 1,
+        coil: this.selectedMeasurementSetting?.coil!,
+        coilId: this.selectedMeasurementSetting?.coilId!,
+        measurementProbeType: {
+          id: 5,
+          breite: 250,
+          hoehe: 150,
+          wicklungszahl: 15,
+          notiz: "",
+        },
+        measurementProbeTypeId: 5,
+        pruefspannung: this.measurementSettings.pruefspannung,
+        //wicklungszahl: 15,
+        bemessungsspannung: this.measurementSettings.bemessungsspannung,
+        bemessungsfrequenz: this.measurementSettings.bemessungsfrequenz,
+        sondenProSchenkel: Number(this.measurementSettings.sondenProSchenkel),
+        notiz: ""
+      };
+
+      console.log(tmpSetting!);
+      await this.measurementSettingsService.updateOrCreateElement(tmpSetting!);
+      this.onSettingSelectionChange(this.selectedSettingId!);
 
       this.saveMessage = "Änderungen gespeichert!";
       setTimeout(() => {
@@ -75,11 +103,18 @@ export class MeasurementSettingsComponent implements OnInit {
       }, 3000);
 
       //this.saveError = false;
-      this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
+
+      this.originalMeasurementSetting = {...tmpSetting!};
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
       this.saveMessage = "Fehler beim Speichern!";
     }
+  }
+
+  async onSettingSelectionChange(SettingId: number) {
+    const settingIdNumber: number = Number(SettingId);
+
+    await this.measurementSettingsService.selectElement(settingIdNumber);
   }
 
   openCoilSelect()
@@ -88,5 +123,9 @@ export class MeasurementSettingsComponent implements OnInit {
     this.coilsSerivce.isCoilSelector = true;
 
     this.router.navigate(['/coil-management']);
+  }
+
+  backToListing(){
+    this.measurementSettingsService.selectedElementCopy = null;
   }
 }
