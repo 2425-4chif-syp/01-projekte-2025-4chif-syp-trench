@@ -1,7 +1,7 @@
-import { Coil } from "../coil-data/coil"
-import { MeasurementProbeType } from "../measurement-probes/measurement-probe-type"
+import { Coil } from "../../coil-data/coil"
+import { MeasurementProbeType } from "../../measurement-probes/measurement-probe-type"
 
-export interface MeasurementSettings{
+export interface MeasurementSetting{
     coil: Coil | null,
     coilId: number | null,
     measurementProbeType: MeasurementProbeType | null,

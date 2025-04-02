@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MeasurementSettings } from '../data/measurement-settings/measurement-settings';
+import { MeasurementSetting } from '../data/measurement-data/measurement-settings/measurement-settings';
 import { MeasurementProbeManagementComponent } from './measurement-probe-management/measurement-probe-management.component';
 import { CommonModule } from '@angular/common';
 
@@ -16,7 +16,7 @@ export class MeasurementSettingsComponent {
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5]) 
   saveMessage: string | null = null
 
-  measurementSettings: MeasurementSettings = {
+  measurementSettings: MeasurementSetting = {
     coil: null,
     coilId: null,
     measurementProbeType: null,
