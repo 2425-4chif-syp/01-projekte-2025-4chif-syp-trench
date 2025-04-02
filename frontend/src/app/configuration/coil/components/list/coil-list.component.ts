@@ -56,7 +56,7 @@ export class CoilListComponent {
       this.measurementSettingsService.selectedElementCopy!.coil = this.coilsService.getCopyElement(coilId);
       console.log("Test");
 
-      this.router.navigate(['/measurement-settings']);
+      this.router.navigate(['/measurement-settings-list']);
       return;
     }
 
