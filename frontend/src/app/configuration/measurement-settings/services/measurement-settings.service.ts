@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ListService } from '../../list-service';
 import { BackendService } from '../../../backend.service';
-import { MeasurementSetting } from './measurement-settings';
+import { ListService } from '../../../generic-list/services/list-service';
+import { MeasurementSetting } from '../interfaces/measurement-settings';
+import {Coil} from "../../coil/interfaces/coil";
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,13 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   public elements: MeasurementSetting[] = [];
   public selectedElementCopy: MeasurementSetting | null = null;
   public selectedElementIsNew: boolean = false;
+  public isCoilSelector: boolean = false;
 
   constructor(private backendService: BackendService) {}
 
   public get newElement(): MeasurementSetting {
     return {
+      id: null,
       coil: null,
       coilId: null,
       measurementProbeType: null,
@@ -28,9 +31,16 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   }
 
   public getCopyElement(id: number): MeasurementSetting {
-    const original = this.elements.find(e => e.coilId === id); // Falls du eine ID hast – hier ggf. anpassen
-    if (!original) throw new Error(`MeasurementSetting with ID ${id} not found.`);
-    return { ...original };
+    id = Number(id);
+
+    const original:MeasurementSetting|undefined = this.elements.find(c => c.id === id);
+    if (original === undefined) {
+      throw new Error(`Coiltype with ID ${id} not found.`);
+    }
+
+    console.log(`Copying element with ID ${id}:`, original);
+
+    return {...original};
   }
 
   public async reloadElements(): Promise<void> {
@@ -38,24 +48,29 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   }
 
   public async reloadElementWithId(id: number): Promise<MeasurementSetting> {
-    const element = await this.backendService.getMeasurementSettings(id);
-    const index = this.elements.findIndex(e => e.coilId === id);
+    id = Number(id);
+
+    const setting: MeasurementSetting = await this.backendService.getMeasurementSettings(id);
+    const index: number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
-      this.elements.push(element);
+      this.elements.push(setting);
     } else {
-      this.elements[index] = element;
+      this.elements[index] = setting;
     }
-    return element;
+
+    return setting;
   }
 
-  public async updateOrCreateElement(element: MeasurementSetting): Promise<void> {
+  public async updateOrCreateElement(measurementSetting: MeasurementSetting):Promise<void> {
     if (this.selectedElementIsNew) {
       this.selectedElementCopy = await this.postSelectedElement();
       this.selectedElementIsNew = false;
-    } else {
-      await this.backendService.updateMeasurementSettings(element);
+      return;
     }
+
+    await this.backendService.updateMeasurementSettings(measurementSetting);
   }
+
 
   public async postSelectedElement(): Promise<MeasurementSetting> {
     if (!this.selectedElementCopy) throw new Error("No element selected.");
@@ -74,8 +89,12 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
 
   public async selectElement(id: number): Promise<void> {
     this.selectedElementIsNew = false;
-    await this.reloadElementWithId(id);
-    this.selectedElementCopy = this.getCopyElement(id);
+
+    const measurementIdNumber: number = Number(id);
+    console.log('Lade Messeinstellung mit der ID:', measurementIdNumber);
+    await this.reloadElementWithId(measurementIdNumber);
+
+    this.selectedElementCopy = this.getCopyElement(measurementIdNumber);
   }
 }
 
