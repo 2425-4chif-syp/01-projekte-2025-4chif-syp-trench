@@ -1,0 +1,19 @@
+<div class="header">
+    <button (click)="connectWebSocket()" [disabled]="isConnected">
+      🔗 WebSocket verbinden
+    </button>
+  </div>
+  
+  <div class="sensor-container" *ngIf="isConnected">
+    <div *ngFor="let sensor of getSensorKeys()" class="sensor-box">
+      <div class="sensor-content">
+        <h3>{{ sensor }}</h3>
+        <p class="value">{{ sensorValues[sensor] | number:'1.4-4' }}</p>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="!isConnected">
+    <p>🔴 Nicht verbunden</p>
+  </div>
+  
