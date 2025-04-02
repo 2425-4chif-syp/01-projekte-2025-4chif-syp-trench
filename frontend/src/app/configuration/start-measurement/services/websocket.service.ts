@@ -9,7 +9,7 @@ export class WebSocketService {
   private messagesSubject = new Subject<string>();
 
   connect(): void {
-    this.socket = new WebSocket('ws://localhost:8080/ws'); // HTTP für lokale Entwicklung
+    this.socket = new WebSocket('ws://localhost:8080/ws'); 
 
     this.socket.onopen = () => {
       console.log('WebSocket Verbindung hergestellt');

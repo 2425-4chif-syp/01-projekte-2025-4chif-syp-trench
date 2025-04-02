@@ -11,7 +11,7 @@ import { WebSocketService } from './services/websocket.service';
   styleUrl: './start-measurement.component.scss'
 })
 export class StartMeasurementComponent implements OnDestroy {
-  sensorValues: { [key: string]: number } = {}; // Speichert Sensorwerte
+  sensorValues: { [key: string]: number } = {}; 
   isConnected: boolean = false;
 
   constructor(private webSocketService: WebSocketService) {}
@@ -21,7 +21,7 @@ export class StartMeasurementComponent implements OnDestroy {
     this.isConnected = true;
 
     this.webSocketService.getMessages().subscribe((message) => {
-      const [topic, value] = message.split(':'); // "trench_test/sensor_1:0.5678"
+      const [topic, value] = message.split(':'); 
       this.sensorValues[topic] = parseFloat(value);
     });
   }
