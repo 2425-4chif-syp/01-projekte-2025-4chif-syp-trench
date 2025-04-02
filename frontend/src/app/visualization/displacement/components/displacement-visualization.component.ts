@@ -2,11 +2,12 @@ import { Component, HostListener, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {CommonModule, DecimalPipe, NgForOf} from "@angular/common";
 import { DisplacementService } from '../services/displacement-calculation.service';
+import { CoilVisualizationComponent } from "../../coil/components/coil-visualization.component";
 
 @Component({
   selector: 'app-displacement-visualization',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, NgForOf, CommonModule],
+  imports: [FormsModule, DecimalPipe, NgForOf, CommonModule, CoilVisualizationComponent],
   templateUrl: './displacement-visualization.component.html',
   styleUrl: './displacement-visualization.component.scss',
 })
@@ -47,6 +48,31 @@ export class DisplacementVisualizationComponent {
     ];
 
     this.calculateResults();
+  }
+
+  public get coilVisualizationSize(): number {
+    switch (this.displacementCalculation.branchAmount) {
+      case 2:
+        return 512;
+      case 3:
+        return 512;
+      case 4:
+        return 512;
+      default:
+        return 512;
+    }
+  }
+  public get coilVisualizationOffset(): { x: number, y: number } {
+    switch (this.displacementCalculation.branchAmount) {
+      case 2:
+        return { x: 0, y: 0 };
+      case 3:
+        return { x: 100, y: 200 };
+      case 4:
+        return { x: -100, y: -100 };
+      default:
+        return { x: 0, y: 0 };
+    }
   }
 
   // Function to generate the branches and sensors structure
