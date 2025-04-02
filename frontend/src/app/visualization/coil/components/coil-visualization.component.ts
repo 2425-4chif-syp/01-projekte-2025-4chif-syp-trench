@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 
 @Component({
   selector: 'app-coil-visualization',
@@ -10,36 +10,21 @@ import { Component, Input } from '@angular/core';
 })
 export class CoilVisualizationComponent {
   @Input() n:number = 0;
-  @Input() bb:number = 0;
-  @Input() dm:number = 0;
   @Input() size:number = 512;
+  public imageLoadError = signal<boolean>(false);
+  public imageLoaded = signal<boolean>(false);
 
-  public get nTransforms():any[] {
-    let polylines = [];
-    for (let i = 0; i < this.n; i++) {
-      polylines.push(this.getNTransform(i));
-    }
-    
-    return polylines;
+  public get svgUrl(): string {
+    return `/assets/${this.n}RJ.svg`;
   }
 
-  public get coreRadius():number {
-    return ((this.dm - this.bb*2) / 4) / 512 * this.size;
+  public onImageLoad(): void {
+    this.imageLoaded.set(true);
+    this.imageLoadError.set(false);
   }
-  public get strokeWidth():number {
-    return 5 / 512 * this.size;
-  }
-
-  public getNTransform(n:number):any {
-    const delta = this.coreRadius / 64;
-
-    return {
-      n: n,
-      radius: 64 / 512 * this.size,
-      rotate: 360 / this.n * n,
-      width: (80 - 8 * this.n) * delta,
-      height: (this.bb / 4) / 512 * this.size,
-      distanceFromRadius: (32 * Math.sqrt(this.n - 2)) * delta,
-    }
+  
+  public onImageError(): void {
+    this.imageLoadError.set(true);
+    this.imageLoaded.set(false);
   }
 }
