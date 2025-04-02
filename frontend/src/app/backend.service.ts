@@ -53,7 +53,7 @@ export class BackendService {
         }
       });
     });
-  }  
+  }
   private httpDeleteRequest(endpoint:string): Promise<any> | void {
     return new Promise<any>((resolve, reject) => {
       this.httpClient.delete(this.apiUrl + endpoint).subscribe({
@@ -82,7 +82,7 @@ export class BackendService {
 
     return newCoil;
   }
-  
+
   private coilFrontendToBackend(coil: Coil): any {
     return {
       id: coil.id,
@@ -95,7 +95,7 @@ export class BackendService {
       notiz: coil.notiz
     };
   }
-  
+
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
       id: coiltype.id,
@@ -129,7 +129,7 @@ export class BackendService {
       notiz: measurementProbeType.notiz
     };
   }
-  private measurementProbeTypeFrontendToBackend(measurementProbeType: MeasurementProbeType): any { 
+  private measurementProbeTypeFrontendToBackend(measurementProbeType: MeasurementProbeType): any {
     return {
       id: measurementProbeType.id,
       breite: measurementProbeType.breite,
@@ -141,6 +141,7 @@ export class BackendService {
 
   private measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSetting {
     return {
+      id: measurementSettings.id,
       coil: measurementSettings.spule,
       coilId: measurementSettings.spuleID,
       measurementProbeType: measurementSettings.messsondenTyp,
@@ -155,6 +156,7 @@ export class BackendService {
 
   private measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{
     return {
+      id: measurementSettings.id,
       spuleID: measurementSettings.coilId,
       messsondenTypID: measurementSettings.measurementProbeTypeId,
       wicklungszahl: measurementSettings.wicklungszahl,
@@ -234,25 +236,25 @@ export class BackendService {
 
 
   public async addMeasurementSettings(measurementSettings: MeasurementSetting): Promise<MeasurementSetting>{
-    const response: any = await this.httpPostRequest('Messeinstellungen', this.measurementSettingsFrontendToBackend(measurementSettings));
+    const response: any = await this.httpPostRequest('Messeinstellung', this.measurementSettingsFrontendToBackend(measurementSettings));
     return this.measurementSettingsBackendToFrontend(response);
   }
 
   public async getAllMeasurementSettings(): Promise<MeasurementSetting[]>{
-    const response: any = await this.httpGetRequest('Messeinstellungen');
+    const response: any = await this.httpGetRequest('Messeinstellung');
     return response.map((measurementSettings: any) => (this.measurementSettingsBackendToFrontend(measurementSettings)));
   }
 
   public async getMeasurementSettings(id: number): Promise<MeasurementSetting>{
-    const response: any = await this.httpGetRequest('Messeinstellungen/' + id);
+    const response: any = await this.httpGetRequest('Messeinstellung/' + id);
     return this.measurementSettingsBackendToFrontend(response);
   }
 
   public async updateMeasurementSettings(measurementSettings: MeasurementSetting): Promise<void>{
-    await this.httpPutRequest('Messeinstellungen/' + measurementSettings.coilId, this.measurementSettingsFrontendToBackend(measurementSettings));
+    await this.httpPutRequest('Messeinstellung/' + measurementSettings.coilId, this.measurementSettingsFrontendToBackend(measurementSettings));
   }
 
   public async deleteMeasurementSettings(measurementSettings: MeasurementSetting): Promise<void>{
-    await this.httpDeleteRequest('Messeinstellungen/' + measurementSettings.coilId);
+    await this.httpDeleteRequest('Messeinstellung/' + measurementSettings.coilId);
   }
 }
