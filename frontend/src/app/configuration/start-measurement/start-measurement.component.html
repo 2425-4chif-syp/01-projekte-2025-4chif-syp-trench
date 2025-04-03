@@ -1,22 +1,31 @@
-<div class="header">
-  <button (click)="startMeasurement()" [disabled]="isConnected">
-    🚀 Messung starten
-  </button>
-  <button (click)="stopMeasurement()" [disabled]="!isConnected">
-    ⏹️ Messung beenden
-  </button>
-</div>
+<div class="container py-4">
 
-<div class="sensor-container" *ngIf="isConnected">
-  <div *ngFor="let sensor of getSensorKeys()" class="sensor-box">
-    <div class="sensor-content">
-      <h3>{{ sensor }}</h3>
-      <p class="value">{{ sensorValues[sensor] | number:'1.4-4' }}</p>
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected">
+      🧪 Messung starten
+    </button>
+    <button class="btn btn-danger" (click)="stopMeasurement()" [disabled]="!isConnected">
+      ⛔ Messung beenden
+    </button>
+  </div>
+
+  <div *ngIf="isConnected">
+    <div *ngFor="let schenkel of getGroupedSensorKeys()" class="mb-5">
+      <h4 class="mb-3 text-primary border-bottom pb-1">{{ schenkel }}</h4>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+        <div *ngFor="let sensor of getGroupedSensors()[schenkel]" class="col">
+          <div class="card text-center h-100 border border-primary shadow-sm">
+            <div class="card-body">
+              <h6 class="card-title text-muted small">{{ sensor }}</h6>
+              <p class="card-text fs-4 fw-bold">{{ sensorValues[sensor] | number:'1.2-2' }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="!isConnected">
-  <p>🔴 Messung gestoppt</p>
+  <div *ngIf="!isConnected" class="text-center mt-5">
+    <p class="text-danger fs-4">🔴 Messung gestoppt</p>
+  </div>
 </div>
-  
