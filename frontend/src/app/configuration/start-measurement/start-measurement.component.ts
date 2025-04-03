@@ -1,12 +1,16 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, LOCALE_ID, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
+
+registerLocaleData(localeDe);
 
 @Component({
   selector: 'app-start-measurement',
   standalone: true,
   imports: [CommonModule], 
-  providers: [WebSocketService],
+  providers: [WebSocketService, { provide: LOCALE_ID, useValue: 'de' }],
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
 })
@@ -39,4 +43,26 @@ export class StartMeasurementComponent implements OnDestroy {
   getSensorKeys(): string[] {
     return Object.keys(this.sensorValues);
   }
+
+  getGroupedSensors(): { [schenkel: string]: string[] } {
+    const grouped: { [schenkel: string]: string[] } = {};
+  
+    for (const key of this.getSensorKeys()) {
+      const match = key.match(/S(\d+)S\d+/); 
+      if (match) {
+        const schenkel = `Schenkel ${match[1]}`;
+        if (!grouped[schenkel]) {
+          grouped[schenkel] = [];
+        }
+        grouped[schenkel].push(key);
+      }
+    }
+  
+    return grouped;
+  }
+  
+  getGroupedSensorKeys(): string[] {
+    return Object.keys(this.getGroupedSensors());
+  }
+  
 }
