@@ -11,7 +11,7 @@ import { DisplacementVisualizationComponent } from './visualization/displacement
 import { MeasurementProbeTypeParentComponent } from './configuration/measurement-probe-type/components/measurement-probe-type-parent.component';
 import { StartMeasurementComponent } from './configuration/start-measurement/start-measurement.component';
 import { MeasurementSettingsParentComponent } from "./configuration/measurement-settings/components/measurement-settings-parent.component";
-import { MeasurementManagementComponent } from './configuration/measurement-management/components/components.component';
+import { MeasurementManagementComponent } from './configuration/measurement-management/components/measurement-management.component';
 import { MeasurementHistoryComponent } from './configuration/measurement-history/components/measurement-history.component';
 
 export const routes: Routes = [
