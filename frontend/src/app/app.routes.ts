@@ -24,5 +24,6 @@ export const routes: Routes = [
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
     {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]},
     {path: 'start-measurement', component: StartMeasurementComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]}
+    {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-history', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]}
 ];

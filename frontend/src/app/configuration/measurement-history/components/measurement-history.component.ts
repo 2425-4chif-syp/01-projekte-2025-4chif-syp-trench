@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { GenericListComponent } from '../generic-list/generic-list.component';
-import { MeasurementHistoryService } from '../data/measurement-history/measurement-history.service';
-import { LIST_SERVICE_TOKEN } from '../data/list-service';
-import { Measurement } from '../data/measurement-history/measurement.model';
+import { Measurement } from '../interfaces/measurement.model';
+import { GenericListComponent } from '../../../generic-list/components/generic-list.component';
+import { LIST_SERVICE_TOKEN } from '../../../generic-list/services/list-service';
+import { MeasurementHistoryService } from '../services/measurement-history.service';
 
 @Component({
   selector: 'app-measurement-history',
