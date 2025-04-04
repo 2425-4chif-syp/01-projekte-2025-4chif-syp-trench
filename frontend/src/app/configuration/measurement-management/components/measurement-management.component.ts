@@ -5,8 +5,8 @@ import { MeasurementHistoryComponent } from "../../measurement-history/component
   selector: 'app-components',
   standalone: true,
   imports: [MeasurementHistoryComponent],
-  templateUrl: './components.component.html',
-  styleUrl: './components.component.scss'
+  templateUrl: './measurement-management.component.html',
+  styleUrl: './measurement-management.component.scss'
 })
 export class MeasurementManagementComponent {
 
