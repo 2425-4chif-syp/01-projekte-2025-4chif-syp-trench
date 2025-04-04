@@ -17,7 +17,7 @@ interface SensorTolerance {
   templateUrl: './measurement-management.component.html',
   styleUrl: './measurement-management.component.scss'
 })
-export class MeasurementManagementComponent implements OnInit, OnDestroy {
+export class MQTTMeasurementComponent implements OnInit, OnDestroy {
   public hasConnected: boolean = false;
   public sensorValues: { [key: string]: number } = {}; // Store sensor values
   public lastUpdate: Date | undefined = undefined;

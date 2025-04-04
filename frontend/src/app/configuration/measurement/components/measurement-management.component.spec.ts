@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MeasurementManagementComponent } from './measurement-management.component';
+import { MQTTMeasurementComponent } from './measurement-management.component';
 
 describe('MeasurementManagementComponent', () => {
-  let component: MeasurementManagementComponent;
-  let fixture: ComponentFixture<MeasurementManagementComponent>;
+  let component: MQTTMeasurementComponent;
+  let fixture: ComponentFixture<MQTTMeasurementComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MeasurementManagementComponent]
+      imports: [MQTTMeasurementComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MeasurementManagementComponent);
+    fixture = TestBed.createComponent(MQTTMeasurementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ListService } from '../list-service';
-import { Measurement } from '../../configuration/measurement-history/interfaces/measurement.model';
-import { BackendService } from '../../backend.service';
+import { ListService } from '../../../generic-list/services/list-service';
+import { Measurement } from '../interfaces/measurement.model';
 
 @Injectable({
   providedIn: 'root'
