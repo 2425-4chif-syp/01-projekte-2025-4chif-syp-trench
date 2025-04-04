@@ -20,12 +20,39 @@ import { MeasurementHistoryService } from '../services/measurement-history.servi
 })
 export class MeasurementHistoryComponent {
   public readonly keysAsColumns: { [key: string]: string } = {
-    'test': 'test'
+    'auftragsnummer': 'Messung',
+    'startTime': 'Startzeit',
+    'endTime': 'Endzeit',
+    'notiz': 'Notiz',
   }
 
   public readonly elementValueToStringMethods: { [key: string]: (element: Measurement) => string } = {
+    'auftragsnummer': (element: Measurement) => element.measurementSettings?.coil?.auftragsnummer + " ",
+  };
 
+  /* 
+  public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
+      'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coil (ID ${element.coiltypeId})`
+    }
+  */
+
+  private formatDate(date: Date | null): string {
+    if (!date) return '';
+    const d = new Date(date);
+    const pad = (n: number) => n.toString().padStart(2, '0');
+  
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    const seconds = pad(d.getSeconds());
+  
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const year = d.getFullYear();
+  
+    return `${hours}:${minutes}:${seconds} ${month}.${day}.${year}`;
   }
+  
+  
 
   test(){
 
