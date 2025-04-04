@@ -9,10 +9,10 @@ namespace TrenchAPI.Core.Entities
         public Messeinstellung? Messeinstellung { get; set; }
         public int MesseinstellungID { get; set; }
 
-        [Column(TypeName = "timestamp")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Anfangszeitpunkt { get; set; }
 
-        [Column(TypeName = "timestamp")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Endzeitpunkt { get; set; }
 
         [Column(TypeName = "VARCHAR(250)")]
