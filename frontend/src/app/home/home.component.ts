@@ -34,7 +34,7 @@ export class HomeComponent {
   }
 
   navigateToMeasureMentSettings(){
-    this.router.navigate(['/measurement-settings']);
+    this.router.navigate(['/measurement-settings-list']);
   }
 
   logout(event: Event): void {

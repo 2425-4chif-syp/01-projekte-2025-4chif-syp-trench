@@ -1,85 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using MQTTnet;
 using MQTTnet.Client;
+using System;
+using System.Diagnostics.Tracing;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace MQTTClientApp
+namespace ConsoleMqtt
 {
     class Program
     {
-        private static IMqttClient _mqttClient;
-
         static async Task Main(string[] args)
         {
-            // Configure MQTT client options
-            var factory = new MqttFactory();
-            _mqttClient = factory.CreateMqttClient();
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddCors();
+            builder.Services.AddSingleton<MqttSubscriber>();
+            
+            // Konfiguriere Kestrel für WebSocket
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(8080);
+            });
+            
+            var app = builder.Build();
 
-            var options = new MqttClientOptionsBuilder()
-                .WithWebSocketServer("ws://vm90.htl-leonding.ac.at:9001/ws")
+            // Initialize MQTT client and subscriber
+            var factory = new MqttFactory();
+            var mqttClient = factory.CreateMqttClient();
+            var mqttOptions = new MqttClientOptionsBuilder()
+                .WithTcpServer("vm90.htl-leonding.ac.at")
                 .WithCredentials("student", "passme")
                 .Build();
 
-            // Connect to the MQTT broker
-            var connectResult = await _mqttClient.ConnectAsync(options, CancellationToken.None);
-
-            if (connectResult.ResultCode == MqttClientConnectResultCode.Success)
-            {
-                Console.WriteLine("Connected to MQTT broker.");
-
-                // Start sending messages periodically
-                await SendMessagesPeriodically();
-            }
-            else
+            var connectResult = await mqttClient.ConnectAsync(mqttOptions);
+            if (connectResult.ResultCode != MqttClientConnectResultCode.Success)
             {
                 Console.WriteLine($"Failed to connect to MQTT broker: {connectResult.ResultCode}");
+                return;
             }
-        }
 
-        private static async Task SendMessagesPeriodically()
-        {
-            var random = new Random();
+            var mqttSubscriber = app.Services.GetRequiredService<MqttSubscriber>();
+            await mqttSubscriber.InitializeWithExistingClient(mqttClient);
 
-            while (true)
+            app.UseCors(builder =>
             {
-                // Create a list to hold all messages
-                var messages = new List<MqttApplicationMessage>();
+                builder.WithOrigins("http://localhost:4200", "http://frontend:4200")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+            });
 
-                // Generate random values for all sensors
-                for (int i = 1; i <= 6; i++)
+            app.UseWebSockets(new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(120)
+            });
+
+            app.Map("/ws", async context =>
+            {
+                if (context.WebSockets.IsWebSocketRequest)
                 {
-                    string topic = $"trench_test/sensor_{i}";
-                    double randomValue = random.NextDouble(); // Random number between 0 and 1
-                    string payload = randomValue.ToString("F4"); // Format to 4 decimal places
-
-                    var message = new MqttApplicationMessageBuilder()
-                        .WithTopic(topic)
-                        .WithPayload(payload)
-                        .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
-                        .WithRetainFlag()
-                        .Build();
-
-                    messages.Add(message); // Add the message to the list
+                    using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    mqttSubscriber.AddWebSocketClient(webSocket);
+                    
+                    var buffer = new byte[1024];
+                    try
+                    {
+                        while (webSocket.State == WebSocketState.Open)
+                        {
+                            var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                            if (result.MessageType == WebSocketMessageType.Close)
+                            {
+                                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"WebSocket error: {ex.Message}");
+                    }
+                    finally
+                    {
+                        mqttSubscriber.RemoveWebSocketClient(webSocket);
+                    }
                 }
-
-                // Publish all messages concurrently
-                var publishTasks = new List<Task>();
-                foreach (var message in messages)
+                else
                 {
-                    publishTasks.Add(_mqttClient.PublishAsync(message, CancellationToken.None));
-                    Console.WriteLine($"Prepared to publish to {message.Topic}: {System.Text.Encoding.UTF8.GetString(message.Payload)}");
+                    context.Response.StatusCode = 400;
+                    await context.Response.WriteAsync("Expected a WebSocket request");
                 }
+            });
 
-                // Wait for all messages to be published
-                await Task.WhenAll(publishTasks);
+            // Start MQTT sender in background
+            _ = MqttSender.sendData();
 
-                Console.WriteLine("All messages published.");
-
-                // Wait for 5 seconds before sending the next set of messages
-                await Task.Delay(5000);
-            }
+            Console.WriteLine("Starting WebSocket server on http://0.0.0.0:8080");
+            await app.RunAsync();
         }
     }
 }

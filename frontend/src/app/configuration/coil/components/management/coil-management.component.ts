@@ -20,7 +20,7 @@ export class CoilManagementComponent {
     this.coiltypesService.reloadElements();
   }
 
-  saveMessage: string | null = null;  
+  saveMessage: string | null = null;
   saveError: boolean = false;
   selectedCoilIsNew: boolean = false;
   originalCoil: Coil | null = null;
@@ -33,7 +33,7 @@ export class CoilManagementComponent {
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
-    //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)! 
+    //this.coiltypesService.coiltypes.find(c => c.tK_Name === this.selectedCoilTypeName)!
     return this.coilsService.selectedElementCopy;
   }
 
@@ -57,7 +57,7 @@ export class CoilManagementComponent {
   hasChanges(): boolean {
     if (!this.originalCoil || !this.selectedCoil) return false;
     return JSON.stringify(this.originalCoil) !== JSON.stringify(this.selectedCoil);
-}
+ }
 
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return false;
@@ -65,7 +65,7 @@ export class CoilManagementComponent {
     return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
 
-  
+
   openCoiltypeSelect() {
     this.coiltypesService.selectedElementCopy = null;
     this.coiltypesService.isCoilSelector = true;

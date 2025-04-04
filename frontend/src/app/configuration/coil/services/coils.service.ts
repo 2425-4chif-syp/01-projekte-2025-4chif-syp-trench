@@ -10,6 +10,8 @@ export class CoilsService implements ListService<Coil> {
   public elements: Coil[] = [];
   public selectedElementCopy: Coil|null = null;
   public selectedElementIsNew: boolean = false;
+  
+  public isCoilSelector: boolean = false;
 
   constructor(private backendService:BackendService) { }
 
