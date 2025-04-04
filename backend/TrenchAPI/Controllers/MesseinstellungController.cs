@@ -26,14 +26,20 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messeinstellung>>> GetMesseinstellungen()
         {
-            return await _context.Messeinstellung.ToListAsync();
+            return await _context.Messeinstellung
+                .Include(m => m.Spule)
+                .Include(m => m.MesssondenTyp)
+                .ToListAsync();
         }
 
         // GET: api/Messeinstellung/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Messeinstellung>> GetMesseinstellung(int id)
         {
-            var messeinstellung = await _context.Messeinstellung.FindAsync(id);
+            var messeinstellung = await _context.Messeinstellung
+                .Include(m => m.Spule)
+                .Include(m => m.MesssondenTyp)
+                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messeinstellung == null)
             {
@@ -82,12 +88,14 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.Spule.Any(s => s.ID == messeinstellungDto.SpuleID))
+            var spule = await _context.Spule.FindAsync(messeinstellungDto.SpuleID);
+            if (spule == null)
             {
                 return BadRequest("Die angegebene Spule existiert nicht.");
             }
 
-            if (!_context.MesssondenTyp.Any(m => m.ID == messeinstellungDto.MesssondenTypID))
+            var messsondenTyp = await _context.MesssondenTyp.FindAsync(messeinstellungDto.MesssondenTypID);
+            if (messsondenTyp == null)
             {
                 return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
             }
@@ -104,15 +112,28 @@ namespace TrenchAPI.Controllers
                 Notiz = messeinstellungDto.Notiz
             };
 
-            // Optionale Navigation Properties setzen
-            messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
-            messeinstellung.MesssondenTyp = await _context.MesssondenTyp.FindAsync(messeinstellung.MesssondenTypID);
+            var existingSpule = _context.Spule.Find(messeinstellung.SpuleID);
+            if (existingSpule == null)
+            {
+                return BadRequest("Die angegebene Spule existiert nicht.");
+            }
+
+            var existingMesssondenTyp = _context.MesssondenTyp.Find(messeinstellung.MesssondenTypID);
+            if (existingMesssondenTyp == null)
+            {
+                return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
+            }
+
+            messeinstellung.Spule = existingSpule;
+            messeinstellung.MesssondenTyp = existingMesssondenTyp;
 
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMesseinstellung", new { id = messeinstellung.ID }, messeinstellung);
         }
+
+
 
         // DELETE: api/Messeinstellung/5
         [HttpDelete("{id}")]
