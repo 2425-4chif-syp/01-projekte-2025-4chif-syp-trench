@@ -65,6 +65,11 @@ https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Proje
 | *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-01-30_teacher[30.01.2025]*
 | MQTT-Kommunikation, Toleranzen, Sensoren
 | Trench-Team, Prof. Stütz
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-03-17_teacher[17.03.2025]*
+| MQTT Topic, Trench Website, Trench Laptop
+| Trench-Team, Prof. Stütz & Dr. Klaus Köck
+
 |===
 
 == Project Meetings

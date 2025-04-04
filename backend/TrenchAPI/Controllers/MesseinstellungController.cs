@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
+using TrenchAPI.Persistence.DTO;
 
 namespace TrenchAPI.Controllers
 {
@@ -74,8 +75,39 @@ namespace TrenchAPI.Controllers
 
         // POST: api/Messeinstellung
         [HttpPost]
-        public async Task<ActionResult<Messeinstellung>> PostMesseinstellung(Messeinstellung messeinstellung)
+        public async Task<ActionResult<Messeinstellung>> PostMesseinstellung(MesseinstellungCreateDto messeinstellungDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.Spule.Any(s => s.ID == messeinstellungDto.SpuleID))
+            {
+                return BadRequest("Die angegebene Spule existiert nicht.");
+            }
+
+            if (!_context.MesssondenTyp.Any(m => m.ID == messeinstellungDto.MesssondenTypID))
+            {
+                return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
+            }
+
+            var messeinstellung = new Messeinstellung
+            {
+                ID = messeinstellungDto.ID,
+                SpuleID = messeinstellungDto.SpuleID,
+                MesssondenTypID = messeinstellungDto.MesssondenTypID,
+                Sonden_pro_schenkel = messeinstellungDto.Sonden_pro_schenkel,
+                Bemessungsspannung = messeinstellungDto.Bemessungsspannung,
+                Bemessungsfrequenz = messeinstellungDto.Bemessungsfrequenz,
+                Pruefspannung = messeinstellungDto.Pruefspannung,
+                Notiz = messeinstellungDto.Notiz
+            };
+
+            // Optionale Navigation Properties setzen
+            messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
+            messeinstellung.MesssondenTyp = await _context.MesssondenTyp.FindAsync(messeinstellung.MesssondenTypID);
+
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();
 

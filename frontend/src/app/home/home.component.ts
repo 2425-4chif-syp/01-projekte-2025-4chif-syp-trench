@@ -1,8 +1,7 @@
-
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -35,7 +34,7 @@ export class HomeComponent {
   }
 
   navigateToMeasureMentSettings(){
-    this.router.navigate(['/measurement-settings']);
+    this.router.navigate(['/measurement-settings-list']);
   }
 
   logout(event: Event): void {

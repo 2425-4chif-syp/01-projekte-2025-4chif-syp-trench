@@ -1,0 +1,79 @@
+= Besprechungsprotokoll 17.03.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 17.03.2025*
+
+Simon Pesut
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Emil Silber
+|Emil Silber
+
+|Filip Schauer
+|Axel Csomany
+
+|Simon Pesut
+|Aaron Schreiegg
+
+|Aaron Schreiegg
+|Simon Pesut
+
+|Dr. Klaus Koeck
+|Filip Schauer
+
+|Thomas Stuetz
+|Thomas Stuetz
+
+|
+|Dr. Klaus Koeck
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|HTL Leonding
+
+|am
+|Mo. 17.3.2025
+|Dauer
+|1h 30m 
+|===
+
+
+
+== Besprochene Themen
+
+* MQTT Topic json-schema
+* MQTT Topic struktur
+* Hardware 
+* Website Aufbau
+* Entities
+
+
+
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer | 
+
+| Thomas Stuetz & Dr. Klaus Koeck & Team Trench
+a| == Ausgangslage
+Erste Version von Trench Website mit C# Backend, Angular Frontend und Postgres Datenbank. Spule, Spuletyp, Messeinstellungen und Messergebnis sind sichtbar. Außerdem können Vektoren it Testdaten angezeigt werden. C# sendet testdaten an MQTT und frontend liest aus.
+
+== Aufgaben
+1. Wireframes werden erstellt, damit wir nicht alles neu programmieren müssen.
+2. Messonden sollen automatisch generiert werden
+3. Messeintellungsliste mit Auswahl für Spule und Messsondentyp
+4. Liste von Messung, mit "Neue Messung"-Button; in der Messung Messeinstellung-Auswahl
+5. Falls eine existierende Messung ist es read-only, sonst "Messung starten".
+6. Checken ob Messung am laufen ist - mit Button auf Messung zugreifen
+7. MQTT umschreiben z.B. 3Schenkel * 8Sonden = 24Werte
+8. Eine Messsondenseite soll generiert werden
+9. Funktionierend auf dem Trench Windows Laptop.
+|===

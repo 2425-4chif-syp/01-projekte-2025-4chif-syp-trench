@@ -1,0 +1,22 @@
+<div class="container">
+    <img
+        class="coil-image"
+        [src]="svgUrl"
+        alt="Coil Visualization"
+        (loadstart)="onImageLoadStart()"
+        (load)="onImageLoad()"
+        (error)="onImageError()"
+        [style.height.px]="size"
+    />
+</div>
+@if (!imageLoaded()) {
+    @if (!imageLoadError()) {
+        <div class="spinner-border" role="status">
+        </div>
+    }
+    @else {
+        <div class="alert alert-danger" role="alert">
+            Fehler beim Laden des Bildes.
+        </div>
+    }
+}

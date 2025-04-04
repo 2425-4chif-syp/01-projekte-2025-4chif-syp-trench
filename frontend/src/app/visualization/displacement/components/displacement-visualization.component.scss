@@ -1,0 +1,31 @@
+.hover-tooltip {
+    position: absolute;
+    background-color: #c0c0c0c0;
+    color: black;
+    margin: 5px;
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-right: 20px;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#visualization-container {
+    position: relative;
+
+    &>svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+
+    &>app-coil-visualization {
+        position: absolute; 
+        top: 0; 
+        z-index: 1;
+        pointer-events: none;
+        filter: opacity(0.5);
+    }
+}

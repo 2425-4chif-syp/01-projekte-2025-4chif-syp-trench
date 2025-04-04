@@ -40,11 +40,13 @@ services:
       context: ./backend
     ports:
       - "5127:5127" 
+      - "8080:8080"  # WebSocket Port für ConsoleMQTT
     expose:
-      - "5127" 
+      - "5127"
+      - "8080"      # WebSocket Port für ConsoleMQTT
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:5127 
+      - ASPNETCORE_URLS=http://0.0.0.0:5127;http://0.0.0.0:8080
       - ConnectionStrings__DevConnection=Host=postgres;Port=5432;Database=postgres;Username=postgres;Password=TRENCH123;
     volumes:
       - ./backend:/src 

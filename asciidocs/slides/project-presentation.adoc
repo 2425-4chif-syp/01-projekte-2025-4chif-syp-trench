@@ -40,7 +40,7 @@ ASC Sensor Visualisation
 - *Filip Schauer*: Technical Leader, Frontend
 - *Aaron Schreiegg*: Frontend
 - *Axel Csomany*: Backend
-- *Simon Pesut*: Backend (mostly database)
+- *Simon Pesut*: Backend (mostly database), Docker
 
 == System Architecture
 
