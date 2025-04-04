@@ -25,7 +25,13 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messung>>> GetMessung()
         {
-            return await _context.Messung.Include(m => m.Messeinstellung).ToListAsync();
+            return await _context.Messung
+                .Include(m => m.Messeinstellung)
+                    .ThenInclude(me => me.Spule)
+                        .ThenInclude(mee => mee.SpuleTyp)
+                 .Include(m => m.Messeinstellung)
+                     .ThenInclude(me => me.MesssondenTyp)
+                .ToListAsync();
         }
 
         // GET: api/Messung/5
@@ -33,7 +39,11 @@ namespace TrenchAPI.Controllers
         public async Task<ActionResult<Messung>> GetMessung(int id)
         {
             var messung = await _context.Messung
-                .Include(m => m.Messeinstellung)
+             .Include(m => m.Messeinstellung)
+                    .ThenInclude(me => me.Spule)
+                        .ThenInclude(mee => mee.SpuleTyp)
+                 .Include(m => m.Messeinstellung)
+                     .ThenInclude(me => me.MesssondenTyp)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messung == null)
@@ -95,6 +105,7 @@ namespace TrenchAPI.Controllers
                 Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
                 Endzeitpunkt = messungDto.Endzeitpunkt,
                 Notiz = messungDto.Notiz,
+                Messeinstellung = existingMesseinstellung,
             };
 
             _context.Messung.Add(messung);
