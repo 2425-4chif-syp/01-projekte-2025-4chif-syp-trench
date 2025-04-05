@@ -25,7 +25,7 @@
         </tbody>
     </table>
 </div>
-@if (!isSelector) {
+@if (!isSelector && showButton) {
     <div class="text-center mt-5">
         <button class="btn btn-primary new-coil-button mt-5" id="new-element-button" (click)="addNewElement()">{{newElementButtonLabel}}</button>
     </div>
