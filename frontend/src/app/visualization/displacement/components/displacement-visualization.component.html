@@ -1,51 +1,3 @@
-<div class="container">
-  <h1>Berechnung von Abweichung</h1>
-  <div class="input-container">
-    <label for="branch-amount">Schenkelanzahl:</label>
-    <input
-      type="number"
-      class="form-control inputField"
-      id="branch-amount"
-      placeholder="Schenkelanzahl"
-      [(ngModel)]="displacementCalculation.branchAmount"
-      min="1"
-      (ngModelChange)="updateBranches()"
-    />
-
-    <label for="sensor-amount">Sondenanzahl:</label>
-    <input
-      type="number"
-      class="form-control inputField"
-      id="sensor-amount"
-      placeholder="Sondenanzahl"
-      [(ngModel)]="displacementCalculation.sensorAmount"
-      min="1"
-      (ngModelChange)="updateBranches()"
-    />
-  </div>
-</div>
-
-<!-- Display the branches and sensors -->
-<div class="branches-container">
-  <h2>Branches</h2>
-  <div *ngFor="let branch of branches; let i = index; trackBy: trackByBranch" class="branch">
-    <h3>Branch {{ i + 1 }}</h3>
-    <div *ngFor="let sensor of branch.sensors; let j = index; trackBy: trackBySensor" class="sensor">
-      <label for="sensor-{{i}}-{{j}}">Sensor {{ j + 1 }}:</label>
-      <input
-        type="text"
-        class="form-control inputField"
-        id="sensor-{{i}}-{{j}}"
-        placeholder="Sensor {{ j + 1 }}"
-        [(ngModel)]="branch.sensors[j]"
-        (input)="onSensorInput(i, j, $event)"
-        pattern="[0-9]*"
-        inputmode="numeric"
-      />
-    </div>
-  </div>
-</div>
-
 <!-- Display the calculated x and y values -->
 <div class="results-container">
   <h2>Results</h2>
@@ -180,7 +132,7 @@
   </svg>
 
   <app-coil-visualization
-    [n]="displacementCalculation.branchAmount"
+    [n]="yokes.length"
     [size]="coilVisualizationSize"
     [style.left.px]="coilVisualizationOffset.x"
     [style.top.px]="coilVisualizationOffset.y"
