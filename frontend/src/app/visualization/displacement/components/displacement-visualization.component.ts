@@ -12,7 +12,7 @@ import { CoilVisualizationComponent } from "../../coil/components/coil-visualiza
   styleUrl: './displacement-visualization.component.scss',
 })
 export class DisplacementVisualizationComponent {
-  @Input() size:number = 512;
+  @Input() size:number = 512; // TODO: This doesn't work right now
   @Input() yokes = signal<{sensors:number[]}[]>([]);
 
   averageLength:number = 0;

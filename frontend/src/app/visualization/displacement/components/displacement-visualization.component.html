@@ -1,33 +1,4 @@
-<!-- Display the calculated x and y values -->
-<div class="results-container">
-  <h2>Results</h2>
-  <table>
-    <thead>
-    <tr>
-      <th>Branch</th>
-      <th>X Value</th>
-      <th>Y Value</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let result of branchResults; let i = index">
-      <td>Branch {{ i + 1 }}</td>
-      <td>{{ result.x | number: '1.2-2' }}</td>
-      <td>{{ result.y | number: '1.2-2' }}</td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- Display the Final Vector -->
-<div class="final-vector-container">
-  <h2>Final Vector</h2>
-  <p>X: {{ finalVector.x | number: '1.2-2' }}</p>
-  <p>Y: {{ finalVector.y | number: '1.2-2' }}</p>
-</div>
-
 <!-- Visualization -->
-
 <div id="visualization-container">
   <svg
     width="1024"
