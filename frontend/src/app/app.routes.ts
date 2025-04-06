@@ -26,5 +26,6 @@ export const routes: Routes = [
     {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-management', component: StartMeasurementComponent, canActivate: [AuthGuard]},
     {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]}
+    {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-history-homescreen', component: MeasurementManagementParentComponent, canActivate: [AuthGuard]},
 ];
