@@ -1,0 +1,22 @@
+<div class="header">
+  <button class="settings-button me-2" routerLink="/displacement-visualization">↗️ Vektor</button>
+  <button class="settings-button" routerLink="/tolerance-settings">⚙️ Einstellungen</button>
+</div>
+
+<div class="sensor-container" *ngIf="hasConnected">
+  <div *ngFor="let sensor of getSensorKeys()" 
+       class="sensor-box"
+       [style.background-color]="getBackgroundColor(sensorValues[sensor], sensor)">
+    <div class="sensor-content">
+      <h3>{{ sensor }}</h3>
+      <p class="value">{{ sensorValues[sensor] | number:'1.4-4' }}</p>
+    </div>
+  </div>
+  <p class="update-time" *ngIf="lastUpdate">
+    Letzte Aktualisierung: {{ lastUpdate | date:'mediumTime' }}
+  </p>
+</div>
+
+<div class="loading" *ngIf="!hasConnected">
+  <p>Verbindung zum MQTT Broker wird hergestellt...</p>
+</div>

@@ -25,8 +25,13 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messung>>> GetMessung()
         {
-            return await _context.Messung.Include(m => m.Messeinstellung).ToListAsync();
-        }
+                return await _context.Messung
+                    .Include(m => m.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                    .Include(m => m.Messeinstellung)
+                        .ThenInclude(me => me.MesssondenTyp)
+                    .ToListAsync();       
+ }
 
         // GET: api/Messung/5
         [HttpGet("{id}")]
