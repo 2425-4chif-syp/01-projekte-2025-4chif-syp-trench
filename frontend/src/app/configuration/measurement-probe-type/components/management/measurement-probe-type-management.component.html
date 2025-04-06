@@ -34,11 +34,15 @@
             <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
             <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
           </div>
+
+          <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+            {{ saveMessage }}
+          </div>          
         </div>    
       </div>
     </div>
   
-    <div class="col-6">
+    <div class="col-6" style="max-height: 600px;">
       <!-- SVG-Zeichnung -->
       <div class="d-flex justify-content-center align-items-center mt-5">
         <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
