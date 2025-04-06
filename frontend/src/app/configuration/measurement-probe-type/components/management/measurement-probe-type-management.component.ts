@@ -55,6 +55,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
     }
 
     try {
+      if(this.selectedProbeType.notiz === null) this.selectedProbeType.notiz = "";
       await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
       this.saveMessage = "Änderungen gespeichert!";
       setTimeout(() => {
