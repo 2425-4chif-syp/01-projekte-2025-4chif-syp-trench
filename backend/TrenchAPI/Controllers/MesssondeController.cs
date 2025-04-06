@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
+using TrenchAPI.Persistence.DTO;
 
 namespace TrenchAPI.Controllers
 {
@@ -25,14 +25,16 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messsonde>>> GetMesssonde()
         {
-            return await _context.Messsonde.ToListAsync();
+            return await _context.Messsonde.Include(ms => ms.Messung).ToListAsync();
         }
 
         // GET: api/Messsonde/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Messsonde>> GetMesssonde(int id)
         {
-            var messsonde = await _context.Messsonde.FindAsync(id);
+            var messsonde = await _context.Messsonde
+                .Include(ms => ms.Messung)
+                .FirstOrDefaultAsync(ms => ms.ID == id);
 
             if (messsonde == null)
             {
@@ -43,7 +45,6 @@ namespace TrenchAPI.Controllers
         }
 
         // PUT: api/Messsonde/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMesssonde(int id, Messsonde messsonde)
         {
@@ -74,10 +75,29 @@ namespace TrenchAPI.Controllers
         }
 
         // POST: api/Messsonde
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Messsonde>> PostMesssonde(Messsonde messsonde)
+        public async Task<ActionResult<Messsonde>> PostMesssonde(MesssondeCreateDto messsondeDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var messung = await _context.Messung.FindAsync(messsondeDto.MessungID);
+            if (messung == null)
+            {
+                return BadRequest("Die angegebene Messung existiert nicht.");
+            }
+
+            var messsonde = new Messsonde
+            {
+                ID = messsondeDto.ID,
+                MessungID = messsondeDto.MessungID,
+                Schenkel = messsondeDto.Schenkel,
+                Notiz = messsondeDto.Notiz,
+                Messung = messung
+            };
+
             _context.Messsonde.Add(messsonde);
             await _context.SaveChangesAsync();
 
@@ -95,6 +115,22 @@ namespace TrenchAPI.Controllers
             }
 
             _context.Messsonde.Remove(messsonde);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/Messsonde
+        [HttpDelete]
+        public async Task<IActionResult> DeleteMesssonden()
+        {
+            var messsonden = await _context.Messsonde.ToListAsync();
+            if (!messsonden.Any())
+            {
+                return NotFound();
+            }
+
+            _context.Messsonde.RemoveRange(messsonden);
             await _context.SaveChangesAsync();
 
             return NoContent();
