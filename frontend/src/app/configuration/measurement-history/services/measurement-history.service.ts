@@ -39,7 +39,6 @@ export class MeasurementHistoryService implements ListService<Measurement> {
   public async reloadElements(): Promise<void> {
     this.elements = await this.backendService.getAllMeasurements();
     if (this.selectedElementCopy?.measurementSettingsId != null) {
-      console.log("TESTESTEST");
       this.selectedElementCopy!.measurementSettings = await this.backendService.getMeasurementSettings(this.selectedElementCopy?.measurementSettingsId);
     }
   }
