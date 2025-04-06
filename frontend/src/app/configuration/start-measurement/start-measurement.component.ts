@@ -30,6 +30,10 @@ export class StartMeasurementComponent implements OnDestroy {
   showIdError: boolean = false;
   isLoading: boolean = true;
   error: string | null = null;
+  
+  private startTime: Date | null = null;
+  private measurementData: { [key: string]: number[] } = {};
+  private isSaving: boolean = false;
 
   constructor(
     private webSocketService: WebSocketService,
@@ -40,7 +44,6 @@ export class StartMeasurementComponent implements OnDestroy {
   }
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
-    // Loose comparison using == here seems to be necessary, not sure why
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
   }
 
@@ -49,6 +52,7 @@ export class StartMeasurementComponent implements OnDestroy {
     this.error = null;
 
     await this.measurementSettingsService.reloadElements();
+    this.isLoading = false;
   }
 
   isValid(): boolean {
@@ -78,6 +82,15 @@ export class StartMeasurementComponent implements OnDestroy {
       const sensorCount:number = this.selectedMeasurementSetting!.sondenProSchenkel!; 
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
       
+      this.startTime = new Date();
+      this.measurementData = {};
+      for (let i = 0; i < yokeCount; i++) {
+        for (let j = 0; j < sensorCount; j++) {
+          const key = `S${i+1}S${j+1}`;
+          this.measurementData[key] = [];
+        }
+      }
+      
       await this.webSocketService.connect();
       this.isConnected = true;
       this.showIdError = false;
@@ -104,13 +117,16 @@ export class StartMeasurementComponent implements OnDestroy {
             return;
           }
     
-          //console.log(`Yoke: ${yokeIndex}, Sensor: ${sensorIndex}, Value: ${sensorValue}`);
-    
           this.yokes.update((prevYokes) => {
             const updatedYokes = [...prevYokes];
             updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
             return updatedYokes;
           });
+          
+          const key = `S${yokeIndex+1}S${sensorIndex+1}`;
+          if (this.measurementData[key]) {
+            this.measurementData[key].push(sensorValue);
+          }
         },
         error: (err: any) => {
           console.error('Fehler beim Laden der Messeinstellungen:', err);
@@ -125,10 +141,62 @@ export class StartMeasurementComponent implements OnDestroy {
     }
   }
 
-  stopMeasurement(): void {
-    this.webSocketService.disconnect();
-    this.isConnected = false;
-    this.yokes.set([]); 
+  async stopMeasurement(): Promise<void> {
+    if (this.isConnected && !this.isSaving) {
+      this.isSaving = true;
+      this.webSocketService.disconnect();
+      this.isConnected = false;
+      
+      try {
+        if (this.startTime && this.measurementSettingId) {
+          const endTime = new Date();
+          
+          const measurementData = {
+            messeinstellungID: this.measurementSettingId,
+            anfangszeitpunkt: this.startTime.toISOString(),
+            endzeitpunkt: endTime.toISOString(),
+            notiz: this.note,
+            messsonden: this.createMesssondenData()
+          };
+          
+          console.log('Speichere Messung:', measurementData);
+          await this.backendService.saveMeasurement(measurementData);
+          console.log('Messung erfolgreich gespeichert');
+        }
+      } catch (error) {
+        console.error('Fehler beim Speichern der Messung:', error);
+        this.error = 'Fehler beim Speichern der Messung';
+      } finally {
+        this.isSaving = false;
+        this.yokes.set([]); 
+      }
+    } else {
+      this.yokes.set([]); 
+    }
+  }
+  
+  private createMesssondenData(): any[] {
+    const messsonden: any[] = [];
+    
+    for (let yokeIndex = 0; yokeIndex < this.yokes().length; yokeIndex++) {
+      for (let sensorIndex = 0; sensorIndex < this.yokes()[yokeIndex].sensors.length; sensorIndex++) {
+        const key = `S${yokeIndex+1}S${sensorIndex+1}`;
+        const values = this.measurementData[key] || [];
+        
+        const avgValue = values.length > 0 
+          ? values.reduce((sum, val) => sum + val, 0) / values.length 
+          : 0;
+        
+        messsonden.push({
+          schenkel: yokeIndex + 1,
+          position: sensorIndex + 1,
+          messwerte: values,
+          durchschnittswert: avgValue
+        });
+      }
+    }
+    
+    return messsonden;
   }
 
   ngOnDestroy(): void {
