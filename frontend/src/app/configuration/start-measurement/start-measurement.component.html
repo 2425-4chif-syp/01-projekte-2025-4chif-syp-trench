@@ -1,12 +1,45 @@
 <div class="container py-4">
 
   <div class="d-flex justify-content-center gap-3 mb-4">
-    <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected">
+    <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected || !isValid()">
       🧪 Messung starten
     </button>
     <button class="btn btn-danger" (click)="stopMeasurement()" [disabled]="!isConnected">
       ⛔ Messung beenden
     </button>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Messung konfigurieren</h5>
+      <div class="mb-3">
+        <label for="measurementSettingId" class="form-label">Messeinstellung: <span class="text-danger">*</span></label>
+        <select class="form-select" id="measurementSettingId" 
+                [(ngModel)]="measurementSettingId" 
+                [class.is-invalid]="showIdError">
+          <option [ngValue]="null">Bitte wählen Sie eine Messeinstellung</option>
+          <option *ngFor="let setting of measurementSettings" [value]="setting.id">
+            Messeinstellung-ID: {{ setting.id }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="showIdError">
+          Bitte wählen Sie eine gültige Messeinstellung aus.
+        </div>
+        <div *ngIf="isLoading" class="text-muted mt-2">
+          <small>Lade Messeinstellungen...</small>
+        </div>
+        <div *ngIf="error" class="text-danger mt-2">
+          <small>{{ error }}</small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="note" class="form-label">Notiz (optional):</label>
+        <textarea class="form-control" id="note" 
+                  [(ngModel)]="note" 
+                  placeholder="Geben Sie eine optionale Notiz ein"
+                  rows="2"></textarea>
+      </div>
+    </div>
   </div>
 
   @if (isConnected) {
