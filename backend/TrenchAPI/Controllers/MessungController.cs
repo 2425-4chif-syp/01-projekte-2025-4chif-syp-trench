@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
 using TrenchAPI.Persistence.DTO;
+using System.Text.Json;
 
 namespace TrenchAPI.Controllers
 {
@@ -31,7 +32,7 @@ namespace TrenchAPI.Controllers
                     .Include(m => m.Messeinstellung)
                         .ThenInclude(me => me.MesssondenTyp)
                     .ToListAsync();       
- }
+        }
 
         // GET: api/Messung/5
         [HttpGet("{id}")]
@@ -39,6 +40,7 @@ namespace TrenchAPI.Controllers
         {
             var messung = await _context.Messung
                 .Include(m => m.Messeinstellung)
+                .Include(m => m.Messsonden)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messung == null)
@@ -83,26 +85,51 @@ namespace TrenchAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Messung>> PostMessung(MessungCreateDto messungDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var existingMesseinstellung = await _context.Messeinstellung.FindAsync(messungDto.MesseinstellungID);
-            if (existingMesseinstellung == null)
-            {
-                return BadRequest("Die angegebene Messeinstellung existiert nicht.");
-            }
-
             var messung = new Messung
             {
                 MesseinstellungID = messungDto.MesseinstellungID,
                 Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
                 Endzeitpunkt = messungDto.Endzeitpunkt,
-                Notiz = messungDto.Notiz,
+                Notiz = messungDto.Notiz
             };
 
             _context.Messung.Add(messung);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);
+        }
+
+        // POST: api/Messung/Complete
+        [HttpPost("Complete")]
+        public async Task<ActionResult<Messung>> PostCompleteMessung(CompleteMessungDto completeMessungDto)
+        {
+            // Messung erstellen
+            var messung = new Messung
+            {
+                MesseinstellungID = completeMessungDto.MesseinstellungID,
+                Anfangszeitpunkt = completeMessungDto.Anfangszeitpunkt,
+                Endzeitpunkt = completeMessungDto.Endzeitpunkt,
+                Notiz = completeMessungDto.Notiz
+            };
+
+            _context.Messung.Add(messung);
+            await _context.SaveChangesAsync();
+
+            // Messsonden erstellen
+            foreach (var messsondeDto in completeMessungDto.Messsonden)
+            {
+                var messsonde = new Messsonde
+                {
+                    MessungID = messung.ID,
+                    Schenkel = messsondeDto.Schenkel,
+                    Position = messsondeDto.Position,
+                    Messwerte = JsonSerializer.Serialize(messsondeDto.Messwerte),
+                    Durchschnittswert = messsondeDto.Durchschnittswert
+                };
+
+                _context.Messsonde.Add(messsonde);
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);
