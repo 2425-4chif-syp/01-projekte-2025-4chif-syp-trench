@@ -315,5 +315,8 @@ export class BackendService {
     await this.httpDeleteRequest('Messung/' + measurement.id);
   }
 
-  
+  // Neue Methode zum Speichern einer Messung
+  public async saveMeasurement(measurementData: any): Promise<any> {
+    return this.httpPostRequest('Messung/Complete', measurementData);
+  }
 }
