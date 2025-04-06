@@ -16,9 +16,10 @@
         <label for="measurementSettingId" class="form-label">Messeinstellung: <span class="text-danger">*</span></label>
         <select class="form-select" id="measurementSettingId" 
                 [(ngModel)]="measurementSettingId" 
-                [class.is-invalid]="showIdError">
+                [class.is-invalid]="showIdError"
+                [disabled]="isConnected">
           <option [ngValue]="null">Bitte wählen Sie eine Messeinstellung</option>
-          <option *ngFor="let setting of measurementSettings" [value]="setting.id">
+          <option *ngFor="let setting of measurementSettingsService.elements" [value]="setting.id">
             Messeinstellung-ID: {{ setting.id }}
           </option>
         </select>
@@ -36,6 +37,7 @@
         <label for="note" class="form-label">Notiz (optional):</label>
         <textarea class="form-control" id="note" 
                   [(ngModel)]="note" 
+                  [disabled]="isConnected"
                   placeholder="Geben Sie eine optionale Notiz ein"
                   rows="2"></textarea>
       </div>

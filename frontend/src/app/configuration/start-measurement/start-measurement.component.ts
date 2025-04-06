@@ -1,12 +1,15 @@
 import { Component, LOCALE_ID, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
-import { MeasurementSetting, MeasurementSettingsService } from './services/get-measurement-settings-id.service';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import { DisplacementVisualizationComponent } from "../../visualization/displacement/components/displacement-visualization.component";
 import { FormsModule } from '@angular/forms';
-import { OnInit } from '@angular/core';
+import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
+import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
+import { Coil } from '../coil/interfaces/coil';
+import { BackendService } from '../../backend.service';
+import { Coiltype } from '../coiltype/interfaces/coiltype';
 
 registerLocaleData(localeDe);
 
@@ -25,31 +28,27 @@ export class StartMeasurementComponent implements OnDestroy {
   measurementSettingId: number | null = null;
   note: string = '';
   showIdError: boolean = false;
-  measurementSettings: MeasurementSetting[] = [];
   isLoading: boolean = true;
   error: string | null = null;
 
   constructor(
     private webSocketService: WebSocketService,
-    private measurementSettingsService: MeasurementSettingsService 
+    public measurementSettingsService: MeasurementSettingsService,
+    private backendService: BackendService
   ) {
     this.loadMeasurementSettings();
   }
-  loadMeasurementSettings(): void {
+  
+  public get selectedMeasurementSetting(): MeasurementSetting | null {
+    // Loose comparison using == here seems to be necessary, not sure why
+    return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
+  }
+
+  async loadMeasurementSettings(): Promise<void> {
     this.isLoading = true;
     this.error = null;
 
-    this.measurementSettingsService.getMeasurementSettings().subscribe({
-      next: (settings) => {
-        this.measurementSettings = settings;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Fehler beim Laden der Messeinstellungen:', err);
-        this.error = 'Fehler beim Laden der Messeinstellungen';
-        this.isLoading = false;
-      }
-    });
+    await this.measurementSettingsService.reloadElements();
   }
 
   isValid(): boolean {
@@ -63,8 +62,20 @@ export class StartMeasurementComponent implements OnDestroy {
     }
 
     try {
-      const yokeCount = 4; // TODO: Get this value from the backend from measurement-settings>coil>coiltype
-      const sensorCount = 8; // TODO: Get this value from the backend from measurement-settings
+      let coil:Coil|null = this.selectedMeasurementSetting!.coil ?? null;
+      
+      if (coil === null) {
+        coil = await this.backendService.getCoil(this.selectedMeasurementSetting?.coilId!);
+      }
+      this.selectedMeasurementSetting!.coil = coil;
+      let coiltype:Coiltype|null = coil!.coiltype ?? null;
+      if (coiltype === null) {
+        coiltype = await this.backendService.getCoiltype(coil!.coiltypeId!);
+      }
+      this.selectedMeasurementSetting!.coil.coiltype = coiltype;
+
+      const yokeCount:number = coiltype.schenkel!;
+      const sensorCount:number = this.selectedMeasurementSetting!.sondenProSchenkel!; 
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
       
       await this.webSocketService.connect();
@@ -87,6 +98,11 @@ export class StartMeasurementComponent implements OnDestroy {
           const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
           const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
           const sensorValue: number = parseFloat(value);
+
+          if (yokeIndex >= yokeCount || sensorIndex >= sensorCount) {
+            console.log(`Skipped message: Yoke ${yokeIndex+1}, Sensor ${sensorIndex+1}, Value ${sensorValue}`);
+            return;
+          }
     
           //console.log(`Yoke: ${yokeIndex}, Sensor: ${sensorIndex}, Value: ${sensorValue}`);
     
