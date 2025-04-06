@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
+using TrenchAPI.Persistence.DTO;
+using System.Text.Json;
 
 namespace TrenchAPI.Controllers
 {
@@ -25,14 +26,22 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messung>>> GetMessung()
         {
-            return await _context.Messung.ToListAsync();
+                return await _context.Messung
+                    .Include(m => m.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                    .Include(m => m.Messeinstellung)
+                        .ThenInclude(me => me.MesssondenTyp)
+                    .ToListAsync();       
         }
 
         // GET: api/Messung/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Messung>> GetMessung(int id)
         {
-            var messung = await _context.Messung.FindAsync(id);
+            var messung = await _context.Messung
+                .Include(m => m.Messeinstellung)
+                .Include(m => m.Messsonden)
+                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messung == null)
             {
@@ -43,7 +52,6 @@ namespace TrenchAPI.Controllers
         }
 
         // PUT: api/Messung/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMessung(int id, Messung messung)
         {
@@ -74,11 +82,54 @@ namespace TrenchAPI.Controllers
         }
 
         // POST: api/Messung
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Messung>> PostMessung(Messung messung)
+        public async Task<ActionResult<Messung>> PostMessung(MessungCreateDto messungDto)
         {
+            var messung = new Messung
+            {
+                MesseinstellungID = messungDto.MesseinstellungID,
+                Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
+                Endzeitpunkt = messungDto.Endzeitpunkt,
+                Notiz = messungDto.Notiz
+            };
+
             _context.Messung.Add(messung);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);
+        }
+
+        // POST: api/Messung/Complete
+        [HttpPost("Complete")]
+        public async Task<ActionResult<Messung>> PostCompleteMessung(CompleteMessungDto completeMessungDto)
+        {
+            // Messung erstellen
+            var messung = new Messung
+            {
+                MesseinstellungID = completeMessungDto.MesseinstellungID,
+                Anfangszeitpunkt = completeMessungDto.Anfangszeitpunkt,
+                Endzeitpunkt = completeMessungDto.Endzeitpunkt,
+                Notiz = completeMessungDto.Notiz
+            };
+
+            _context.Messung.Add(messung);
+            await _context.SaveChangesAsync();
+
+            // Messsonden erstellen
+            foreach (var messsondeDto in completeMessungDto.Messsonden)
+            {
+                var messsonde = new Messsonde
+                {
+                    MessungID = messung.ID,
+                    Schenkel = messsondeDto.Schenkel,
+                    Position = messsondeDto.Position,
+                    Messwerte = JsonSerializer.Serialize(messsondeDto.Messwerte),
+                    Durchschnittswert = messsondeDto.Durchschnittswert
+                };
+
+                _context.Messsonde.Add(messsonde);
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);
@@ -95,6 +146,22 @@ namespace TrenchAPI.Controllers
             }
 
             _context.Messung.Remove(messung);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/Messung
+        [HttpDelete]
+        public async Task<IActionResult> DeleteMessungen()
+        {
+            var messungen = await _context.Messung.ToListAsync();
+            if (!messungen.Any())
+            {
+                return NotFound();
+            }
+
+            _context.Messung.RemoveRange(messungen);
             await _context.SaveChangesAsync();
 
             return NoContent();

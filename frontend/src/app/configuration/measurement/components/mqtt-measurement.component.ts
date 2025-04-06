@@ -11,13 +11,13 @@ interface SensorTolerance {
 }
 
 @Component({
-  selector: 'app-measurement-management',
+  selector: 'app-mqtt-measurement',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule] as const,
-  templateUrl: './measurement-management.component.html',
-  styleUrl: './measurement-management.component.scss'
+  templateUrl: './mqtt-measurement.component.html',
+  styleUrl: './mqtt-measurement.component.scss'
 })
-export class MeasurementManagementComponent implements OnInit, OnDestroy {
+export class MQTTMeasurementComponent implements OnInit, OnDestroy {
   public hasConnected: boolean = false;
   public sensorValues: { [key: string]: number } = {}; // Store sensor values
   public lastUpdate: Date | undefined = undefined;

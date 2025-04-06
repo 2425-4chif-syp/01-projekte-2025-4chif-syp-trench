@@ -62,13 +62,13 @@ Simon Pesut
 |===
 |wer | 
 
-| Team
+| Thomas Stuetz & Dr. Klaus Koeck & Team Trench
 a| == Ausgangslage
 Erste Version von Trench Website mit C# Backend, Angular Frontend und Postgres Datenbank. Spule, Spuletyp, Messeinstellungen und Messergebnis sind sichtbar. Außerdem können Vektoren it Testdaten angezeigt werden. C# sendet testdaten an MQTT und frontend liest aus.
 
 == Aufgaben
 1. Wireframes werden erstellt, damit wir nicht alles neu programmieren müssen.
-2. Messsondentypliste soll implementiert werden
+2. Messonden sollen automatisch generiert werden
 3. Messeintellungsliste mit Auswahl für Spule und Messsondentyp
 4. Liste von Messung, mit "Neue Messung"-Button; in der Messung Messeinstellung-Auswahl
 5. Falls eine existierende Messung ist es read-only, sonst "Messung starten".

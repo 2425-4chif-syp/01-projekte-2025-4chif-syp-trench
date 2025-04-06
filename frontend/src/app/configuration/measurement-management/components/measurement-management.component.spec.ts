@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MeasurementManagementComponent } from './measurement-management.component';
 
-describe('MeasurementManagementComponent', () => {
+
+describe('ComponentsComponent', () => {
   let component: MeasurementManagementComponent;
   let fixture: ComponentFixture<MeasurementManagementComponent>;
 

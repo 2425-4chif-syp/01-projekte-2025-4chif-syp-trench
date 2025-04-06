@@ -1,21 +1,26 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
     public class Messung : EntityObject
     {
-        [ForeignKey(nameof(MesseinstellungID))]
-        public Messeinstellung? Messeinstellung { get; set; }
+        [Required]
         public int MesseinstellungID { get; set; }
-
-        [Column(TypeName = "timestamp")]
+        
+        [ForeignKey("MesseinstellungID")]
+        public virtual Messeinstellung Messeinstellung { get; set; }
+        
+        [Required]
         public DateTime Anfangszeitpunkt { get; set; }
-
-        [Column(TypeName = "timestamp")]
+        
+        [Required]
         public DateTime Endzeitpunkt { get; set; }
-
-        [Column(TypeName = "VARCHAR(250)")]
-        public string Notiz { get; set; } = "";
+        
+        public string Notiz { get; set; }
+        
+        public virtual ICollection<Messsonde> Messsonden { get; set; }
     }
 }

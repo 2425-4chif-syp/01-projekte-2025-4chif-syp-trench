@@ -1,106 +1,147 @@
-﻿using MQTTnet;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using MQTTnet;
 using MQTTnet.Client;
 using System;
+using System.Diagnostics.Tracing;
+using System.Net.WebSockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace ConsoleMqtt
 {
     class Program
     {
-        private static IMqttClient _mqttPublisherClient;
-        private static MqttSubscriber _subscriber;
-
         static async Task Main(string[] args)
         {
-            // Create separate factory instances (optional)
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddCors();
+            builder.Services.AddSingleton<MqttSubscriber>();
+            
+            // Konfiguriere Kestrel für WebSocket
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                serverOptions.ListenAnyIP(8080);
+            });
+            
+            var app = builder.Build();
+
+            // Initialize MQTT client and subscriber
             var factory = new MqttFactory();
-
-            // Configure publisher (using your existing WebSocket config)
-            _mqttPublisherClient = factory.CreateMqttClient();
-            var publisherOptions = new MqttClientOptionsBuilder()
-                .WithWebSocketServer("ws://vm90.htl-leonding.ac.at:9001/ws")
+            var mqttClient = factory.CreateMqttClient();
+            var mqttOptions = new MqttClientOptionsBuilder()
+                .WithTcpServer("vm90.htl-leonding.ac.at")
                 .WithCredentials("student", "passme")
                 .Build();
 
-            // Configure subscriber (using TCP/MQTT protocol)
-            var subscriberClient = factory.CreateMqttClient();
-            var subscriberOptions = new MqttClientOptionsBuilder()
-                .WithTcpServer("vm90.htl-leonding.ac.at") // Default port 1883
-                .WithCredentials("student", "passme")
-                .Build();
-
-            // Connect publisher
-            var pubConnectResult = await _mqttPublisherClient.ConnectAsync(publisherOptions);
-            if (pubConnectResult.ResultCode != MqttClientConnectResultCode.Success)
+            var connectResult = await mqttClient.ConnectAsync(mqttOptions);
+            if (connectResult.ResultCode != MqttClientConnectResultCode.Success)
             {
-                Console.WriteLine($"Failed to connect publisher: {pubConnectResult.ResultCode}");
+                Console.WriteLine($"Failed to connect to MQTT broker: {connectResult.ResultCode}");
                 return;
             }
 
-            // Connect subscriber
-            var subConnectResult = await subscriberClient.ConnectAsync(subscriberOptions);
-            if (subConnectResult.ResultCode != MqttClientConnectResultCode.Success)
+            var mqttSubscriber = app.Services.GetRequiredService<MqttSubscriber>();
+            await mqttSubscriber.InitializeWithExistingClient(mqttClient);
+
+            app.UseCors(builder =>
             {
-                Console.WriteLine($"Failed to connect subscriber: {subConnectResult.ResultCode}");
-                return;
-            }
+                builder.WithOrigins("http://localhost:4200", "http://frontend:4200")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+            });
 
-            Console.WriteLine("Both clients connected successfully");
-
-            // Initialize subscriber
-            _subscriber = new MqttSubscriber();
-            await _subscriber.InitializeWithExistingClient(subscriberClient);
-
-            // Start sending messages
-            await SendMessagesPeriodically();
-
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
-
-            // Cleanup
-            await _subscriber.DisconnectAsync();
-            await _mqttPublisherClient.DisconnectAsync();
-        }
-
-        private static async Task SendMessagesPeriodically()
-        {
-            var random = new Random();
-
-            while (true)
+            app.UseWebSockets(new WebSocketOptions
             {
-                var messages = new List<MqttApplicationMessage>();
+                KeepAliveInterval = TimeSpan.FromSeconds(120)
+            });
 
-                for (int i = 1; i <= 4; i++)
+            app.Map("/ws", async context =>
+            {
+                if (context.WebSockets.IsWebSocketRequest)
                 {
-                    for (int j = 1; j <= 8; j++)
+                    using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    Console.WriteLine("Neue WebSocket-Verbindung akzeptiert");
+                    mqttSubscriber.AddWebSocketClient(webSocket);
+                    
+                    var buffer = new byte[4096]; // Größerer Buffer
+                    try
                     {
-                        string topic = $"trench_adc_test/S{i}S{j}";
-                        double randomValue = 1000 + random.NextDouble() * 1000;
-                        string payload = randomValue.ToString("F2");
-
-                        var message = new MqttApplicationMessageBuilder()
-                            .WithTopic(topic)
-                            .WithPayload(payload)
-                            .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
-                            .WithRetainFlag()
-                            .Build();
-
-                        messages.Add(message);
+                        while (webSocket.State == WebSocketState.Open)
+                        {
+                            var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                            Console.WriteLine($"WebSocket Nachricht empfangen: Typ={result.MessageType}, Länge={result.Count} Bytes");
+                            
+                            if (result.MessageType == WebSocketMessageType.Close)
+                            {
+                                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                                Console.WriteLine("WebSocket-Verbindung normal geschlossen");
+                                break;
+                            }
+                            
+                            // Verarbeite die empfangene Nachricht
+                            var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                            Console.WriteLine($"Empfangene Nachricht: {message}");
+                            
+                            try 
+                            {
+                                var config = JsonSerializer.Deserialize<Dictionary<string, object>>(message);
+                                Console.WriteLine("JSON erfolgreich deserialisiert");
+                                
+                                if (config != null)
+                                {
+                                    Console.WriteLine($"Nachrichtentyp: {config.GetValueOrDefault("type")}");
+                                    if (config.ContainsKey("type") && config["type"].ToString() == "config")
+                                    {
+                                        Console.WriteLine($"Konfiguration empfangen - ID: {config["measurementSettingId"]}, Notiz: {config["note"]}");
+                                        
+                                        // Sende Bestätigung zurück
+                                        var response = JsonSerializer.Serialize(new { status = "ok", message = "Konfiguration empfangen" });
+                                        var responseBytes = Encoding.UTF8.GetBytes(response);
+                                        await webSocket.SendAsync(
+                                            new ArraySegment<byte>(responseBytes),
+                                            WebSocketMessageType.Text,
+                                            true,
+                                            CancellationToken.None
+                                        );
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Fehler beim Verarbeiten der Konfigurationsnachricht: {ex.Message}");
+                                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"WebSocket Fehler: {ex.Message}");
+                        Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                    }
+                    finally
+                    {
+                        mqttSubscriber.RemoveWebSocketClient(webSocket);
+                        Console.WriteLine("WebSocket-Client entfernt");
                     }
                 }
-
-                var publishTasks = messages.Select(message => 
+                else
                 {
-                    Console.WriteLine($"Publishing to {message.Topic}: {System.Text.Encoding.UTF8.GetString(message.Payload)}");
-                    return _mqttPublisherClient.PublishAsync(message, CancellationToken.None);
-                });
+                    context.Response.StatusCode = 400;
+                    await context.Response.WriteAsync("Expected a WebSocket request");
+                }
+            });
 
-                await Task.WhenAll(publishTasks);
-                Console.WriteLine($"All {messages.Count} messages published at {DateTime.Now:T}");
+            // Start MQTT sender in background
+            _ = MqttSender.sendData();
 
-                await Task.Delay(5000);
-            }
+            Console.WriteLine("Starting WebSocket server on http://0.0.0.0:8080");
+            await app.RunAsync();
         }
     }
 }
