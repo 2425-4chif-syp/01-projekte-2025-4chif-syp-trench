@@ -32,7 +32,7 @@ export class MeasurementHistoryComponent {
   public readonly elementValueToStringMethods: { [key: string]: (element: Measurement) => string } = {
     'startTime': (element) => this.formatDate(element.startTime),
     'endTime': (element) => this.formatDate(element.endTime),
-    'measurementSettings': (element) => element.measurementSettings?.coil?.coiltype?.name ?? console.log("bla", element) + ""
+    'measurementSettings': (element) => element.measurementSettings?.coil?.coiltype?.name ?? "Unknown Coil"
   };
 
   /* 
