@@ -1,7 +1,7 @@
 import { Component, LOCALE_ID, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
-import { MeasurementSetting } from './services/get-measurement-settings-id.service';
+import { MeasurementSetting, MeasurementSettingsService } from './services/get-measurement-settings-id.service';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import { DisplacementVisualizationComponent } from "../../visualization/displacement/components/displacement-visualization.component";
@@ -18,7 +18,7 @@ registerLocaleData(localeDe);
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
 })
-export class StartMeasurementComponent implements OnInit, OnDestroy {
+export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
   sensorValues: { [key: string]: number } = {}; 
   isConnected: boolean = false;
@@ -30,40 +30,21 @@ export class StartMeasurementComponent implements OnInit, OnDestroy {
   error: string | null = null;
 
   constructor(
-    private webSocketService: WebSocketService
-  ) {}
-
-  ngOnInit(): void {
+    private webSocketService: WebSocketService,
+    private measurementSettingsService: MeasurementSettingsService 
+  ) {
     this.loadMeasurementSettings();
   }
-
-
   loadMeasurementSettings(): void {
-    const yokeCount = 4; // TODO: Get this value from the backend from measurement-settings>coil>coiltype
-    const sensorCount = 8; // TODO: Get this value from the backend from measurement-settings
-    this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
-
     this.isLoading = true;
     this.error = null;
 
-    this.webSocketService.getMessages().subscribe({
-      next: (message: string) => {
-        console.log('Received message:', message);
-
-        const [topic, value] = message.split(':'); 
-        const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
-        const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
-        const sensorValue: number = parseFloat(value);
-  
-        //console.log(`Yoke: ${yokeIndex}, Sensor: ${sensorIndex}, Value: ${sensorValue}`);
-  
-        this.yokes.update((prevYokes) => {
-          const updatedYokes = [...prevYokes];
-          updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
-          return updatedYokes;
-        });
+    this.measurementSettingsService.getMeasurementSettings().subscribe({
+      next: (settings) => {
+        this.measurementSettings = settings;
+        this.isLoading = false;
       },
-      error: (err: any) => {
+      error: (err) => {
         console.error('Fehler beim Laden der Messeinstellungen:', err);
         this.error = 'Fehler beim Laden der Messeinstellungen';
         this.isLoading = false;
@@ -82,6 +63,10 @@ export class StartMeasurementComponent implements OnInit, OnDestroy {
     }
 
     try {
+      const yokeCount = 4; // TODO: Get this value from the backend from measurement-settings>coil>coiltype
+      const sensorCount = 8; // TODO: Get this value from the backend from measurement-settings
+      this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
+      
       await this.webSocketService.connect();
       this.isConnected = true;
       this.showIdError = false;
@@ -94,16 +79,27 @@ export class StartMeasurementComponent implements OnInit, OnDestroy {
       console.log('Sende Konfiguration:', config);
       this.webSocketService.sendMessage(JSON.stringify(config));
 
-      this.webSocketService.getMessages().subscribe((message) => {
-        console.log('Empfangene Nachricht:', message);
-        try {
-          const data = JSON.parse(message);
-          if (data.status === 'ok') {
-            console.log('Konfiguration wurde vom Server bestätigt');
-          }
-        } catch {
-          const [topic, value] = message.split(':');
-          this.sensorValues[topic] = parseFloat(value);
+      this.webSocketService.getMessages().subscribe({
+        next: (message: string) => {
+          console.log('Received message:', message);
+  
+          const [topic, value] = message.split(':'); 
+          const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
+          const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
+          const sensorValue: number = parseFloat(value);
+    
+          //console.log(`Yoke: ${yokeIndex}, Sensor: ${sensorIndex}, Value: ${sensorValue}`);
+    
+          this.yokes.update((prevYokes) => {
+            const updatedYokes = [...prevYokes];
+            updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
+            return updatedYokes;
+          });
+        },
+        error: (err: any) => {
+          console.error('Fehler beim Laden der Messeinstellungen:', err);
+          this.error = 'Fehler beim Laden der Messeinstellungen';
+          this.isLoading = false;
         }
       });
     } catch (error) {
