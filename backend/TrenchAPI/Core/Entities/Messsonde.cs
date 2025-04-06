@@ -1,18 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TrenchAPI.Core.Entities
 {
     public class Messsonde : EntityObject
     {
-        [ForeignKey(nameof(MessungID))]
-        public Messung? Messung { get; set; }
+        [Required]
         public int MessungID { get; set; }
-
-        [Column(TypeName = "int")]
+        
+        [ForeignKey("MessungID")]
+        [JsonIgnore]
+        public virtual Messung Messung { get; set; }
+        
+        [Required]
         public int Schenkel { get; set; }
-
-        [Column(TypeName = "VARCHAR(250)")]
-        public string Notiz { get; set; } = "";
+        
+        [Required]
+        public int Position { get; set; }
+        
+        [Required]
+        [Column(TypeName = "jsonb")]
+        public string Messwerte { get; set; }
+        
+        [Required]
+        public double Durchschnittswert { get; set; }
     }
 }
