@@ -22,6 +22,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
   saveMessage: string | null = null;
   saveError: boolean = false;
   originalProbeType: MeasurementProbeType | null = null;
+  showDeleteModal = false;
 
   constructor(private measurementProbeTypesService: MeasurementProbeTypesService) {}
 
@@ -54,6 +55,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
     }
 
     try {
+      if(this.selectedProbeType.notiz === null) this.selectedProbeType.notiz = "";
       await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
       this.saveMessage = "Änderungen gespeichert!";
       setTimeout(() => {
@@ -74,13 +76,19 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
     return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
 
-  async deleteProbeType(): Promise<void> {
-    if (this.measurementProbeTypesService.selectedElementCopy === null) {
-      return;
-    }
-
-    await this.measurementProbeTypesService.deleteElement(this.measurementProbeTypesService.selectedElementCopy.id!);
+  openDeleteModal(): void {
+    this.showDeleteModal = true;
   }
+  
+  async confirmDeleteProbeType(): Promise<void> {
+    this.showDeleteModal = false;
+  
+    if (this.selectedProbeType === null) return;
+  
+    await this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id!);
+    this.backToListing();
+  }
+  
 
   backToListing(): void {
     this.measurementProbeTypesService.selectedElementCopy = null;

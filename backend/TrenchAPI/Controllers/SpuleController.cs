@@ -84,7 +84,8 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.SpuleTyp.Any(st => st.ID == spuleDto.SpuleTypID))
+            var spuleTyp = await _context.SpuleTyp.FindAsync(spuleDto.SpuleTypID);
+            if (spuleTyp == null)
             {
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");
             }
