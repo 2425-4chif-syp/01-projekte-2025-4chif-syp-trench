@@ -9,6 +9,8 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace ConsoleMqtt
 {
@@ -64,28 +66,68 @@ namespace ConsoleMqtt
                 if (context.WebSockets.IsWebSocketRequest)
                 {
                     using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    Console.WriteLine("Neue WebSocket-Verbindung akzeptiert");
                     mqttSubscriber.AddWebSocketClient(webSocket);
                     
-                    var buffer = new byte[1024];
+                    var buffer = new byte[4096]; // Größerer Buffer
                     try
                     {
                         while (webSocket.State == WebSocketState.Open)
                         {
                             var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                            Console.WriteLine($"WebSocket Nachricht empfangen: Typ={result.MessageType}, Länge={result.Count} Bytes");
+                            
                             if (result.MessageType == WebSocketMessageType.Close)
                             {
                                 await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                                Console.WriteLine("WebSocket-Verbindung normal geschlossen");
                                 break;
+                            }
+                            
+                            // Verarbeite die empfangene Nachricht
+                            var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                            Console.WriteLine($"Empfangene Nachricht: {message}");
+                            
+                            try 
+                            {
+                                var config = JsonSerializer.Deserialize<Dictionary<string, object>>(message);
+                                Console.WriteLine("JSON erfolgreich deserialisiert");
+                                
+                                if (config != null)
+                                {
+                                    Console.WriteLine($"Nachrichtentyp: {config.GetValueOrDefault("type")}");
+                                    if (config.ContainsKey("type") && config["type"].ToString() == "config")
+                                    {
+                                        Console.WriteLine($"Konfiguration empfangen - ID: {config["measurementSettingId"]}, Notiz: {config["note"]}");
+                                        
+                                        // Sende Bestätigung zurück
+                                        var response = JsonSerializer.Serialize(new { status = "ok", message = "Konfiguration empfangen" });
+                                        var responseBytes = Encoding.UTF8.GetBytes(response);
+                                        await webSocket.SendAsync(
+                                            new ArraySegment<byte>(responseBytes),
+                                            WebSocketMessageType.Text,
+                                            true,
+                                            CancellationToken.None
+                                        );
+                                    }
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Fehler beim Verarbeiten der Konfigurationsnachricht: {ex.Message}");
+                                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"WebSocket error: {ex.Message}");
+                        Console.WriteLine($"WebSocket Fehler: {ex.Message}");
+                        Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                     }
                     finally
                     {
                         mqttSubscriber.RemoveWebSocketClient(webSocket);
+                        Console.WriteLine("WebSocket-Client entfernt");
                     }
                 }
                 else
