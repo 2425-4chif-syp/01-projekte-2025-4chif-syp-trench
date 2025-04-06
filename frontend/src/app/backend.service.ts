@@ -4,6 +4,7 @@ import { Coil } from './configuration/coil/interfaces/coil';
 import { Coiltype } from './configuration/coiltype/interfaces/coiltype';
 import { MeasurementProbeType } from './configuration/measurement-probe-type/interfaces/measurement-probe-type';
 import { MeasurementSetting } from './configuration/measurement-settings/interfaces/measurement-settings';
+import { Measurement } from './configuration/measurement-history/interfaces/measurement.model';
 
 @Injectable({
   providedIn: 'root'
@@ -156,7 +157,6 @@ export class BackendService {
   }
 
   private measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{
-    console.log(measurementSettings);
     return {
       id: measurementSettings.id,
       spuleID: measurementSettings.coilId,
@@ -169,6 +169,30 @@ export class BackendService {
       notiz: measurementSettings.notiz
     }
   }
+
+  private measurementBackendToFrontend(measurement: any): Measurement {
+    return {
+      id: measurement.id,
+      measurementSettings: measurement.messeinstellung,
+      measurementSettingsId: measurement.messeinstellungID,
+      startTime: measurement.anfangszeitpunkt,
+      endTime: measurement.endzeitpunkt,
+      notiz: measurement.notiz
+    }
+  }
+
+  private measurementFrontendToBackend(measurement: Measurement): any {
+    return {
+      id: measurement.id,
+      messeinstellungID: measurement.measurementSettingsId,
+      anfangszeitpunkt: measurement.startTime,
+      endzeitpunkt: measurement.endTime,
+      notiz: measurement.notiz
+    }
+  }
+    
+
+  // Spulen
 
   public async getAllCoils(): Promise<Coil[]> {
     const response:any = await this.httpGetRequest('Spule');
@@ -193,6 +217,8 @@ export class BackendService {
     await this.httpDeleteRequest('Spule/' + coil.id);
   }
 
+  // Spulentypen
+
   public async getAllCoiltypes(): Promise<Coiltype[]> {
     const response:any = await this.httpGetRequest('SpuleTyp');
     return response.map((coiltype: any) => (this.coiltypeBackendToFrontend(coiltype)));
@@ -216,6 +242,8 @@ export class BackendService {
     await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
   }
 
+  // Messsonden
+
   public async getAllMeasurementProbeTypes(): Promise<MeasurementProbeType[]> {
     const response:any = await this.httpGetRequest('MesssondenTyp');
     return response.map((measurementProbeType: any) => (this.measurementProbeTypeBackendToFrontend(measurementProbeType)));
@@ -236,6 +264,8 @@ export class BackendService {
   public async deleteMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
     await this.httpDeleteRequest('MesssondenTyp/' + measurementProbeType.id);
   }
+
+  // Messeinstellungen
 
   public async addMeasurementSettings(measurementSettings: MeasurementSetting): Promise<MeasurementSetting>{
     const response: any = await this.httpPostRequest('Messeinstellung', this.measurementSettingsFrontendToBackend(measurementSettings));
@@ -259,4 +289,31 @@ export class BackendService {
   public async deleteMeasurementSettings(measurementSettings: MeasurementSetting): Promise<void>{
     await this.httpDeleteRequest('Messeinstellung/' + measurementSettings.id);
   }
+
+  // Messungen
+
+  public async getAllMeasurements(): Promise<Measurement[]> {
+    const response: any = await this.httpGetRequest('Messung');
+    return response.map((measurement: any) => (this.measurementBackendToFrontend(measurement)));
+  }
+
+  public async getMeasurement(id: number): Promise<Measurement> {
+    const response: any = await this.httpGetRequest('Messung/' + id);
+    return this.measurementBackendToFrontend(response);
+  }
+
+  public async addMeasurement(measurement: Measurement): Promise<Measurement> {
+    const response: any = await this.httpPostRequest('Messung', this.measurementFrontendToBackend(measurement));
+    return this.measurementBackendToFrontend(response);
+  }
+
+  public async updateMeasurement(measurement: Measurement): Promise<void> {
+    await this.httpPutRequest('Messung/' + measurement.id, this.measurementFrontendToBackend(measurement));
+  }
+
+  public async deleteMeasurement(measurement: Measurement): Promise<void> {
+    await this.httpDeleteRequest('Messung/' + measurement.id);
+  }
+
+  
 }
