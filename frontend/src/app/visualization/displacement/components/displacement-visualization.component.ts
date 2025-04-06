@@ -36,7 +36,7 @@ export class DisplacementVisualizationComponent {
   }
 
   public get coilVisualizationSize(): number {
-    switch (this.yokes.length) {
+    switch (this.yokes().length) {
       case 2:
         return 400;
       case 3:
