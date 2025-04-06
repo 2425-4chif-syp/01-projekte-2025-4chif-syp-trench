@@ -1,21 +1,23 @@
-import { Component, LOCALE_ID, OnDestroy } from '@angular/core';
+import { Component, LOCALE_ID, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import { DisplacementVisualizationComponent } from "../../visualization/displacement/components/displacement-visualization.component";
 
 registerLocaleData(localeDe);
 
 @Component({
   selector: 'app-start-measurement',
   standalone: true,
-  imports: [CommonModule], 
+  imports: [CommonModule, DisplacementVisualizationComponent], 
   providers: [WebSocketService, { provide: LOCALE_ID, useValue: 'de' }],
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
 })
 export class StartMeasurementComponent implements OnDestroy {
-  sensorValues: { [key: string]: number } = {}; 
+  yokes = signal<{ sensors: number[] }[]>([]);
+
   isConnected: boolean = false;
 
   constructor(private webSocketService: WebSocketService) {}
@@ -24,45 +26,36 @@ export class StartMeasurementComponent implements OnDestroy {
     this.webSocketService.connect();
     this.isConnected = true;
 
+    const yokeCount = 4; // TODO: Get this value from the backend from measurement-settings>coil>coiltype
+    const sensorCount = 8; // TODO: Get this value from the backend from measurement-settings
+    this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
+
     this.webSocketService.getMessages().subscribe((message) => {
+      console.log('Received message:', message);
+
       const [topic, value] = message.split(':'); 
-      this.sensorValues[topic] = parseFloat(value);
+      const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
+      const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
+      const sensorValue: number = parseFloat(value);
+
+      //console.log(`Yoke: ${yokeIndex}, Sensor: ${sensorIndex}, Value: ${sensorValue}`);
+
+      //this.yokes[yokeIndex].sensors[sensorIndex] = sensorValue;
+      this.yokes.update((prevYokes) => {
+        const updatedYokes = [...prevYokes];
+        updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
+        return updatedYokes;
+      });
     });
   }
 
   stopMeasurement(): void {
     this.webSocketService.disconnect();
     this.isConnected = false;
-    this.sensorValues = {};
+    this.yokes.set([]); 
   }
 
   ngOnDestroy(): void {
     this.stopMeasurement();
   }
-
-  getSensorKeys(): string[] {
-    return Object.keys(this.sensorValues);
-  }
-
-  getGroupedSensors(): { [schenkel: string]: string[] } {
-    const grouped: { [schenkel: string]: string[] } = {};
-  
-    for (const key of this.getSensorKeys()) {
-      const match = key.match(/S(\d+)S\d+/); 
-      if (match) {
-        const schenkel = `Schenkel ${match[1]}`;
-        if (!grouped[schenkel]) {
-          grouped[schenkel] = [];
-        }
-        grouped[schenkel].push(key);
-      }
-    }
-  
-    return grouped;
-  }
-  
-  getGroupedSensorKeys(): string[] {
-    return Object.keys(this.getGroupedSensors());
-  }
-  
 }
