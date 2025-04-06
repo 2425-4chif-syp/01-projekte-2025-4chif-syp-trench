@@ -27,17 +27,22 @@
             <textarea id="notiz" class="form-control" [(ngModel)]="selectedProbeType!.notiz"></textarea>
           </div>
         </div>
+
         <div class="mt-auto mb-4 px-3">
           <div class="d-flex justify-content-between">
             <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
             <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-            <button class="btn btn-danger w-100" (click)="deleteProbeType()">Löschen</button>
+            <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
           </div>
-        </div>
+
+          <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+            {{ saveMessage }}
+          </div>          
+        </div>    
       </div>
     </div>
   
-    <div class="col-6">
+    <div class="col-6" style="max-height: 600px;">
       <!-- SVG-Zeichnung -->
       <div class="d-flex justify-content-center align-items-center mt-5">
         <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
@@ -79,3 +84,26 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
+  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Messsonde löschen?</h5>
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Messsonde löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">Abbrechen</button>
+        <button type="button" class="btn btn-danger" (click)="confirmDeleteProbeType()">Löschen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  

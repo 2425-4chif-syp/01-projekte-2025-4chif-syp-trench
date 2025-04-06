@@ -25,7 +25,7 @@ export class MeasurementHistoryComponent {
     'id': 'ID',
     'startTime': 'Startzeit',
     'endTime': 'Endzeit',
-    'measurementSettings': 'Spule'
+    //'measurementSettings': 'Spule'
     //'notiz': 'Notiz',
   }
 
