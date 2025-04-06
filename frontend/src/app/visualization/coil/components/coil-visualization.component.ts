@@ -31,5 +31,6 @@ export class CoilVisualizationComponent {
   public onImageError(): void {
     this.imageLoadError.set(true);
     this.imageLoaded.set(false);
+    console.error(`Error loading image: ${this.svgUrl}`);
   }
 }

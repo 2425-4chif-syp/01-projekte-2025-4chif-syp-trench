@@ -1,7 +1,7 @@
 <div class="container py-4">
 
   <div class="d-flex justify-content-center gap-3 mb-4">
-    <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected">
+    <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected || !isValid()">
       🧪 Messung starten
     </button>
     <button class="btn btn-danger" (click)="stopMeasurement()" [disabled]="!isConnected">
@@ -9,23 +9,65 @@
     </button>
   </div>
 
-  <div *ngIf="isConnected">
-    <div *ngFor="let schenkel of getGroupedSensorKeys()" class="mb-5">
-      <h4 class="mb-3 text-primary border-bottom pb-1">{{ schenkel }}</h4>
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-        <div *ngFor="let sensor of getGroupedSensors()[schenkel]" class="col">
-          <div class="card text-center h-100 border border-primary shadow-sm">
-            <div class="card-body">
-              <h6 class="card-title text-muted small">{{ sensor }}</h6>
-              <p class="card-text fs-4 fw-bold">{{ sensorValues[sensor] | number:'1.2-2' }}</p>
-            </div>
-          </div>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Messung konfigurieren</h5>
+      <div class="mb-3">
+        <label for="measurementSettingId" class="form-label">Messeinstellung: <span class="text-danger">*</span></label>
+        <select class="form-select" id="measurementSettingId" 
+                [(ngModel)]="measurementSettingId" 
+                [class.is-invalid]="showIdError"
+                [disabled]="isConnected">
+          <option [ngValue]="null">Bitte wählen Sie eine Messeinstellung</option>
+          <option *ngFor="let setting of measurementSettingsService.elements" [value]="setting.id">
+            Messeinstellung-ID: {{ setting.id }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="showIdError">
+          Bitte wählen Sie eine gültige Messeinstellung aus.
         </div>
+        <div *ngIf="isLoading" class="text-muted mt-2">
+          <small>Lade Messeinstellungen...</small>
+        </div>
+        <div *ngIf="error" class="text-danger mt-2">
+          <small>{{ error }}</small>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="note" class="form-label">Notiz (optional):</label>
+        <textarea class="form-control" id="note" 
+                  [(ngModel)]="note" 
+                  [disabled]="isConnected"
+                  placeholder="Geben Sie eine optionale Notiz ein"
+                  rows="2"></textarea>
       </div>
     </div>
   </div>
 
-  <div *ngIf="!isConnected" class="text-center mt-5">
-    <p class="text-danger fs-4">🔴 Messung gestoppt</p>
-  </div>
+  @if (isConnected) {
+    @for (yoke of yokes(); track $index) {
+      <div class="mb-5">
+        <h4 class="mb-3 text-primary border-bottom pb-1">Schenkel #{{ $index+1 }}</h4>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+          @for (sensor of yoke.sensors; track $index) {
+            <div class="col">
+              <div class="card text-center h-100 border border-primary shadow-sm">
+                <div class="card-body">
+                  <h6 class="card-title text-muted small">Sensor #{{ $index+1 }}</h6>
+                  <p class="card-text fs-4 fw-bold">{{ sensor | number:'1.2-2' }}</p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+  }
+    
+    <app-displacement-visualization [size]="512" [yokes]="yokes" />
+  }
+  @else {
+    <div class="text-center mt-5">
+      <p class="text-danger fs-4">🔴 Messung gestoppt</p>
+    </div>
+  }
 </div>

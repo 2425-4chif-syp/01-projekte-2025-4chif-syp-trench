@@ -16,6 +16,7 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   @Input() public elementValueToStringMethods: { [key: string]: (element:TElement) => string } = {};
   @Input() public isSelector: boolean = false;
   @Input() public newElementButtonLabel: string = 'New Element';
+  @Input() public showButton: boolean = true;
 
   @Output() onElementClick = new EventEmitter<TElement>();
   @Output() hoveringElement = new EventEmitter<{element:TElement|null, mousePosition:{x:number, y:number}|null}>();
