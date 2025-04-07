@@ -28,7 +28,7 @@ export class DisplacementVisualizationComponent {
   public isHoveringOverBorder:boolean = false;
 
   constructor(private displacementService: DisplacementService) {
-    //this.yokes.set([
+    //this.yokes  .set([
     //  { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
     //  { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
@@ -55,7 +55,7 @@ export class DisplacementVisualizationComponent {
     };
   }
   private get coilVisualizationOffsetUnscaled(): { x: number, y: number } {
-    switch (this.yokes.length) {
+    switch (this.yokes().length) {
       case 2:
         return { x: 425, y: 450 };
       case 3:
@@ -67,7 +67,7 @@ export class DisplacementVisualizationComponent {
     }
   }
   public get coilVisualizationRotation(): number {
-    switch (this.yokes.length) {
+    switch (this.yokes().length) {
       case 2:
         return 0;
       case 3:
