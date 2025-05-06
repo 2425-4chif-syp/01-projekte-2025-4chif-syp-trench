@@ -14,7 +14,7 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "varchar")]
         public string Name { get; set; } = "";
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Kalibrierungsfaktor { get; set; }
     }
 }

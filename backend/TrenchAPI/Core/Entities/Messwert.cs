@@ -18,10 +18,10 @@ namespace TrenchAPI.Core.Entities
         [ForeignKey(nameof(SondenPositionID))]
         public virtual SondenPosition SondenPosition { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Wert { get; set; }
 
-        [Column(TypeName = "timestamp")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Zeitpunkt { get; set; }
     }
 }

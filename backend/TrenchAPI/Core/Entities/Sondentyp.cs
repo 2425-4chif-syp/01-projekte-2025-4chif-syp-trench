@@ -7,10 +7,10 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "varchar")]
         public string Name { get; set; } = "";
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Breite { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Hoehe { get; set; }
 
         [Column(TypeName = "int")]

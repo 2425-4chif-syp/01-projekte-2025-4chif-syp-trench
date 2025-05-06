@@ -11,13 +11,13 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "int")]
         public int Schenkelzahl { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Bandbreite { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Schichthoehe { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Durchmesser { get; set; }
 
         [Column(TypeName = "int")]

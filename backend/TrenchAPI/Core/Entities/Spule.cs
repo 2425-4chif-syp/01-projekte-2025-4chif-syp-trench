@@ -16,10 +16,10 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "int")]
         public int AuftragsPosNr { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Bemessungsspannung { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Bemessungsfrequenz { get; set; }
 
         [Column(TypeName = "int")]
