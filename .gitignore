@@ -73,3 +73,5 @@ obj/
 
 # Processed files
 *.vsidx
+backend/ConsoleMQTT/Properties/launchSettings.json
+backend/TrenchAPI/TrenchAPI.sln
