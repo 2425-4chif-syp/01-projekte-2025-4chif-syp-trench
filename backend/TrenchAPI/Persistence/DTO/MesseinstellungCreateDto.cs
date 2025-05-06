@@ -6,12 +6,9 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class MesseinstellungCreateDto : EntityObject
     {
+        public string Name { get; set; } 
         public int SpuleID { get; set; }
-        public int MesssondenTypID { get; set; }
-        public int Sonden_pro_schenkel { get; set; }
-        public decimal Bemessungsspannung { get; set; }
-        public decimal Bemessungsfrequenz { get; set; }
-        public decimal Pruefspannung { get; set; }
-        public string Notiz { get; set; } = "";
+        public int SondenTypID { get; set; }
+        public int SondenProSchenkel { get; set; }
     }
 }
