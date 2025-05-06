@@ -12,47 +12,47 @@ namespace TrenchAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MesssondenTypController : ControllerBase
+    public class SondenTypController : ControllerBase
     {
         private readonly WebDbContext _context;
 
-        public MesssondenTypController(WebDbContext context)
+        public SondenTypController(WebDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/MesssondenTyp
+        // GET: api/SondenTyp
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MesssondenTyp>>> GetMesssondenTyp()
+        public async Task<ActionResult<IEnumerable<SondenTyp>>> GetSondenTyp()
         {
-            return await _context.MesssondenTyp.ToListAsync();
+            return await _context.SondenTyp.ToListAsync();
         }
 
-        // GET: api/MesssondenTyp/5
+        // GET: api/SondenTyp/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MesssondenTyp>> GetMesssondenTyp(int id)
+        public async Task<ActionResult<SondenTyp>> GetSondenTyp(int id)
         {
-            var messsondenTyp = await _context.MesssondenTyp.FindAsync(id);
+            var SondenTyp = await _context.SondenTyp.FindAsync(id);
 
-            if (messsondenTyp == null)
+            if (SondenTyp == null)
             {
                 return NotFound();
             }
 
-            return messsondenTyp;
+            return SondenTyp;
         }
 
-        // PUT: api/MesssondenTyp/5
+        // PUT: api/SondenTyp/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMesssondenTyp(int id, MesssondenTyp messsondenTyp)
+        public async Task<IActionResult> PutSondenTyp(int id, SondenTyp SondenTyp)
         {
-            if (id != messsondenTyp.ID)
+            if (id != SondenTyp.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(messsondenTyp).State = EntityState.Modified;
+            _context.Entry(SondenTyp).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MesssondenTypExists(id))
+                if (!SondenTypExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/MesssondenTyp
+        // POST: api/SondenTyp
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MesssondenTyp>> PostMesssondenTyp(MesssondenTyp messsondenTyp)
+        public async Task<ActionResult<SondenTyp>> PostSondenTyp(SondenTyp SondenTyp)
         {
-            _context.MesssondenTyp.Add(messsondenTyp);
+            _context.SondenTyp.Add(SondenTyp);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMesssondenTyp", new { id = messsondenTyp.ID }, messsondenTyp);
+            return CreatedAtAction("GetSondenTyp", new { id = SondenTyp.ID }, SondenTyp);
         }
 
-        // DELETE: api/MesssondenTyp/5
+        // DELETE: api/SondenTyp/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMesssondenTyp(int id)
+        public async Task<IActionResult> DeleteSondenTyp(int id)
         {
-            var messsondenTyp = await _context.MesssondenTyp.FindAsync(id);
-            if (messsondenTyp == null)
+            var SondenTyp = await _context.SondenTyp.FindAsync(id);
+            if (SondenTyp == null)
             {
                 return NotFound();
             }
 
-            _context.MesssondenTyp.Remove(messsondenTyp);
+            _context.SondenTyp.Remove(SondenTyp);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool MesssondenTypExists(int id)
+        private bool SondenTypExists(int id)
         {
-            return _context.MesssondenTyp.Any(e => e.ID == id);
+            return _context.SondenTyp.Any(e => e.ID == id);
         }
     }
 }
