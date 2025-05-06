@@ -30,7 +30,7 @@ namespace TrenchAPI.Controllers
                     .Include(m => m.Messeinstellung)
                         .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
                     .Include(m => m.Messeinstellung)
-                        .ThenInclude(me => me.MesssondenTyp)
+                        .ThenInclude(me => me.SondenTyp)
                     .ToListAsync();       
         }
 
@@ -40,7 +40,6 @@ namespace TrenchAPI.Controllers
         {
             var messung = await _context.Messung
                 .Include(m => m.Messeinstellung)
-                .Include(m => m.Messsonden)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messung == null)
@@ -101,35 +100,9 @@ namespace TrenchAPI.Controllers
 
         // POST: api/Messung/Complete
         [HttpPost("Complete")]
-        public async Task<ActionResult<Messung>> PostCompleteMessung(CompleteMessungDto completeMessungDto)
+        public async Task<ActionResult<Messung>> PostCompleteMessung(Messung messung)
         {
-            // Messung erstellen
-            var messung = new Messung
-            {
-                MesseinstellungID = completeMessungDto.MesseinstellungID,
-                Anfangszeitpunkt = completeMessungDto.Anfangszeitpunkt,
-                Endzeitpunkt = completeMessungDto.Endzeitpunkt,
-                Notiz = completeMessungDto.Notiz
-            };
-
             _context.Messung.Add(messung);
-            await _context.SaveChangesAsync();
-
-            // Messsonden erstellen
-            foreach (var messsondeDto in completeMessungDto.Messsonden)
-            {
-                var messsonde = new Messsonde
-                {
-                    MessungID = messung.ID,
-                    Schenkel = messsondeDto.Schenkel,
-                    Position = messsondeDto.Position,
-                    Messwerte = JsonSerializer.Serialize(messsondeDto.Messwerte),
-                    Durchschnittswert = messsondeDto.Durchschnittswert
-                };
-
-                _context.Messsonde.Add(messsonde);
-            }
-
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);

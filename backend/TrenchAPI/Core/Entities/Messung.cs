@@ -12,19 +12,19 @@ namespace TrenchAPI.Core.Entities
         [ForeignKey(nameof(MesseinstellungID))]
         public virtual Messeinstellung Messeinstellung { get; set; }
 
-        [Column(TypeName = "timestamp")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Anfangszeitpunkt { get; set; }
 
-        [Column(TypeName = "timestamp")]
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Endzeitpunkt { get; set; }
 
         [Column(TypeName = "varchar")]
         public string Name { get; set; } = "";
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Tauchkernstellung { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
+        [Column(TypeName = "decimal")]
         public decimal Pruefspannung { get; set; }
 
         [Column(TypeName = "varchar")]
