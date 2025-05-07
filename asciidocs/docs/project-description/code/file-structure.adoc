@@ -1,6 +1,6 @@
 = File Structure
 
-link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Code] / *File Structure*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project-description/[Project Description] / link:/01-projekte-2025-4chif-syp-trench/project-description/[Code] / *File Structure*
 
 The project has three main folders:
 - `docs`: Contains the documentation of the project, including the project description, usage instructions, diagrams and RevealJS Slides. This is written using https://asciidoctor.org/[Asciidoctor].

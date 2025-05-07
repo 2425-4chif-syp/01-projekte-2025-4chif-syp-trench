@@ -1,6 +1,6 @@
 = About
 
-link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / *About*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project-description/[Project Description] / *About*
 
 == What is this project?
 include::./description.adoc[]

@@ -1,6 +1,6 @@
 = Project Usage
 
-link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / *Usage*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project-description/[Project Description] / *Usage*
 
 == Benutzerrollen
 
