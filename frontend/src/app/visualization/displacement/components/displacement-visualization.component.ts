@@ -12,7 +12,7 @@ import { CoilVisualizationComponent } from "../../coil/components/coil-visualiza
   styleUrl: './displacement-visualization.component.scss',
 })
 export class DisplacementVisualizationComponent {
-  @Input() size:number = 512; // TODO: This doesn't work right now
+  @Input() size:number = 512; 
   @Input() yokes = signal<{sensors:number[]}[]>([]);
 
   averageLength:number = 0;
@@ -35,48 +35,20 @@ export class DisplacementVisualizationComponent {
     //]);
   }
 
-  public get coilVisualizationSize(): number {
+  public get internalTranslationOffset():number {
+    return -(this.size/512-1)*12;
+  }
+
+  public get rotationOffset():number {
     switch (this.yokes().length) {
       case 2:
-        return 400;
+        return 180;
       case 3:
-        return 512;
+        return 210;
       case 4:
-        return 540;
-      default:
-        return 512;
+        return 180;
     }
-  }
-  public get coilVisualizationOffset(): { x: number, y: number } {
-    const offset = this.coilVisualizationOffsetUnscaled;
-    return {
-      x: offset.x - (this.coilVisualizationSize/2),
-      y: offset.y - (this.coilVisualizationSize/2)
-    };
-  }
-  private get coilVisualizationOffsetUnscaled(): { x: number, y: number } {
-    switch (this.yokes.length) {
-      case 2:
-        return { x: 425, y: 450 };
-      case 3:
-        return { x: 474.5, y: 524.5 };
-      case 4:
-        return { x: 500, y: 512 };
-      default:
-        return { x: 500, y: 512 };
-    }
-  }
-  public get coilVisualizationRotation(): number {
-    switch (this.yokes.length) {
-      case 2:
-        return 0;
-      case 3:
-        return -(45-45/3);
-      case 4:
-        return 0;
-      default:
-        return 0;
-    }
+    return 0;
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {

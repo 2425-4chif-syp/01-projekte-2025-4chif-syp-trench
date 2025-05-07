@@ -13,7 +13,7 @@ export class DisplacementService {
       const sum = branch.sensors.reduce((acc, sensor) => acc + sensor, 0);
       const average = sum / branch.sensors.length;
 
-      // Calculate the angle of the branch using the formula: (2π / numberOfBranches) * index - π/2
+      // Calculate the angle of the branch using the formula: (2π / numberOfBranches) * index
       const angle = (2 * Math.PI / numberOfBranches) * index;
 
       // Calculate the x and y values
