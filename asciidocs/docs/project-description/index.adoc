@@ -1,8 +1,9 @@
 = Project Description
 
-https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Project Description*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Project Description*
 
 == Index
-- https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project-description/about/[About]
-- https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project-description/usage/[Usage]
-- https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project-description/diagrams/[Diagrams]
+- link:/01-projekte-2025-4chif-syp-trench/project-description/about/[About]
+- link:/01-projekte-2025-4chif-syp-trench/project-description/usage/[Usage]
+- link:/01-projekte-2025-4chif-syp-trench/project-description/code/[Code]
+- link:/01-projekte-2025-4chif-syp-trench/project-description/diagrams/[Diagrams]
