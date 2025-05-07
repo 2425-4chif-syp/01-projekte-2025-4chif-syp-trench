@@ -35,50 +35,6 @@ export class DisplacementVisualizationComponent {
     //]);
   }
 
-  public get coilVisualizationSize(): number {
-    switch (this.yokes().length) {
-      case 2:
-        return 400;
-      case 3:
-        return 512;
-      case 4:
-        return 540;
-      default:
-        return 512;
-    }
-  }
-  public get coilVisualizationOffset(): { x: number, y: number } {
-    const offset = this.coilVisualizationOffsetUnscaled;
-    return {
-      x: offset.x - (this.coilVisualizationSize/2),
-      y: offset.y - (this.coilVisualizationSize/2)
-    };
-  }
-  private get coilVisualizationOffsetUnscaled(): { x: number, y: number } {
-    switch (this.yokes.length) {
-      case 2:
-        return { x: 425, y: 450 };
-      case 3:
-        return { x: 474.5, y: 524.5 };
-      case 4:
-        return { x: 500, y: 512 };
-      default:
-        return { x: 500, y: 512 };
-    }
-  }
-  public get coilVisualizationRotation(): number {
-    switch (this.yokes.length) {
-      case 2:
-        return 0;
-      case 3:
-        return -(45-45/3);
-      case 4:
-        return 0;
-      default:
-        return 0;
-    }
-  }
-
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
     const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
 
