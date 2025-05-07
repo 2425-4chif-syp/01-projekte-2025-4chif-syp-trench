@@ -35,8 +35,20 @@ export class DisplacementVisualizationComponent {
     //]);
   }
 
-  public get translationOffset():number {
+  public get internalTranslationOffset():number {
     return -(this.size/512-1)*12;
+  }
+
+  public get rotationOffset():number {
+    switch (this.yokes().length) {
+      case 2:
+        return 180;
+      case 3:
+        return 210;
+      case 4:
+        return 180;
+    }
+    return 0;
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
