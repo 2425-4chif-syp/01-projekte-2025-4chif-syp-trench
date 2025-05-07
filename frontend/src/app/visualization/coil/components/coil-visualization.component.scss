@@ -5,3 +5,12 @@
 
     border: 1px dotted red;
 }
+
+#center-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1px dotted red;
+    background-color: #ff000080;
+    z-index: 1000;
+}
