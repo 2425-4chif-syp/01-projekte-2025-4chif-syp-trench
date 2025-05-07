@@ -1,3 +1,1 @@
 This project is the SYP-Project of the 4CHIF class of the HTL Leonding. Its idea is to aid the company https://trench-group.com/[Trench Group] on creating https://en.wikipedia.org/wiki/Arc_suppression[Arc Supression Coils] by providing a visualization and a summary of the position of the deviation of the its core, to see if it is within the allowed tolerance.
-
-It is primarily made using https://angular.dev/[Angular], https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet[.NET], https://www.postgresql.org/[PostgreSQL], https://mqtt.org/[MQTT] and https://www.docker.com/[Docker].
