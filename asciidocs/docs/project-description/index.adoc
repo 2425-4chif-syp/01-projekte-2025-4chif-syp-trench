@@ -2,23 +2,6 @@
 
 https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Project Description*
 
-== What is this project?
-
-This project is the SYP-Project of the 4CHIF class of the HTL Leonding. Its idea is to aid the company https://trench-group.com/[Trench Group] on creating https://en.wikipedia.org/wiki/Arc_suppression[Arc Supression Coils] by providing a visualization and a summary of the position of the deviation of the its core, to see if it is within the allowed tolerance.
-
-It is primarily made using https://angular.dev/[Angular], https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet[.NET], https://www.postgresql.org/[PostgreSQL], https://mqtt.org/[MQTT] and https://www.docker.com/[Docker].
-
-== Project Team
-include::./project-team.adoc[]
-
-== System Architecture
-image::/01-projekte-2025-4chif-syp-trench/project-description/images/system-architecture.png[]
-
-== Use-Case Diagram
-include::./use-case.adoc[]
-
-== Entity Relationship Diagram
-include::./erd.puml[]
-
-== File Structure
-include::./file-structure.adoc[]
+== Index
+- https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project-description/about/[About]
+- https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project-description/diagrams/[Diagrams]
