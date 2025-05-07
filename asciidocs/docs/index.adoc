@@ -1,20 +1,13 @@
 = Trench Project
 ifndef::imagesdir[:imagesdir: images]
 
-== Useful Links
-- link:/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[RevealJS slides]
-- https://vm81.htl-leonding.ac.at/agiles/99-400/current[YouTrack Board]
-
 == Index 
 - link:/01-projekte-2025-4chif-syp-trench/project-description[Project Description]
 
 - link:/01-projekte-2025-4chif-syp-trench/project-guidelines[Project Guidelines]
 
+- link:/01-projekte-2025-4chif-syp-trench/slides/project-presentation.html[RevealJS slides]
+
+- https://vm81.htl-leonding.ac.at/agiles/99-400/current[YouTrack Board]
+
 - link:/01-projekte-2025-4chif-syp-trench/conversation-protocols[Conversation Protocols]
-
-- link:/01-projekte-2025-4chif-syp-trench/api[API]
-
-== Other 
-
-- link:/01-projekte-2025-4chif-syp-trench/Deploy_Project_with_Docker[Deploy project with docker]
-- link:/01-projekte-2025-4chif-syp-trench/connect-docker-with-postgres[Connect Docker with Postgres]

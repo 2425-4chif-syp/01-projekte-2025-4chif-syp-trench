@@ -1,6 +1,6 @@
 = How to Deploy the Project with Docker
 
-https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project_description/[Code] / *Deploy Project with Docker*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Code] / *Deploy Project with Docker*
 
 == Overview
 This document provides step-by-step instructions for setting up and running the project, which includes a frontend (Angular), a backend (ASP.NET Core), and a PostgreSQL database. The project uses Docker for containerization to ensure seamless deployment and consistent environments.

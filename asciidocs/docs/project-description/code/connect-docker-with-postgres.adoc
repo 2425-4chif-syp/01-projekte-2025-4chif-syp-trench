@@ -1,8 +1,8 @@
 = Setting up PostgreSQL and pgAdmin with Docker
 
-https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project_description/[Code] / *Connect Docker with Postgres*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / link:/01-projekte-2025-4chif-syp-trench/project_description/[Code] / *Connect Docker with Postgres*
 
-https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Connect Docker with Postgres*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Connect Docker with Postgres*
 
 :icons: font
 :source-highlighter: pygments
