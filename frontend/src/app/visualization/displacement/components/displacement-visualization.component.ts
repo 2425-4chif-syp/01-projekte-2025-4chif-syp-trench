@@ -12,7 +12,7 @@ import { CoilVisualizationComponent } from "../../coil/components/coil-visualiza
   styleUrl: './displacement-visualization.component.scss',
 })
 export class DisplacementVisualizationComponent {
-  @Input() size:number = 512; // TODO: This doesn't work right now
+  @Input() size:number = 512; 
   @Input() yokes = signal<{sensors:number[]}[]>([]);
 
   averageLength:number = 0;
@@ -33,6 +33,10 @@ export class DisplacementVisualizationComponent {
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
     //  { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     //]);
+  }
+
+  public get translationOffset():number {
+    return -(this.size/512-1)*12;
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
