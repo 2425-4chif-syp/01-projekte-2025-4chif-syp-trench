@@ -12,47 +12,47 @@ namespace TrenchAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MesssondenTypController : ControllerBase
+    public class SondeController : ControllerBase
     {
         private readonly WebDbContext _context;
 
-        public MesssondenTypController(WebDbContext context)
+        public SondeController(WebDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/MesssondenTyp
+        // GET: api/Sonde
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MesssondenTyp>>> GetMesssondenTyp()
+        public async Task<ActionResult<IEnumerable<Sonde>>> GetSonde()
         {
-            return await _context.MesssondenTyp.ToListAsync();
+            return await _context.Sonde.ToListAsync();
         }
 
-        // GET: api/MesssondenTyp/5
+        // GET: api/Sonde/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MesssondenTyp>> GetMesssondenTyp(int id)
+        public async Task<ActionResult<Sonde>> GetSonde(int id)
         {
-            var messsondenTyp = await _context.MesssondenTyp.FindAsync(id);
+            var Sonde = await _context.Sonde.FindAsync(id);
 
-            if (messsondenTyp == null)
+            if (Sonde == null)
             {
                 return NotFound();
             }
 
-            return messsondenTyp;
+            return Sonde;
         }
 
-        // PUT: api/MesssondenTyp/5
+        // PUT: api/Sonde/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMesssondenTyp(int id, MesssondenTyp messsondenTyp)
+        public async Task<IActionResult> PutSonde(int id, Sonde Sonde)
         {
-            if (id != messsondenTyp.ID)
+            if (id != Sonde.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(messsondenTyp).State = EntityState.Modified;
+            _context.Entry(Sonde).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MesssondenTypExists(id))
+                if (!SondeExists(id))
                 {
                     return NotFound();
                 }
@@ -73,36 +73,36 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/MesssondenTyp
+        // POST: api/Sonde
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MesssondenTyp>> PostMesssondenTyp(MesssondenTyp messsondenTyp)
+        public async Task<ActionResult<Sonde>> PostSonde(Sonde Sonde)
         {
-            _context.MesssondenTyp.Add(messsondenTyp);
+            _context.Sonde.Add(Sonde);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMesssondenTyp", new { id = messsondenTyp.ID }, messsondenTyp);
+            return CreatedAtAction("GetSonde", new { id = Sonde.ID }, Sonde);
         }
 
-        // DELETE: api/MesssondenTyp/5
+        // DELETE: api/Sonde/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMesssondenTyp(int id)
+        public async Task<IActionResult> DeleteSonde(int id)
         {
-            var messsondenTyp = await _context.MesssondenTyp.FindAsync(id);
-            if (messsondenTyp == null)
+            var Sonde = await _context.Sonde.FindAsync(id);
+            if (Sonde == null)
             {
                 return NotFound();
             }
 
-            _context.MesssondenTyp.Remove(messsondenTyp);
+            _context.Sonde.Remove(Sonde);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool MesssondenTypExists(int id)
+        private bool SondeExists(int id)
         {
-            return _context.MesssondenTyp.Any(e => e.ID == id);
+            return _context.Sonde.Any(e => e.ID == id);
         }
     }
 }

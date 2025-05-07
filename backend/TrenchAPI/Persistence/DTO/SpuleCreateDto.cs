@@ -1,14 +1,15 @@
-﻿using TrenchAPI.Core.Entities;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using TrenchAPI.Core.Entities;
 
 namespace TrenchAPI.Persistence.DTO
 {
     public class SpuleCreateDto : EntityObject
     {
         public int SpuleTypID { get; set; }
-        public decimal Ur { get; set; }
-        public int Einheit { get; set; }
-        public int Auftragsnummer { get; set; }
+        public string Auftragsnr { get; set; }
         public int AuftragsPosNr { get; set; }
-        public decimal Omega { get; set; }
+        public decimal Bemessungsspannung { get; set; }
+        public decimal Bemessungsfrequenz { get; set; }
+        public int Einheit { get; set; }
     }
 }

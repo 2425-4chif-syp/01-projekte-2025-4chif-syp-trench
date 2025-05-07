@@ -87,7 +87,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Die angegebene Spule existiert nicht.");
             }
 
-            if (!_context.MesssondenTyp.Any(m => m.ID == messeinstellungDto.MesssondenTypID))
+            if (!_context.SondenTyp.Any(m => m.ID == messeinstellungDto.SondenTypID))
             {
                 return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
             }
@@ -96,17 +96,13 @@ namespace TrenchAPI.Controllers
             {
                 ID = messeinstellungDto.ID,
                 SpuleID = messeinstellungDto.SpuleID,
-                MesssondenTypID = messeinstellungDto.MesssondenTypID,
-                Sonden_pro_schenkel = messeinstellungDto.Sonden_pro_schenkel,
-                Bemessungsspannung = messeinstellungDto.Bemessungsspannung,
-                Bemessungsfrequenz = messeinstellungDto.Bemessungsfrequenz,
-                Pruefspannung = messeinstellungDto.Pruefspannung,
-                Notiz = messeinstellungDto.Notiz
+                SondenTypID = messeinstellungDto.SondenTypID,
+                SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
             };
 
             // Optionale Navigation Properties setzen
             messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
-            messeinstellung.MesssondenTyp = await _context.MesssondenTyp.FindAsync(messeinstellung.MesssondenTypID);
+            messeinstellung.SondenTyp = await _context.SondenTyp.FindAsync(messeinstellung.SondenTypID);
 
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();
