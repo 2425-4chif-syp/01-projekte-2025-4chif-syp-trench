@@ -1,4 +1,6 @@
-<div class="container">
+<div class="container"
+    [style.height.px]="size"
+    [style.width.px]="size">
     <img
         class="coil-image"
         [src]="svgUrl"
@@ -6,7 +8,7 @@
         (loadstart)="onImageLoadStart()"
         (load)="onImageLoad()"
         (error)="onImageError()"
-        [style.height.px]="size"
+        [style.width.px]="size"
     />
 </div>
 @if (!imageLoaded()) {
