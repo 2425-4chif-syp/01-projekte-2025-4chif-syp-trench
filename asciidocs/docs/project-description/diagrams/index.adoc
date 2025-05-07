@@ -1,0 +1,10 @@
+https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project_description/[Project Description] / *Diagrams*
+
+== System Architecture
+image::/01-projekte-2025-4chif-syp-trench/project-description/diagrams/images/system-architecture.png[]
+
+== Use-Case Diagram
+include::./use-case.adoc[]
+
+== Entity Relationship Diagram
+include::./erd.puml[]
