@@ -1,96 +1,96 @@
 [plantuml, format="svg"]
 ----
-@startuml
+@startuml Trench ERD
 
-' Group: Master data
-entity spuletyp {
-  * id : integer <<PK>>
+entity spulentyp {
+  * id : integer
   --
   name : varchar
   schenkelzahl : integer
   bandbreite : decimal
   schichthoehe : decimal
   durchmesser : decimal
-  notiz : string
+  toleranzbereich : integer
+  notiz : varchar
 }
 
-entity messsondentyp {
-  * id : integer <<PK>>
+entity spule {
+  * id : integer
+  --
+  spuletyp_id : integer
+  auftragsnr : varchar
+  auftragsposnr : integer
+  bemessungsspannung : decimal
+  bemessungsfrequenz : decimal
+  einheit : integer
+  notiz : varchar
+}
+
+entity sondentyp {
+  * id : integer
   --
   name : varchar
   breite : decimal
   hoehe : decimal
-  wicklungszahl : integer
-  notiz : string
+  windungszahl : integer
+  notiz : varchar
 }
 
-' Group: Main objects
-entity spule {
-  * id : integer <<PK>>
-  --
-  spuletyp_id : integer <<FK>>
-  auftragsnr : varchar
-  auftragsposnr : integer
-  ur : decimal
-  einheit : integer
-  omega : decimal
-  notiz : string
-}
-
-' Group: Measurements
 entity messeinstellung {
-  * id : integer <<PK>>
+  * id : integer
   --
-  spule_id : integer <<FK>>
-  messsondentyp_id : integer <<FK>>
+  spule_id : integer
+  sondentyp_id : integer
   name : varchar
   sonden_pro_schenkel : integer
-  bemessungsspannung : decimal
-  bemessungsfrequenz : decimal
-  notiz : string
 }
 
 entity messung {
-  * id : integer <<PK>>
+  * id : integer
   --
-  messeinstellung_id : integer <<FK>>
+  messeinstellung_id : integer
   anfangszeitpunkt : timestamp
   endzeitpunkt : timestamp
-  notiz : string
+  name : varchar
+  tauchkernstellung : decimal
+  pruefspannung : decimal
+  notiz : varchar
 }
 
-entity messsonde {
-  * id : integer <<PK>>
+entity sondenposition {
+  * id : integer
   --
-  messung_id : integer <<FK>>
+  sonde_id : integer
+  messeinstellung_id : integer
   schenkel : integer
   position : integer
 }
 
 entity messwert {
-  * id : integer <<PK>>
+  * id : integer
   --
-  messsonde_id : integer <<FK>>
+  messung_id : integer
+  sondenposition_id : integer
   wert : decimal
   zeitpunkt : timestamp
 }
 
-entity messsondenkalibrierung {
-  * id : integer <<PK>>
+entity sonde {
+  * id : integer
   --
-  messeinstellung_id : integer <<FK>>
-  schenkel : integer
-  position : integer
+  sondentyp_id : integer
+  name : varchar
   kalibrierungsfaktor : decimal
 }
 
-' Relationships
-spule }|..|| spuletyp : "spuletyp_id"
-messeinstellung }|..|| spule : "spule_id"
-messeinstellung }|..|| messsondentyp : "messsondentyp_id"
-messung }|..|| messeinstellung : "messeinstellung_id"
-messsonde }|..|| messung : "messung_id"
-messwert }|..|| messsonde : "messsonde_id"
-messsondenkalibrierung }|..|| messeinstellung : "messeinstellung_id"
+spule }o--|| spulentyp : "spuletyp_id"
+messeinstellung }o--|| spule : "spule_id"
+messeinstellung }o--|| sondentyp : "sondentyp_id"
+messung }o--|| messeinstellung : "messeinstellung_id"
+sondenposition }o--|| sonde : "sonde_id"
+sondenposition }o--|| messeinstellung : "messeinstellung_id"
+messwert }o--|| messung : "messung_id"
+messwert }o--|| sondenposition : "sondenposition_id"
+sonde }o--|| sondentyp : "sondentyp_id"
 
 @enduml
