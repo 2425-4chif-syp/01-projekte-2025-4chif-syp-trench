@@ -33,4 +33,28 @@ export class CoilVisualizationComponent {
     this.imageLoaded.set(false);
     console.error(`Error loading image: ${this.svgUrl}`);
   }
+
+  public get rotationOffset(): number {
+    switch (this.n) {
+      case 2:
+        return 0;
+      case 3:
+        return 0;
+      case 4:
+        return 0;
+    }
+    return 0;
+  }
+  public get positionOffset(): {x: number, y: number } {
+    switch (this.n) {
+      case 2:
+        return { x: 0, y: -0.113 };
+      case 3:
+        return { x: 0, y: 0.022 };
+      case 4:
+        return { x: 0, y: 0 };
+    }
+    return { x: 0, y: 0 };
+
+  }
 }
