@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 04.01.2025</title>
+<title>Setting up PostgreSQL and pgAdmin with Docker</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -434,15 +434,154 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
+}
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
+}
+pre.rouge .gr {
+  color: #f6f8fa;
+}
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
+}
+pre.rouge .gi {
+  color: #116329;
+  background-color: #dafbe1;
+}
+pre.rouge .kc {
+  color: #0550ae;
+}
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
+}
+pre.rouge .nd {
+  color: #8250df;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
+  font-weight: bold;
+}
+</style>
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 04.01.2025</h1>
+<h1>Setting up PostgreSQL and pgAdmin with Docker</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_besprochene_themen">1. Besprochene Themen</a></li>
-<li><a href="#_vereinbarungen_und_entscheidungen">2. Vereinbarungen und Entscheidungen</a></li>
+<li><a href="#_prerequisites">1. Prerequisites</a></li>
+<li><a href="#_step_1_docker_compose_configuration">2. Step 1: Docker Compose Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#_where_to_place_docker_compose_yml">2.1. Where to place <code>docker-compose.yml</code></a></li>
+</ul>
+</li>
+<li><a href="#_step_2_start_the_services">3. Step 2: Start the Services</a></li>
+<li><a href="#_step_3_access_the_services">4. Step 3: Access the Services</a>
+<ul class="sectlevel2">
+<li><a href="#_access_pgadmin">4.1. Access pgAdmin</a></li>
+<li><a href="#_connect_pgadmin_to_postgresql">4.2. Connect pgAdmin to PostgreSQL</a></li>
+</ul>
+</li>
+<li><a href="#_common_issues_and_troubleshooting">5. Common Issues and Troubleshooting</a>
+<ul class="sectlevel2">
+<li><a href="#_docker_desktop_is_not_running">5.1. Docker Desktop is not running</a></li>
+<li><a href="#_linux_container_mode">5.2. Linux Container Mode</a></li>
+<li><a href="#_version_is_obsolete_warning">5.3. <code>version</code> is obsolete warning</a></li>
+<li><a href="#_cannot_connect_to_postgresql">5.4. Cannot connect to PostgreSQL</a></li>
+</ul>
+</li>
+<li><a href="#_step_4_manage_your_database">6. Step 4: Manage Your Database</a>
+<ul class="sectlevel2">
+<li><a href="#_connecting_with_psql">6.1. Connecting with <code>psql</code></a></li>
+</ul>
+</li>
+<li><a href="#_summary">7. Summary</a></li>
 </ul>
 </div>
 </div>
@@ -450,157 +589,298 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 04.01.2025</strong></p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/project_description/">Project Description</a> / <a href="/01-projekte-2025-4chif-syp-trench/project_description/">Code</a> / <strong>Connect Docker with Postgres</strong></p>
 </div>
 <div class="paragraph">
-<p>Emil Silber</p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <strong>Connect Docker with Postgres</strong></p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Teilnehmer</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Anwesend</th>
-<th class="tableblock halign-left valign-top">Relevant Für</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filip Schauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Axel Csomany</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Simon Pesut</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Aaron Schreiegg</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Axel Csomany</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Simon Pesut</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Aaron Schreiegg</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filip Schauer</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Ort und Zeit</caption>
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ort</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Discord</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Di. 07.1.2024</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4 Stunden</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><strong>Author</strong>: Simon Pesut</p>
+</div>
+<div class="paragraph">
+<p>This guide explains how to set up a PostgreSQL database and pgAdmin using Docker. It also demonstrates how to connect pgAdmin to the database step-by-step.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_besprochene_themen"><a class="anchor" href="#_besprochene_themen"></a>1. Besprochene Themen</h2>
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>1. Prerequisites</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Before proceeding, ensure you have the following installed and ready:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Virtualisierung</p>
+<p><strong>Docker Desktop</strong> (running in Linux container mode).</p>
 </li>
 <li>
-<p>Docker</p>
+<p><strong>Docker Compose</strong>.</p>
+</li>
+<li>
+<p>Basic familiarity with Docker commands.</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vereinbarungen_und_entscheidungen"><a class="anchor" href="#_vereinbarungen_und_entscheidungen"></a>2. Vereinbarungen und Entscheidungen</h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all fit-content">
-<caption class="title">Table 3. Was wurde vereinbart?</caption>
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">wer</th>
-<th class="tableblock halign-left valign-top"></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Team</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="sect1">
-<h2 id="_ausgangslage"><a class="anchor" href="#_ausgangslage"></a>1. Ausgangslage</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Eine .NET-Anwendung und eine PostgreSQL-Datenbank sollten in Docker laufen. Dabei sollten automatisch Datenbanktabellen durch Migrationen erstellt werden.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_probleme"><a class="anchor" href="#_probleme"></a>2. Probleme</h2>
+<h2 id="_step_1_docker_compose_configuration"><a class="anchor" href="#_step_1_docker_compose_configuration"></a>2. Step 1: Docker Compose Configuration</h2>
 <div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Während des Builds war die Datenbank nicht erreichbar, was zu Fehlern führte.</p>
+<p>Create a <code>docker-compose.yml</code> file with the following content:</p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="yaml"><span class="na">services</span><span class="pi">:</span>
+  <span class="na">postgres</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">postgres</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">postgres_container</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">POSTGRES_USER</span><span class="pi">:</span> <span class="s">postgres</span>
+      <span class="na">POSTGRES_PASSWORD</span><span class="pi">:</span> <span class="s">your_password</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5432:5432"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">postgres_data:/var/lib/postgresql/data</span>
+
+  <span class="na">pgadmin</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">dpage/pgadmin4</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">pgadmin_container</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="na">PGADMIN_DEFAULT_EMAIL</span><span class="pi">:</span> <span class="s">your_email@example.com</span>
+      <span class="na">PGADMIN_DEFAULT_PASSWORD</span><span class="pi">:</span> <span class="s">your_password</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">8080:80"</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">postgres_data</span><span class="pi">:</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This file defines two services:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>postgres</code>: Runs the PostgreSQL database.</p>
 </li>
 <li>
-<p>Der fertige Container konnte keine Migrationen ausführen, weil wichtige Tools fehlten.</p>
+<p><code>pgadmin</code>: Runs the pgAdmin web-based database management interface.</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_where_to_place_docker_compose_yml"><a class="anchor" href="#_where_to_place_docker_compose_yml"></a>2.1. Where to place <code>docker-compose.yml</code></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Later on we will get some more services for backend and frontent as well, so we will have to put the <code>docker-compose.yml</code> file in the root of the project.</p>
 </li>
 <li>
-<p>Es gab Probleme mit Pfadangaben und Umgebungsvariablen, die zu Syntaxfehlern führten.</p>
+<p>This allows the <code>docker-compose</code> command to manage all services (frontend, backend, and database) together.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_2_start_the_services"><a class="anchor" href="#_step_2_start_the_services"></a>3. Step 2: Start the Services</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run the following commands to start the containers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker-compose up -d</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once the containers are up, confirm that they’re running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ docker ps</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This command will display a list of running containers. Ensure both <code>postgres_container</code> and <code>pgadmin_container</code> are listed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_3_access_the_services"><a class="anchor" href="#_step_3_access_the_services"></a>4. Step 3: Access the Services</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_access_pgadmin"><a class="anchor" href="#_access_pgadmin"></a>4.1. Access pgAdmin</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open your web browser and go to:
+<code><a href="http://localhost:8080" class="bare">http://localhost:8080</a></code></p>
+</li>
+<li>
+<p>Log in using the credentials defined in the <code>docker-compose.yml</code> file:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Email</strong>: <code>your_email@example.com</code></p>
+</li>
+<li>
+<p><strong>Password</strong>: <code>your_password</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connect_pgadmin_to_postgresql"><a class="anchor" href="#_connect_pgadmin_to_postgresql"></a>4.2. Connect pgAdmin to PostgreSQL</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In pgAdmin, right-click on <strong>Servers</strong> and select <strong>Create → Server</strong>.</p>
+</li>
+<li>
+<p>Fill in the details on the following tabs:</p>
+<div class="literalblock">
+<div class="content">
+<pre>[.table-striped,.table-bordered,.table-hover]
+|===
+| **Tab** | **Field**            | **Value**
+| General | Name                 | My PostgreSQL Server
+| Connection | Host              | localhost or host.docker.internal
+| Connection | Port              | 5432
+| Connection | Maintenance DB    | postgres
+| Connection | Username          | postgres
+| Connection | Password          | your_password
+|===</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Click <strong>Save</strong>. pgAdmin will now connect to your PostgreSQL database.</p>
 </li>
 </ol>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_lösung"><a class="anchor" href="#_lösung"></a>3. Lösung</h2>
+<h2 id="_common_issues_and_troubleshooting"><a class="anchor" href="#_common_issues_and_troubleshooting"></a>5. Common Issues and Troubleshooting</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_docker_desktop_is_not_running"><a class="anchor" href="#_docker_desktop_is_not_running"></a>5.1. Docker Desktop is not running</h3>
 <div class="paragraph">
-<p>Ein zusätzlicher Dienst namens <strong>"migrate"</strong> wurde erstellt. Dieser Dienst nutzt ein passendes Image, das alle notwendigen Tools enthält, um die Migrationen durchzuführen. Der eigentliche Backend-Container bleibt schlank und führt nur die Anwendung aus.</p>
+<p>Ensure Docker Desktop is fully started. Open it and wait until the status icon in the taskbar indicates it is running.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_linux_container_mode"><a class="anchor" href="#_linux_container_mode"></a>5.2. Linux Container Mode</h3>
+<div class="paragraph">
+<p>If Docker Desktop is not in Linux Container mode:</p>
 </div>
-<div class="sect1">
-<h2 id="_ergebnis"><a class="anchor" href="#_ergebnis"></a>4. Ergebnis</h2>
-<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Die Tabellen werden korrekt erstellt, die Datenbank läuft.</p>
-</li>
-<li>
-<p>Die Aufgaben sind gut aufgeteilt: Der <strong>"migrate"</strong>-Dienst kümmert sich nur um die Migrationen, der Backend-Container nur um die Anwendung.</p>
-</li>
-<li>
-<p>Alles funktioniert stabil.</p>
+<p>Right-click the Docker Desktop icon in the taskbar and select <strong>Switch to Linux Containers</strong>.</p>
 </li>
 </ul>
 </div>
 </div>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="sect2">
+<h3 id="_version_is_obsolete_warning"><a class="anchor" href="#_version_is_obsolete_warning"></a>5.3. <code>version</code> is obsolete warning</h3>
+<div class="paragraph">
+<p>If you see a warning about the <code>version</code> attribute being obsolete in <code>docker-compose.yml</code>, simply remove the <code>version</code> line.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cannot_connect_to_postgresql"><a class="anchor" href="#_cannot_connect_to_postgresql"></a>5.4. Cannot connect to PostgreSQL</h3>
+<div class="paragraph">
+<p>Check the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Containers are running (<code>docker ps</code>).</p>
+</li>
+<li>
+<p>Credentials match the <code>docker-compose.yml</code> file.</p>
+</li>
+<li>
+<p>Use <code>localhost</code> or <code>host.docker.internal</code> for the host.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_4_manage_your_database"><a class="anchor" href="#_step_4_manage_your_database"></a>6. Step 4: Manage Your Database</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once connected, you can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use <strong>pgAdmin</strong> to create tables, run SQL queries, and manage your database visually.</p>
+</li>
+<li>
+<p>Use the PostgreSQL CLI (<code>psql</code>) for direct command-line interaction.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_connecting_with_psql"><a class="anchor" href="#_connecting_with_psql"></a>6.1. Connecting with <code>psql</code></h3>
+<div class="paragraph">
+<p>You can connect to your database from your terminal using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ psql -h localhost -U postgres -d postgres</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>-h</strong>: Hostname (<code>localhost</code>).</p>
+</li>
+<li>
+<p><strong>-U</strong>: Username (<code>postgres</code>).</p>
+</li>
+<li>
+<p><strong>-d</strong>: Database name (<code>postgres</code>).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>7. Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Congratulations! You have successfully:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Set up PostgreSQL and pgAdmin using Docker.</p>
+</li>
+<li>
+<p>Connected pgAdmin to your PostgreSQL database.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can now manage your database using pgAdmin or <code>psql</code> as needed.</p>
+</div>
 </div>
 </div>
 </div>

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Untitled</title>
+<title>Project Usage</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,19 +435,71 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body class="article">
+<body class="article toc2 toc-left">
 <div id="header">
+<h1>Project Usage</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_benutzerrollen">1. Benutzerrollen</a></li>
+<li><a href="#_entitäten">2. Entitäten</a></li>
+<li><a href="#_messungen">3. Messungen</a></li>
+</ul>
+</div>
 </div>
 <div id="content">
-<div class="imageblock">
-<div class="content">
-<img src="images/diag-plantuml-md5-a2151db0b916ae204f5a43d7d769daf6.svg" alt="Diagram" width="320" height="413">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/project_description/">Project Description</a> / <strong>Usage</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_benutzerrollen"><a class="anchor" href="#_benutzerrollen"></a>1. Benutzerrollen</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Es gibt zwei verschiedene Benutzerrollen in der Anwendung:
+- <strong>Admin</strong>: Hat vollen Zugriff auf alle Funktionen der Anwendung, einschließlich der Verwaltung von Benutzern und deren Berechtigungen. Erfordert eine Authentifizierung mit einem Passwort.
+- <strong>Monteur</strong>: Hat vollen Zugriff auf alle Funktionen der Anwendung, jedoch sind Spulentypen und Sensortypen schreibgeschützt.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_entitäten"><a class="anchor" href="#_entitäten"></a>2. Entitäten</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Bevor Messungen erstellt werden können, müssen folgende Entitäten erstellt werden:
+- <strong>Spulentyp</strong>: Ein allgemeiner Typ einer Spule, inklusive Schenkelzahl, Bandbreite, Schichthöhe, Durchmessers und eines Toleranzbereiches,
+  der die maximal akzeptable Abweichung der Spule angibt.
+- <strong>Spule</strong>: Eine konkrete Spule eines bestimmten Spulentypen, inklusive Auftragsnummer, AuftragsPosNummer, Bemessungsspannung und -frequenz, Einheit.
+- <strong>Sondentyp</strong>: Ein allgemeiner Typ einer Messsonde, inklusive Breite, Höhe und einer Windungszahl.
+- <strong>Sonde</strong>: Eine konkrete Messsonde eines bestimmten Sondentyps, inklusive eines optionalen Kalibrierungsfaktors.
+- <strong>Messeinstellung</strong>: Eine Konfiguration für eine Messung. Hier muss die Spule angegegeben werden und die nötigen Sonden.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_messungen"><a class="anchor" href="#_messungen"></a>3. Messungen</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Um eine Messung durchzuführen, muss eine <strong>Messeinstellung</strong> ausgewählt werden. Es müssen auch die Tauchkernstellung und die Prüfspannung angegeben werden.</p>
+</div>
+<div class="paragraph">
+<p>Wenn eine Messung gestartet ist, werden die Messwerte mit Visualisierung in Echtzeit angezeigt. Es kann nur eine Messung gleichzeitig durchgeführt werden, jedoch ist diese Messung global für jeden Nutzer zugänglich, und es kann über den global sichtbaren "Laufende Messung"-Button darauf zugegriffen werden.</p>
+</div>
+<div class="paragraph">
+<p>Bei einer laufenden Messung besteht die Möglichkeit, die Messung zu pausieren, abzubrechen oder zu speichern. Falls nicht abgebrochen wird, wird die Messung in der Datenbank gespeichert und kann auch später abgerufen werden.</p>
+</div>
+<div class="paragraph">
+<p>In der Visualisierung wird die aktuelle Ausrichtung aller Schenkel angezeigt, wichtig hierbei ist der finale Vektor, welcher anzeigt, in welche Richtung die Auslenkung der Spule zeigt. Hierbei wird auch angezeigt, ob sich dieser Auslenkungsvektor in der im Spulentypen definierten Toleranzbereich befindet.</p>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-06 21:43:40 UTC
+Last updated 2025-05-07 13:20:22 UTC
 </div>
 </div>
 </body>

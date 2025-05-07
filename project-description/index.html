@@ -441,11 +441,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_what_is_this_project">1. What is this project?</a></li>
-<li><a href="#_project_team">2. Project Team</a></li>
-<li><a href="#_system_architecture">3. System Architecture</a></li>
-<li><a href="#_use_case_diagram">4. Use-Case Diagram</a></li>
-<li><a href="#_entity_relationship_diagram">5. Entity Relationship Diagram</a></li>
+<li><a href="#_index">1. Index</a></li>
 </ul>
 </div>
 </div>
@@ -453,364 +449,35 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <strong>Project Description</strong></p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <strong>Project Description</strong></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_what_is_this_project"><a class="anchor" href="#_what_is_this_project"></a>1. What is this project?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This project is the SYP-Project of the 4CHIF class of the HTL Leonding. Its idea is to aid the company <a href="https://trench-group.com/">Trench Group</a> on creating <a href="https://en.wikipedia.org/wiki/Arc_suppression">Arc Supression Coils</a> by providing a visualization and a summary of the position of the deviation of the its core, to see if it is within the allowed tolerance.</p>
-</div>
-<div class="paragraph">
-<p>It is primarily made using <a href="https://angular.dev/">Angular</a>, <a href="https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet">.NET</a>, <a href="https://www.postgresql.org/">PostgreSQL</a>, and <a href="https://www.docker.com/">Docker</a> and <a href="https://mqtt.org/">MQTT</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_project_team"><a class="anchor" href="#_project_team"></a>2. Project Team</h2>
+<h2 id="_index"><a class="anchor" href="#_index"></a>1. Index</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Emil Silber</strong>: <strong>Project Leader</strong>, Organizational Leader, Backend</p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/project-description/about/">About</a></p>
 </li>
 <li>
-<p><strong>Filip Schauer</strong>: Technical Leader, Frontend</p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/project-description/usage/">Usage</a></p>
 </li>
 <li>
-<p><strong>Aaron Schreiegg</strong>: Frontend</p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/project-description/code/">Code</a></p>
 </li>
 <li>
-<p><strong>Axel Csomany</strong>: Backend</p>
-</li>
-<li>
-<p><strong>Simon Pesut</strong>: Backend (mostly database)</p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/project-description/diagrams/">Diagrams</a></p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_system_architecture"><a class="anchor" href="#_system_architecture"></a>3. System Architecture</h2>
-<div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="/01-projekte-2025-4chif-syp-trench/project-description/images/system-architecture.png" alt="system architecture">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_use_case_diagram"><a class="anchor" href="#_use_case_diagram"></a>4. Use-Case Diagram</h2>
-<div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="images/diag-plantuml-md5-a2151db0b916ae204f5a43d7d769daf6.svg" alt="Diagram" width="320" height="413">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_entity_relationship_diagram"><a class="anchor" href="#_entity_relationship_diagram"></a>5. Entity Relationship Diagram</h2>
-<div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="images/diag-plantuml-md5-96c40285fc01a436c7ffc9c7c549cfa9.svg" alt="Diagram" width="541" height="1273">
-</div>
-</div>
-<div class="paragraph">
-<p>asciidocs/
-    docs/
-        index.adoc
-            &gt; The main index file of the documentation.
-            &gt; Includes references to other documentation files,
-            &gt; and is what is displayed on the website.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>project-description/
-    &gt; A general description about the project.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>images/
-    &gt; Images used in the project description.
-    &gt; Also gets used at other places, like the slides.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>index.adoc</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>connect-docker-with-postgres.adoc
-    &gt; Tutorial on how to connect a Docker container
-    &gt; with a PostgreSQL database.
-file-structure.adoc
-    &gt; The file structure of the project (this file).
-project-team.adoc
-    &gt; The team of the project and what our tasks are.
-use-case.adoc
-    &gt; The use case of the project. What are the Roles and what are they allowed to do?
-erd.puml
-    &gt; The entity relationship diagram of the project.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>project-guidelines/
-    &gt; Guidelines for working on the project.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>index.adoc</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>naming/
-    &gt; Guidelines for naming branches and commits.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>branch-name-guidelines.adoc
-commit-message-guidelines.adoc</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>conversation-protocols/
-    &gt; Protocols of the conversations we had during the project.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>index.adoc</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>lessons/
-    &gt; Things said in SYP-class that is relevant to the project.
-teacher/
-    &gt; Private conversations with a teacher about the project.
-project-meetings/
-    &gt; Intern conversations with the project team about the project.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>scripts/
-    &gt; Files to help with building the documentation and more.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>slides/
-    &gt; The project presentation slides in RevealJS.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>project-presentation.adoc</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>css/
-images/</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>frontend/
-    &gt; The frontend of the project, written in Angular using HTML, TypeScript, SCSS and Bootstrap.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>src/
-    app/
-        &gt; The main Angular components of the project.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>coil-data/
-    &gt; Data and service for the coils.
-coil-management/
-    &gt; The coil management component.
-    &gt; Contains a parent component, which loads
-    &gt; either the list of coils or the specific coil form.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>coiltype-data/
-    &gt; Data and service for the coil types.
-coiltype-management/
-    &gt; The coil type management component.
-    &gt; Contains a parent component, which loads
-    &gt; either the list of coil types or the specific coil type form.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>home/
-    &gt; Home page of the application.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>measurement-management/
-    &gt; Currently empty.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>app.component.*
-    &gt; The main component of the application.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>app.config.ts
-    &gt; Configuration of the application.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>    app.routes.ts
-        &gt; Routes of the application.
-assets/
-    &gt; Images and other assets used in the frontend.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>index.html
-main.ts
-styles.scss</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>angular.json
-package.json
-package-lock.json
-tsconfig.json</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>backend/TrenchAPI/
-    &gt; The backend of the project, written in C# using ASP.NET Core.</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Controllers/
-    &gt; The controllers of the API.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>SpuleController.cs
-    &gt; The controller for the coils.
-SpuleTypController.cs
-    &gt; The controller for the coil types.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Models/
-    &gt; The data models of the API.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Spule.cs &amp; SpuleContext.cs
-    &gt; The model for the coils.
-SpuleTyp.cs &amp; SpuleTypContext.cs
-    &gt; The model for the coil types.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Migrations/
-    &gt; Migrations for the database.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Services/
-    &gt; The services of the API.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>CoilService.cs
-    &gt; The service for the coils.
-CoilTypeService.cs
-    &gt; The service for the coil types.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Properties/
-    launchSettings.json</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>TrenchAPI.csproj
-    &gt; The project file of the API.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>appsettings.json
-appsettings.development.json</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>Program.cs
-    &gt; The main program file of the API.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>TrenchAPI.sln
-    &gt; The Visual Studio solution file of the API.</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="title">gitignore</div>
-<div class="content">
-<pre>&gt; Files and directories that should be ignored by Git.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>README.md
-    &gt; The README file of the project, shown on GitHub. This only contains a link to the documentation, since GitHub cannot display AsciiDoc files properly.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>== Frontend Concepts
-image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-1.png[]
-image::/01-projekte-2025-4chif-syp-trench/project-description/images/frontend-concept-2.png[]</pre>
-</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-06 21:43:40 UTC
+Last updated 2025-05-07 13:20:22 UTC
 </div>
 </div>
 </body>

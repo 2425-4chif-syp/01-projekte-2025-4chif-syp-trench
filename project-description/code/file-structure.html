@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Untitled</title>
+<title>File Structure</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,178 +437,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
+<h1>File Structure</h1>
 </div>
 <div id="content">
 <div class="paragraph">
-<p>The relevant files of the project are structured as follows:</p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/project_description/">Project Description</a> / <a href="/01-projekte-2025-4chif-syp-trench/project_description/">Code</a> / <strong>File Structure</strong></p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>asciidocs/
-    docs/
-        index.adoc
-            &gt; The main index file of the documentation.
-            &gt; Includes references to other documentation files,
-            &gt; and is what is displayed on the website.
-
-    project-description/
-        &gt; A general description about the project.
-
-        images/
-            &gt; Images used in the project description.
-            &gt; Also gets used at other places, like the slides.
-
-        index.adoc
-
-        connect-docker-with-postgres.adoc
-            &gt; Tutorial on how to connect a Docker container
-            &gt; with a PostgreSQL database.
-        file-structure.adoc
-            &gt; The file structure of the project (this file).
-        project-team.adoc
-            &gt; The team of the project and what our tasks are.
-        use-case.adoc
-            &gt; The use case of the project. What are the Roles and what are they allowed to do?
-        erd.puml
-            &gt; The entity relationship diagram of the project.
-
-    project-guidelines/
-        &gt; Guidelines for working on the project.
-
-        index.adoc
-
-        naming/
-            &gt; Guidelines for naming branches and commits.
-
-            branch-name-guidelines.adoc
-            commit-message-guidelines.adoc
-
-    conversation-protocols/
-        &gt; Protocols of the conversations we had during the project.
-
-        index.adoc
-
-        lessons/
-            &gt; Things said in SYP-class that is relevant to the project.
-        teacher/
-            &gt; Private conversations with a teacher about the project.
-        project-meetings/
-            &gt; Intern conversations with the project team about the project.
-
-    scripts/
-        &gt; Files to help with building the documentation and more.
-
-    slides/
-        &gt; The project presentation slides in RevealJS.
-
-        project-presentation.adoc
-
-        css/
-        images/
-
-frontend/
-    &gt; The frontend of the project, written in Angular using HTML, TypeScript, SCSS and Bootstrap.
-
-    src/
-        app/
-            &gt; The main Angular components of the project.
-
-            coil-data/
-                &gt; Data and service for the coils.
-            coil-management/
-                &gt; The coil management component.
-                &gt; Contains a parent component, which loads
-                &gt; either the list of coils or the specific coil form.
-
-            coiltype-data/
-                &gt; Data and service for the coil types.
-            coiltype-management/
-                &gt; The coil type management component.
-                &gt; Contains a parent component, which loads
-                &gt; either the list of coil types or the specific coil type form.
-
-            home/
-                &gt; Home page of the application.
-
-            measurement-management/
-                &gt; Currently empty.
-
-            app.component.*
-                &gt; The main component of the application.
-
-            app.config.ts
-                &gt; Configuration of the application.
-
-            app.routes.ts
-                &gt; Routes of the application.
-        assets/
-            &gt; Images and other assets used in the frontend.
-
-        index.html
-        main.ts
-        styles.scss
-
-    angular.json
-    package.json
-    package-lock.json
-    tsconfig.json
-
-backend/TrenchAPI/
-    &gt; The backend of the project, written in C# using ASP.NET Core.
-
-    Controllers/
-        &gt; The controllers of the API.
-
-        SpuleController.cs
-            &gt; The controller for the coils.
-        SpuleTypController.cs
-            &gt; The controller for the coil types.
-
-    Models/
-        &gt; The data models of the API.
-
-        Spule.cs &amp; SpuleContext.cs
-            &gt; The model for the coils.
-        SpuleTyp.cs &amp; SpuleTypContext.cs
-            &gt; The model for the coil types.
-
-    Migrations/
-        &gt; Migrations for the database.
-
-    Services/
-        &gt; The services of the API.
-
-        CoilService.cs
-            &gt; The service for the coils.
-        CoilTypeService.cs
-            &gt; The service for the coil types.
-
-    Properties/
-        launchSettings.json
-
-    TrenchAPI.csproj
-        &gt; The project file of the API.
-
-    appsettings.json
-    appsettings.development.json
-
-    Program.cs
-        &gt; The main program file of the API.
-
-    TrenchAPI.sln
-        &gt; The Visual Studio solution file of the API.
-
-.gitignore
-    &gt; Files and directories that should be ignored by Git.
-
-README.md
-    &gt; The README file of the project, shown on GitHub. This only contains a link to the documentation, since GitHub cannot display AsciiDoc files properly.</pre>
-</div>
+<div class="paragraph">
+<p>The project has three main folders:
+- <code>docs</code>: Contains the documentation of the project, including the project description, usage instructions, diagrams and RevealJS Slides. This is written using <a href="https://asciidoctor.org/">Asciidoctor</a>.
+- <code>frontend</code>: Contains the frontend code of the project, which is built using <a href="https://angular.dev/">Angular</a>.
+- <code>backend</code>: Contains the backend code of the project, which is built using <a href="https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet">.NET</a>. This includes the main project folder <code>TrenchAPI</code> and another C# project folder <code>ConsoleMQTT</code> for mocking MQTT messages.</p>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-06 21:43:40 UTC
+Last updated 2025-05-07 13:20:22 UTC
 </div>
 </div>
 </body>
