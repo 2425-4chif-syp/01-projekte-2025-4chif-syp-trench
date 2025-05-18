@@ -63,7 +63,7 @@
               <div class="mb-3">
                 <label for="toleranzbereich" class="form-label">Toleranzbereich:</label>
                 <input type="number" class="form-control" id="toleranzbereich" placeholder="Toleranzbereich in mm"
-                    min="0"
+                    min="0" [(ngModel)]="selectedCoiltype.toleranzbereich"
                     [class.is-invalid]="saveError && isFieldInvalid('toleranzbereich')">
                 <div class="invalid-feedback">Bitte geben Sie einen gültigen Toleranzbereich ein.</div>
             </div>

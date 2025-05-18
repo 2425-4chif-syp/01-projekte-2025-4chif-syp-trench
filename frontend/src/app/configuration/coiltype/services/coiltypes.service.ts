@@ -18,14 +18,14 @@ export class CoiltypesService implements ListService<Coiltype> {
 
   public get newElement(): Coiltype {
     return {
-      id: null,
+      id: 0,
       name: '',
       schenkel: 0,
       bandbreite: null,
       schichthoehe: null,
       durchmesser: null,
       toleranzbereich: null,
-      notiz: null
+      notiz: ''
     };
   }
 
@@ -76,7 +76,7 @@ export class CoiltypesService implements ListService<Coiltype> {
     const response:Coiltype = await this.backendService.addCoiltype(this.selectedElementCopy);
 
     this.elements.push(response);
-
+    
     return response;
   }
 
