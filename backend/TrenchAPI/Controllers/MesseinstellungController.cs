@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -89,7 +90,7 @@ namespace TrenchAPI.Controllers
 
             if (!_context.SondenTyp.Any(m => m.ID == messeinstellungDto.SondenTypID))
             {
-                return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
+                return BadRequest("Der angegebene Sondentyp existiert nicht.");
             }
 
             var messeinstellung = new Messeinstellung
@@ -100,8 +101,21 @@ namespace TrenchAPI.Controllers
                 SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
             };
 
-            messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
-            messeinstellung.SondenTyp = await _context.SondenTyp.FindAsync(messeinstellung.SondenTypID);
+            var existingSpule = _context.Spule.Find(messeinstellung.SpuleID);
+            var existingSondenTyp = _context.SondenTyp.Find(messeinstellung.SondenTypID);
+
+            if (existingSpule == null)
+            {
+                return BadRequest("Der angegebene Spule existiert nicht. (DEBUG: 2)");
+            }
+
+            if (existingSondenTyp == null)
+            {
+                return BadRequest("Der angegebene SondenTyp existiert nicht. (DEBUG: 2)");
+            }
+
+            messeinstellung.Spule = existingSpule;
+            messeinstellung.SondenTyp = existingSondenTyp;
 
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();

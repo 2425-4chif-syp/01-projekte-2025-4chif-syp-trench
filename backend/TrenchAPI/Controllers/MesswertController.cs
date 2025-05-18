@@ -116,6 +116,9 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene SondenPosition existiert nicht. (DEBUG: 2)");
             }
 
+            messwert.Messung = existingMessung;
+            messwert.SondenPosition = existingSondenPosition;
+
             _context.Messwert.Add(messwert);
             await _context.SaveChangesAsync();
 

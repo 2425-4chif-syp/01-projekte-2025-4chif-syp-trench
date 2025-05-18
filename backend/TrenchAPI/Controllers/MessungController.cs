@@ -113,6 +113,8 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 2)");
             }
 
+            messung.Messeinstellung = existingMesseinstellung;
+
             _context.Messung.Add(messung);
             await _context.SaveChangesAsync();
 
