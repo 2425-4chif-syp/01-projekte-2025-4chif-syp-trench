@@ -17,15 +17,15 @@ export class CoilsService implements ListService<Coil> {
 
   public get newElement(): Coil {
     return {
-      id: null,
+      id: 0,
       coiltype: null,
       coiltypeId: null,
       einheit: null,
-      auftragsnummer: null,
+      auftragsnummer: '',
       auftragsPosNr: null,
       bemessungsspannung: null,
       bemessungsfrequenz: null,
-      notiz: null
+      notiz: ''
     };
   }
 

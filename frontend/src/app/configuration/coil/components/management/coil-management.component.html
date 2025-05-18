@@ -26,9 +26,9 @@
       <!-- Formulareingaben -->
       <div class="mb-3">
           <label for="auftragsNr" class="form-label">Auftrags-Nummer: <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="auftragsNr" placeholder="Auftrags-Nummer"
-              [(ngModel)]="selectedCoil.auftragsnummer" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('auftragsnummer')">
+          <input type="text" class="form-control" id="auftragsNr" placeholder="Auftrags-Nummer"
+              [(ngModel)]="selectedCoil.auftragsnummer" 
+              [class.is-invalid]="saveError ">
           <div class="invalid-feedback">Bitte geben Sie eine Auftragsnummer ein.</div>
       </div>
 
@@ -42,18 +42,18 @@
 
       <!---->
       <div class="mb-3">
-          <label for="ur" class="form-label">Bemessungsspannung: <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="ur" placeholder="Bemessungsspannung"
+          <label for="bemessungsspannung" class="form-label">Bemessungsspannung: <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" id="bemessungsspannung" placeholder="Bemessungsspannung"
               [(ngModel)]="selectedCoil.bemessungsspannung" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('ur')">
+              [class.is-invalid]="saveError && isFieldInvalid('bemessungsspannung')">
           <div class="invalid-feedback">Bitte geben Sie eine Bemessungsspannung ein.</div>
       </div>
 
       <div class="mb-3">
-        <label for="omega" class="form-label">Bemessungsfrequenz <span class="text-danger">*</span></label>
-        <input type="number" class="form-control" id="omega" placeholder="Bemessungsfrequenz"
+        <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="bemessungsfrequenz" placeholder="Bemessungsfrequenz"
             [(ngModel)]="selectedCoil.bemessungsfrequenz" min="0"
-            [class.is-invalid]="saveError && isFieldInvalid('omega')">
+            [class.is-invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
         <div class="invalid-feedback">Bitte geben Sie eine Bemessungsfrequenz ein.</div>
       </div>
 
@@ -65,14 +65,14 @@
           <div class="invalid-feedback">Bitte geben Sie eine Einheit ein.</div>
       </div>
 
-    <div class="form-group mb-4">
+    <!--<div class="form-group mb-4">
       <label for="content">Notiz:</label>
       <div class="content-editor">
                     <textarea id="content" class="form-control form-control-lg"
                               name="content" rows="3" [(ngModel)]="selectedCoil.notiz"
                               placeholder="Notiz..."></textarea>
       </div>
-    </div>
+    </div>-->
 
       <!-- Buttons -->
       <div class="d-flex justify-content-between mt-4">
