@@ -18,13 +18,14 @@ export class CoiltypesService implements ListService<Coiltype> {
 
   public get newElement(): Coiltype {
     return {
-      id: 0,
+      id: null,
       name: '',
       schenkel: 0,
-      bandbreite: 0,
-      schichthoehe: 0,
-      durchmesser: 0,
-      notiz: ""
+      bandbreite: null,
+      schichthoehe: null,
+      durchmesser: null,
+      toleranzbereich: null,
+      notiz: null
     };
   }
 
