@@ -44,7 +44,7 @@
       <div class="mb-3">
           <label for="ur" class="form-label">Bemessungsspannung: <span class="text-danger">*</span></label>
           <input type="number" class="form-control" id="ur" placeholder="Bemessungsspannung"
-              [(ngModel)]="selectedCoil.ur" min="0"
+              [(ngModel)]="selectedCoil.bemessungsspannung" min="0"
               [class.is-invalid]="saveError && isFieldInvalid('ur')">
           <div class="invalid-feedback">Bitte geben Sie eine Bemessungsspannung ein.</div>
       </div>
@@ -52,7 +52,7 @@
       <div class="mb-3">
         <label for="omega" class="form-label">Bemessungsfrequenz <span class="text-danger">*</span></label>
         <input type="number" class="form-control" id="omega" placeholder="Bemessungsfrequenz"
-            [(ngModel)]="selectedCoil.omega" min="0"
+            [(ngModel)]="selectedCoil.bemessungsfrequenz" min="0"
             [class.is-invalid]="saveError && isFieldInvalid('omega')">
         <div class="invalid-feedback">Bitte geben Sie eine Bemessungsfrequenz ein.</div>
       </div>
