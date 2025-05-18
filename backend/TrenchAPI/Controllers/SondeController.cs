@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
+using TrenchAPI.Persistence.DTO;
 
 namespace TrenchAPI.Controllers
 {
@@ -76,12 +77,38 @@ namespace TrenchAPI.Controllers
         // POST: api/Sonde
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Sonde>> PostSonde(Sonde Sonde)
+        public async Task<ActionResult<Sonde>> PostSonde(SondeCreateDto sondeDto)
         {
-            _context.Sonde.Add(Sonde);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.SondenTyp.Any(st => st.ID == sondeDto.SondenTypID))
+            {
+                return BadRequest("Der angegebene Sondentyp existiert nicht. (DEBUG: 1)");
+            }
+
+            var sonde = new Sonde
+            {
+                ID = sondeDto.ID,
+                SondenTypID = sondeDto.SondenTypID,
+                Name = sondeDto.Name,
+                Kalibrierungsfaktor = sondeDto.Kalibrierungsfaktor,
+            };
+
+            var existingSondenTyp = _context.SondenTyp.Find(sonde.SondenTypID);
+            if (existingSondenTyp == null)
+            {
+                return BadRequest("Der angegebene Sondentyp existiert nicht. (DEBUG: 2)");
+            }
+
+            sonde.SondenTyp = existingSondenTyp;
+
+            _context.Sonde.Add(sonde);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSonde", new { id = Sonde.ID }, Sonde);
+            return CreatedAtAction("GetSonde", new { id = sonde.ID }, sonde);
         }
 
         // DELETE: api/Sonde/5
