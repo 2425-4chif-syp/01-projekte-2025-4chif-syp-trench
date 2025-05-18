@@ -78,46 +78,6 @@ namespace TrenchAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Messwert>> PostMesswert(Messwert messwert)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (!_context.Messung.Any(st => st.ID == messwertDto.MessungID))
-            {
-                return BadRequest("Der angegebene Messung existiert nicht. (DEBUG: 1)");
-            }
-
-            if (!_context.SondenPosition.Any(st => st.ID == messwertDto.SondenPositionID))
-            {
-                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 1)");
-            }
-
-            var messwert = new Messwert
-            {
-                ID = messwertDto.ID,
-                MessungID = messwertDto.MessungID,
-                SondenPositionID = messwertDto.SondenPositionID,
-                Wert = messwertDto.Wert,
-                Zeitpunkt = messwertDto.Zeitpunkt,
-            };
-
-            var existingMessung = _context.Messung.Find(messwert.MessungID);
-            var existingSondenPosition = _context.SondenPosition.Find(messwert.SondenPositionID);
-
-            if (existingMessung == null)
-            {
-                return BadRequest("Der angegebene Messung existiert nicht. (DEBUG: 2)");
-            }
-
-            if (existingSondenPosition == null)
-            {
-                return BadRequest("Der angegebene SondenPosition existiert nicht. (DEBUG: 2)");
-            }
-
-            messwert.Messung = existingMessung;
-            messwert.SondenPosition = existingSondenPosition;
-
             _context.Messwert.Add(messwert);
             await _context.SaveChangesAsync();
 
