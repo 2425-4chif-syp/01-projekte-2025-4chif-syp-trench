@@ -33,7 +33,11 @@ namespace TrenchAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Messeinstellung>> GetMesseinstellung(int id)
         {
-            var messeinstellung = await _context.Messeinstellung.FindAsync(id);
+            var messeinstellung = await _context.Messeinstellung
+                                            .Include(me => me.Spule)
+                                                .ThenInclude(sp => sp.SpuleTyp)
+                                            .Include(me => me.SondenTyp)
+                                            .FirstOrDefaultAsync(s => s.ID == id);
 
             if (messeinstellung == null)
             {
@@ -100,7 +104,7 @@ namespace TrenchAPI.Controllers
                 SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
             };
 
-            messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
+            messeinstellung.Spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(m => m.ID == messeinstellung.SpuleID);
             messeinstellung.SondenTyp = await _context.SondenTyp.FindAsync(messeinstellung.SondenTypID);
 
             _context.Messeinstellung.Add(messeinstellung);
