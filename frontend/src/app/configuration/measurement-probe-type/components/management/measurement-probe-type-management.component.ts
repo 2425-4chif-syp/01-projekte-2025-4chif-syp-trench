@@ -39,7 +39,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
 
     this.saveError = true;
 
-    const requiredFields = ['hoehe', 'breite', 'wicklungszahl'];
+    const requiredFields = ['hoehe', 'breite', 'windungszahl'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {

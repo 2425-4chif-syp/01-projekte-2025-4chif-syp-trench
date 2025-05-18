@@ -25,6 +25,7 @@ export class MeasurementProbeTypeListComponent {
 
     public readonly keysAsColumns: { [key: string]: string } = {
       'id': 'Messsondentyp',
+      'name': 'Name',
       'breite': 'Breite',
       'hoehe': 'Höhe',
       'wicklungszahl': 'Wicklungszahl',
