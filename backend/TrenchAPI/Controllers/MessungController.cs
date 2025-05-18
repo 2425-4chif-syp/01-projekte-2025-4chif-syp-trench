@@ -84,13 +84,34 @@ namespace TrenchAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Messung>> PostMessung(MessungCreateDto messungDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.Messeinstellung.Any(st => st.ID == messungDto.MesseinstellungID))
+            {
+                return BadRequest("Der angegebene Messeinstellung existiert nicht for some reason?. (DEBUG: 1)");
+            }
+
             var messung = new Messung
             {
+                ID = messungDto.ID,
                 MesseinstellungID = messungDto.MesseinstellungID,
                 Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
                 Endzeitpunkt = messungDto.Endzeitpunkt,
+                Name = messungDto.Name,
+                Tauchkernstellung = messungDto.Tauchkernstellung,
+                Pruefspannung = messungDto.Pruefspannung,
                 Notiz = messungDto.Notiz
             };
+
+            var existingMesseinstellung = _context.Messeinstellung.Find(messung.MesseinstellungID);
+
+            if (existingMesseinstellung == null)
+            {
+                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 2)");
+            }
 
             _context.Messung.Add(messung);
             await _context.SaveChangesAsync();

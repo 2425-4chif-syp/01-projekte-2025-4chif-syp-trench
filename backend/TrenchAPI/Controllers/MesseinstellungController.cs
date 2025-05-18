@@ -100,7 +100,6 @@ namespace TrenchAPI.Controllers
                 SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
             };
 
-            // Optionale Navigation Properties setzen
             messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
             messeinstellung.SondenTyp = await _context.SondenTyp.FindAsync(messeinstellung.SondenTypID);
 
