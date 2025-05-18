@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
+using TrenchAPI.Persistence.DTO;
 
 namespace TrenchAPI.Controllers
 {
@@ -75,9 +76,47 @@ namespace TrenchAPI.Controllers
 
         // POST: api/SondenPosition
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
-        public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPosition sondenPosition)
+        public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPositionCreateDto sondenPositionDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.Messeinstellung.Any(st => st.ID == sondenPositionDto.SondeID))
+            {
+                return BadRequest("Der angegebene Sonde existiert nicht. (DEBUG: 1)");
+            }
+
+            if (!_context.Messeinstellung.Any(st => st.ID == sondenPositionDto.MesseinstellungID))
+            {
+                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 1)");
+            }
+
+            var sondenPosition = new SondenPosition
+            {
+                ID = sondenPositionDto.ID,
+                SondeID = sondenPositionDto.SondeID,
+                MesseinstellungID = sondenPositionDto.MesseinstellungID,
+                Position = sondenPositionDto.Position,
+                Schenkel = sondenPositionDto.Schenkel
+            };
+
+            var existingSonde = _context.Sonde.Find(sondenPosition.SondeID);
+            var existingMesseinstellung = _context.Messeinstellung.Find(sondenPosition.MesseinstellungID);
+
+            if (existingSonde == null)
+            {
+                return BadRequest("Der angegebene Sonde existiert nicht. (DEBUG: 2)");
+            }
+
+            if (existingMesseinstellung == null)
+            {
+                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 2)");
+            }
+
             _context.SondenPosition.Add(sondenPosition);
             await _context.SaveChangesAsync();
 
