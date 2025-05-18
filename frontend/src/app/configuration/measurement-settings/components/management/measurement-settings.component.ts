@@ -130,8 +130,6 @@ export class MeasurementSettingsComponent implements OnInit {
     );
   }
 
-
-
   openCoilSelect()
   {
     this.coilsService.selectedElementCopy = null;

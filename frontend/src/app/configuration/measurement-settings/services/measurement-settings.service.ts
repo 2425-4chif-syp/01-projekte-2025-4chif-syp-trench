@@ -23,7 +23,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       measurementProbeTypeId: null,
       coil: null,
       measurementProbeType: null,
-      sondenProSchenkel: null,
+      sondenProSchenkel: 1,
     };
   }
 
