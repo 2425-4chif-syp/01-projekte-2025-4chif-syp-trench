@@ -2,14 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MeasurementProbeTypesService } from '../../services/measurement-probe-types.service';
-
-export interface MeasurementProbeType {
-  id: number | null;
-  breite: number | null;
-  hoehe: number | null;
-  wicklungszahl: number | null;
-  notiz: string | null;
-}
+import { MeasurementProbeType } from '../../interfaces/measurement-probe-type';
 
 @Component({
   selector: 'app-measurement-probe-type-management',
