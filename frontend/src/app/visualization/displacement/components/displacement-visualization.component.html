@@ -119,7 +119,10 @@
     @if (hoveredArrow !== null) {
       <ul>
         <li>
-          <strong>Branch</strong>: {{ (IsHoveringOverResultArrow() ? 'Final Vector' : 'Branch ' + (hoveredArrow.branchIndex + 1)) }}
+          <strong>Schenkel</strong>: {{ (IsHoveringOverResultArrow() ? 'Final Vector' : 'Schenkel ' + (hoveredArrow.branchIndex + 1)) }}
+        </li>
+        <li>
+          <strong>Sensor</strong>: {{ (IsHoveringOverResultArrow() ? 'Final Vector' : 'Sensor ' + (hoveredArrow.sensorIndex + 1)) }}
         </li>
         <li>
           <strong>x</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.x : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].x) | number: '1.2-2' }}
@@ -128,13 +131,13 @@
           <strong>y</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.y : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].y) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>Length</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.length : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length ) | number: '1.2-2' }}
+          <strong>Länge</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.length : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length ) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>Difference from average</strong>: {{ ((IsHoveringOverResultArrow() ? finalVector.length : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length) - averageLength) | number: '1.2-2' }}
+          <strong>Abweichung vom Durchschnitt</strong>: {{ ((IsHoveringOverResultArrow() ? finalVector.length : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length) - averageLength) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>Angle</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.angle : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].angle)*radToDeg | number: '1.2-2' }}°
+          <strong>Winkel</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.angle : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].angle)*radToDeg | number: '1.2-2' }}°
         </li>
       </ul>
     }

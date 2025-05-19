@@ -116,22 +116,27 @@ export class DisplacementCalculationService {
     }
 
     // Kraftkomponenten in x und y
-    const F: { sensors: number[] }[] = yokes.map((yoke, i) => ({
+    const F: { sensors: {x:number, y:number}[] }[] = yokes.map((yoke, i) => ({
       sensors: yoke.sensors.map((_, ii) =>
-        F_skal[i].sensors[ii] * Math.cos(angle[i].sensors[ii] * Math.PI / 180)
+        ({
+          x: F_skal[i].sensors[ii] * Math.cos(angle[i].sensors[ii] * Math.PI / 180),
+          y: F_skal[i].sensors[ii] * Math.sin(angle[i].sensors[ii] * Math.PI / 180)
+        })
       )
     }));
+
+    console.log('F:', F);
 
     // Werte gruppiert nach Joch zurückgeben
     const result: { x: number; y: number, angle:number, length:number }[][] = [];
     for (let i = 0; i < yokes.length; i++) {
       const yoke = yokes[i];
       const yokeResult: { x: number; y: number, angle:number, length:number }[] = [];
-      for (let j = 0; j < yoke.sensors.length; j++) {
-        const x = F[i].sensors[j];
-        const y = F[i].sensors[j] * Math.tan(angle[i].sensors[j] * Math.PI / 180);
+      for (let ii = 0; ii < yoke.sensors.length; ii++) {
+        const { x, y } = F[i].sensors[ii];
         const length = Math.sqrt(x * x + y * y);
-        yokeResult.push({ x, y, angle: angle[i].sensors[j], length });
+        const angle_value = angle[i].sensors[ii] * Math.PI / 180;
+        yokeResult.push({ x, y, angle: angle_value, length });
       }
       result.push(yokeResult);
     }
