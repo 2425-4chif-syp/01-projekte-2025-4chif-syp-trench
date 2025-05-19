@@ -26,14 +26,28 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SondenPosition>>> GetSondenPosition()
         {
-            return await _context.SondenPosition.ToListAsync();
+            return await _context.SondenPosition
+                .Include(sp => sp.Sonde)
+                    .ThenInclude(s => s.SondenTyp)
+                .Include(sp => sp.Messeinstellung)
+                    .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(sp => sp.Messeinstellung)
+                    .ThenInclude(me => me.SondenTyp)
+                .ToListAsync();
         }
 
         // GET: api/SondenPosition/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SondenPosition>> GetSondenPosition(int id)
         {
-            var sondenPosition = await _context.SondenPosition.FindAsync(id);
+            var sondenPosition = await _context.SondenPosition
+                .Include(sp => sp.Sonde)
+                    .ThenInclude(s => s.SondenTyp)
+                .Include(sp => sp.Messeinstellung)
+                    .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(sp => sp.Messeinstellung)
+                    .ThenInclude(me => me.SondenTyp)
+                .FirstOrDefaultAsync(sp => sp.ID == id);
 
             if (sondenPosition == null)
             {
