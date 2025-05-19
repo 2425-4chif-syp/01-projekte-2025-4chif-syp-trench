@@ -1,8 +1,14 @@
-import { Component, HostListener, Input, signal } from '@angular/core';
+import { Component, effect, HostListener, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {CommonModule, DecimalPipe} from "@angular/common";
-import { DisplacementService } from '../services/displacement-calculation.service';
 import { CoilVisualizationComponent } from "../../coil/components/coil-visualization.component";
+import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
+import { MeasurementProbeType } from '../../../configuration/measurement-probe-type/interfaces/measurement-probe-type';
+import { MeasurementProbe } from '../../../configuration/measurement-probe/interfaces/measurement-probes';
+import { Coil } from '../../../configuration/coil/interfaces/coil';
+import { Coiltype } from '../../../configuration/coiltype/interfaces/coiltype';
+import { MeasurementSetting } from '../../../configuration/measurement-settings/interfaces/measurement-settings';
+import { Measurement } from '../../../configuration/measurement-history/interfaces/measurement.model';
 
 @Component({
   selector: 'app-displacement-visualization',
@@ -14,6 +20,13 @@ import { CoilVisualizationComponent } from "../../coil/components/coil-visualiza
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
   @Input() yokes = signal<{sensors:number[]}[]>([]);
+  @Input() measurementProbeType:MeasurementProbeType = null!;
+  @Input() measurementProbes:MeasurementProbe[] = [];
+  @Input() coil:Coil = null!;
+  @Input() coiltype:Coiltype = null!;
+  @Input() measurementSetting:MeasurementSetting = null!;
+
+  public calcResults:{ x: number; y: number, angle:number, length:number }[][] = [];
 
   averageLength:number = 0;
 
@@ -22,17 +35,47 @@ export class DisplacementVisualizationComponent {
 
   public readonly radToDeg = 180 / Math.PI;
 
-  public hoveredArrow:number|null = null;
+  public hoveredArrow:{branchIndex:number, sensorIndex:number}|null = null;
   public mousePosition: { x: number, y: number }|null = null;
 
   public isHoveringOverBorder:boolean = false;
 
-  constructor(private displacementService: DisplacementService) {
+  constructor(private displacementCalculationService:DisplacementCalculationService) {
     //this.yokes.set([
     //  { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
     //  { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     //]);
+  }
+
+  ngOnInit() {
+    // TODO: Also update on signal change
+    this.updateVisualization();
+  }
+
+  ngAfterViewInit() {
+    effect(() => {
+      this.updateVisualization();
+    });
+  }
+
+  public updateVisualization():void {
+    const result = this.displacementCalculationService.calculateYokeData(
+      this.yokes(),
+      this.measurementProbeType,
+      this.measurementProbes,
+      this.coiltype,
+      this.coil,
+      this.measurementSetting
+    );
+
+    // Calculate the average length of the vectors
+    this.averageLength = result.reduce((sum, branch) => {
+      const branchLength = branch.reduce((branchSum, sensor) => branchSum + this.calculateVectorLength(sensor.x, sensor.y), 0);
+      return sum + branchLength;
+    }, 0) / (result.length * this.measurementSetting.sondenProSchenkel!);
+
+    this.calcResults = result;
   }
 
   public get internalTranslationOffset():number {
@@ -52,46 +95,37 @@ export class DisplacementVisualizationComponent {
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
 
     return Math.cos(branch.angle) * newLength;
   }
   public scaledBranchResultY(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
 
     return Math.sin(branch.angle) * newLength;
   }
-
-  // Function to calculate the results using the service
-  public get branchResults(): { x: number; y: number, angle:number, length:number }[] {
-    this.averageLength = this.yokes().reduce((acc, branch) => {
-      const sum = branch.sensors.reduce((acc, sensor) => acc + sensor, 0);
-      const average = sum / branch.sensors.length;
-      return acc + average;
-    }, 0) / this.yokes().length;
-
-    return this.displacementService.calculateBranchData(
-      this.yokes(),
-      this.yokes().length
-    );
+  
+  private calculateVectorLength(x: number, y: number): number {
+    return Math.sqrt(x * x + y * y);
   }
 
   // Function to calculate the Final Vector
   public get finalVector(): { x: number; y: number, angle:number, length:number } {
-    let vector = this.branchResults.reduce(
+    // Final vector is calculated by summing up all the x and y components of each branch
+    let vector = this.calcResults.reduce(
       (acc, branch) => {
-        acc.x += branch.x;
-        acc.y += branch.y;
-        return acc;
+        const branchX = branch.reduce((sum, sensor) => sum + sensor.x, 0);
+        const branchY = branch.reduce((sum, sensor) => sum + sensor.y, 0);
+        return { x: acc.x + branchX, y: acc.y + branchY };
       },
-      { x: 0, y: 0 } // Initial value for the accumulator
+      { x: 0, y: 0 }
     );
 
     return {
       x: vector.x,
       y: vector.y,
       angle: Math.atan2(vector.y, vector.x),
-      length: this.displacementService.calculateVectorLength(vector.x, vector.y),
+      length: this.calculateVectorLength(vector.x, vector.y),
     }
   }
 
@@ -114,10 +148,20 @@ export class DisplacementVisualizationComponent {
     }
   }
 
-  public onArrowMouseEnter(index:number):void {
-    this.hoveredArrow = index;
+  public IsHoveringOverArrow(branchIndex:number, sensorIndex:number):boolean {
+    return this.hoveredArrow?.branchIndex === branchIndex && this.hoveredArrow?.sensorIndex === sensorIndex;
   }
-  public onArrowMouseLeave(index:number):void {
+  public IsHoveringOverResultArrow():boolean {
+    return this.hoveredArrow?.branchIndex === -1 && this.hoveredArrow?.sensorIndex === -1;
+  }
+
+  public onArrowMouseEnter(branchIndex:number, sensorIndex:number):void {
+    this.hoveredArrow = { branchIndex, sensorIndex };
+  }
+  public onResultArrowMouseEnter():void {
+    this.hoveredArrow = { branchIndex: -1, sensorIndex: -1 };
+  }
+  public onArrowMouseLeave():void {
     this.hoveredArrow = null;
   }
 
