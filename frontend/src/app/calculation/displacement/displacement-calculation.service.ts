@@ -9,23 +9,38 @@ import { MeasurementSetting } from '../../configuration/measurement-settings/int
 @Injectable({
   providedIn: 'root',
 })
+
+// TODO:
+// Ur aus der Excel -> Eingabefeld? (nicht im ERD)
+// delta_ang aus der Excel -> Hier steht, das kann aus den gegebenen Werten berechnet werden - wie geht das?
+// Berechnung von angle -> Wie sehen die Zahlen links für 2 Jochs aus? 
+// Berechnung von angle -> Was ist, wenn es eine ungerade Anzahl an Sonden pro Joch gibt?
 export class DisplacementCalculationService {
   constructor() {}
 
   // false: A_JI = Bandbreite * Schichthoehe
   // true:  A_JI = Durchmesser * Pi * Bandbreite / 3
-  private static readonly alternativeBerechnungVonA_JI:boolean = false;
+  private readonly alternativeBerechnungVonA_JI:boolean = false;
+
+  private readonly Ur = 21000 / Math.sqrt(3);
+  private readonly delta_ang = 15.5;
+
+  private getAngleLookup(yokeCount: number): number[] {
+    switch (yokeCount) {
+      case 2:
+        return [0, 180]; // Nur eine Schätzung
+      case 3:
+        return [0, -120, 120];
+      case 4:
+        return [0, 90, 180, 270];
+    }
+    throw new Error('Invalid yoke count: ' + yokeCount);
+  }
 
   // Function to calculate the x and y values of the vectors
   calculateYokeData(yokes: { sensors: number[] }[], measurementProbeType:MeasurementProbeType, measurementProbe:MeasurementProbe, coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting, measurement: Measurement)
     : { x: number; y: number, angle:number, length:number }[] {
     return yokes.map((yoke, index) => {
-      // TODO:
-      // Ur aus der Excel -> Eingabefeld? (nicht im ERD)
-      // delta_ang aus der Excel -> Hier steht, das kann aus den gegebenen Werten berechnet werden - wie geht das?
-      const Ur = 21000 / Math.sqrt(3);
-      const delta_ang = 15.5;
-
       // Berechnete Querschnittsfläche in m^2
       const A = measurementProbeType.breite! * measurementProbeType.hoehe! / 1000.0 / 1000.0;
 
@@ -47,7 +62,7 @@ export class DisplacementCalculationService {
       // Induktion umgerechnet auf Nennbedingungen * 115%
       const B_peak_nom: { sensors: number[] }[] = B_peak.map(yoke => ({
         sensors: yoke.sensors.map(sensor => 
-          (sensor / coil.bemessungsspannung! * Ur / 1000 * 1.15))
+          (sensor / coil.bemessungsspannung! * this.Ur / 1000 * 1.15))
       }));
 
       // Vs/A/m
@@ -59,7 +74,7 @@ export class DisplacementCalculationService {
           ((sensor * sensor) / µ0 / 2 * A))
       }));
 
-      const A_JI = DisplacementCalculationService.alternativeBerechnungVonA_JI ?
+      const A_JI = this.alternativeBerechnungVonA_JI ?
         (coiltype.durchmesser! * Math.PI * coiltype.bandbreite! / 3) :
         (coiltype.bandbreite! * coiltype.schichthoehe!);
 
@@ -73,6 +88,29 @@ export class DisplacementCalculationService {
       }));
 
       // Winkel der Normale auf die Messfläche ergibt sich aus Anzahl der Sonden und Gerätetype
+      
+      if (measurementSetting.sondenProSchenkel! < 4 || measurementSetting.sondenProSchenkel! % 2 != 0) {
+        throw new Error('Invalid number of sensors per yoke (must be >=4 and even): ' + measurementSetting.sondenProSchenkel);
+      }
+      const angleLookup = this.getAngleLookup(yokes.length);
+      let angle: { sensors: number[] }[] = [];
+      for (let i = 0; i < yokes.length; i++) {
+        let sensors: number[] = new Array(yokes[i].sensors.length);
+
+        // Sonden in der Mitte
+        sensors[yokes.length / 2 - 1] = angleLookup[i] - this.delta_ang / 2;
+        sensors[yokes.length / 2] = angleLookup[i] + this.delta_ang / 2;
+
+        // Erste Hälfte der Sonden (bei 6 ist das Index 2->0)
+        for (let ii = yokes.length / 2 - 2; ii >= 0; ii--) {
+          sensors.push(sensors[ii + 1] - this.delta_ang);
+        }
+
+        // Zweite Hälfte der Sonden (bei 6 ist das Index 5->3)
+        for (let ii = yokes.length / 2 + 1; ii < yokes[i].sensors.length; ii++) {
+          sensors.push(sensors[ii - 1] + this.delta_ang);
+        }
+      }
 
       return { x: 0, y: 0, angle: 0, length: 0 };
     });
