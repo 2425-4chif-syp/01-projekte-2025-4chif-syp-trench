@@ -107,6 +107,7 @@ namespace TrenchAPI.Controllers
                 SpuleID = messeinstellungDto.SpuleID,
                 SondenTypID = messeinstellungDto.SondenTypID,
                 SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
+                Name = messeinstellungDto.Name,
             };
 
             messeinstellung.Spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(m => m.ID == messeinstellung.SpuleID);
