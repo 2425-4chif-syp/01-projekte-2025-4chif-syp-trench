@@ -47,11 +47,11 @@
   @if (isConnected) {
     <app-displacement-visualization [size]="512" 
     [yokes]="yokes"
-    [measurementProbeType]="this.selectedMeasurementSetting!.measurementProbeType!"
+    [measurementProbeType]="selectedMeasurementSetting!.measurementProbeType!"
     [measurementProbes]="[]"
-    [coiltype]="this.selectedMeasurementSetting!.coil!.coiltype!"
-    [coil]="this.selectedMeasurementSetting!.coil!"
-    [measurementSetting]="this.selectedMeasurementSetting!"
+    [coiltype]="selectedMeasurementSetting!.coil!.coiltype!"
+    [coil]="selectedMeasurementSetting!.coil!"
+    [measurementSetting]="selectedMeasurementSetting!"
     />
 
     @for (yoke of yokes(); track $index) {

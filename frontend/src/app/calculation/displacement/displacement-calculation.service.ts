@@ -125,8 +125,6 @@ export class DisplacementCalculationService {
       )
     }));
 
-    console.log('F:', F);
-
     // Werte gruppiert nach Joch zurückgeben
     const result: { x: number; y: number, angle:number, length:number }[][] = [];
     for (let i = 0; i < yokes.length; i++) {

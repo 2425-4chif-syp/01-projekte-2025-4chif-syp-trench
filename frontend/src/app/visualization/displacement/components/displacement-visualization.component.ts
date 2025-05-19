@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, signal } from '@angular/core';
+import { Component, effect, HostListener, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {CommonModule, DecimalPipe} from "@angular/common";
 import { CoilVisualizationComponent } from "../../coil/components/coil-visualization.component";
@@ -25,7 +25,6 @@ export class DisplacementVisualizationComponent {
   @Input() coil:Coil = null!;
   @Input() coiltype:Coiltype = null!;
   @Input() measurementSetting:MeasurementSetting = null!;
-  @Input() measurement:Measurement = null!;
 
   public calcResults:{ x: number; y: number, angle:number, length:number }[][] = [];
 
@@ -52,6 +51,12 @@ export class DisplacementVisualizationComponent {
   ngOnInit() {
     // TODO: Also update on signal change
     this.updateVisualization();
+  }
+
+  ngAfterViewInit() {
+    effect(() => {
+      this.updateVisualization();
+    });
   }
 
   public updateVisualization():void {
