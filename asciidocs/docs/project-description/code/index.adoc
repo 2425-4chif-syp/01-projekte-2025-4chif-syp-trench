@@ -5,7 +5,7 @@ link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-202
 This project is primarily made using https://angular.dev/[Angular], https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet[.NET], https://www.postgresql.org/[PostgreSQL], https://mqtt.org/[MQTT] and https://www.docker.com/[Docker].
 
 == Index
-- link:/01-projekte-2025-4chif-syp-trench/project-description/code/file-structure/[File Structure]
+- link:/01-projekte-2025-4chif-syp-trench/project-description/code/file-structure[File Structure]
 - link:/01-projekte-2025-4chif-syp-trench/project-description/code/rest-api-endpoints[REST-API Endpoints]
 - link:/01-projekte-2025-4chif-syp-trench/project-description/code/deploy-project-with-docker[Deploy Project with Docker]
 - link:/01-projekte-2025-4chif-syp-trench/project-description/code/connect-docker-with-postgres[Connect Docker with PostgreSQL]
