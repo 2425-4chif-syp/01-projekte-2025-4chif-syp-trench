@@ -4,7 +4,10 @@ export interface Measurement {
     id: number | null,
     measurementSettings: MeasurementSetting | null,
     measurementSettingsId: number | null,
-    startTime: Date | null,
-    endTime: Date | null,
+    anfangszeitpunkt: Date | null,
+    endzeitpunkt: Date | null,
+    name: string | null,
+    tauchkernstellung: number | null,
+    pruefspannung: number | null,
     notiz: string | null,
 }

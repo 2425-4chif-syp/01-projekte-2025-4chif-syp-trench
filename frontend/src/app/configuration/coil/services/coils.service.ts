@@ -20,12 +20,12 @@ export class CoilsService implements ListService<Coil> {
       id: 0,
       coiltype: null,
       coiltypeId: null,
-      ur: null,
       einheit: null,
-      auftragsnummer: null,
+      auftragsnummer: '',
       auftragsPosNr: null,
-      omega: null,
-      notiz: null
+      bemessungsspannung: null,
+      bemessungsfrequenz: null,
+      notiz: ''
     };
   }
 

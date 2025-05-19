@@ -29,7 +29,7 @@ export class MeasurementProbeManagementComponent {
       this.groupedProbes.set(Array.from({ length: this.yokeAmount }, () => []));
 
       for (const probe of this.measurementProbes) {
-        const index = probe.yoke - 1;
+        const index = 1;//probe.yoke - 1;
         this.groupedProbes()[index].push(probe);
       }
     }
@@ -71,18 +71,19 @@ export class MeasurementProbeManagementComponent {
 
   isValidProbe(probe: MeasurementProbe): boolean {
     return (
-      probe.width > 0 &&
+      /*probe.width > 0 &&
       probe.position > 0 &&
       probe.yoke > 0 &&
-      probe.yoke <= this.yokeAmount
+      probe.yoke <= this.yokeAmount*/
+      true
     );
   }
 
   addMeasurementProbe(yoke: number): void {
-    const existingProbes = this.measurementProbes.filter(probe => probe.yoke === (yoke + 1));
-    const maxPosition = existingProbes.length > 0
+    const existingProbes = this.measurementProbes.filter(probe => 1);//probe.yoke === (yoke + 1));
+    const maxPosition = /*existingProbes.length > 0
       ? Math.max(...existingProbes.map(probe => probe.position))
-      : 0;
+      : 0;*/ 0;
 
     const newProbe = {
       id: this.measurementProbes.length + 1,

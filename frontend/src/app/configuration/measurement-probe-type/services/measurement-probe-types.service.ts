@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
-import { MeasurementProbeType } from '../interfaces/measurement-probe-type';
 import { BackendService } from '../../../backend.service';
+import { MeasurementProbeType } from '../interfaces/measurement-probe-type';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MeasurementProbeTypesService implements ListService<MeasurementProbeType> {
   public elements: MeasurementProbeType[] = [];
-  public selectedElementCopy: MeasurementProbeType|null = null;
+  public selectedElementCopy: MeasurementProbeType | null = null;
   public selectedElementIsNew: boolean = false;
 
   public isProbeSelector: boolean = false;
@@ -18,10 +18,11 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
   public get newElement(): MeasurementProbeType {
     return {
       id: 0,
+      name: '',
       breite: null,
       hoehe: null,
-      wicklungszahl: null,
-      notiz: null
+      windungszahl: null,
+      notiz: ''
     };
   }
 

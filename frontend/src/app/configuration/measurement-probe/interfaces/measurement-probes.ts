@@ -2,9 +2,8 @@ import { MeasurementProbeType } from "../../measurement-probe-type/interfaces/me
 
 export interface MeasurementProbe {
     id: number,
-    width: number,
+    name: string,
     probeType: MeasurementProbeType,
     probeTypeId: number,
-    yoke: number,
-    position: number
+    kalibrierungsfaktor: number | null,
 }

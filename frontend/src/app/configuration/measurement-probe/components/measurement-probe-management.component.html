@@ -22,8 +22,8 @@
                                 @for (probe of group; track $index) {
                                 <tr (click)="openModal(probe)">
                                     <td>{{ probe.id }}</td>
-                                    <td>{{ probe.width }}</td>
-                                    <td>{{ probe.position }}</td>
+                                    <!--<td>{{ probe. }}</td>
+                                    <td>{{ probe.position }}</td>-->
                                     <td><button class="btn btn-danger btn-sm px-3" (click)="confirmDelete(probe); $event.stopPropagation()">
                                         &times;
                                     </button></td>
@@ -63,29 +63,29 @@
                 <form #probeForm="ngForm">
                     <div class="mb-3">
                         <label for="probeWidth" class="form-label">Breite</label>
-                        <input type="number" id="probeWidth" class="form-control" [(ngModel)]="selectedProbe!.width"
+                       <!-- <input type="number" id="probeWidth" class="form-control" [(ngModel)]="selectedProbe!.width"
                             name="probeWidth" min="1" required />
                         <small class="text-danger" *ngIf="selectedProbe!.width <= 0">
                             Wert muss größer als 0 sein!
-                        </small>
+                        </small>-->
                     </div>
 
                     <div class="mb-3">
                         <label for="probeYoke" class="form-label">Schenkel</label>
-                        <input type="number" id="probeYoke" class="form-control" [(ngModel)]="selectedProbe!.yoke"
+                        <!--<input type="number" id="probeYoke" class="form-control" [(ngModel)]="selectedProbe!.yoke"
                             name="probeYoke" min="1" [max]="yokeAmount" required [disabled]="isNewProbe"/>
                         <small class="text-danger" *ngIf="selectedProbe!.yoke < 1 || selectedProbe!.yoke > yokeAmount">
                             Wert muss zwischen 1 und {{ yokeAmount }} liegen!
-                        </small>
+                        </small>-->
                     </div>
 
                     <div class="mb-3">
                         <label for="probePosition" class="form-label">Position</label>
-                        <input type="number" id="probePosition" class="form-control"
+                     <!--<input type="number" id="probePosition" class="form-control"
                             [(ngModel)]="selectedProbe!.position" name="probePosition" min="1" required />
                         <small class="text-danger" *ngIf="selectedProbe!.position <= 0">
                             Wert muss größer als 0 sein!
-                        </small>
+                        </small>-->
                     </div>
                 </form>
             </div>

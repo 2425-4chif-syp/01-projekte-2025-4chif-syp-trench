@@ -17,8 +17,11 @@ export class MeasurementHistoryService implements ListService<Measurement> {
       id: null,
       measurementSettings: null,
       measurementSettingsId: null,
-      startTime: null,
-      endTime: null,
+      anfangszeitpunkt: null,
+      endzeitpunkt: null,
+      name: '',
+      tauchkernstellung: null,
+      pruefspannung: null,
       notiz: null,
     }
   }

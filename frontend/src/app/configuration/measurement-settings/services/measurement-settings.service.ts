@@ -18,16 +18,12 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   public get newElement(): MeasurementSetting {
     return {
       id: null,
-      coil: null,
+      name: "",
       coilId: null,
-      measurementProbeType: null,
       measurementProbeTypeId: null,
-      //wicklungszahl: null,
-      bemessungsspannung: null,
-      bemessungsfrequenz: null,
-      pruefspannung: null,
-      sondenProSchenkel: null,
-      notiz: null
+      coil: null,
+      measurementProbeType: null,
+      sondenProSchenkel: 1,
     };
   }
 

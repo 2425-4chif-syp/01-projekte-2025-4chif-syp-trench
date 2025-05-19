@@ -59,10 +59,11 @@ export class MeasurementSettingsComponent implements OnInit {
     const requiredFields: (keyof MeasurementSetting)[] = [
       'coilId',
       'measurementProbeTypeId',
-      'bemessungsspannung',
-      'bemessungsfrequenz',
-      'pruefspannung',
-      'sondenProSchenkel'
+      //'bemessungsspannung',
+      //'bemessungsfrequenz',
+      //'pruefspannung',,,,,,,,,,
+      'sondenProSchenkel',
+      // -> 'name'
     ];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
@@ -74,7 +75,7 @@ export class MeasurementSettingsComponent implements OnInit {
 
     try {
       this.selectedMeasurementSetting!.id = this.measurementSettingsService.selectedElementCopy?.id! || 0;
-      this.selectedMeasurementSetting!.notiz = "";
+      //this.selectedMeasurementSetting!.notiz = "";
       console.log(this.selectedMeasurementSetting!);
       await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting!);
       this.onSettingSelectionChange(this.selectedSettingId!);
@@ -117,9 +118,10 @@ export class MeasurementSettingsComponent implements OnInit {
     const fieldsToCompare: (keyof MeasurementSetting)[] = [
       'coilId',
       'measurementProbeTypeId',
-      'bemessungsspannung',
-      'bemessungsfrequenz',
-      'pruefspannung',
+      //'bemessungsspannung',
+      //'bemessungsfrequenz',
+      //'pruefspannung',
+      'name',
       'sondenProSchenkel'
     ];
 
@@ -127,8 +129,6 @@ export class MeasurementSettingsComponent implements OnInit {
       this.selectedMeasurementSetting![field] !== this.originalMeasurementSetting![field]
     );
   }
-
-
 
   openCoilSelect()
   {

@@ -5,6 +5,9 @@ import { Coiltype } from './configuration/coiltype/interfaces/coiltype';
 import { MeasurementProbeType } from './configuration/measurement-probe-type/interfaces/measurement-probe-type';
 import { MeasurementSetting } from './configuration/measurement-settings/interfaces/measurement-settings';
 import { Measurement } from './configuration/measurement-history/interfaces/measurement.model';
+import { MeasurementProbe } from './configuration/measurement-probe/interfaces/measurement-probes';
+import { MeasurementProbePosition } from './configuration/measurement-probe-position/interfaces/measurement-probe-position.model';
+import { Messwert } from './configuration/messwert/interfaces/messwert.model';
 
 @Injectable({
   providedIn: 'root'
@@ -73,11 +76,11 @@ export class BackendService {
       id: coil.id,
       coiltype: coil.spuleTyp,
       coiltypeId: coil.spuleTypID,
-      ur: coil.ur,
       einheit: coil.einheit,
-      auftragsnummer: coil.auftragsnummer,
+      auftragsnummer: coil.auftragsnr,
       auftragsPosNr: coil.auftragsPosNr,
-      omega: coil.omega,
+      bemessungsfrequenz: coil.bemessungsfrequenz,
+      bemessungsspannung: coil.bemessungsspannung,
       notiz: coil.notiz
     };
 
@@ -88,11 +91,11 @@ export class BackendService {
     return {
       id: coil.id,
       spuleTypID: coil.coiltypeId,
-      ur: coil.ur,
+      bemessungsfrequenz: coil.bemessungsfrequenz,
+      bemessungsspannung: coil.bemessungsspannung,
       einheit: coil.einheit,
-      auftragsnummer: coil.auftragsnummer,
+      auftragsnr: coil.auftragsnummer,
       auftragsPosNr: coil.auftragsPosNr,
-      omega: coil.omega,
       notiz: coil.notiz
     };
   }
@@ -101,10 +104,11 @@ export class BackendService {
     return {
       id: coiltype.id,
       name: coiltype.name,
-      schenkel: coiltype.schenkel,
+      schenkel: coiltype.schenkelzahl,
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      toleranzbereich: coiltype.toleranzbereich,
       notiz: coiltype.notiz
     };
   }
@@ -113,10 +117,11 @@ export class BackendService {
     return {
       id: coiltype.id,
       name: coiltype.name,
-      schenkel: coiltype.schenkel,
+      schenkelzahl: coiltype.schenkel,
       bandbreite: coiltype.bandbreite,
       schichthoehe: coiltype.schichthoehe,
       durchmesser: coiltype.durchmesser,
+      toleranzbereich: coiltype.toleranzbereich,
       notiz: coiltype.notiz
     };
   }
@@ -124,18 +129,20 @@ export class BackendService {
   private measurementProbeTypeBackendToFrontend(measurementProbeType: any): MeasurementProbeType {
     return {
       id: measurementProbeType.id,
+      name: measurementProbeType.name,
       breite: measurementProbeType.breite,
       hoehe: measurementProbeType.hoehe,
-      wicklungszahl: measurementProbeType.wicklungszahl,
+      windungszahl: measurementProbeType.windungszahl,
       notiz: measurementProbeType.notiz
     };
   }
   private measurementProbeTypeFrontendToBackend(measurementProbeType: MeasurementProbeType): any {
     return {
       id: measurementProbeType.id,
+      name: measurementProbeType.name,
       breite: measurementProbeType.breite,
       hoehe: measurementProbeType.hoehe,
-      wicklungszahl: measurementProbeType.wicklungszahl,
+      windungszahl: measurementProbeType.windungszahl,
       notiz: measurementProbeType.notiz
     };
   }
@@ -147,12 +154,8 @@ export class BackendService {
       coilId: measurementSettings.spuleID,
       measurementProbeType: measurementSettings.messsondenTyp,
       measurementProbeTypeId: measurementSettings.messsondenTypID,
-      //wicklungszahl: measurementSettings.wicklungszahl,
-      bemessungsspannung: measurementSettings.bemessungsspannung,
-      bemessungsfrequenz: measurementSettings.bemessungsfrequenz,
-      pruefspannung: measurementSettings.pruefspannung,
       sondenProSchenkel: measurementSettings.sonden_pro_schenkel,
-      notiz: measurementSettings.notiz
+      name: measurementSettings.name
     };
   }
 
@@ -161,12 +164,8 @@ export class BackendService {
       id: measurementSettings.id,
       spuleID: measurementSettings.coilId,
       messsondenTypID: measurementSettings.measurementProbeTypeId,
-      //wicklungszahl: measurementSettings.wicklungszahl,
-      bemessungsspannung: measurementSettings.bemessungsspannung,
-      bemessungsfrequenz: measurementSettings.bemessungsfrequenz,
-      pruefspannung: measurementSettings.pruefspannung,
       sonden_pro_schenkel: measurementSettings.sondenProSchenkel,
-      notiz: measurementSettings.notiz
+      name: measurementSettings.name
     }
   }
 
@@ -175,8 +174,11 @@ export class BackendService {
       id: measurement.id,
       measurementSettings: measurement.messeinstellung,
       measurementSettingsId: measurement.messeinstellungID,
-      startTime: measurement.anfangszeitpunkt,
-      endTime: measurement.endzeitpunkt,
+      anfangszeitpunkt: measurement.anfangszeitpunkt,
+      endzeitpunkt: measurement.endzeitpunkt,
+      name: measurement.name,
+      tauchkernstellung: measurement.tauchkernstellung,
+      pruefspannung: measurement.pruefspannung,
       notiz: measurement.notiz
     }
   }
@@ -185,12 +187,77 @@ export class BackendService {
     return {
       id: measurement.id,
       messeinstellungID: measurement.measurementSettingsId,
-      anfangszeitpunkt: measurement.startTime,
-      endzeitpunkt: measurement.endTime,
+      anfangszeitpunkt: measurement.anfangszeitpunkt,
+      endzeitpunkt: measurement.endzeitpunkt,
+      name: measurement.name,
+      tauchkernstellung: measurement.tauchkernstellung,
+      pruefspannung: measurement.pruefspannung,
       notiz: measurement.notiz
     }
   }
+
+  private measurementProbeBackendToFrontend(measurementProbe: any): MeasurementProbe {
+    return {
+      id: measurementProbe.id,
+      probeType: measurementProbe.probeTyp,
+      probeTypeId: measurementProbe.probeTypID,
+      name: measurementProbe.name,
+      kalibrierungsfaktor: measurementProbe.kalibrierungsfaktor,
+    }
+  }
+
+  private measurementProbeFrontendToBackend(measurementProbe: MeasurementProbe): any {
+    return {
+      id: measurementProbe.id,
+      probeTypId: measurementProbe.probeTypeId,
+      name: measurementProbe.name,
+      kalibrierungsfaktor: measurementProbe.kalibrierungsfaktor,
+    }
+  }
     
+  private measurementProbePositionBackendToFrontend(measurementProbePosition: any): MeasurementProbePosition {
+    return {
+      id: measurementProbePosition.id,
+      measurementSettingsId: measurementProbePosition.messeinstellung_id,
+      measurementSetting: measurementProbePosition.messeinstellung,
+      measurementProbeId: measurementProbePosition.messsonde_id,
+      measurementProbe: measurementProbePosition.messsonde,
+      schenkel: measurementProbePosition.schenkel,
+      position: measurementProbePosition.position
+    }
+  }
+
+  private measurementProbePositionFrontendToBackend(measurementProbePosition: MeasurementProbePosition): any {
+    return {
+      id: measurementProbePosition.id,
+      messeinstellung_id: measurementProbePosition.measurementSettingsId,
+      messsonde_id: measurementProbePosition.measurementProbeId,
+      schenkel: measurementProbePosition.schenkel,
+      position: measurementProbePosition.position
+    }
+  }
+
+  private messwertBackendToFrontend(messwert: any): Messwert {
+    return {
+      id: messwert.id,
+      measurement_id: messwert.messung_id,
+      measurement: messwert.messung,
+      measurementProbePositionId: messwert.messsondenPosition_id,
+      measurementProbePosition: messwert.messsondenPosition,
+      wert: messwert.wert,
+      zeitpunkt: messwert.zeitpunkt
+    }
+  }
+
+  private messwertFrontendToBackend(messwert: Messwert): any {
+    return {
+      id: messwert.id,
+      messung_id: messwert.measurement_id,
+      messsondenPosition_id: messwert.measurementProbePositionId,
+      wert: messwert.wert,
+      zeitpunkt: messwert.zeitpunkt
+    }
+  }
 
   // Spulen
 
@@ -242,29 +309,53 @@ export class BackendService {
     await this.httpDeleteRequest('SpuleTyp/' + coiltype.id);
   }
 
-  // Messsonden
+  // Messsondentyp
 
   public async getAllMeasurementProbeTypes(): Promise<MeasurementProbeType[]> {
-    const response:any = await this.httpGetRequest('MesssondenTyp');
+    const response:any = await this.httpGetRequest('SondenTyp');
     return response.map((measurementProbeType: any) => (this.measurementProbeTypeBackendToFrontend(measurementProbeType)));
   }
   public async getMeasurementProbeType(id: number): Promise<MeasurementProbeType> {
-    const response:any = await this.httpGetRequest('MesssondenTyp/' + id);
+    const response:any = await this.httpGetRequest('SondenTyp/' + id);
     return this.measurementProbeTypeBackendToFrontend(response);
   }
   public async addMeasurementProbeType(measurementProbeType:MeasurementProbeType): Promise<MeasurementProbeType> {
-    const response:any = await this.httpPostRequest('MesssondenTyp', this.measurementProbeTypeBackendToFrontend(measurementProbeType));
+    const response:any = await this.httpPostRequest('SondenTyp', this.measurementProbeTypeBackendToFrontend(measurementProbeType));
     return this.measurementProbeTypeBackendToFrontend(response);
   }
 
   public async updateMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
-    await this.httpPutRequest('MesssondenTyp/' + measurementProbeType.id, this.measurementProbeTypeFrontendToBackend(measurementProbeType));
+    await this.httpPutRequest('SondenTyp/' + measurementProbeType.id, this.measurementProbeTypeFrontendToBackend(measurementProbeType));
   }
 
   public async deleteMeasurementProbeType(measurementProbeType: MeasurementProbeType): Promise<void> {
-    await this.httpDeleteRequest('MesssondenTyp/' + measurementProbeType.id);
+    await this.httpDeleteRequest('SondenTyp/' + measurementProbeType.id);
   }
 
+  // Messsonden
+  public async getAllMeasurementProbes(): Promise<MeasurementProbe[]> {
+    const response: any = await this.httpGetRequest('Messsonde');
+    return response.map((probe: any) => this.measurementProbeBackendToFrontend(probe));
+  }
+  
+  public async getMeasurementProbe(id: number): Promise<MeasurementProbe> {
+    const response: any = await this.httpGetRequest('Messsonde/' + id);
+    return this.measurementProbeBackendToFrontend(response);
+  }
+  
+  public async addMeasurementProbe(probe: MeasurementProbe): Promise<MeasurementProbe> {
+    const response: any = await this.httpPostRequest('Messsonde', this.measurementProbeFrontendToBackend(probe));
+    return this.measurementProbeBackendToFrontend(response);
+  }
+  
+  public async updateMeasurementProbe(probe: MeasurementProbe): Promise<void> {
+    await this.httpPutRequest('Messsonde/' + probe.id, this.measurementProbeFrontendToBackend(probe));
+  }
+  
+  public async deleteMeasurementProbe(probe: MeasurementProbe): Promise<void> {
+    await this.httpDeleteRequest('Messsonde/' + probe.id);
+  }
+  
   // Messeinstellungen
 
   public async addMeasurementSettings(measurementSettings: MeasurementSetting): Promise<MeasurementSetting>{
@@ -290,6 +381,55 @@ export class BackendService {
     await this.httpDeleteRequest('Messeinstellung/' + measurementSettings.id);
   }
 
+  //Messsondenpositionen
+  public async getAllMeasurementProbePositions(): Promise<MeasurementProbePosition[]> {
+    const response: any = await this.httpGetRequest('MesssondenPosition');
+    return response.map((pos: any) => this.measurementProbePositionBackendToFrontend(pos));
+  }
+  
+  public async getMeasurementProbePosition(id: number): Promise<MeasurementProbePosition> {
+    const response: any = await this.httpGetRequest('MesssondenPosition/' + id);
+    return this.measurementProbePositionBackendToFrontend(response);
+  }
+  
+  public async addMeasurementProbePosition(pos: MeasurementProbePosition): Promise<MeasurementProbePosition> {
+    const response: any = await this.httpPostRequest('MesssondenPosition', this.measurementProbePositionFrontendToBackend(pos));
+    return this.measurementProbePositionBackendToFrontend(response);
+  }
+  
+  public async updateMeasurementProbePosition(pos: MeasurementProbePosition): Promise<void> {
+    await this.httpPutRequest('MesssondenPosition/' + pos.id, this.measurementProbePositionFrontendToBackend(pos));
+  }
+  
+  public async deleteMeasurementProbePosition(pos: MeasurementProbePosition): Promise<void> {
+    await this.httpDeleteRequest('MesssondenPosition/' + pos.id);
+  }
+  
+  // Messwerte
+
+  public async getAllMesswerte(): Promise<Messwert[]> {
+    const response: any = await this.httpGetRequest('Messwert');
+    return response.map((wert: any) => this.messwertBackendToFrontend(wert));
+  }
+  
+  public async getMesswert(id: number): Promise<Messwert> {
+    const response: any = await this.httpGetRequest('Messwert/' + id);
+    return this.messwertBackendToFrontend(response);
+  }
+  
+  public async addMesswert(wert: Messwert): Promise<Messwert> {
+    const response: any = await this.httpPostRequest('Messwert', this.messwertFrontendToBackend(wert));
+    return this.messwertBackendToFrontend(response);
+  }
+  
+  public async updateMesswert(wert: Messwert): Promise<void> {
+    await this.httpPutRequest('Messwert/' + wert.id, this.messwertFrontendToBackend(wert));
+  }
+  
+  public async deleteMesswert(wert: Messwert): Promise<void> {
+    await this.httpDeleteRequest('Messwert/' + wert.id);
+  }
+  
   // Messungen
 
   public async getAllMeasurements(): Promise<Measurement[]> {
