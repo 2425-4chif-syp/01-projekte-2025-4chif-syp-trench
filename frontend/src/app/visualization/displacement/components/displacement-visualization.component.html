@@ -28,50 +28,50 @@
         </g>
 
         <!-- Vectors -->
-        @for (branch of branchResults; track $index) {
-          <!-- TODO: The arrow should point towards the actual vector; currently the line goes to the vector, then the triangle goes beyond it -->
-          <g 
-            transform="translate(12, 12)"
-            (mouseenter)="onArrowMouseEnter($index)" (mouseleave)="onArrowMouseLeave($index)"
-          >
-            <!-- Arrow body -->
-            <line
-              x1="0"
-              y1="0"
-              [attr.x2]="scaledBranchResultX(branch, hoveredArrow === $index ? -0.25 : -0.125)"
-              [attr.y2]="scaledBranchResultY(branch, hoveredArrow === $index ? -0.25 : -0.125)"
-              [attr.stroke]="getArrowColor($index)"
-              [attr.stroke-width]="hoveredArrow === $index ? '0.25' : '0.125'"
-              [attr.stroke-opacity]="hoveredArrow === $index ? '1' : '0.75'"
-            /> <!-- [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.0625,0.0625'" --> 
+        @for (branch of calcResults; track branch; let branchIndex = $index) {
+          @for (vector of branch; track vector; let vectorIndex = $index) {
+            <g 
+              transform="translate(12, 12)"
+              (mouseenter)="onArrowMouseEnter(branchIndex, vectorIndex)" (mouseleave)="onArrowMouseLeave()"
+            >
+              <!-- Arrow body -->
+              <line
+                x1="0"
+                y1="0"
+                [attr.x2]="scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)"
+                [attr.y2]="scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)"
+                [attr.stroke]="getArrowColor(branchIndex)"
+                [attr.stroke-width]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '0.25' : '0.125'"
+                [attr.stroke-opacity]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
+              /> <!-- [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.0625,0.0625'" --> 
 
-            <!-- Arrow triangle -->
-            <polygon
-              points="0.25,0 0,-0.125 0,0.125"
-              [attr.fill]="getArrowColor($index)"
-              [attr.transform]="'translate('
-                +scaledBranchResultX(branch, hoveredArrow === $index ? -0.25 : -0.125)+', '
-                +scaledBranchResultY(branch, hoveredArrow === $index ? -0.25 : -0.125)
-                +') rotate('+(branch.angle * radToDeg)+') scale('+(hoveredArrow === $index ? '1.5' : '1')+')'"
-              [attr.fill-opacity]="hoveredArrow === $index ? '1' : '0.75'"
-              />
+              <!-- Arrow triangle -->
+              <polygon
+                points="0.25,0 0,-0.125 0,0.125"
+                [attr.fill]="getArrowColor(branchIndex)"
+                [attr.transform]="'translate('
+                  +scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)+', '
+                  +scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)
+                  +') rotate('+(vector.angle * radToDeg)+') scale('+(IsHoveringOverArrow(branchIndex, vectorIndex) ? '1.5' : '1')+')'"
+                [attr.fill-opacity]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
+                />
 
-            <!-- Arrow hitbox -->
-            <line
-              x1="0"
-              y1="0"
-              [attr.x2]="scaledBranchResultX(branch, 0)"
-              [attr.y2]="scaledBranchResultY(branch, 0)"
-              stroke="transparent"
-              stroke-width="0.25"
-            /> 
-          </g>
+              <!-- Arrow hitbox -->
+              <line
+                x1="0"
+                y1="0"
+                [attr.x2]="scaledBranchResultX(vector, 0)"
+                [attr.y2]="scaledBranchResultY(vector, 0)"
+                stroke="transparent"
+                stroke-width="0.25"
+              /> 
+            </g>
+          }
         }
-
         <!-- Result vector -->
         <g 
         transform="translate(12, 12)"
-        (mouseenter)="onArrowMouseEnter(-1)" (mouseleave)="onArrowMouseLeave(-1)"
+        (mouseenter)="onResultArrowMouseEnter()" (mouseleave)="onArrowMouseLeave()"
         >
         @if (finalVector.length / averageLength > 0.01) {
           <!-- Arrow body -->
@@ -79,27 +79,27 @@
             <line
               x1="0"
               y1="0"
-              [attr.x2]="scaledBranchResultX(finalVector, hoveredArrow === -1 ? -0.25 : -0.125)"
-              [attr.y2]="scaledBranchResultY(finalVector, hoveredArrow === -1 ? -0.25 : -0.125)"
-              [attr.stroke-width]="hoveredArrow === -1 ? '0.25' : '0.125'"
+              [attr.x2]="scaledBranchResultX(finalVector, IsHoveringOverResultArrow() ? -0.25 : -0.125)"
+              [attr.y2]="scaledBranchResultY(finalVector, IsHoveringOverResultArrow() ? -0.25 : -0.125)"
+              [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.25' : '0.125'"
               stroke="black"
             />
           }
 
           <!-- Arrow triangle -->
           <polygon
-            [attr.points]="(finalVector.length / averageLength >= 0.05 || hoveredArrow === -1) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
+            [attr.points]="(finalVector.length / averageLength >= 0.05 || IsHoveringOverResultArrow()) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
             fill="black"
             [attr.transform]="'translate('
-            +scaledBranchResultX(finalVector, hoveredArrow === -1 && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
-            +scaledBranchResultY(finalVector, hoveredArrow === -1 && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
+            +scaledBranchResultX(finalVector, IsHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
+            +scaledBranchResultY(finalVector, IsHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
             +') rotate('+(finalVector.angle * radToDeg)
-            +') scale('+(hoveredArrow === -1 && finalVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
+            +') scale('+(IsHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
             />
           }
         
           <!-- Center circle -->
-          <circle cx="0" cy="0" [attr.r]="hoveredArrow === -1 ? '0.125' : '0.0625'" fill="black" />
+          <circle cx="0" cy="0" [attr.r]="IsHoveringOverResultArrow() ? '0.125' : '0.0625'" fill="black" />
         </g>
       </g>
     </g>
@@ -119,22 +119,22 @@
     @if (hoveredArrow !== null) {
       <ul>
         <li>
-          <strong>Branch</strong>: {{ (hoveredArrow === -1 ? 'Final Vector' : 'Branch ' + (hoveredArrow + 1)) }}
+          <strong>Branch</strong>: {{ (IsHoveringOverResultArrow() ? 'Final Vector' : 'Branch ' + (hoveredArrow.branchIndex + 1)) }}
         </li>
         <li>
-          <strong>x</strong>: {{ (hoveredArrow === -1 ? finalVector.x : branchResults[hoveredArrow].x) | number: '1.2-2' }}
+          <strong>x</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.x : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].x) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>y</strong>: {{ (hoveredArrow === -1 ? finalVector.y : branchResults[hoveredArrow].y) | number: '1.2-2' }}
+          <strong>y</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.y : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].y) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>Length</strong>: {{ (hoveredArrow === -1 ? finalVector.length : branchResults[hoveredArrow].length ) | number: '1.2-2' }}
+          <strong>Length</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.length : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length ) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>Difference from average</strong>: {{ ((hoveredArrow === -1 ? finalVector.length : branchResults[hoveredArrow].length) - averageLength) | number: '1.2-2' }}
+          <strong>Difference from average</strong>: {{ ((IsHoveringOverResultArrow() ? finalVector.length : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length) - averageLength) | number: '1.2-2' }}
         </li>
         <li>
-          <strong>Angle</strong>: {{ (hoveredArrow === -1 ? finalVector.angle : branchResults[hoveredArrow].angle)*radToDeg | number: '1.2-2' }}°
+          <strong>Angle</strong>: {{ (IsHoveringOverResultArrow() ? finalVector.angle : calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].angle)*radToDeg | number: '1.2-2' }}°
         </li>
       </ul>
     }

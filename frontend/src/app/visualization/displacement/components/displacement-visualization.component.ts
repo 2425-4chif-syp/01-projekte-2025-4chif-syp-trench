@@ -27,6 +27,8 @@ export class DisplacementVisualizationComponent {
   @Input() measurementSetting:MeasurementSetting = null!;
   @Input() measurement:Measurement = null!;
 
+  public calcResults:{ x: number; y: number, angle:number, length:number }[][] = [];
+
   averageLength:number = 0;
 
   // Final Vector (sum of all x and y values)
@@ -34,7 +36,7 @@ export class DisplacementVisualizationComponent {
 
   public readonly radToDeg = 180 / Math.PI;
 
-  public hoveredArrow:number|null = null;
+  public hoveredArrow:{branchIndex:number, sensorIndex:number}|null = null;
   public mousePosition: { x: number, y: number }|null = null;
 
   public isHoveringOverBorder:boolean = false;
@@ -45,6 +47,31 @@ export class DisplacementVisualizationComponent {
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
     //  { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     //]);
+  }
+
+  ngOnInit() {
+    // TODO: Also update on signal change
+    this.updateVisualization();
+  }
+
+  public updateVisualization():void {
+    const result = this.displacementCalculationService.calculateYokeData(
+      this.yokes(),
+      this.measurementProbeType,
+      this.measurementProbe,
+      this.coiltype,
+      this.coil,
+      this.measurementSetting,
+      this.measurement
+    );
+
+    // Calculate the average length of the vectors
+    this.averageLength = result.reduce((sum, branch) => {
+      const branchLength = branch.reduce((branchSum, sensor) => branchSum + this.calculateVectorLength(sensor.x, sensor.y), 0);
+      return sum + branchLength;
+    }, 0) / (result.length * this.measurementSetting.sondenProSchenkel!);
+
+    this.calcResults = result;
   }
 
   public get internalTranslationOffset():number {
@@ -78,34 +105,16 @@ export class DisplacementVisualizationComponent {
     return Math.sqrt(x * x + y * y);
   }
 
-  // Function to calculate the results using the service
-  public get branchResults(): { x: number; y: number, angle:number, length:number }[] {
-    this.averageLength = this.yokes().reduce((acc, branch) => {
-      const sum = branch.sensors.reduce((acc, sensor) => acc + sensor, 0);
-      const average = sum / branch.sensors.length;
-      return acc + average;
-    }, 0) / this.yokes().length;
-
-    return this.displacementCalculationService.calculateYokeData(
-      this.yokes(),
-      this.measurementProbeType,
-      this.measurementProbe,
-      this.coiltype,
-      this.coil,
-      this.measurementSetting,
-      this.measurement
-    );
-  }
-
   // Function to calculate the Final Vector
   public get finalVector(): { x: number; y: number, angle:number, length:number } {
-    let vector = this.branchResults.reduce(
+    // Final vector is calculated by summing up all the x and y components of each branch
+    let vector = this.calcResults.reduce(
       (acc, branch) => {
-        acc.x += branch.x;
-        acc.y += branch.y;
-        return acc;
+        const branchX = branch.reduce((sum, sensor) => sum + sensor.x, 0);
+        const branchY = branch.reduce((sum, sensor) => sum + sensor.y, 0);
+        return { x: acc.x + branchX, y: acc.y + branchY };
       },
-      { x: 0, y: 0 } // Initial value for the accumulator
+      { x: 0, y: 0 }
     );
 
     return {
@@ -135,10 +144,20 @@ export class DisplacementVisualizationComponent {
     }
   }
 
-  public onArrowMouseEnter(index:number):void {
-    this.hoveredArrow = index;
+  public IsHoveringOverArrow(branchIndex:number, sensorIndex:number):boolean {
+    return this.hoveredArrow?.branchIndex === branchIndex && this.hoveredArrow?.sensorIndex === sensorIndex;
   }
-  public onArrowMouseLeave(index:number):void {
+  public IsHoveringOverResultArrow():boolean {
+    return this.hoveredArrow?.branchIndex === -1 && this.hoveredArrow?.sensorIndex === -1;
+  }
+
+  public onArrowMouseEnter(branchIndex:number, sensorIndex:number):void {
+    this.hoveredArrow = { branchIndex, sensorIndex };
+  }
+  public onResultArrowMouseEnter():void {
+    this.hoveredArrow = { branchIndex: -1, sensorIndex: -1 };
+  }
+  public onArrowMouseLeave():void {
     this.hoveredArrow = null;
   }
 
