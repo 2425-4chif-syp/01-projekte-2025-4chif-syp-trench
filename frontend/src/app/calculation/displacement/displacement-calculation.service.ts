@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class DisplacementService {
+export class DisplacementCalculationService {
   constructor() {}
 
   // Function to calculate the x and y values of the vectors
@@ -22,9 +22,5 @@ export class DisplacementService {
 
       return { x: x, y: y, angle: angle, length: average };
     });
-  }
-
-  public calculateVectorLength(x: number, y: number): number {
-    return Math.sqrt(x * x + y * y);
   }
 }

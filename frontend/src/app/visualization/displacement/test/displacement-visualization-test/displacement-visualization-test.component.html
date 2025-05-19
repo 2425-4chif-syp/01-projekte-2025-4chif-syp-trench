@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Displacement Visualization Test</h1>
+    <h2>Input</h2>
+    @for (yoke of yokes(); track yoke; let yokeIndex = $index ) {
+        <h3>Yoke #{{yokeIndex}}</h3>
+        <ul>
+            @for (sensor of yoke.sensors; track sensor; let sensorIndex = $index) {
+                <li>Sensor #{{sensorIndex}}: {{sensor}}</li>
+            }
+        </ul>
+    }
+
+    <h2>Visualization</h2>
+    <app-displacement-visualization [yokes]="yokes"></app-displacement-visualization>
+</div>

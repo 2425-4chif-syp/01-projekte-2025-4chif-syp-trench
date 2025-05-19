@@ -1,8 +1,8 @@
 import { Component, HostListener, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {CommonModule, DecimalPipe} from "@angular/common";
-import { DisplacementService } from '../services/displacement-calculation.service';
 import { CoilVisualizationComponent } from "../../coil/components/coil-visualization.component";
+import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
 
 @Component({
   selector: 'app-displacement-visualization',
@@ -27,7 +27,7 @@ export class DisplacementVisualizationComponent {
 
   public isHoveringOverBorder:boolean = false;
 
-  constructor(private displacementService: DisplacementService) {
+  constructor(private displacementCalculationService:DisplacementCalculationService) {
     //this.yokes.set([
     //  { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
@@ -52,14 +52,18 @@ export class DisplacementVisualizationComponent {
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
 
     return Math.cos(branch.angle) * newLength;
   }
   public scaledBranchResultY(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.displacementService.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
 
     return Math.sin(branch.angle) * newLength;
+  }
+  
+  private calculateVectorLength(x: number, y: number): number {
+    return Math.sqrt(x * x + y * y);
   }
 
   // Function to calculate the results using the service
@@ -70,7 +74,7 @@ export class DisplacementVisualizationComponent {
       return acc + average;
     }, 0) / this.yokes().length;
 
-    return this.displacementService.calculateBranchData(
+    return this.displacementCalculationService.calculateBranchData(
       this.yokes(),
       this.yokes().length
     );
@@ -91,7 +95,7 @@ export class DisplacementVisualizationComponent {
       x: vector.x,
       y: vector.y,
       angle: Math.atan2(vector.y, vector.x),
-      length: this.displacementService.calculateVectorLength(vector.x, vector.y),
+      length: this.calculateVectorLength(vector.x, vector.y),
     }
   }
 

@@ -12,7 +12,7 @@ import { MeasurementSettingsParentComponent } from "./configuration/measurement-
 import { MeasurementManagementComponent } from './configuration/measurement-management/components/measurement-management.component';
 import { MeasurementHistoryComponent } from './configuration/measurement-history/components/measurement-history.component';
 import { MeasurementManagementParentComponent } from './configuration/measurement-management/measurement-management-parent.component';
-import { DisplacementCalculationTestComponent } from './visualization/displacement/test/displacement-calculation-test/displacement-calculation-test.component';
+import { DisplacementVisualizationTestComponent } from './visualization/displacement/test/displacement-visualization-test/displacement-visualization-test.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -27,5 +27,5 @@ export const routes: Routes = [
     {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history-homescreen', component: MeasurementManagementParentComponent, canActivate: [AuthGuard]},
-    {path: 'displacement-calculation-test', component: DisplacementCalculationTestComponent, canActivate: [AuthGuard]}
+    {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]}
 ];
