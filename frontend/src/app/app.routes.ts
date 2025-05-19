@@ -7,6 +7,7 @@ import { CoiltypeParentComponent } from './configuration/coiltype/components/coi
 import { MeasurementSettingsComponent } from './configuration/measurement-settings/components/management/measurement-settings.component';
 import { DisplacementVisualizationComponent } from './visualization/displacement/components/displacement-visualization.component';
 import { MeasurementProbeTypeParentComponent } from './configuration/measurement-probe-type/components/measurement-probe-type-parent.component';
+import { ManagementProbeParentComponent } from './configuration/measurement-probe/components/measurement-probe-parent.component'
 import { StartMeasurementComponent } from './configuration/start-measurement/start-measurement.component';
 import { MeasurementSettingsParentComponent } from "./configuration/measurement-settings/components/measurement-settings-parent.component";
 import { MeasurementManagementComponent } from './configuration/measurement-management/components/measurement-management.component';
@@ -23,6 +24,7 @@ export const routes: Routes = [
     {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
     {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-probe-management', component: ManagementProbeParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-management', component: StartMeasurementComponent, canActivate: [AuthGuard]},
     {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},

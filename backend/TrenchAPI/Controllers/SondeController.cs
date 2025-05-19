@@ -26,14 +26,14 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sonde>>> GetSonde()
         {
-            return await _context.Sonde.ToListAsync();
+            return await _context.Sonde.Include(s => s.SondenTyp).ToListAsync();
         }
 
         // GET: api/Sonde/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Sonde>> GetSonde(int id)
         {
-            var Sonde = await _context.Sonde.FindAsync(id);
+            var Sonde = await _context.Sonde.Include(s => s.SondenTyp).FirstOrDefaultAsync(s => s.ID == id);
 
             if (Sonde == null)
             {

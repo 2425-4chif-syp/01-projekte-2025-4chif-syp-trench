@@ -1,0 +1,9 @@
+.hover-tooltip {
+    position: absolute;
+    background-color: #c0c0c080;
+    color: #fff;
+    margin: 5px;
+    border-radius: 10px;
+    pointer-events: none;
+    z-index: 1000;
+}

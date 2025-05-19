@@ -1,7 +1,7 @@
 import { Component, signal, OnInit  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MeasurementProbeManagementComponent } from '../../../measurement-probe/components/measurement-probe-management.component';
+// import { MeasurementProbeManagementComponent } from '../../../measurement-probe/components/measurement-probe-parent.component';
 import { MeasurementSetting } from '../../interfaces/measurement-settings';
 import { Coil } from '../../../coil/interfaces/coil';
 import { MeasurementSettingsService } from '../../services/measurement-settings.service';

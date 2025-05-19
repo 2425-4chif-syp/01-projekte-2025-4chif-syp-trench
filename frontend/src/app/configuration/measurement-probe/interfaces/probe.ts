@@ -1,9 +1,9 @@
 import { MeasurementProbeType } from "../../measurement-probe-type/interfaces/measurement-probe-type";
 
-export interface MeasurementProbe {
+export interface Probe {
     id: number,
     name: string,
-    probeType: MeasurementProbeType,
+    probeType: MeasurementProbeType | null,
     probeTypeId: number,
-    kalibrierungsfaktor: number | null,
+    kalibrierungsfaktor: number | null
 }
