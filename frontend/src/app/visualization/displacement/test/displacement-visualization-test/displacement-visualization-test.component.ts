@@ -55,7 +55,7 @@ export class DisplacementVisualizationTestComponent {
     einheit: 123457890,
     auftragsnummer: 'Instanz',
     auftragsPosNr: 0,
-    bemessungsspannung: 0,
+    bemessungsspannung: 900,
     bemessungsfrequenz: 50,
     notiz: ""
   };
