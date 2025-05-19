@@ -28,7 +28,7 @@ export class MeasurementProbeTypeListComponent {
       'name': 'Name',
       'breite': 'Breite',
       'hoehe': 'Höhe',
-      'wicklungszahl': 'Wicklungszahl',
+      'windungszahl': 'Windungszahl',
       'notiz': 'Notiz'
     }
     public readonly elementValueToStringMethods: { [key: string]: (element:MeasurementProbeType) => string } = {
