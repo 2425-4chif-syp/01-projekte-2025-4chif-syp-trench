@@ -43,7 +43,7 @@ export class ProbeManagementComponent {
   }
 
   public get selectedProbetype(): MeasurementProbeType|null {
-    console.log(this.selectedProbe);
+    //console.log(this.selectedProbe);
 
     if (this.selectedProbe?.probeType ?? null !== null) {
       return this.selectedProbe?.probeType!;
@@ -57,9 +57,9 @@ export class ProbeManagementComponent {
     return JSON.stringify(this.originalProbe) !== JSON.stringify(this.selectedProbe);
  }
 
-  isFieldInvalid(field: string): boolean {
+  isFieldInvalid(field: keyof Probe): boolean {
     if (!this.selectedProbe) return false;
-    let value = this.selectedProbe[field as keyof Probe];
+    let value = this.selectedProbe[field];
     return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
 
@@ -76,7 +76,7 @@ export class ProbeManagementComponent {
 
     this.saveError = true;
 
-    const requiredFields = ['name', 'kalibrierungsfaktor'];
+    const requiredFields: (keyof Probe)[] = ['name', 'kalibrierungsfaktor'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
@@ -100,8 +100,6 @@ export class ProbeManagementComponent {
         this.saveMessage = "Fehler beim Speichern!";
     }
 }
-
-
 
   writeSaveMessage(message:string) {
     this.saveMessage = message;

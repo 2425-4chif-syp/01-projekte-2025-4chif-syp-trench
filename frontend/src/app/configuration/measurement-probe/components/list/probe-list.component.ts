@@ -32,7 +32,7 @@ export class ProbeListComponent {
     'kalibrierungsfaktor': 'Kalibrierungsfaktor'
   }
   public readonly elementValueToStringMethods: { [key: string]: (element:Probe) => string } = {
-    'probetype': (element:Probe) => element.probeType?.name ?? `Unnamed ProbeType (ID ${element.probeTypeId})`
+    'probeType': (element:Probe) => element.probeType?.name ?? `Unnamed ProbeType (ID ${element.probeTypeId})`
   }
 
   constructor(public probesService:ProbesService, private router:Router) {
