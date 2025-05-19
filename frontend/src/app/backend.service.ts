@@ -152,9 +152,9 @@ export class BackendService {
       id: measurementSettings.id,
       coil: measurementSettings.spule,
       coilId: measurementSettings.spuleID,
-      measurementProbeType: measurementSettings.messsondenTyp,
-      measurementProbeTypeId: measurementSettings.messsondenTypID,
-      sondenProSchenkel: measurementSettings.sonden_pro_schenkel,
+      measurementProbeType: measurementSettings.sondenTyp,
+      measurementProbeTypeId: measurementSettings.sondenTypID,
+      sondenProSchenkel: measurementSettings.sondenProSchenkel,
       name: measurementSettings.name
     };
   }
@@ -163,8 +163,8 @@ export class BackendService {
     return {
       id: measurementSettings.id,
       spuleID: measurementSettings.coilId,
-      messsondenTypID: measurementSettings.measurementProbeTypeId,
-      sonden_pro_schenkel: measurementSettings.sondenProSchenkel,
+      sondenTypID: measurementSettings.measurementProbeTypeId,
+      sondenProSchenkel: measurementSettings.sondenProSchenkel,
       name: measurementSettings.name
     }
   }
