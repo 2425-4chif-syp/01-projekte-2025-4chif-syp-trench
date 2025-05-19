@@ -30,9 +30,6 @@ export class DisplacementVisualizationComponent {
 
   averageLength:number = 0;
 
-  // Final Vector (sum of all x and y values)
-  //finalVector: { x: number; y: number, angle:number, length:number } = { x: 0, y: 0, angle:0, length:0 };
-
   public readonly radToDeg = 180 / Math.PI;
 
   public hoveredArrow:{branchIndex:number, sensorIndex:number}|null = null;
@@ -75,7 +72,20 @@ export class DisplacementVisualizationComponent {
       return sum + branchLength;
     }, 0) / (result.length * this.measurementSetting.sondenProSchenkel!);
 
-    this.calcResults = result;
+    this.calcResults = result.map(branch => {
+      return branch.map(sensor => {
+        const length = this.calculateVectorLength(sensor.x, sensor.y);
+        const angle = this.calculateVectorAngle(sensor.x, sensor.y);
+        return { x: sensor.x, y: sensor.y, angle, length };
+      });
+    });
+  }
+
+  private calculateVectorLength(x: number, y: number): number {
+    return Math.sqrt(x * x + y * y);
+  }
+  private calculateVectorAngle(x: number, y: number): number {
+    return Math.atan2(y, x);
   }
 
   public get internalTranslationOffset():number {
@@ -103,10 +113,6 @@ export class DisplacementVisualizationComponent {
     const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
 
     return Math.sin(branch.angle) * newLength;
-  }
-  
-  private calculateVectorLength(x: number, y: number): number {
-    return Math.sqrt(x * x + y * y);
   }
 
   // Function to calculate the Final Vector

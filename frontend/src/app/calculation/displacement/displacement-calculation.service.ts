@@ -40,7 +40,7 @@ export class DisplacementCalculationService {
 
   // Function to calculate the x and y values of the vectors
   calculateYokeData(yokes: { sensors: number[] }[], measurementProbeType:MeasurementProbeType, measurementProbes:MeasurementProbe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
-    : { x: number; y: number, angle:number, length:number }[][] {
+    : { x: number; y: number }[][] {
     // Berechnete Querschnittsfläche in m^2
     const A = measurementProbeType.breite! * measurementProbeType.hoehe! / 1000.0 / 1000.0;
 
@@ -125,16 +125,13 @@ export class DisplacementCalculationService {
       )
     }));
 
-    // Werte gruppiert nach Joch zurückgeben
-    const result: { x: number; y: number, angle:number, length:number }[][] = [];
+    // Werte gruppiert nach Schenkel zurückgeben
+    const result: { x: number; y: number }[][] = [];
     for (let i = 0; i < yokes.length; i++) {
       const yoke = yokes[i];
-      const yokeResult: { x: number; y: number, angle:number, length:number }[] = [];
+      const yokeResult: { x: number; y: number }[] = [];
       for (let ii = 0; ii < yoke.sensors.length; ii++) {
-        const { x, y } = F[i].sensors[ii];
-        const length = Math.sqrt(x * x + y * y);
-        const angle_value = angle[i].sensors[ii] * Math.PI / 180;
-        yokeResult.push({ x, y, angle: angle_value, length });
+        yokeResult.push(F[i].sensors[ii]);
       }
       result.push(yokeResult);
     }
