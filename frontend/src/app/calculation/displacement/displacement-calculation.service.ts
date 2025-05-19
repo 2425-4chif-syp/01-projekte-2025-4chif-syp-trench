@@ -97,20 +97,25 @@ export class DisplacementCalculationService {
       for (let i = 0; i < yokes.length; i++) {
         let sensors: number[] = new Array(yokes[i].sensors.length);
 
+        const center = Math.floor(yokes[i].sensors.length / 2);
+
         // Sonden in der Mitte
-        sensors[yokes.length / 2 - 1] = angleLookup[i] - this.delta_ang / 2;
-        sensors[yokes.length / 2] = angleLookup[i] + this.delta_ang / 2;
+        sensors[center - 1] = angleLookup[i] - this.delta_ang / 2;
+        sensors[center] = angleLookup[i] + this.delta_ang / 2;
 
         // Erste Hälfte der Sonden (bei 6 ist das Index 2->0)
-        for (let ii = yokes.length / 2 - 2; ii >= 0; ii--) {
-          sensors.push(sensors[ii + 1] - this.delta_ang);
+        for (let ii = center - 2; ii >= 0; ii--) {
+          sensors[ii] = sensors[ii + 1] - this.delta_ang;
         }
 
         // Zweite Hälfte der Sonden (bei 6 ist das Index 5->3)
-        for (let ii = yokes.length / 2 + 1; ii < yokes[i].sensors.length; ii++) {
-          sensors.push(sensors[ii - 1] + this.delta_ang);
+        for (let ii = center + 1; ii < yokes[i].sensors.length; ii++) {
+          sensors[ii] = sensors[ii - 1] + this.delta_ang;
         }
+
+        angle.push({ sensors: sensors });
       }
+      console.log(angle);
 
       return { x: 0, y: 0, angle: 0, length: 0 };
     });
