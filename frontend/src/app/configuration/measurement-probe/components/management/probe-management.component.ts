@@ -8,7 +8,7 @@ import { Probe } from '../../interfaces/probe';
 import { MeasurementProbeType } from '../../../measurement-probe-type/interfaces/measurement-probe-type';
 
 @Component({
-  selector: 'app-coil-management',
+  selector: 'app-probe-management',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './probe-management.component.html',
@@ -122,7 +122,7 @@ export class ProbeManagementComponent {
     this.showDeleteModal = true;
   }
 
-  async deleteCoil(): Promise<void> {
+  async deleteProbe(): Promise<void> {
     this.showDeleteModal = false;
 
     if (this.probesService.selectedElementCopy === null) {

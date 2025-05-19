@@ -5,6 +5,7 @@ import { MeasurementProbeTypesService } from '../../services/measurement-probe-t
 import { MeasurementProbeType } from '../../interfaces/measurement-probe-type';
 import {MeasurementSettingsService} from "../../../measurement-settings/services/measurement-settings.service";
 import {Router} from "@angular/router";
+import { ProbesService } from '../../../measurement-probe/services/probes.service';
 
 @Component({
   selector: 'app-measurement-probe-type-list',
@@ -35,22 +36,22 @@ export class MeasurementProbeTypeListComponent {
 
     }
 
-    constructor(public measurementProbeTypesService:MeasurementProbeTypesService, public measurementSettingsService: MeasurementSettingsService, public router: Router) {
+    constructor(public measurementProbeTypesService:MeasurementProbeTypesService, public probesService: ProbesService, public router: Router) {
 
+    }
+
+    public get isProbeSelector(): boolean {
+      return this.measurementProbeTypesService.isProbeSelector;
     }
 
     openProbeType(probeType:MeasurementProbeType) {
       const id:number = probeType.id!;
 
       if (this.measurementProbeTypesService.isProbeSelector) {
-        console.log(this.measurementSettingsService.selectedElementCopy ?? "undefined 1");
+        this.probesService.selectedElementCopy!.probeTypeId = id;
+        this.probesService.selectedElementCopy!.probeType = this.measurementProbeTypesService.getCopyElement(id);
 
-        this.measurementSettingsService.selectedElementCopy!.measurementProbeTypeId = id;
-        console.log(this.measurementSettingsService.selectedElementCopy ?? "undefined");
-        this.measurementSettingsService.selectedElementCopy!.measurementProbeType = this.measurementProbeTypesService.getCopyElement(id);
-        console.log("Test");
-
-        this.router.navigate(['/measurement-settings-list']);
+        this.router.navigate(['/measurement-probe-management']);
         return;
       }
 
