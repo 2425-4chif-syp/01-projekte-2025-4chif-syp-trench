@@ -4,11 +4,9 @@ export interface Coil {
     id: number | null;
     coiltype: Coiltype | null;
     coiltypeId: number | null;
-    //ur: number | null;
     einheit: number | null;
     auftragsnummer: string | null;
     auftragsPosNr: number | null;
-    //omega: number | null;
     bemessungsspannung: number | null;
     bemessungsfrequenz: number | null;
     notiz: string | null;

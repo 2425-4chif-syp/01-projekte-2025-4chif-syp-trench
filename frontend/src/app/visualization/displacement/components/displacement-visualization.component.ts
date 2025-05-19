@@ -3,6 +3,12 @@ import { FormsModule } from '@angular/forms';
 import {CommonModule, DecimalPipe} from "@angular/common";
 import { CoilVisualizationComponent } from "../../coil/components/coil-visualization.component";
 import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
+import { MeasurementProbeType } from '../../../configuration/measurement-probe-type/interfaces/measurement-probe-type';
+import { MeasurementProbe } from '../../../configuration/measurement-probe/interfaces/measurement-probes';
+import { Coil } from '../../../configuration/coil/interfaces/coil';
+import { Coiltype } from '../../../configuration/coiltype/interfaces/coiltype';
+import { MeasurementSetting } from '../../../configuration/measurement-settings/interfaces/measurement-settings';
+import { Measurement } from '../../../configuration/measurement-history/interfaces/measurement.model';
 
 @Component({
   selector: 'app-displacement-visualization',
@@ -14,6 +20,12 @@ import { DisplacementCalculationService } from '../../../calculation/displacemen
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
   @Input() yokes = signal<{sensors:number[]}[]>([]);
+  @Input() measurementProbeType:MeasurementProbeType = null!;
+  @Input() measurementProbe:MeasurementProbe = null!;
+  @Input() coil:Coil = null!;
+  @Input() coiltype:Coiltype = null!;
+  @Input() measurementSetting:MeasurementSetting = null!;
+  @Input() measurement:Measurement = null!;
 
   averageLength:number = 0;
 
@@ -74,9 +86,14 @@ export class DisplacementVisualizationComponent {
       return acc + average;
     }, 0) / this.yokes().length;
 
-    return this.displacementCalculationService.calculateBranchData(
+    return this.displacementCalculationService.calculateYokeData(
       this.yokes(),
-      this.yokes().length
+      this.measurementProbeType,
+      this.measurementProbe,
+      this.coiltype,
+      this.coil,
+      this.measurementSetting,
+      this.measurement
     );
   }
 

@@ -8,10 +8,5 @@ export interface MeasurementSetting{
     measurementProbeType: MeasurementProbeType | null,
     measurementProbeTypeId: number | null,
     name: string,
-    //wicklungszahl: number | null,
-    //bemessungsspannung: number | null,
-    //bemessungsfrequenz: number | null,
-    //pruefspannung: number | null,
     sondenProSchenkel: number | null,
-    //notiz: string | null,
 }
