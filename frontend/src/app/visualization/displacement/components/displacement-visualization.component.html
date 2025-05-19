@@ -38,20 +38,20 @@
               <line
                 x1="0"
                 y1="0"
-                [attr.x2]="scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)"
-                [attr.y2]="scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)"
+                [attr.x2]="scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)"
+                [attr.y2]="scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)"
                 [attr.stroke]="getArrowColor(branchIndex)"
-                [attr.stroke-width]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '0.25' : '0.125'"
+                [attr.stroke-width]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '0.125' : '0.0625'"
                 [attr.stroke-opacity]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
               /> <!-- [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.0625,0.0625'" --> 
 
               <!-- Arrow triangle -->
               <polygon
-                points="0.25,0 0,-0.125 0,0.125"
+                points="0.125,0 0,-0.0625 0,0.0625"
                 [attr.fill]="getArrowColor(branchIndex)"
                 [attr.transform]="'translate('
-                  +scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)+', '
-                  +scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.25 : -0.125)
+                  +scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)+', '
+                  +scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)
                   +') rotate('+(vector.angle * radToDeg)+') scale('+(IsHoveringOverArrow(branchIndex, vectorIndex) ? '1.5' : '1')+')'"
                 [attr.fill-opacity]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
                 />
@@ -63,7 +63,7 @@
                 [attr.x2]="scaledBranchResultX(vector, 0)"
                 [attr.y2]="scaledBranchResultY(vector, 0)"
                 stroke="transparent"
-                stroke-width="0.25"
+                stroke-width="0.125"
               /> 
             </g>
           }
@@ -84,14 +84,14 @@
                 [attr.x2]="scaledBranchResultX(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) ? -0.25 : -0.125)"
                 [attr.y2]="scaledBranchResultY(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) ? -0.25 : -0.125)"
                 [attr.stroke-width]="IsHoveringOverYokeArrow(yokeVectorIndex) ? '0.25' : '0.125'"
-                stroke="black"
+                [attr.stroke]="getArrowColor(yokeVectorIndex)"
               />
             }
 
             <!-- Arrow triangle -->
             <polygon
               [attr.points]="(yokeVector.length / averageLength >= 0.05 || IsHoveringOverYokeArrow(yokeVectorIndex)) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
-              fill="black"
+              [attr.fill]="getArrowColor(yokeVectorIndex)"
               [attr.transform]="'translate('
               +scaledBranchResultX(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
               +scaledBranchResultY(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
@@ -201,9 +201,6 @@
           </li>
           <li>
             <strong>Länge</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length | number: '1.2-2' }}
-          </li>
-          <li>
-            <strong>Abweichung vom Durchschnitt</strong>: {{ ((calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length) - averageLength) | number: '1.2-2' }}
           </li>
           <li>
             <strong>Winkel</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].angle * radToDeg | number: '1.2-2' }}°
