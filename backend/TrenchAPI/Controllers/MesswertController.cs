@@ -26,14 +26,45 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messwert>>> GetMesswert()
         {
-            return await _context.Messwert.ToListAsync();
+            return await _context.Messwert
+                .Include(m => m.Messung)
+                    .ThenInclude(m => m.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(m => m.Messung)
+                    .ThenInclude(m => m.Messeinstellung)
+                        .ThenInclude(me => me.SondenTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Messeinstellung)
+                        .ThenInclude(me => me.SondenTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Sonde)
+                        .ThenInclude(s => s.SondenTyp)
+            .ToListAsync();
         }
 
         // GET: api/Messwert/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Messwert>> GetMesswert(int id)
         {
-            var messwert = await _context.Messwert.FindAsync(id);
+            var messwert = await _context.Messwert
+                .Include(m => m.Messung)
+                    .ThenInclude(m => m.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(m => m.Messung)
+                    .ThenInclude(m => m.Messeinstellung)
+                        .ThenInclude(me => me.SondenTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Messeinstellung)
+                        .ThenInclude(me => me.SondenTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Sonde)
+                        .ThenInclude(s => s.SondenTyp).FirstOrDefaultAsync(s => s.ID == id);
 
             if (messwert == null)
             {
