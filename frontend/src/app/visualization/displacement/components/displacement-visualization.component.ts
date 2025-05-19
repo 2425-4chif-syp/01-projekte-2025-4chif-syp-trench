@@ -21,7 +21,7 @@ export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
   @Input() yokes = signal<{sensors:number[]}[]>([]);
   @Input() measurementProbeType:MeasurementProbeType = null!;
-  @Input() measurementProbe:MeasurementProbe = null!;
+  @Input() measurementProbes:MeasurementProbe[] = [];
   @Input() coil:Coil = null!;
   @Input() coiltype:Coiltype = null!;
   @Input() measurementSetting:MeasurementSetting = null!;
@@ -58,11 +58,10 @@ export class DisplacementVisualizationComponent {
     const result = this.displacementCalculationService.calculateYokeData(
       this.yokes(),
       this.measurementProbeType,
-      this.measurementProbe,
+      this.measurementProbes,
       this.coiltype,
       this.coil,
-      this.measurementSetting,
-      this.measurement
+      this.measurementSetting
     );
 
     // Calculate the average length of the vectors

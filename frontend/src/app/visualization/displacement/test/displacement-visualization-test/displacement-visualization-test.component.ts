@@ -29,14 +29,6 @@ export class DisplacementVisualizationTestComponent {
     notiz: ""
   };
 
-  probe:MeasurementProbe = {
-    id: 0,
-    name: "Test-Sonde",
-    probeType: this.probe_type,
-    probeTypeId: 0,
-    kalibrierungsfaktor: 1.0
-  };
-
   coiltype:Coiltype = {
     id: 0,
     name: "Test-Spulentyp",
@@ -68,17 +60,5 @@ export class DisplacementVisualizationTestComponent {
     measurementProbeType: this.probe_type,
     measurementProbeTypeId: 0,
     sondenProSchenkel: 6,
-  }
-
-  measurement:Measurement = {
-    id: 0,
-    measurementSettings: this.measurementSetting,
-    measurementSettingsId: 0,
-    anfangszeitpunkt: new Date(),
-    endzeitpunkt: new Date(),
-    name: "Test-Messung",
-    tauchkernstellung: 0,
-    pruefspannung: 0,
-    notiz: ""
   }
 }

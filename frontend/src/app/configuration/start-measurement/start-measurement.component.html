@@ -45,7 +45,14 @@
   </div>
 
   @if (isConnected) {
-    <app-displacement-visualization [size]="512" [yokes]="yokes" />
+    <app-displacement-visualization [size]="512" 
+    [yokes]="yokes"
+    [measurementProbeType]="this.selectedMeasurementSetting!.measurementProbeType!"
+    [measurementProbes]="[]"
+    [coiltype]="this.selectedMeasurementSetting!.coil!.coiltype!"
+    [coil]="this.selectedMeasurementSetting!.coil!"
+    [measurementSetting]="this.selectedMeasurementSetting!"
+    />
 
     @for (yoke of yokes(); track $index) {
       <div class="mb-5">
