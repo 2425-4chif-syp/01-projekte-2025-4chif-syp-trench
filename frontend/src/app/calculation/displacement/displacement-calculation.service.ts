@@ -39,7 +39,7 @@ export class DisplacementCalculationService {
 
   // Function to calculate the x and y values of the vectors
   calculateYokeData(yokes: { sensors: number[] }[], measurementProbeType:MeasurementProbeType, measurementProbe:MeasurementProbe, coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting, measurement: Measurement)
-    : { x: number; y: number, angle:number, length:number }[] {
+    : { x: number; y: number, angle:number, length:number }[][] {
     return yokes.map((yoke, index) => {
       // Berechnete Querschnittsfläche in m^2
       const A = measurementProbeType.breite! * measurementProbeType.hoehe! / 1000.0 / 1000.0;
@@ -88,7 +88,6 @@ export class DisplacementCalculationService {
       }));
 
       // Winkel der Normale auf die Messfläche ergibt sich aus Anzahl der Sonden und Gerätetype
-      
       if (measurementSetting.sondenProSchenkel! < 4 || measurementSetting.sondenProSchenkel! % 2 != 0) {
         throw new Error('Invalid number of sensors per yoke (must be >=4 and even): ' + measurementSetting.sondenProSchenkel);
       }
@@ -115,9 +114,32 @@ export class DisplacementCalculationService {
 
         angle.push({ sensors: sensors });
       }
-      console.log(angle);
 
-      return { x: 0, y: 0, angle: 0, length: 0 };
+      // Kraftkomponenten in x und y
+      let F: { sensors: number[] }[] = [];
+      F = yokes.map((yoke, i) => ({
+        sensors: yoke.sensors.map((_, ii) =>
+          F_skal[i].sensors[ii] * Math.cos(angle[i].sensors[ii] * Math.PI / 180)
+        )
+      }));
+
+      return F.map((f, i) => {
+        const yokeAngle = angle[i].sensors.map(a => a * Math.PI / 180);
+        const yokeLength = f.sensors.map((f, j) => {
+          return Math.sqrt(f * f + F_skal[i].sensors[j] * F_skal[i].sensors[j]);
+        });
+
+        // Berechnung der x und y Komponenten
+        const x = f.sensors.map((f, j) => f * Math.cos(yokeAngle[j]));
+        const y = f.sensors.map((f, j) => f * Math.sin(yokeAngle[j]));
+
+        return {
+          x: x.reduce((acc, val) => acc + val, 0),
+          y: y.reduce((acc, val) => acc + val, 0),
+          angle: angle[i].sensors[0],
+          length: yokeLength.reduce((acc, val) => acc + val, 0)
+        };
+      });
     });
   }
 }
