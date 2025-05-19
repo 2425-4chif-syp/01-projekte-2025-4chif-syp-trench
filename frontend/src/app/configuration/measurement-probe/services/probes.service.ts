@@ -22,7 +22,7 @@ export class ProbesService implements ListService<Probe> {
         name: '',
         probeType: null,
         probeTypeId: 0,
-        kalibrierungsfaktor: 0,
+        kalibrierungsfaktor: null,
     };
   }
 

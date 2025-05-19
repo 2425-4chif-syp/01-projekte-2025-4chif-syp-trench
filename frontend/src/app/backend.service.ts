@@ -199,8 +199,8 @@ export class BackendService {
   private measurementProbeBackendToFrontend(measurementProbe: any): Probe {
     return {
       id: measurementProbe.id,
-      probeType: measurementProbe.probeTyp,
-      probeTypeId: measurementProbe.probeTypID,
+      probeType: measurementProbe.sondenTyp,
+      probeTypeId: measurementProbe.sondenTypID,
       name: measurementProbe.name,
       kalibrierungsfaktor: measurementProbe.kalibrierungsfaktor,
     }
@@ -209,7 +209,7 @@ export class BackendService {
   private measurementProbeFrontendToBackend(measurementProbe: Probe): any {
     return {
       id: measurementProbe.id,
-      probeTypId: measurementProbe.probeTypeId,
+      sondenTypID: measurementProbe.probeTypeId,
       name: measurementProbe.name,
       kalibrierungsfaktor: measurementProbe.kalibrierungsfaktor,
     }
@@ -334,26 +334,26 @@ export class BackendService {
 
   // Messsonden
   public async getAllMeasurementProbes(): Promise<Probe[]> {
-    const response: any = await this.httpGetRequest('Messsonde');
+    const response: any = await this.httpGetRequest('Sonde');
     return response.map((probe: any) => this.measurementProbeBackendToFrontend(probe));
   }
   
   public async getMeasurementProbe(id: number): Promise<Probe> {
-    const response: any = await this.httpGetRequest('Messsonde/' + id);
+    const response: any = await this.httpGetRequest('Sonde/' + id);
     return this.measurementProbeBackendToFrontend(response);
   }
   
   public async addMeasurementProbe(probe: Probe): Promise<Probe> {
-    const response: any = await this.httpPostRequest('Messsonde', this.measurementProbeFrontendToBackend(probe));
+    const response: any = await this.httpPostRequest('Sonde', this.measurementProbeFrontendToBackend(probe));
     return this.measurementProbeBackendToFrontend(response);
   }
   
   public async updateMeasurementProbe(probe: Probe): Promise<void> {
-    await this.httpPutRequest('Messsonde/' + probe.id, this.measurementProbeFrontendToBackend(probe));
+    await this.httpPutRequest('Sonde/' + probe.id, this.measurementProbeFrontendToBackend(probe));
   }
   
   public async deleteMeasurementProbe(probe: Probe): Promise<void> {
-    await this.httpDeleteRequest('Messsonde/' + probe.id);
+    await this.httpDeleteRequest('Sonde/' + probe.id);
   }
   
   // Messeinstellungen
