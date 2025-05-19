@@ -1,4 +1,4 @@
-import { MeasurementProbe } from "../../measurement-probe/interfaces/measurement-probes";
+import { MeasurementProbe } from "../../measurement-probe/interfaces/probe";
 import { MeasurementSetting } from "../../measurement-settings/interfaces/measurement-settings";
 
 export interface MeasurementProbePosition {
