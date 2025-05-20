@@ -3,12 +3,11 @@ import { FormsModule } from '@angular/forms';
 import {CommonModule, DecimalPipe} from "@angular/common";
 import { CoilVisualizationComponent } from "../../coil/components/coil-visualization.component";
 import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
-import { MeasurementProbeType } from '../../../configuration/measurement-probe-type/interfaces/measurement-probe-type';
-import { MeasurementProbe } from '../../../configuration/measurement-probe/interfaces/measurement-probes';
 import { Coil } from '../../../configuration/coil/interfaces/coil';
 import { Coiltype } from '../../../configuration/coiltype/interfaces/coiltype';
 import { MeasurementSetting } from '../../../configuration/measurement-settings/interfaces/measurement-settings';
-import { Measurement } from '../../../configuration/measurement-history/interfaces/measurement.model';
+import { ProbeType } from '../../../configuration/probe-type/interfaces/probe-type';
+import { Probe } from '../../../configuration/probe/interfaces/probe';
 
 @Component({
   selector: 'app-displacement-visualization',
@@ -20,8 +19,8 @@ import { Measurement } from '../../../configuration/measurement-history/interfac
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
   @Input() yokes = signal<{sensors:number[]}[]>([]);
-  @Input() measurementProbeType:MeasurementProbeType = null!;
-  @Input() measurementProbes:MeasurementProbe[] = [];
+  @Input() measurementProbeType:ProbeType = null!;
+  @Input() measurementProbes:Probe[] = [];
   @Input() coil:Coil = null!;
   @Input() coiltype:Coiltype = null!;
   @Input() measurementSetting:MeasurementSetting = null!;

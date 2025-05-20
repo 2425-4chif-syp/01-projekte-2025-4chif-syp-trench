@@ -31,9 +31,9 @@
                 <div class="mb-3 col-6">
                   <label class="form-label">Messonden-Typ: <span class="text-danger">*</span></label>
                   <div class="border p-2 rounded bg-light">
-                    <div *ngIf="selectedMeasurementSetting?.measurementProbeType; else noProbe">
-                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.measurementProbeTypeId}}</p>
-                      <p class="mb-0"><strong>Breite:</strong> {{ selectedMeasurementSetting?.measurementProbeType!.breite }}</p>
+                    <div *ngIf="selectedMeasurementSetting?.probeType; else noProbe">
+                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.probeTypeId}}</p>
+                      <p class="mb-0"><strong>Breite:</strong> {{ selectedMeasurementSetting?.probeType!.breite }}</p>
                     </div>
                     <ng-template #noProbe>
                       <p class="text-danger mb-0">Kein Messsondentyp ausgewählt</p>
@@ -43,8 +43,8 @@
                     <button
                       class="btn btn-sm mt-2"
                       [ngClass]="{
-                        'btn-outline-danger': saveError && isFieldInvalid('measurementProbeTypeId'),
-                        'btn-outline-secondary': !(saveError && isFieldInvalid('measurementProbeTypeId'))
+                        'btn-outline-danger': saveError && isFieldInvalid('probeTypeId'),
+                        'btn-outline-secondary': !(saveError && isFieldInvalid('probeTypeId'))
                       }"
                       (click)="openProbeSelect()">
                       Messsondentyp ändern...

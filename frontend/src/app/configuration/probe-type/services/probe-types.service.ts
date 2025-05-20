@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { BackendService } from '../../../backend.service';
-import { MeasurementProbeType } from '../interfaces/measurement-probe-type';
+import { ProbeType } from '../interfaces/probe-type';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MeasurementProbeTypesService implements ListService<MeasurementProbeType> {
-  public elements: MeasurementProbeType[] = [];
-  public selectedElementCopy: MeasurementProbeType | null = null;
+export class ProbeTypesService implements ListService<ProbeType> {
+  public elements: ProbeType[] = [];
+  public selectedElementCopy: ProbeType | null = null;
   public selectedElementIsNew: boolean = false;
 
+  public isMeasurementSettingsSelector: boolean = false;
   public isProbeSelector: boolean = false;
 
   constructor(private backendService:BackendService) { }
 
-  public get newElement(): MeasurementProbeType {
+  public get newElement(): ProbeType {
     return {
       id: 0,
       name: '',
@@ -26,10 +27,10 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
     };
   }
 
-  public getCopyElement(id:number):MeasurementProbeType {
+  public getCopyElement(id:number):ProbeType {
     id = Number(id);
 
-    const original:MeasurementProbeType|undefined = this.elements.find(c => c.id === id);
+    const original:ProbeType|undefined = this.elements.find(c => c.id === id);
     if (original === undefined) {
       throw new Error(`Element with ID ${id} not found.`);
     }
@@ -42,10 +43,10 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
     this.elements = await this.backendService.getAllMeasurementProbeTypes();
   }
 
-  public async reloadElementWithId(id:number):Promise<MeasurementProbeType> {
+  public async reloadElementWithId(id:number):Promise<ProbeType> {
     id = Number(id);
 
-    const element:MeasurementProbeType = await this.backendService.getMeasurementProbeType(id);
+    const element:ProbeType = await this.backendService.getMeasurementProbeType(id);
     const index:number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(element);
@@ -56,7 +57,7 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
     return element;
   }
 
-  public async updateOrCreateElement(element:MeasurementProbeType):Promise<void> {
+  public async updateOrCreateElement(element:ProbeType):Promise<void> {
     if (this.selectedElementIsNew) {
       this.selectedElementCopy = await this.postSelectedElement();
       this.selectedElementIsNew = false;
@@ -66,12 +67,12 @@ export class MeasurementProbeTypesService implements ListService<MeasurementProb
     await this.backendService.updateMeasurementProbeType(element);
   }
 
-  public async postSelectedElement():Promise<MeasurementProbeType> {
+  public async postSelectedElement():Promise<ProbeType> {
     if (this.selectedElementCopy === null) {
       throw new Error('No coil selected.');
     }
 
-    const response:MeasurementProbeType = await this.backendService.addMeasurementProbeType(this.selectedElementCopy);
+    const response:ProbeType = await this.backendService.addMeasurementProbeType(this.selectedElementCopy);
 
     this.elements.push(response);
 

@@ -1,11 +1,11 @@
-import { Component, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProbesService } from '../../services/probes.service';
-import { MeasurementProbeTypesService } from '../../../measurement-probe-type/services/measurement-probe-types.service';
 import { Probe } from '../../interfaces/probe';
-import { MeasurementProbeType } from '../../../measurement-probe-type/interfaces/measurement-probe-type';
+import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
+import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 
 @Component({
   selector: 'app-probe-management',
@@ -15,9 +15,9 @@ import { MeasurementProbeType } from '../../../measurement-probe-type/interfaces
   styleUrl: './probe-management.component.scss'
 })
 export class ProbeManagementComponent {
-  constructor(public probesService: ProbesService, private measurementProbeTypesService: MeasurementProbeTypesService, private router:Router) {
-    this.measurementProbeTypesService.isProbeSelector = false;
-    this.measurementProbeTypesService.reloadElements();
+  constructor(public probesService: ProbesService, private probeTypesService: ProbeTypesService, private router:Router) {
+    this.probeTypesService.isMeasurementSettingsSelector = false;
+    this.probeTypesService.reloadElements();
   }
 
   saveMessage: string | null = null;
@@ -42,14 +42,14 @@ export class ProbeManagementComponent {
     this.probesService.selectElement(Number(id));
   }
 
-  public get selectedProbetype(): MeasurementProbeType|null {
+  public get selectedProbetype(): ProbeType|null {
     //console.log(this.selectedProbe);
 
     if (this.selectedProbe?.probeType ?? null !== null) {
       return this.selectedProbe?.probeType!;
     }
 
-    return this.measurementProbeTypesService.elements.find(c => c.id === this.selectedProbe?.probeTypeId) ?? null;
+    return this.probeTypesService.elements.find(c => c.id === this.selectedProbe?.probeTypeId) ?? null;
   }
 
   hasChanges(): boolean {
@@ -65,10 +65,10 @@ export class ProbeManagementComponent {
 
 
   openProbetypeSelect() {
-    this.measurementProbeTypesService.selectedElementCopy = null;
-    this.measurementProbeTypesService.isProbeSelector = true;
+    this.probeTypesService.selectedElementCopy = null;
+    this.probeTypesService.isProbeSelector = true;
 
-    this.router.navigate(['/measurement-probe-type-management']);
+    this.router.navigate(['/probe-type-management']);
   }
 
   async saveChanges() {
@@ -154,7 +154,7 @@ export class ProbeManagementComponent {
   getProbetypeName(): string {
     if (!this.selectedProbeId) return 'Sondentyp auswählen';
     const probe = this.probesService.elements.find(probe => probe.id === this.selectedProbeId);
-    const probetype = this.measurementProbeTypesService.elements.find(type => type.id === this.selectedProbe?.probeTypeId);
+    const probetype = this.probeTypesService.elements.find(type => type.id === this.selectedProbe?.probeTypeId);
     return probetype ? probetype.name! : 'Sondentyp auswählen';
   }
 }

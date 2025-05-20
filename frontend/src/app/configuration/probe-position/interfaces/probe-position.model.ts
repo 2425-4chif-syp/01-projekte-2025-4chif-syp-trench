@@ -1,7 +1,7 @@
-import { Probe } from "../../measurement-probe/interfaces/probe";
 import { MeasurementSetting } from "../../measurement-settings/interfaces/measurement-settings";
+import { Probe } from "../../probe/interfaces/probe";
 
-export interface MeasurementProbePosition {
+export interface ProbePosition {
     id: number | null;
     measurementSettingsId: number | null;
     measurementSetting: MeasurementSetting | null;

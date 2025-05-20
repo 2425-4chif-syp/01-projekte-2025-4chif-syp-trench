@@ -1,13 +1,12 @@
 import { Component, signal, OnInit  } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-// import { MeasurementProbeManagementComponent } from '../../../measurement-probe/components/measurement-probe-parent.component';
 import { MeasurementSetting } from '../../interfaces/measurement-settings';
-import { Coil } from '../../../coil/interfaces/coil';
 import { MeasurementSettingsService } from '../../services/measurement-settings.service';
 import { Router } from '@angular/router';
 import { CoilsService } from '../../../coil/services/coils.service';
-import {MeasurementProbeTypesService} from "../../../measurement-probe-type/services/measurement-probe-types.service";
+import { ProbesService } from '../../../probe/services/probes.service';
+import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 
 
 @Component({
@@ -46,9 +45,9 @@ export class MeasurementSettingsComponent implements OnInit {
     }
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeService: MeasurementProbeTypesService , private router: Router){
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private router: Router){
     this.coilsService.isCoilSelector = false;
-    this.probeService.isProbeSelector = false;
+    this.probeTypesService.isMeasurementSettingsSelector = false;
   }
 
   async saveChanges() {
@@ -58,10 +57,10 @@ export class MeasurementSettingsComponent implements OnInit {
 
     const requiredFields: (keyof MeasurementSetting)[] = [
       'coilId',
-      'measurementProbeTypeId',
+      'probeTypeId',
       //'bemessungsspannung',
       //'bemessungsfrequenz',
-      //'pruefspannung',,,,,,,,,,
+      //'pruefspannung',
       'sondenProSchenkel',
       // -> 'name'
     ];
@@ -108,7 +107,6 @@ export class MeasurementSettingsComponent implements OnInit {
 
   coilOrProbeChanged(): boolean {
     const changed = JSON.stringify(this.selectedMeasurementSetting) !== JSON.stringify(this.originalMeasurementSetting);
-    console.log("Has Changes:", changed);
     return changed;
   }
 
@@ -117,7 +115,7 @@ export class MeasurementSettingsComponent implements OnInit {
 
     const fieldsToCompare: (keyof MeasurementSetting)[] = [
       'coilId',
-      'measurementProbeTypeId',
+      'probeTypeId',
       //'bemessungsspannung',
       //'bemessungsfrequenz',
       //'pruefspannung',
@@ -140,10 +138,10 @@ export class MeasurementSettingsComponent implements OnInit {
 
   openProbeSelect()
   {
-    this.probeService.selectedElementCopy = null;
-    this.probeService.isProbeSelector = true;
+    this.probeTypesService.selectedElementCopy = null;
+    this.probeTypesService.isMeasurementSettingsSelector = true;  
 
-    this.router.navigate(['/measurement-probe-type-management']);
+    this.router.navigate(['/probe-type-management']);
   }
 
   backToListing(){

@@ -1,23 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MeasurementProbeTypesService } from '../../services/measurement-probe-types.service';
-import { MeasurementProbeType } from '../../interfaces/measurement-probe-type';
+import { ProbeTypesService } from '../../services/probe-types.service';
+import { ProbeType } from '../../interfaces/probe-type';
 
 @Component({
-  selector: 'app-measurement-probe-type-management',
+  selector: 'app-probe-type-management',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './measurement-probe-type-management.component.html',
-  styleUrl: './measurement-probe-type-management.component.scss'
+  templateUrl: './probe-type-management.component.html',
+  styleUrl: './probe-type-management.component.scss'
 })
-export class MeasurementProbeTypeManagementComponent implements OnInit {
+export class ProbeTypeManagementComponent implements OnInit {
   saveMessage: string | null = null;
   saveError: boolean = false;
-  originalProbeType: MeasurementProbeType | null = null;
+  originalProbeType: ProbeType | null = null;
   showDeleteModal = false;
 
-  constructor(private measurementProbeTypesService: MeasurementProbeTypesService) {}
+  constructor(private measurementProbeTypesService: ProbeTypesService) {}
 
   ngOnInit() {
     if (this.selectedProbeType) {
@@ -25,7 +25,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
     }
   }
 
-  public get selectedProbeType(): MeasurementProbeType | null {
+  public get selectedProbeType(): ProbeType | null {
     return this.measurementProbeTypesService.selectedElementCopy;
   }
 
@@ -65,7 +65,7 @@ export class MeasurementProbeTypeManagementComponent implements OnInit {
 
   isFieldInvalid(field: string): boolean {
     if (!this.selectedProbeType) return false;
-    let value = this.selectedProbeType[field as keyof MeasurementProbeType];
+    let value = this.selectedProbeType[field as keyof ProbeType];
     return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
 

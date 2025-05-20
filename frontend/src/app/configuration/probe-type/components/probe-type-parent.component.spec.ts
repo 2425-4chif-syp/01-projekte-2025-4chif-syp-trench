@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MeasurementProbeTypeParentComponent } from './measurement-probe-type-parent.component';
+import { ProbeTypeParentComponent } from './probe-type-parent.component';
 
 describe('MeasurementProbeTypeParentComponent', () => {
-  let component: MeasurementProbeTypeParentComponent;
-  let fixture: ComponentFixture<MeasurementProbeTypeParentComponent>;
+  let component: ProbeTypeParentComponent;
+  let fixture: ComponentFixture<ProbeTypeParentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MeasurementProbeTypeParentComponent]
+      imports: [ProbeTypeParentComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MeasurementProbeTypeParentComponent);
+    fixture = TestBed.createComponent(ProbeTypeParentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

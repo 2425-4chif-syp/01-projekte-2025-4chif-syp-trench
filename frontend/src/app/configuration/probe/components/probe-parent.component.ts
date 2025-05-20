@@ -8,9 +8,9 @@ import { ProbesService } from '../services/probes.service';
   selector: 'app-probe-parent',
   standalone: true,
   imports: [CommonModule, ProbeListComponent, ProbeManagementComponent],
-  templateUrl: './measurement-probe-parent.component.html',
-  styleUrl: './measurement-probe-parent.component.scss'
+  templateUrl: './probe-parent.component.html',
+  styleUrl: './probe-parent.component.scss'
 })
-export class ManagementProbeParentComponent {
+export class ProbeParentComponent {
   constructor(public probesService:ProbesService) {}
 }

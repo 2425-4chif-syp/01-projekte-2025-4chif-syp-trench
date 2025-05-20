@@ -1,11 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { DisplacementVisualizationComponent } from '../../components/displacement-visualization.component';
-import { MeasurementProbeType } from '../../../../configuration/measurement-probe-type/interfaces/measurement-probe-type';
-import { MeasurementProbe } from '../../../../configuration/measurement-probe/interfaces/measurement-probes';
 import { Coil } from '../../../../configuration/coil/interfaces/coil';
 import { Coiltype } from '../../../../configuration/coiltype/interfaces/coiltype';
 import { MeasurementSetting } from '../../../../configuration/measurement-settings/interfaces/measurement-settings';
-import { Measurement } from '../../../../configuration/measurement-history/interfaces/measurement.model';
+import { ProbeType } from '../../../../configuration/probe-type/interfaces/probe-type';
 
 @Component({
   selector: 'app-displacement-visualization-test',
@@ -20,7 +18,7 @@ export class DisplacementVisualizationTestComponent {
     { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051.0] },
     { sensors: [1161.2, 1423.0, 1744.1, 1807.6, 1472.1, 1139.1] }]);
 
-  probe_type:MeasurementProbeType = {
+  probe_type:ProbeType = {
     id: 0,
     name: "Test-Sondentyp",
     breite: 145,
@@ -57,8 +55,8 @@ export class DisplacementVisualizationTestComponent {
     name: "Test-Messeinstellung",
     coil: this.coil,
     coilId: 0,
-    measurementProbeType: this.probe_type,
-    measurementProbeTypeId: 0,
+    probeType: this.probe_type,
+    probeTypeId: 0,
     sondenProSchenkel: 6,
   }
 }

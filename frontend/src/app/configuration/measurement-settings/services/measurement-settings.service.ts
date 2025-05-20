@@ -20,9 +20,9 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       id: null,
       name: "",
       coilId: null,
-      measurementProbeTypeId: null,
+      probeTypeId: null,
       coil: null,
-      measurementProbeType: null,
+      probeType: null,
       sondenProSchenkel: 1,
     };
   }
@@ -45,9 +45,9 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
 
     console.log('Reload elements');
 
-    if (this.selectedElementCopy?.coilId! != null && this.selectedElementCopy?.measurementProbeType! != null) {
+    if (this.selectedElementCopy?.coilId! != null && this.selectedElementCopy?.probeType! != null) {
       this.selectedElementCopy!.coil = await this.backendService.getCoil(this.selectedElementCopy?.coilId!);
-      this.selectedElementCopy!.measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy?.measurementProbeTypeId!);
+      this.selectedElementCopy!.probeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy?.probeTypeId!);
     }
   }
 
@@ -106,8 +106,8 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       this.selectedElementCopy.coil = await this.backendService.getCoil(this.selectedElementCopy?.coilId);
     }
 
-    if (this.selectedElementCopy?.measurementProbeTypeId != null) {
-      this.selectedElementCopy.measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy.measurementProbeTypeId);
+    if (this.selectedElementCopy?.probeTypeId != null) {
+      this.selectedElementCopy.probeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy.probeTypeId);
     }
   }
 }
