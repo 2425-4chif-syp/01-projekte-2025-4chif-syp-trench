@@ -99,7 +99,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.Messeinstellung.Any(st => st.ID == sondenPositionDto.SondeID))
+            if (!_context.Sonde.Any(st => st.ID == sondenPositionDto.SondeID))
             {
                 return BadRequest("Der angegebene Sonde existiert nicht. (DEBUG: 1)");
             }
