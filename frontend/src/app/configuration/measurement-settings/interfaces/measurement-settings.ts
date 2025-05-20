@@ -5,8 +5,8 @@ export interface MeasurementSetting{
     id: number | null,
     coil: Coil | null,
     coilId: number | null,
-    measurementProbeType: ProbeType | null,
-    measurementProbeTypeId: number | null,
+    probeType: ProbeType | null,
+    probeTypeId: number | null,
     name: string,
     sondenProSchenkel: number | null,
 }

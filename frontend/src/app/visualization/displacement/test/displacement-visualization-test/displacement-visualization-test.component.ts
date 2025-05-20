@@ -55,8 +55,8 @@ export class DisplacementVisualizationTestComponent {
     name: "Test-Messeinstellung",
     coil: this.coil,
     coilId: 0,
-    measurementProbeType: this.probe_type,
-    measurementProbeTypeId: 0,
+    probeType: this.probe_type,
+    probeTypeId: 0,
     sondenProSchenkel: 6,
   }
 }

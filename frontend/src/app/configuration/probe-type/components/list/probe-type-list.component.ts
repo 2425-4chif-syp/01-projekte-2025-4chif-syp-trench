@@ -5,6 +5,7 @@ import { ProbeTypesService as ProbeTypesService } from '../../services/probe-typ
 import {Router} from "@angular/router";
 import { ProbeType } from '../../interfaces/probe-type';
 import { ProbesService } from '../../../probe/services/probes.service';
+import { MeasurementSettingsService } from '../../../measurement-settings/services/measurement-settings.service';
 
 @Component({
   selector: 'app-probe-type-list',
@@ -35,25 +36,31 @@ export class ProbeTypeListComponent {
 
     }
 
-    constructor(public measurementProbeTypesService:ProbeTypesService, public probesService: ProbesService, public router: Router) {
+    constructor(public probesTypesService:ProbeTypesService, public probesService: ProbesService, private measurementSettingsService: MeasurementSettingsService, public router: Router) {
 
     }
 
-    public get isProbeSelector(): boolean {
-      return this.measurementProbeTypesService.isProbeSelector;
+    public get isProbeTypeSelector(): boolean {
+      return this.probesTypesService.isMeasurementSettingsSelector;
     }
 
     openProbeType(probeType:ProbeType) {
       const id:number = probeType.id!;
 
-      if (this.measurementProbeTypesService.isProbeSelector) {
-        this.probesService.selectedElementCopy!.probeTypeId = id;
-        this.probesService.selectedElementCopy!.probeType = this.measurementProbeTypesService.getCopyElement(id);
+      if (this.probesTypesService.isMeasurementSettingsSelector) {
+        this.measurementSettingsService.selectedElementCopy!.probeTypeId = id;
+        this.measurementSettingsService.selectedElementCopy!.probeType = probeType;
 
-        this.router.navigate(['/probe-management']);
+        this.router.navigate(['/measurement-settings-list']);
         return;
       }
+      if (this.probesTypesService.isProbeSelector) { 
+        this.probesService.selectedElementCopy!.probeTypeId = id;
+        this.probesService.selectedElementCopy!.probeType = probeType;
 
-      this.measurementProbeTypesService.selectElement(id);
+        this.router.navigate(['/probe-management']);
+      }
+
+      this.probesTypesService.selectElement(id);
     }
 }

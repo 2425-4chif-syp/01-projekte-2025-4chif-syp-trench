@@ -11,6 +11,7 @@ export class ProbeTypesService implements ListService<ProbeType> {
   public selectedElementCopy: ProbeType | null = null;
   public selectedElementIsNew: boolean = false;
 
+  public isMeasurementSettingsSelector: boolean = false;
   public isProbeSelector: boolean = false;
 
   constructor(private backendService:BackendService) { }

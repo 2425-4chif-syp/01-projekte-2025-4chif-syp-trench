@@ -7,9 +7,7 @@ import { DisplacementVisualizationComponent } from "../../visualization/displace
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
-import { Coil } from '../coil/interfaces/coil';
 import { BackendService } from '../../backend.service';
-import { Coiltype } from '../coiltype/interfaces/coiltype';
 
 registerLocaleData(localeDe);
 
@@ -115,11 +113,11 @@ export class StartMeasurementComponent implements OnDestroy {
         throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
       }
 
-      let measurementProbeType = this.selectedMeasurementSetting!.measurementProbeType;
+      let measurementProbeType = this.selectedMeasurementSetting!.probeType;
       if (measurementProbeType === null) {
-        measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedMeasurementSetting?.measurementProbeTypeId!);
+        measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedMeasurementSetting?.probeTypeId!);
       }
-      this.selectedMeasurementSetting!.measurementProbeType = measurementProbeType;
+      this.selectedMeasurementSetting!.probeType = measurementProbeType;
 
 
       const yokeCount = coiltype.schenkelzahl;

@@ -15,9 +15,9 @@ import { ProbeType } from '../../../probe-type/interfaces/probe-type';
   styleUrl: './probe-management.component.scss'
 })
 export class ProbeManagementComponent {
-  constructor(public probesService: ProbesService, private measurementProbeTypesService: ProbeTypesService, private router:Router) {
-    this.measurementProbeTypesService.isProbeSelector = false;
-    this.measurementProbeTypesService.reloadElements();
+  constructor(public probesService: ProbesService, private probeTypesService: ProbeTypesService, private router:Router) {
+    this.probeTypesService.isMeasurementSettingsSelector = false;
+    this.probeTypesService.reloadElements();
   }
 
   saveMessage: string | null = null;
@@ -49,7 +49,7 @@ export class ProbeManagementComponent {
       return this.selectedProbe?.probeType!;
     }
 
-    return this.measurementProbeTypesService.elements.find(c => c.id === this.selectedProbe?.probeTypeId) ?? null;
+    return this.probeTypesService.elements.find(c => c.id === this.selectedProbe?.probeTypeId) ?? null;
   }
 
   hasChanges(): boolean {
@@ -65,8 +65,8 @@ export class ProbeManagementComponent {
 
 
   openProbetypeSelect() {
-    this.measurementProbeTypesService.selectedElementCopy = null;
-    this.measurementProbeTypesService.isProbeSelector = true;
+    this.probeTypesService.selectedElementCopy = null;
+    this.probeTypesService.isProbeSelector = true;
 
     this.router.navigate(['/probe-type-management']);
   }
@@ -154,7 +154,7 @@ export class ProbeManagementComponent {
   getProbetypeName(): string {
     if (!this.selectedProbeId) return 'Sondentyp auswählen';
     const probe = this.probesService.elements.find(probe => probe.id === this.selectedProbeId);
-    const probetype = this.measurementProbeTypesService.elements.find(type => type.id === this.selectedProbe?.probeTypeId);
+    const probetype = this.probeTypesService.elements.find(type => type.id === this.selectedProbe?.probeTypeId);
     return probetype ? probetype.name! : 'Sondentyp auswählen';
   }
 }
