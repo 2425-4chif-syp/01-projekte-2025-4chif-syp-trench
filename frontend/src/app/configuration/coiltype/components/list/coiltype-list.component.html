@@ -1,10 +1,15 @@
 <div class="container">
-    <app-generic-list 
-    [keysAsColumns]="keysAsColumns"
-    [isSelector]="isCoilSelector"
-    [newElementButtonLabel]="'Neuer Spulentyp'"
-    (onElementClick)="openCoiltype($event)"
-    (hoveringElement)="updateHoveredCoiltype($event)" />
+    <div class="text-center">
+        <h2 class="mt-3 mb-1">
+            Spulentypen
+        </h2>
+        <app-generic-list 
+        [keysAsColumns]="keysAsColumns"
+        [isSelector]="isCoilSelector"
+        [newElementButtonLabel]="'Neuer Spulentyp'"
+        (onElementClick)="openCoiltype($event)"
+        (hoveringElement)="updateHoveredCoiltype($event)" />
+    </div>
 </div>
 
 @if (hoveredCoiltype !== null && mousePosition !== null) {
