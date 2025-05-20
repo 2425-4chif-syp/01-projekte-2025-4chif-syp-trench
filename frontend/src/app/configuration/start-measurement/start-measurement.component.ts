@@ -78,6 +78,12 @@ export class StartMeasurementComponent implements OnDestroy {
       }
       this.selectedMeasurementSetting!.coil.coiltype = coiltype;
 
+      let measurementProbeType = this.selectedMeasurementSetting!.measurementProbeType;
+      if (measurementProbeType === null) {
+        measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedMeasurementSetting?.measurementProbeTypeId!);
+      }
+      this.selectedMeasurementSetting!.measurementProbeType = measurementProbeType;
+
       const yokeCount:number = coiltype.schenkel!;
       const sensorCount:number = this.selectedMeasurementSetting!.sondenProSchenkel!; 
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));

@@ -13,7 +13,6 @@ import { MeasurementSetting } from '../../configuration/measurement-settings/int
 // TODO:
 // Ur aus der Excel -> Eingabefeld? (nicht im ERD)
 // delta_ang aus der Excel -> Hier steht, das kann aus den gegebenen Werten berechnet werden - wie geht das?
-// Berechnung von angle -> Wie sehen die Zahlen links für 2 Jochs aus? 
 // Berechnung von angle -> Was ist, wenn es eine ungerade Anzahl an Sonden pro Joch gibt?
 // Sondenkalibrierung wird noch nicht berücksichtigt
 export class DisplacementCalculationService {
@@ -29,9 +28,9 @@ export class DisplacementCalculationService {
   private getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
       case 2:
-        return [0, 180]; // Nur eine Schätzung
+        return [0, 180]; 
       case 3:
-        return [0, -120, 120];
+        return [0, 120, 240];
       case 4:
         return [0, 90, 180, 270];
     }
