@@ -43,11 +43,17 @@ export class DisplacementVisualizationComponent {
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
     //  { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     //]);
-  }
-
-  ngOnInit() {
-    // TODO: Also update on signal change
-    this.updateVisualization();
+    
+    effect(() => {
+      // Re-run updateVisualization whenever any of these signals/inputs change
+      this.yokes();
+      this.measurementProbeType;
+      this.measurementProbes;
+      this.coil;
+      this.coiltype;
+      this.measurementSetting;
+      this.updateVisualization();
+    });
   }
 
   public updateVisualization():void {
