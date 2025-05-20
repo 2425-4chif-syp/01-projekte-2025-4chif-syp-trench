@@ -151,8 +151,6 @@ export class StartMeasurementComponent implements OnDestroy {
 
       this.webSocketService.getMessages().subscribe({
         next: (message: string) => {
-          console.log('Received message:', message);
-  
           const [topic, value] = message.split(':'); 
           const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
           const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
