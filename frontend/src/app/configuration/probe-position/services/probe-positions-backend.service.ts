@@ -32,25 +32,25 @@ export class ProbePositionsBackendService {
   }
   
   public async getAllProbePositions(): Promise<ProbePosition[]> {
-    const response: any = await this.backendService.httpGetRequest('MesssondenPosition');
+    const response: any = await this.backendService.httpGetRequest('SondenPosition');
     return response.map((pos: any) => this.probePositionBackendToFrontend(pos));
   }
 
   public async getMeasurementProbePosition(id: number): Promise<ProbePosition> {
-    const response: any = await this.backendService.httpGetRequest('MesssondenPosition/' + id);
+    const response: any = await this.backendService.httpGetRequest('SondenPosition/' + id);
     return this.probePositionBackendToFrontend(response);
   }
 
   public async addProbePosition(pos: ProbePosition): Promise<ProbePosition> {
-    const response: any = await this.backendService.httpPostRequest('MesssondenPosition', this.probePositionFrontendToBackend(pos));
+    const response: any = await this.backendService.httpPostRequest('SondenPosition', this.probePositionFrontendToBackend(pos));
     return this.probePositionBackendToFrontend(response);
   }
 
   public async updateProbePosition(pos: ProbePosition): Promise<void> {
-    await this.backendService.httpPutRequest('MesssondenPosition/' + pos.id, this.probePositionFrontendToBackend(pos));
+    await this.backendService.httpPutRequest('SondenPosition/' + pos.id, this.probePositionFrontendToBackend(pos));
   }
 
   public async deleteProbePosition(pos: ProbePosition): Promise<void> {
-    await this.backendService.httpDeleteRequest('MesssondenPosition/' + pos.id);
+    await this.backendService.httpDeleteRequest('SondenPosition/' + pos.id);
   }
 }
