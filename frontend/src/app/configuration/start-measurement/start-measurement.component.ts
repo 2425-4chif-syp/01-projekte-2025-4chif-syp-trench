@@ -27,6 +27,7 @@ registerLocaleData(localeDe);
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
+  m_tot: number = 0;
   sensorValues: { [key: string]: number } = {}; 
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
@@ -142,9 +143,18 @@ export class StartMeasurementComponent implements OnDestroy {
 
       // Initialisiere die Yokes und Sensoren
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
-      this.yokeData.set(this.displacementCalculationService.calculateYokeData
-        (this.yokes(), measurementProbeType, [], coiltype, coil, measurementSetting));
-      
+      const calcResult = this.displacementCalculationService.calculateYokeData(
+        this.yokes(),
+        measurementProbeType,
+        [],
+        coiltype,
+        coil,
+        measurementSetting
+      );
+
+      this.m_tot = calcResult.m_tot;
+      this.yokeData.set(calcResult.F); 
+
       this.startTime = new Date();
       this.measurementData = {};
       for (let i = 0; i < yokeCount; i++) {

@@ -36,9 +36,9 @@ export class DisplacementCalculationService {
     throw new Error('Invalid yoke count: ' + yokeCount);
   }
 
-  // Function to calculate the x and y values of the vectors
+  // Function to calculate the x and y values of the vectors and the total force in kg
   calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, probes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
-    : { x: number; y: number }[][] {
+    : {F: { x: number; y: number }[][], m_tot:number} {
     // Berechnete Querschnittsfläche in m^2
     const A = probeType.breite! * probeType.hoehe! / 1000.0 / 1000.0;
 
@@ -134,6 +134,27 @@ export class DisplacementCalculationService {
       result.push(yokeResult);
     }
 
-    return result;
+    // Summenkraft in N
+    const F_tot_vec: { x: number; y: number } = { x: 0, y: 0 };
+    for (let i = 0; i < yokes.length; i++) {
+      for (let ii = 0; ii < yokes[i].sensors.length; ii++) {
+        F_tot_vec.x += F[i].sensors[ii].x;
+        F_tot_vec.y += F[i].sensors[ii].y;
+      }
+    }
+
+    // Summenkraft in kg
+    const m_tot_vec: { x: number; y: number } = {
+      x: F_tot_vec.x / 9.81,
+      y: F_tot_vec.y / 9.81
+    };
+
+    // Absolutwert der Summenkraft in kg
+    const m_tot = Math.sqrt(m_tot_vec.x * m_tot_vec.x + m_tot_vec.y * m_tot_vec.y);
+
+    return {
+      F: result,
+      m_tot: m_tot
+    };
   }
 }
