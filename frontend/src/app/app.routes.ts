@@ -6,14 +6,14 @@ import { CoilParentComponent } from './configuration/coil/components/coil-parent
 import { CoiltypeParentComponent } from './configuration/coiltype/components/coiltype-parent.component';
 import { MeasurementSettingsComponent } from './configuration/measurement-settings/components/management/measurement-settings.component';
 import { DisplacementVisualizationComponent } from './visualization/displacement/components/displacement-visualization.component';
-import { MeasurementProbeTypeParentComponent } from './configuration/measurement-probe-type/components/measurement-probe-type-parent.component';
-import { ManagementProbeParentComponent } from './configuration/measurement-probe/components/measurement-probe-parent.component'
 import { StartMeasurementComponent } from './configuration/start-measurement/start-measurement.component';
 import { MeasurementSettingsParentComponent } from "./configuration/measurement-settings/components/measurement-settings-parent.component";
 import { MeasurementManagementComponent } from './configuration/measurement-management/components/measurement-management.component';
 import { MeasurementHistoryComponent } from './configuration/measurement-history/components/measurement-history.component';
 import { MeasurementManagementParentComponent } from './configuration/measurement-management/measurement-management-parent.component';
 import { DisplacementVisualizationTestComponent } from './visualization/displacement/test/displacement-visualization-test/displacement-visualization-test.component';
+import { ProbeTypeParentComponent } from './configuration/probe-type/components/probe-type-parent.component';
+import { ProbeParentComponent } from './configuration/probe/components/probe-parent.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -23,8 +23,8 @@ export const routes: Routes = [
     {path: 'coiltype-management', component: CoiltypeParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-settings', component: MeasurementSettingsComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization', component: DisplacementVisualizationComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-probe-type-management', component: MeasurementProbeTypeParentComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-probe-management', component: ManagementProbeParentComponent, canActivate: [AuthGuard]},
+    {path: 'probe-type-management', component: ProbeTypeParentComponent, canActivate: [AuthGuard]},
+    {path: 'probe-management', component: ProbeParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-management', component: StartMeasurementComponent, canActivate: [AuthGuard]},
     {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},

@@ -1,4 +1,4 @@
-export interface MeasurementProbeType {
+export interface ProbeType {
     id: number | null;
     name: string | null;
     breite: number | null;

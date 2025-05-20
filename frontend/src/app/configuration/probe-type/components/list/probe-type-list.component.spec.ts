@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MeasurementProbeTypeListComponent } from './measurement-probe-type-list.component';
+import { ProbeTypeListComponent } from './probe-type-list.component';
 
 describe('MeasurementProbeTypeListComponent', () => {
-  let component: MeasurementProbeTypeListComponent;
-  let fixture: ComponentFixture<MeasurementProbeTypeListComponent>;
+  let component: ProbeTypeListComponent;
+  let fixture: ComponentFixture<ProbeTypeListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MeasurementProbeTypeListComponent]
+      imports: [ProbeTypeListComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MeasurementProbeTypeListComponent);
+    fixture = TestBed.createComponent(ProbeTypeListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

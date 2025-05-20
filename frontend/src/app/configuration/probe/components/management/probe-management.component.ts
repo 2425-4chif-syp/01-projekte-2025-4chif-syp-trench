@@ -1,11 +1,11 @@
-import { Component, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProbesService } from '../../services/probes.service';
-import { MeasurementProbeTypesService } from '../../../measurement-probe-type/services/measurement-probe-types.service';
 import { Probe } from '../../interfaces/probe';
-import { MeasurementProbeType } from '../../../measurement-probe-type/interfaces/measurement-probe-type';
+import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
+import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 
 @Component({
   selector: 'app-probe-management',
@@ -15,7 +15,7 @@ import { MeasurementProbeType } from '../../../measurement-probe-type/interfaces
   styleUrl: './probe-management.component.scss'
 })
 export class ProbeManagementComponent {
-  constructor(public probesService: ProbesService, private measurementProbeTypesService: MeasurementProbeTypesService, private router:Router) {
+  constructor(public probesService: ProbesService, private measurementProbeTypesService: ProbeTypesService, private router:Router) {
     this.measurementProbeTypesService.isProbeSelector = false;
     this.measurementProbeTypesService.reloadElements();
   }
@@ -42,7 +42,7 @@ export class ProbeManagementComponent {
     this.probesService.selectElement(Number(id));
   }
 
-  public get selectedProbetype(): MeasurementProbeType|null {
+  public get selectedProbetype(): ProbeType|null {
     //console.log(this.selectedProbe);
 
     if (this.selectedProbe?.probeType ?? null !== null) {
@@ -68,7 +68,7 @@ export class ProbeManagementComponent {
     this.measurementProbeTypesService.selectedElementCopy = null;
     this.measurementProbeTypesService.isProbeSelector = true;
 
-    this.router.navigate(['/measurement-probe-type-management']);
+    this.router.navigate(['/probe-type-management']);
   }
 
   async saveChanges() {
