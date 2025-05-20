@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { BackendService } from '../../../backend.service';
 import { ProbeType } from '../interfaces/probe-type';
+import { ProbeTypesBackendService } from './probe-types-backend.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class ProbeTypesService implements ListService<ProbeType> {
   public isMeasurementSettingsSelector: boolean = false;
   public isProbeSelector: boolean = false;
 
-  constructor(private backendService:BackendService) { }
+  constructor(private probeTypesBackendService:ProbeTypesBackendService) { }
 
   public get newElement(): ProbeType {
     return {
@@ -40,13 +41,13 @@ export class ProbeTypesService implements ListService<ProbeType> {
 
 
   public async reloadElements():Promise<void> {
-    this.elements = await this.backendService.getAllMeasurementProbeTypes();
+    this.elements = await this.probeTypesBackendService.getAllProbeTypes();
   }
 
   public async reloadElementWithId(id:number):Promise<ProbeType> {
     id = Number(id);
 
-    const element:ProbeType = await this.backendService.getMeasurementProbeType(id);
+    const element:ProbeType = await this.probeTypesBackendService.getProbeType(id);
     const index:number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(element);
@@ -64,7 +65,7 @@ export class ProbeTypesService implements ListService<ProbeType> {
       return;
     }
 
-    await this.backendService.updateMeasurementProbeType(element);
+    await this.probeTypesBackendService.updateProbeType(element);
   }
 
   public async postSelectedElement():Promise<ProbeType> {
@@ -72,7 +73,7 @@ export class ProbeTypesService implements ListService<ProbeType> {
       throw new Error('No coil selected.');
     }
 
-    const response:ProbeType = await this.backendService.addMeasurementProbeType(this.selectedElementCopy);
+    const response:ProbeType = await this.probeTypesBackendService.addProbeType(this.selectedElementCopy);
 
     this.elements.push(response);
 
@@ -87,7 +88,7 @@ export class ProbeTypesService implements ListService<ProbeType> {
       throw new Error(`Element with ID ${id} not found.`);
     }
 
-    await this.backendService.deleteMeasurementProbeType(this.elements[index]);
+    await this.probeTypesBackendService.deleteProbeType(this.elements[index]);
 
     this.elements.splice(index, 1);
     this.selectedElementCopy = null;

@@ -7,7 +7,11 @@ import { DisplacementVisualizationComponent } from "../../visualization/displace
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
-import { BackendService } from '../../backend.service';
+import { MeasurementSettingsBackendService } from '../measurement-settings/services/measurement-settings-backend.service';
+import { CoilsBackendService } from '../coil/services/coils-backend.service';
+import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
+import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
+import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
 
 registerLocaleData(localeDe);
 
@@ -36,7 +40,11 @@ export class StartMeasurementComponent implements OnDestroy {
   constructor(
     private webSocketService: WebSocketService,
     public measurementSettingsService: MeasurementSettingsService,
-    private backendService: BackendService
+    private measurementSettingsBackendService: MeasurementSettingsBackendService,
+    private measurementsBackendService: MeasurementsBackendService,
+    private coiltypesBackendService: CoiltypesBackendService,
+    private coilsBackendService: CoilsBackendService,
+    private probeTypesBackendService: ProbeTypesBackendService
   ) {
     this.loadMeasurementSettings();
   }
@@ -66,7 +74,7 @@ export class StartMeasurementComponent implements OnDestroy {
 
     try {
       // Hole die Messeinstellung direkt vom Backend
-      const measurementSetting = await this.backendService.getMeasurementSettings(this.measurementSettingId!);
+      const measurementSetting = await this.measurementSettingsBackendService.getMeasurementSettings(this.measurementSettingId!);
       if (!measurementSetting) {
         this.showIdError = true;
         this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
@@ -81,7 +89,7 @@ export class StartMeasurementComponent implements OnDestroy {
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
       if (!coil && measurementSetting.coilId) {
-        coil = await this.backendService.getCoil(measurementSetting.coilId);
+        coil = await this.coilsBackendService.getCoil(measurementSetting.coilId);
         if (!coil) {
           throw new Error('Coil konnte nicht geladen werden');
         }
@@ -97,7 +105,7 @@ export class StartMeasurementComponent implements OnDestroy {
       let coiltype = coilData.spuleTyp;
       if (!coiltype && coilData.spuleTypID) {
         console.log('Lade Coiltype mit ID:', coilData.spuleTypID);
-        coiltype = await this.backendService.getCoiltype(coilData.spuleTypID);
+        coiltype = await this.coiltypesBackendService.getCoiltype(coilData.spuleTypID);
         if (!coiltype) {
           throw new Error('Coiltype konnte nicht geladen werden');
         }
@@ -115,7 +123,7 @@ export class StartMeasurementComponent implements OnDestroy {
 
       let measurementProbeType = this.selectedMeasurementSetting!.probeType;
       if (measurementProbeType === null) {
-        measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedMeasurementSetting?.probeTypeId!);
+        measurementProbeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
       }
       this.selectedMeasurementSetting!.probeType = measurementProbeType;
 
@@ -215,7 +223,7 @@ export class StartMeasurementComponent implements OnDestroy {
           };
           
           console.log('Speichere Messung:', measurementData);
-          await this.backendService.saveMeasurement(measurementData);
+          await this.measurementsBackendService.saveMeasurement(measurementData);
           console.log('Messung erfolgreich gespeichert');
         }
       } catch (error) {

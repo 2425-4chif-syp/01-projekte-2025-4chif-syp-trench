@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { Coil } from '../interfaces/coil';
-import { BackendService } from '../../../backend.service';
+import { CoilsBackendService } from './coils-backend.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class CoilsService implements ListService<Coil> {
   
   public isCoilSelector: boolean = false;
 
-  constructor(private backendService:BackendService) { }
+  constructor(private coilsBackendService:CoilsBackendService) { }
 
   public get newElement(): Coil {
     return {
@@ -42,13 +42,13 @@ export class CoilsService implements ListService<Coil> {
   
 
   public async reloadElements():Promise<void> {
-    this.elements = await this.backendService.getAllCoils();
+    this.elements = await this.coilsBackendService.getAllCoils();
   }
   
   public async reloadElementWithId(id:number):Promise<Coil> {
     id = Number(id);
 
-    const coil:Coil = await this.backendService.getCoil(id);
+    const coil:Coil = await this.coilsBackendService.getCoil(id);
     const index:number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(coil);
@@ -66,7 +66,7 @@ export class CoilsService implements ListService<Coil> {
       return;
     }
 
-    await this.backendService.updateCoil(coil);
+    await this.coilsBackendService.updateCoil(coil);
   }  
 
   public async postSelectedElement():Promise<Coil> {
@@ -74,7 +74,7 @@ export class CoilsService implements ListService<Coil> {
       throw new Error('No coil selected.');
     }
 
-    const response:Coil = await this.backendService.addCoil(this.selectedElementCopy);
+    const response:Coil = await this.coilsBackendService.addCoil(this.selectedElementCopy);
 
     this.elements.push(response);
 
@@ -89,7 +89,7 @@ export class CoilsService implements ListService<Coil> {
       throw new Error(`Coil with ID ${id} not found.`);
     }
 
-    await this.backendService.deleteCoil(this.elements[index]);
+    await this.coilsBackendService.deleteCoil(this.elements[index]);
 
     this.elements.splice(index, 1);
     this.selectedElementCopy = null;
