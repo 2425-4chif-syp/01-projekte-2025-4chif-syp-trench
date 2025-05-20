@@ -1,24 +1,61 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from '../../../backend.service';
 import { MeasurementSetting } from '../interfaces/measurement-settings';
+import { Coil } from '../../coil/interfaces/coil';
+import { Coiltype } from '../../coiltype/interfaces/coiltype';
+import { CoilsBackendService } from '../../coil/services/coils-backend.service';
+import { CoiltypesBackendService } from '../../coiltype/services/coiltypes-backend.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MeasurementSettingsBackendService {
 
-  constructor(private backendService:BackendService) { }
+  constructor(private backendService: BackendService ){}//, private coilBackendService: CoilsBackendService, private coilTypeBackendService: CoiltypesBackendService) { }
+
+  private coiltypeBackendToFrontend(coiltype: any): Coiltype {
+    return {
+      id: coiltype.id,
+      name: coiltype.name,
+      schenkel: coiltype.schenkelzahl,
+      bandbreite: coiltype.bandbreite,
+      schichthoehe: coiltype.schichthoehe,
+      durchmesser: coiltype.durchmesser,
+      toleranzbereich: coiltype.toleranzbereich,
+      notiz: coiltype.notiz
+    };
+  }
+  
+  private coilBackendToFrontend(coil: any): Coil {
+    return {
+      id: coil.id,
+      coiltype: this.coiltypeBackendToFrontend(coil.spuleTyp),
+      coiltypeId: coil.spuleTypID,
+      einheit: coil.einheit,
+      auftragsnummer: coil.auftragsnr,
+      auftragsPosNr: coil.auftragsPosNr,
+      bemessungsfrequenz: coil.bemessungsfrequenz,
+      bemessungsspannung: coil.bemessungsspannung,
+      notiz: coil.notiz
+    };
+  }  
 
   private measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSetting {
-    return {
+    console.log("MAPPED Coiltype:", this.coilBackendToFrontend(measurementSettings.spule).coiltype);
+    const tmp: MeasurementSetting = {
       id: measurementSettings.id,
-      coil: measurementSettings.spule,
+      //coil: this.coilBackendService.coilBackendToFrontend(measurementSettings.spule),
+      coil: this.coilBackendToFrontend(measurementSettings.spule),
       coilId: measurementSettings.spuleID,
       probeType: measurementSettings.sondenTyp,
       probeTypeId: measurementSettings.sondenTypID,
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
       name: measurementSettings.name
     };
+
+    console.log("MAPPED MeasurementSettings:", tmp);
+
+    return tmp;
   }
 
   private measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{

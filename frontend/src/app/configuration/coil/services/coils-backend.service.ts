@@ -9,8 +9,7 @@ export class CoilsBackendService {
 
   constructor(private backendService:BackendService) { }
 
-  
-    private coilBackendToFrontend(coil: any): Coil {
+    public coilBackendToFrontend(coil: any): Coil {
         const newCoil: Coil = {
         id: coil.id,
         coiltype: coil.spuleTyp,
@@ -26,7 +25,7 @@ export class CoilsBackendService {
         return newCoil;
     }
 
-    private coilFrontendToBackend(coil: Coil): any {
+    public coilFrontendToBackend(coil: Coil): any {
         return {
         id: coil.id,
         spuleTypID: coil.coiltypeId,
