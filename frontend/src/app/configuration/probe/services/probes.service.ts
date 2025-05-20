@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { Probe } from '../interfaces/probe';
-import { BackendService } from '../../../backend.service';
+import { ProbesBackendService } from './probes-backend.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,7 @@ export class ProbesService implements ListService<Probe> {
 
   public isProbeSelector:boolean = false;
 
-  constructor(private backendService:BackendService) {
+  constructor(private probeBackendService:ProbesBackendService) {
   }
   public sortDirection: { [key: string]: boolean } = {};
 
@@ -38,13 +38,13 @@ export class ProbesService implements ListService<Probe> {
   }
 
   public async reloadElements():Promise<void> {
-    this.elements = await this.backendService.getAllMeasurementProbes();
+    this.elements = await this.probeBackendService.getAllProbes();
   }
 
   public async reloadElementWithId(id:number):Promise<Probe> {
     id = Number(id);
 
-    const probe:Probe = await this.backendService.getMeasurementProbe(id);
+    const probe:Probe = await this.probeBackendService.getProbe(id);
     const index:number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(probe);
@@ -62,7 +62,7 @@ export class ProbesService implements ListService<Probe> {
       return;
     }
 
-    await this.backendService.updateMeasurementProbe(probe);
+    await this.probeBackendService.updateProbe(probe);
   }
 
   public async postSelectedElement():Promise<Probe> {
@@ -70,7 +70,7 @@ export class ProbesService implements ListService<Probe> {
       throw new Error('No probe selected.');
     }
 
-    const response:Probe = await this.backendService.addMeasurementProbe(this.selectedElementCopy);
+    const response:Probe = await this.probeBackendService.addProbe(this.selectedElementCopy);
 
     this.elements.push(response);
     
@@ -85,7 +85,7 @@ export class ProbesService implements ListService<Probe> {
       throw new Error(`Probe with ID ${id} not found.`);
     }
 
-    await this.backendService.deleteMeasurementProbe(this.elements[index]);
+    await this.probeBackendService.deleteProbe(this.elements[index]);
 
     this.elements.splice(index, 1);
     this.selectedElementCopy = null;

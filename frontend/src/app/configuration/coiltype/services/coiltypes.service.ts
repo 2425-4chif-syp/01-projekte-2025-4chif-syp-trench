@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { Coiltype } from '../interfaces/coiltype';
-import { BackendService } from '../../../backend.service';
+import { CoiltypesBackendService } from './coiltypes-backend.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,7 @@ export class CoiltypesService implements ListService<Coiltype> {
 
   public isCoilSelector:boolean = false;
 
-  constructor(private backendService:BackendService) {
+  constructor(private coiltypesBackendService:CoiltypesBackendService) {
   }
   public sortDirection: { [key: string]: boolean } = {};
 
@@ -41,13 +41,13 @@ export class CoiltypesService implements ListService<Coiltype> {
   }
 
   public async reloadElements():Promise<void> {
-    this.elements = await this.backendService.getAllCoiltypes();
+    this.elements = await this.coiltypesBackendService.getAllCoiltypes();
   }
 
   public async reloadElementWithId(id:number):Promise<Coiltype> {
     id = Number(id);
 
-    const coiltype:Coiltype = await this.backendService.getCoiltype(id);
+    const coiltype:Coiltype = await this.coiltypesBackendService.getCoiltype(id);
     const index:number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(coiltype);
@@ -65,7 +65,7 @@ export class CoiltypesService implements ListService<Coiltype> {
       return;
     }
 
-    await this.backendService.updateCoiltype(coiltype);
+    await this.coiltypesBackendService.updateCoiltype(coiltype);
   }
 
   public async postSelectedElement():Promise<Coiltype> {
@@ -73,7 +73,7 @@ export class CoiltypesService implements ListService<Coiltype> {
       throw new Error('No coil selected.');
     }
 
-    const response:Coiltype = await this.backendService.addCoiltype(this.selectedElementCopy);
+    const response:Coiltype = await this.coiltypesBackendService.addCoiltype(this.selectedElementCopy);
 
     this.elements.push(response);
     
@@ -88,7 +88,7 @@ export class CoiltypesService implements ListService<Coiltype> {
       throw new Error(`Coiltype with ID ${id} not found.`);
     }
 
-    await this.backendService.deleteCoiltype(this.elements[index]);
+    await this.coiltypesBackendService.deleteCoiltype(this.elements[index]);
 
     this.elements.splice(index, 1);
     this.selectedElementCopy = null;
