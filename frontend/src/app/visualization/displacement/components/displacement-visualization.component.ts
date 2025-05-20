@@ -30,9 +30,6 @@ export class DisplacementVisualizationComponent {
 
   averageLength:number = 0;
 
-  // Final Vector (sum of all x and y values)
-  //finalVector: { x: number; y: number, angle:number, length:number } = { x: 0, y: 0, angle:0, length:0 };
-
   public readonly radToDeg = 180 / Math.PI;
 
   public hoveredArrow:{branchIndex:number, sensorIndex:number}|null = null;
@@ -46,15 +43,15 @@ export class DisplacementVisualizationComponent {
     //  { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051] },
     //  { sensors: [1161.2, 1423, 1744.1, 1807.6, 1472.1, 1139.1] }
     //]);
-  }
-
-  ngOnInit() {
-    // TODO: Also update on signal change
-    this.updateVisualization();
-  }
-
-  ngAfterViewInit() {
+    
     effect(() => {
+      // Re-run updateVisualization whenever any of these signals/inputs change
+      this.yokes();
+      this.measurementProbeType;
+      this.measurementProbes;
+      this.coil;
+      this.coiltype;
+      this.measurementSetting;
       this.updateVisualization();
     });
   }
@@ -69,13 +66,22 @@ export class DisplacementVisualizationComponent {
       this.measurementSetting
     );
 
-    // Calculate the average length of the vectors
-    this.averageLength = result.reduce((sum, branch) => {
-      const branchLength = branch.reduce((branchSum, sensor) => branchSum + this.calculateVectorLength(sensor.x, sensor.y), 0);
-      return sum + branchLength;
-    }, 0) / (result.length * this.measurementSetting.sondenProSchenkel!);
+    this.calcResults = result.map(branch => {
+      return branch.map(sensor => {
+        const length = this.calculateVectorLength(sensor.x, sensor.y);
+        const angle = this.calculateVectorAngle(sensor.x, sensor.y);
+        return { x: sensor.x, y: sensor.y, angle, length };
+      });
+    });
 
-    this.calcResults = result;
+    this.averageLength = this.yokeVectors.reduce((sum, vector) => sum + vector.length, 0) / this.yokeVectors.length;
+  }
+
+  private calculateVectorLength(x: number, y: number): number {
+    return Math.sqrt(x * x + y * y);
+  }
+  private calculateVectorAngle(x: number, y: number): number {
+    return Math.atan2(y, x);
   }
 
   public get internalTranslationOffset():number {
@@ -104,12 +110,21 @@ export class DisplacementVisualizationComponent {
 
     return Math.sin(branch.angle) * newLength;
   }
-  
-  private calculateVectorLength(x: number, y: number): number {
-    return Math.sqrt(x * x + y * y);
+
+  public get yokeVectors(): { x: number; y: number, angle:number, length:number }[] {
+    // Yoke vectors are calculated by summing up all the x and y components of each yoke
+    return this.calcResults.map(branch => {
+      const branchX = branch.reduce((sum, sensor) => sum + sensor.x, 0);
+      const branchY = branch.reduce((sum, sensor) => sum + sensor.y, 0);
+      return {
+        x: branchX,
+        y: branchY,
+        angle: this.calculateVectorAngle(branchX, branchY),
+        length: this.calculateVectorLength(branchX, branchY),
+      };
+    });
   }
 
-  // Function to calculate the Final Vector
   public get finalVector(): { x: number; y: number, angle:number, length:number } {
     // Final vector is calculated by summing up all the x and y components of each branch
     let vector = this.calcResults.reduce(
@@ -124,7 +139,7 @@ export class DisplacementVisualizationComponent {
     return {
       x: vector.x,
       y: vector.y,
-      angle: Math.atan2(vector.y, vector.x),
+      angle: this.calculateVectorAngle(vector.x, vector.y),
       length: this.calculateVectorLength(vector.x, vector.y),
     }
   }
@@ -151,12 +166,18 @@ export class DisplacementVisualizationComponent {
   public IsHoveringOverArrow(branchIndex:number, sensorIndex:number):boolean {
     return this.hoveredArrow?.branchIndex === branchIndex && this.hoveredArrow?.sensorIndex === sensorIndex;
   }
+  public IsHoveringOverYokeArrow(branchIndex:number):boolean {
+    return this.hoveredArrow?.branchIndex === branchIndex && this.hoveredArrow?.sensorIndex === -1;
+  }
   public IsHoveringOverResultArrow():boolean {
     return this.hoveredArrow?.branchIndex === -1 && this.hoveredArrow?.sensorIndex === -1;
   }
 
   public onArrowMouseEnter(branchIndex:number, sensorIndex:number):void {
     this.hoveredArrow = { branchIndex, sensorIndex };
+  }
+  public onYokeArrowMouseEnter(branchIndex:number):void {
+    this.hoveredArrow = { branchIndex, sensorIndex: -1 };
   }
   public onResultArrowMouseEnter():void {
     this.hoveredArrow = { branchIndex: -1, sensorIndex: -1 };

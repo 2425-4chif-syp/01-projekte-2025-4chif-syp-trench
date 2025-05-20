@@ -18,7 +18,7 @@ import {MeasurementProbeTypesService} from "../../../measurement-probe-type/serv
   styleUrl: './measurement-settings.component.scss'
 })
 export class MeasurementSettingsComponent implements OnInit {
-  schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 6, 7, 8]);
+  schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8]);
   saveMessage: string | null = null
   saveError: boolean = false;
   showDeleteModal = false;

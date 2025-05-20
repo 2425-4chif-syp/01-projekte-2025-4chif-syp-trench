@@ -13,7 +13,6 @@ import { MeasurementSetting } from '../../configuration/measurement-settings/int
 // TODO:
 // Ur aus der Excel -> Eingabefeld? (nicht im ERD)
 // delta_ang aus der Excel -> Hier steht, das kann aus den gegebenen Werten berechnet werden - wie geht das?
-// Berechnung von angle -> Wie sehen die Zahlen links für 2 Jochs aus? 
 // Berechnung von angle -> Was ist, wenn es eine ungerade Anzahl an Sonden pro Joch gibt?
 // Sondenkalibrierung wird noch nicht berücksichtigt
 export class DisplacementCalculationService {
@@ -29,9 +28,9 @@ export class DisplacementCalculationService {
   private getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
       case 2:
-        return [0, 180]; // Nur eine Schätzung
+        return [0, 180]; 
       case 3:
-        return [0, -120, 120];
+        return [0, 120, 240];
       case 4:
         return [0, 90, 180, 270];
     }
@@ -40,7 +39,7 @@ export class DisplacementCalculationService {
 
   // Function to calculate the x and y values of the vectors
   calculateYokeData(yokes: { sensors: number[] }[], measurementProbeType:MeasurementProbeType, measurementProbes:MeasurementProbe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
-    : { x: number; y: number, angle:number, length:number }[][] {
+    : { x: number; y: number }[][] {
     // Berechnete Querschnittsfläche in m^2
     const A = measurementProbeType.breite! * measurementProbeType.hoehe! / 1000.0 / 1000.0;
 
@@ -125,16 +124,13 @@ export class DisplacementCalculationService {
       )
     }));
 
-    // Werte gruppiert nach Joch zurückgeben
-    const result: { x: number; y: number, angle:number, length:number }[][] = [];
+    // Werte gruppiert nach Schenkel zurückgeben
+    const result: { x: number; y: number }[][] = [];
     for (let i = 0; i < yokes.length; i++) {
       const yoke = yokes[i];
-      const yokeResult: { x: number; y: number, angle:number, length:number }[] = [];
+      const yokeResult: { x: number; y: number }[] = [];
       for (let ii = 0; ii < yoke.sensors.length; ii++) {
-        const { x, y } = F[i].sensors[ii];
-        const length = Math.sqrt(x * x + y * y);
-        const angle_value = angle[i].sensors[ii] * Math.PI / 180;
-        yokeResult.push({ x, y, angle: angle_value, length });
+        yokeResult.push(F[i].sensors[ii]);
       }
       result.push(yokeResult);
     }

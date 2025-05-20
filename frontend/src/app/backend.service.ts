@@ -148,15 +148,41 @@ export class BackendService {
   }
 
   private measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSetting {
-    return {
+    console.log('Backend Messeinstellung:', measurementSettings);
+    
+    const coil = measurementSettings.spule ? {
+      id: measurementSettings.spule.id,
+      coiltype: measurementSettings.spule.spuleTyp ? {
+        id: measurementSettings.spule.spuleTyp.id,
+        name: measurementSettings.spule.spuleTyp.name,
+        schenkel: measurementSettings.spule.spuleTyp.schenkelzahl,
+        bandbreite: measurementSettings.spule.spuleTyp.bandbreite,
+        schichthoehe: measurementSettings.spule.spuleTyp.schichthoehe,
+        durchmesser: measurementSettings.spule.spuleTyp.durchmesser,
+        toleranzbereich: measurementSettings.spule.spuleTyp.toleranzbereich,
+        notiz: measurementSettings.spule.spuleTyp.notiz
+      } : null,
+      coiltypeId: measurementSettings.spule.spuleTypID,
+      einheit: measurementSettings.spule.einheit,
+      auftragsnummer: measurementSettings.spule.auftragsnr,
+      auftragsPosNr: measurementSettings.spule.auftragsPosNr,
+      bemessungsfrequenz: measurementSettings.spule.bemessungsfrequenz,
+      bemessungsspannung: measurementSettings.spule.bemessungsspannung,
+      notiz: measurementSettings.spule.notiz
+    } : null;
+
+    const result = {
       id: measurementSettings.id,
-      coil: measurementSettings.spule,
+      coil: coil,
       coilId: measurementSettings.spuleID,
       measurementProbeType: measurementSettings.sondenTyp,
       measurementProbeTypeId: measurementSettings.sondenTypID,
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
       name: measurementSettings.name
     };
+
+    console.log('Konvertierte Frontend Messeinstellung:', result);
+    return result;
   }
 
   private measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{

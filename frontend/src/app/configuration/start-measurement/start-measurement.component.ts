@@ -66,20 +66,64 @@ export class StartMeasurementComponent implements OnDestroy {
     }
 
     try {
-      let coil:Coil|null = this.selectedMeasurementSetting!.coil ?? null;
-      
-      if (coil === null) {
-        coil = await this.backendService.getCoil(this.selectedMeasurementSetting?.coilId!);
+      // Lade die Messeinstellung neu
+      const measurementSetting = await this.measurementSettingsService.reloadElementWithId(this.measurementSettingId!);
+      if (!measurementSetting) {
+        this.showIdError = true;
+        throw new Error('Keine Messeinstellung ausgewählt');
       }
-      this.selectedMeasurementSetting!.coil = coil;
-      let coiltype:Coiltype|null = coil!.coiltype ?? null;
-      if (coiltype === null) {
-        coiltype = await this.backendService.getCoiltype(coil!.coiltypeId!);
-      }
-      this.selectedMeasurementSetting!.coil.coiltype = coiltype;
 
-      const yokeCount:number = coiltype.schenkel!;
-      const sensorCount:number = this.selectedMeasurementSetting!.sondenProSchenkel!; 
+      // Lade zuerst die Coil-Informationen
+      let coil = measurementSetting.coil;
+      if (!coil && measurementSetting.coilId) {
+        coil = await this.backendService.getCoil(measurementSetting.coilId);
+        if (!coil) {
+          throw new Error('Coil konnte nicht geladen werden');
+        }
+        measurementSetting.coil = coil;
+      }
+
+      if (!coil) {
+        throw new Error('Keine Coil-Informationen verfügbar');
+      }
+
+      // Dann lade die Coiltype-Informationen
+      let coiltype = coil.coiltype;
+      if (!coiltype && coil.coiltypeId) {
+        console.log('Lade Coiltype mit ID:', coil.coiltypeId);
+        coiltype = await this.backendService.getCoiltype(coil.coiltypeId);
+        if (!coiltype) {
+          throw new Error('Coiltype konnte nicht geladen werden');
+        }
+        coil.coiltype = coiltype;
+      }
+
+      if (!coiltype) {
+        throw new Error('Keine Coiltype-Informationen verfügbar');
+      }
+
+      // Überprüfe die Schenkelzahl
+      if (!coiltype.schenkel) {
+        throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
+      }
+
+      let measurementProbeType = this.selectedMeasurementSetting!.measurementProbeType;
+      if (measurementProbeType === null) {
+        measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedMeasurementSetting?.measurementProbeTypeId!);
+      }
+      this.selectedMeasurementSetting!.measurementProbeType = measurementProbeType;
+
+
+      const yokeCount = coiltype.schenkel;
+      const sensorCount = measurementSetting.sondenProSchenkel || 0;
+      
+      if (sensorCount <= 0) {
+        throw new Error('Ungültige Anzahl von Sonden pro Schenkel');
+      }
+
+      console.log(`Initialisiere ${yokeCount} Schenkel mit je ${sensorCount} Sensoren`);
+
+      // Initialisiere die Yokes und Sensoren
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
       
       this.startTime = new Date();
@@ -91,10 +135,12 @@ export class StartMeasurementComponent implements OnDestroy {
         }
       }
       
+      // Verbinde mit WebSocket
       await this.webSocketService.connect();
       this.isConnected = true;
       this.showIdError = false;
 
+      // Sende Konfiguration
       const config = {
         type: 'config',
         measurementSettingId: this.measurementSettingId,
@@ -105,8 +151,6 @@ export class StartMeasurementComponent implements OnDestroy {
 
       this.webSocketService.getMessages().subscribe({
         next: (message: string) => {
-          console.log('Received message:', message);
-  
           const [topic, value] = message.split(':'); 
           const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
           const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
@@ -155,8 +199,13 @@ export class StartMeasurementComponent implements OnDestroy {
             messeinstellungID: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
-            notiz: this.note,
-            messsonden: this.createMesssondenData()
+            notiz: this.note || "",
+            messsonden: this.createMesssondenData().map(sonde => ({
+              schenkel: sonde.schenkel,
+              position: sonde.position,
+              messwerte: sonde.messwerte,
+              durchschnittswert: sonde.durchschnittswert
+            }))
           };
           
           console.log('Speichere Messung:', measurementData);
