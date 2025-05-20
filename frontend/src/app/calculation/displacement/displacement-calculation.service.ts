@@ -37,7 +37,7 @@ export class DisplacementCalculationService {
   }
 
   // Function to calculate the x and y values of the vectors
-  calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, measurementProbes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
+  calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, probes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
     : { x: number; y: number }[][] {
     // Berechnete Querschnittsfläche in m^2
     const A = probeType.breite! * probeType.hoehe! / 1000.0 / 1000.0;

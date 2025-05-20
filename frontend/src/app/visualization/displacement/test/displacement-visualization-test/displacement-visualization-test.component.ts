@@ -4,6 +4,7 @@ import { Coil } from '../../../../configuration/coil/interfaces/coil';
 import { Coiltype } from '../../../../configuration/coiltype/interfaces/coiltype';
 import { MeasurementSetting } from '../../../../configuration/measurement-settings/interfaces/measurement-settings';
 import { ProbeType } from '../../../../configuration/probe-type/interfaces/probe-type';
+import { DisplacementCalculationService } from '../../../../calculation/displacement/displacement-calculation.service';
 
 @Component({
   selector: 'app-displacement-visualization-test',
@@ -17,6 +18,18 @@ export class DisplacementVisualizationTestComponent {
     { sensors: [1069.7, 1351.4, 1723.8, 1826.3, 1452.2, 1091.7] },
     { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051.0] },
     { sensors: [1161.2, 1423.0, 1744.1, 1807.6, 1472.1, 1139.1] }]);
+  yokeData = signal<{ x: number; y: number }[][]>([]);
+
+  constructor(private displacementCalculationService:DisplacementCalculationService) {
+    this.yokeData.set(this.displacementCalculationService.calculateYokeData(
+      this.yokes(),
+      this.probe_type,
+      [],
+      this.coiltype,
+      this.coil,
+      this.measurementSetting
+    ));
+  }
 
   probe_type:ProbeType = {
     id: 0,
@@ -34,7 +47,7 @@ export class DisplacementVisualizationTestComponent {
     bandbreite: 150,
     schichthoehe: 416,
     durchmesser: 550,
-    toleranzbereich: 0,
+    toleranzbereich: 400,
     notiz: ""
   }
 

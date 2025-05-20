@@ -12,6 +12,7 @@ import { CoilsBackendService } from '../coil/services/coils-backend.service';
 import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
+import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 
 registerLocaleData(localeDe);
 
@@ -25,6 +26,7 @@ registerLocaleData(localeDe);
 })
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
+  yokeData = signal<{ x: number; y: number }[][]>([]);
   sensorValues: { [key: string]: number } = {}; 
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
@@ -39,6 +41,7 @@ export class StartMeasurementComponent implements OnDestroy {
 
   constructor(
     private webSocketService: WebSocketService,
+    private displacementCalculationService: DisplacementCalculationService,
     public measurementSettingsService: MeasurementSettingsService,
     private measurementSettingsBackendService: MeasurementSettingsBackendService,
     private measurementsBackendService: MeasurementsBackendService,
@@ -139,6 +142,8 @@ export class StartMeasurementComponent implements OnDestroy {
 
       // Initialisiere die Yokes und Sensoren
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
+      this.yokeData.set(this.displacementCalculationService.calculateYokeData
+        (this.yokes(), measurementProbeType, [], coiltype, coil, measurementSetting));
       
       this.startTime = new Date();
       this.measurementData = {};

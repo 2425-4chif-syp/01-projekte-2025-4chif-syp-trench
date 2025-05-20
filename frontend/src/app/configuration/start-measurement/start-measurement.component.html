@@ -46,9 +46,9 @@
 
   @if (isConnected) {
     <app-displacement-visualization [size]="512" 
-    [yokes]="yokes"
-    [measurementProbeType]="selectedMeasurementSetting!.probeType!"
-    [measurementProbes]="[]"
+    [yokeData]="yokeData"
+    [probeType]="selectedMeasurementSetting!.probeType!"
+    [probes]="[]"
     [coiltype]="selectedMeasurementSetting!.coil!.coiltype!"
     [coil]="selectedMeasurementSetting!.coil!"
     [measurementSetting]="selectedMeasurementSetting!"

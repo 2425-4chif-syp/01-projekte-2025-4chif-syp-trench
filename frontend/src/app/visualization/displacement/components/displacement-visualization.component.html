@@ -1,4 +1,4 @@
-@if (yokes().length === 0) {
+@if (yokeData().length === 0) {
   <div class="alert alert-danger mt-3">
     <strong>Fehler:</strong> Keine Daten zur Ausrichtungsvisualisierung vorhanden.
   </div>
@@ -146,7 +146,7 @@
     </svg>
 
     <app-coil-visualization
-      [n]="yokes().length"
+      [n]="coiltype.schenkel"
       [size]="size"
     ></app-coil-visualization>
   </div>

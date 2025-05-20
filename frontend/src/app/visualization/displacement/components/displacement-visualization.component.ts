@@ -18,9 +18,9 @@ import { Probe } from '../../../configuration/probe/interfaces/probe';
 })
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
-  @Input() yokes = signal<{sensors:number[]}[]>([]);
-  @Input() measurementProbeType:ProbeType = null!;
-  @Input() measurementProbes:Probe[] = [];
+  @Input() yokeData = signal<{ x: number; y: number }[][]>([]);
+  @Input() probeType:ProbeType = null!;
+  @Input() probes:Probe[] = [];
   @Input() coil:Coil = null!;
   @Input() coiltype:Coiltype = null!;
   @Input() measurementSetting:MeasurementSetting = null!;
@@ -45,9 +45,9 @@ export class DisplacementVisualizationComponent {
     
     effect(() => {
       // Re-run updateVisualization whenever any of these signals/inputs change
-      this.yokes();
-      this.measurementProbeType;
-      this.measurementProbes;
+      this.yokeData();
+      this.probeType;
+      this.probes;
       this.coil;
       this.coiltype;
       this.measurementSetting;
@@ -56,16 +56,7 @@ export class DisplacementVisualizationComponent {
   }
 
   public updateVisualization():void {
-    const result = this.displacementCalculationService.calculateYokeData(
-      this.yokes(),
-      this.measurementProbeType,
-      this.measurementProbes,
-      this.coiltype,
-      this.coil,
-      this.measurementSetting
-    );
-
-    this.calcResults = result.map(branch => {
+    this.calcResults = this.yokeData().map(branch => {
       return branch.map(sensor => {
         const length = this.calculateVectorLength(sensor.x, sensor.y);
         const angle = this.calculateVectorAngle(sensor.x, sensor.y);
@@ -88,7 +79,7 @@ export class DisplacementVisualizationComponent {
   }
 
   public get rotationOffset():number {
-    switch (this.yokes().length) {
+    switch (this.coiltype.schenkel) {
       case 2:
         return 180;
       case 3:
