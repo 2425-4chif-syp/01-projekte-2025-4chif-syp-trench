@@ -66,12 +66,12 @@
 }
 
 /* Hover-Effekt für die obere Hälfte */
-.card-action-top:hover ~ .card-img-container .card-img {
+.hover-card:hover .card-img {
   filter: brightness(50%);
 }
 
 /* Hover-Effekt für die untere Hälfte */
-.card-action-bottom:hover ~ .card-img-container .card-img {
+.hover-card:hover .card-img {
   filter: brightness(50%);
 }
 
