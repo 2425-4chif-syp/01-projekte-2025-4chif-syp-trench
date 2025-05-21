@@ -138,11 +138,11 @@ export class DisplacementVisualizationComponent {
   public get toleranceCircleRadius():number {
     return this.finalVector.length / this.averageLength / this.m_tot * this.coiltype.toleranzbereich! * 6;
   }
+  public get isWithinTolerance():boolean {
+    return this.m_tot < this.coiltype.toleranzbereich!;
+  }
   public get toleranceColor():string {
-    if (this.m_tot < this.coiltype.toleranzbereich!) {
-      return 'lime';
-    }
-    return 'red';
+    return this.isWithinTolerance ? '#00FF00' : '#FF0000';
   }
 
   public getArrowColor(index:number):string {
