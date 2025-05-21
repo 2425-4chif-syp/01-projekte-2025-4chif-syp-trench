@@ -15,10 +15,25 @@
       [attr.transform]="'rotate('+rotationOffset+')'"
     >
       <g [attr.transform]="'translate('+internalTranslationOffset+', '+internalTranslationOffset+') scale('+size/512+')'">
+        <!-- Background circle -->
+        <g opacity="0.25">
+          <circle cx="12" cy="12" r="6" fill="white" />
+        </g>
+
         <g [attr.transform]="">
-          <g>
-            <!-- Tolerance circle -->
-            <circle cx="12" cy="12" [attr.r]="toleranceCircleRadius" fill="gray" />
+          <!-- Tolerance background -->
+          <g opacity="0.125">
+            <circle cx="12" cy="12" r="6" fill="red" />
+            <circle cx="12" cy="12" [attr.r]="toleranceCircleRadius" fill="lime" />
+          </g>
+
+          <!-- Tolerance circle -->
+          <g (mouseenter)="onResultArrowMouseEnter()" (mouseleave)="onArrowMouseLeave()">
+            <circle cx="12" cy="12" [attr.r]="finalVector.length / averageLength * 6" 
+            fill="none" 
+            [attr.stroke]="toleranceColor" 
+            [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.125' : '0.0625'"
+            />
           </g>
 
           <g (mouseenter)="onBorderMouseEnter()" (mouseleave)="onBorderMouseLeave()">
