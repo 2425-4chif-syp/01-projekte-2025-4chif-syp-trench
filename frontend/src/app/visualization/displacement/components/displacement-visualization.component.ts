@@ -135,18 +135,14 @@ export class DisplacementVisualizationComponent {
     }
   }
 
-  public get toleranceFraction():number {
-    return this.finalVector.length / this.averageLength / this.m_tot * this.coiltype.toleranzbereich!;
-  }
   public get toleranceCircleRadius():number {
-    console.log(this.finalVector.length, this.averageLength, this.m_tot, this.coiltype.toleranzbereich);
-    return this.toleranceFraction * 6; 
+    return this.finalVector.length / this.averageLength / this.m_tot * this.coiltype.toleranzbereich! * 6;
   }
   public get toleranceColor():string {
-    if (this.toleranceFraction >= 1) {
-      return 'red';
+    if (this.m_tot < this.coiltype.toleranzbereich!) {
+      return 'lime';
     }
-    return 'lime';
+    return 'red';
   }
 
   public getArrowColor(index:number):string {

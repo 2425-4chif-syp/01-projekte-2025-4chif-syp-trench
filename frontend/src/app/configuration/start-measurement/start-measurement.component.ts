@@ -44,7 +44,6 @@ export class StartMeasurementComponent implements OnDestroy {
     private webSocketService: WebSocketService,
     private displacementCalculationService: DisplacementCalculationService,
     public measurementSettingsService: MeasurementSettingsService,
-    private measurementSettingsBackendService: MeasurementSettingsBackendService,
     private measurementsBackendService: MeasurementsBackendService,
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
@@ -119,11 +118,11 @@ export class StartMeasurementComponent implements OnDestroy {
         throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
       }
 
-      let measurementProbeType = this.selectedMeasurementSetting!.probeType;
-      if (measurementProbeType === null) {
-        measurementProbeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
+      let probeType = this.selectedMeasurementSetting!.probeType;
+      if (probeType === null) {
+        probeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
       }
-      this.selectedMeasurementSetting!.probeType = measurementProbeType;
+      this.selectedMeasurementSetting!.probeType = probeType;
 
 
       const yokeCount = coiltype.schenkel;
@@ -137,18 +136,7 @@ export class StartMeasurementComponent implements OnDestroy {
 
       // Initialisiere die Yokes und Sensoren
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
-      const calcResult = this.displacementCalculationService.calculateYokeData(
-        this.yokes(),
-        measurementProbeType,
-        [],
-        coiltype,
-        coil,
-        measurementSetting
-      );
-
-      this.m_tot = calcResult.m_tot;
-      this.yokeData.set(calcResult.F); 
-
+      
       this.startTime = new Date();
       this.measurementData = {};
       for (let i = 0; i < yokeCount; i++) {
@@ -189,7 +177,19 @@ export class StartMeasurementComponent implements OnDestroy {
             updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
             return updatedYokes;
           });
-          
+
+          const result = this.displacementCalculationService.calculateYokeData(
+            this.yokes(),
+            probeType!,
+            [],
+            coiltype!,
+            coil!,
+            measurementSetting!
+          );
+
+          this.yokeData.set(result.F);
+          this.m_tot = result.m_tot;
+
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;
           if (this.measurementData[key]) {
             this.measurementData[key].push(sensorValue);
