@@ -19,6 +19,7 @@ import { Probe } from '../../../configuration/probe/interfaces/probe';
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
   @Input() yokeData = signal<{ x: number; y: number }[][]>([]);
+  @Input() m_tot:number = 0;
   @Input() probeType:ProbeType = null!;
   @Input() probes:Probe[] = [];
   @Input() coil:Coil = null!;
@@ -135,7 +136,8 @@ export class DisplacementVisualizationComponent {
   }
 
   public get toleranceCircleRadius():number {
-    return this.finalVector.length / this.averageLength * 6; 
+    console.log(this.finalVector.length, this.averageLength, this.m_tot, this.coiltype.toleranzbereich);
+    return this.finalVector.length / this.averageLength / this.m_tot * this.coiltype.toleranzbereich! * 6; 
   }
 
   public getArrowColor(index:number):string {
