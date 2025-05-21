@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,18 +8,26 @@ namespace TrenchAPI.Core.Entities
     {
         [Required]
         public int MesseinstellungID { get; set; }
-        
-        [ForeignKey("MesseinstellungID")]
+
+        [ForeignKey(nameof(MesseinstellungID))]
         public virtual Messeinstellung Messeinstellung { get; set; }
-        
-        [Required]
+
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Anfangszeitpunkt { get; set; }
-        
-        [Required]
+
+        [Column(TypeName = "timestamp with time zone")]
         public DateTime Endzeitpunkt { get; set; }
-        
-        public string Notiz { get; set; }
-        
-        public virtual ICollection<Messsonde> Messsonden { get; set; }
+
+        [Column(TypeName = "varchar")]
+        public string Name { get; set; } = "";
+
+        [Column(TypeName = "decimal")]
+        public decimal Tauchkernstellung { get; set; }
+
+        [Column(TypeName = "decimal")]
+        public decimal Pruefspannung { get; set; }
+
+        [Column(TypeName = "varchar")]
+        public string Notiz { get; set; } = "";
     }
 }

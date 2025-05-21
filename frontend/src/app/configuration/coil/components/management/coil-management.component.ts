@@ -78,7 +78,7 @@ export class CoilManagementComponent {
 
     this.saveError = true; // Fehlerprüfung aktivieren
 
-    const requiredFields = ['ur', 'einheit', 'auftragsnummer', 'auftragsPosNr', 'omega'];
+    const requiredFields = ['einheit', 'auftragsPosNr', 'bemessungsfrequenz', 'bemessungsspannung'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {

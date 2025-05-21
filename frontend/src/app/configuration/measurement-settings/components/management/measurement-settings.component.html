@@ -31,9 +31,9 @@
                 <div class="mb-3 col-6">
                   <label class="form-label">Messonden-Typ: <span class="text-danger">*</span></label>
                   <div class="border p-2 rounded bg-light">
-                    <div *ngIf="selectedMeasurementSetting?.measurementProbeType; else noProbe">
-                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.measurementProbeTypeId}}</p>
-                      <p class="mb-0"><strong>Breite:</strong> {{ selectedMeasurementSetting?.measurementProbeType!.breite }}</p>
+                    <div *ngIf="selectedMeasurementSetting?.probeType; else noProbe">
+                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.probeTypeId}}</p>
+                      <p class="mb-0"><strong>Breite:</strong> {{ selectedMeasurementSetting?.probeType!.breite }}</p>
                     </div>
                     <ng-template #noProbe>
                       <p class="text-danger mb-0">Kein Messsondentyp ausgewählt</p>
@@ -43,8 +43,8 @@
                     <button
                       class="btn btn-sm mt-2"
                       [ngClass]="{
-                        'btn-outline-danger': saveError && isFieldInvalid('measurementProbeTypeId'),
-                        'btn-outline-secondary': !(saveError && isFieldInvalid('measurementProbeTypeId'))
+                        'btn-outline-danger': saveError && isFieldInvalid('probeTypeId'),
+                        'btn-outline-secondary': !(saveError && isFieldInvalid('probeTypeId'))
                       }"
                       (click)="openProbeSelect()">
                       Messsondentyp ändern...
@@ -54,6 +54,7 @@
                 </div>
               </div>
 
+              <!--
               <div class="mb-3">
                 <label for="bemessungs-spannung" class="form-label">Bemessungsspannung [kV]: <span class="text-danger">*</span></label>
                 <input type="number" class="form-control" id="bemessungs-spannung"
@@ -62,8 +63,9 @@
                        min="0"
                        [class.is-invalid]="saveError && isFieldInvalid('bemessungsspannung')">
               </div>
-
-
+              -->
+              
+              <!--
               <div class="mb-3">
                 <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz [Hz]: <span class="text-danger">*</span></label>
                 <input type="number" class="form-control" id="bemessungs-frequenz"
@@ -72,8 +74,20 @@
                        min="0"
                        [class.is-invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
               </div>
+              -->
 
+              <div class="mb-3">
+                <label for="name" class="form-label">Name: <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" [(ngModel)]="selectedMeasurementSetting!.name"
+                       placeholder="Name">
+              </div>  
+              
+              <!--
+                  [(ngModel)]="selectedMeasurementSetting!.name"
+                  [class.is-invalid]="saveError && isFieldInvalid('name')">
 
+              -->
+              
               <div class="mb-3">
                 <label for="sonden-pro-schenkel" class="form-label">Sonden pro Schenkel: <span class="text-danger">*</span></label>
                 <select class="form-select" id="sonden-pro-schenkel"
@@ -85,7 +99,7 @@
                 </select>
               </div>
 
-
+              <!--
               <div class="mb-3">
                 <label for="mess-stärke" class="form-label">Prüfspannung [V]: <span class="text-danger">*</span></label>
                 <input type="number" class="form-control" id="mess-stärke"
@@ -94,6 +108,7 @@
                        min="0"
                        [class.is-invalid]="saveError && isFieldInvalid('pruefspannung')">
               </div>
+              -->
 
               <div class="text-center mt-4">
                  <div class="d-flex justify-content-between mt-4">

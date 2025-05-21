@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { Measurement } from '../interfaces/measurement.model';
-import { BackendService } from '../../../backend.service';
-import { MeasurementManagementComponent } from '../../measurement-management/components/measurement-management.component';
+import { MeasurementSettingsBackendService } from '../../measurement-settings/services/measurement-settings-backend.service';
+import { MeasurementsBackendService } from './measurement-backend.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +17,16 @@ export class MeasurementHistoryService implements ListService<Measurement> {
       id: null,
       measurementSettings: null,
       measurementSettingsId: null,
-      startTime: null,
-      endTime: null,
+      anfangszeitpunkt: null,
+      endzeitpunkt: null,
+      name: '',
+      tauchkernstellung: null,
+      pruefspannung: null,
       notiz: null,
     }
   }
 
-  constructor(private backendService: BackendService) {}
+  constructor(private measurementBackendService: MeasurementsBackendService, private measurementSettingsBackendService: MeasurementSettingsBackendService) {}
   
   public getCopyElement(id: number): Measurement {
     id = Number(id);
@@ -37,16 +40,16 @@ export class MeasurementHistoryService implements ListService<Measurement> {
   }
 
   public async reloadElements(): Promise<void> {
-    this.elements = await this.backendService.getAllMeasurements();
+    this.elements = await this.measurementBackendService.getAllMeasurements();
     if (this.selectedElementCopy?.measurementSettingsId != null) {
-      this.selectedElementCopy!.measurementSettings = await this.backendService.getMeasurementSettings(this.selectedElementCopy?.measurementSettingsId);
+      this.selectedElementCopy!.measurementSettings = await this.measurementSettingsBackendService.getMeasurementSettings(this.selectedElementCopy?.measurementSettingsId);
     }
   }
 
   public async reloadElementWithId(id: number): Promise<Measurement> {
     id = Number(id);
     
-    const measurement: Measurement = await this.backendService.getMeasurement(id);
+    const measurement: Measurement = await this.measurementBackendService.getMeasurement(id);
     const index: number = this.elements.findIndex((element: Measurement) => element.id === id);
     if (index === -1) {
       this.elements.push(measurement);
@@ -66,12 +69,12 @@ export class MeasurementHistoryService implements ListService<Measurement> {
       return;
     }
 
-    await this.backendService.updateMeasurement(measurement);
+    await this.measurementBackendService.updateMeasurement(measurement);
   }
 
   public async postSelectedElement(): Promise<Measurement> {
     if (!this.selectedElementCopy) throw new Error("No element selected.");
-    const response = await this.backendService.addMeasurement(this.selectedElementCopy);
+    const response = await this.measurementBackendService.addMeasurement(this.selectedElementCopy);
     this.elements.push(response);
     return response;
   }
@@ -79,7 +82,7 @@ export class MeasurementHistoryService implements ListService<Measurement> {
   public async deleteElement(id: number): Promise<void> {
     const index = this.elements.findIndex(e => e.id === id);
     if (index === -1) throw new Error(`Element with ID ${id} not found.`);
-    await this.backendService.deleteMeasurement(this.elements[index]);
+    await this.measurementBackendService.deleteMeasurement(this.elements[index]);
     this.elements.splice(index, 1);
     this.selectedElementCopy = null;  }
   

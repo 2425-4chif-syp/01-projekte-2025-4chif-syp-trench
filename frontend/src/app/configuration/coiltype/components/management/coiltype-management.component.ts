@@ -50,7 +50,7 @@ export class CoiltypeManagementComponent {
   
       this.saveError = true; 
   
-      const requiredFields = ['name', 'bandbreite', 'schichthoehe', 'durchmesser'];
+      const requiredFields = ['name', 'bandbreite', 'schichthoehe', 'durchmesser', 'toleranzbereich'];
       const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
   
       if (invalidFields.length > 0) {

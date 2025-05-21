@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BackendService } from '../../../backend.service';
 import { ListService } from '../../../generic-list/services/list-service';
 import { MeasurementSetting } from '../interfaces/measurement-settings';
-import {Coil} from "../../coil/interfaces/coil";
+import { MeasurementSettingsBackendService } from './measurement-settings-backend.service';
+import { CoilsBackendService } from '../../coil/services/coils-backend.service';
+import { ProbeTypesBackendService } from '../../probe-type/services/probe-types-backend.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,21 +14,17 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   public selectedElementIsNew: boolean = false;
   public isCoilSelector: boolean = false;
 
-  constructor(private backendService: BackendService) {}
+  constructor(private measurementSettingsBackendService: MeasurementSettingsBackendService, private coilBackendService: CoilsBackendService, private probeTypeBackendService: ProbeTypesBackendService) {}
 
   public get newElement(): MeasurementSetting {
     return {
       id: null,
-      coil: null,
+      name: "",
       coilId: null,
-      measurementProbeType: null,
-      measurementProbeTypeId: null,
-      //wicklungszahl: null,
-      bemessungsspannung: null,
-      bemessungsfrequenz: null,
-      pruefspannung: null,
-      sondenProSchenkel: null,
-      notiz: null
+      probeTypeId: null,
+      coil: null,
+      probeType: null,
+      sondenProSchenkel: 1,
     };
   }
 
@@ -45,20 +42,20 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   }
 
   public async reloadElements(): Promise<void> {
-    this.elements = await this.backendService.getAllMeasurementSettings();
+    this.elements = await this.measurementSettingsBackendService.getAllMeasurementSettings();
 
     console.log('Reload elements');
 
-    if (this.selectedElementCopy?.coilId! != null && this.selectedElementCopy?.measurementProbeType! != null) {
-      this.selectedElementCopy!.coil = await this.backendService.getCoil(this.selectedElementCopy?.coilId!);
-      this.selectedElementCopy!.measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy?.measurementProbeTypeId!);
+    if (this.selectedElementCopy?.coilId! != null && this.selectedElementCopy?.probeType! != null) {
+      this.selectedElementCopy!.coil = await this.coilBackendService.getCoil(this.selectedElementCopy?.coilId!);
+      this.selectedElementCopy!.probeType = await this.probeTypeBackendService.getProbeType(this.selectedElementCopy?.probeTypeId!);
     }
   }
 
   public async reloadElementWithId(id: number): Promise<MeasurementSetting> {
     id = Number(id);
 
-    const setting: MeasurementSetting = await this.backendService.getMeasurementSettings(id);
+    const setting: MeasurementSetting = await this.measurementSettingsBackendService.getMeasurementSettings(id);
     const index: number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(setting);
@@ -78,13 +75,13 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       return;
     }
 
-    await this.backendService.updateMeasurementSettings(measurementSetting);
+    await this.measurementSettingsBackendService.updateMeasurementSettings(measurementSetting);
   }
 
 
   public async postSelectedElement(): Promise<MeasurementSetting> {
     if (!this.selectedElementCopy) throw new Error("No element selected.");
-    const response = await this.backendService.addMeasurementSettings(this.selectedElementCopy);
+    const response = await this.measurementSettingsBackendService.addMeasurementSettings(this.selectedElementCopy);
     this.elements.push(response);
     return response;
   }
@@ -92,7 +89,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   public async deleteElement(id: number): Promise<void> {
     const index = this.elements.findIndex(e => e.coilId === id);
     if (index === -1) throw new Error(`Element with ID ${id} not found.`);
-    await this.backendService.deleteMeasurementSettings(this.elements[index]);
+    await this.measurementSettingsBackendService.deleteMeasurementSettings(this.elements[index]);
     this.elements.splice(index, 1);
     this.selectedElementCopy = null;
   }
@@ -107,11 +104,11 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
     this.selectedElementCopy = this.getCopyElement(measurementIdNumber);
 
     if (this.selectedElementCopy?.coilId != null) {
-      this.selectedElementCopy.coil = await this.backendService.getCoil(this.selectedElementCopy?.coilId);
+      this.selectedElementCopy.coil = await this.coilBackendService.getCoil(this.selectedElementCopy?.coilId);
     }
 
-    if (this.selectedElementCopy?.measurementProbeTypeId != null) {
-      this.selectedElementCopy.measurementProbeType = await this.backendService.getMeasurementProbeType(this.selectedElementCopy.measurementProbeTypeId);
+    if (this.selectedElementCopy?.probeTypeId != null) {
+      this.selectedElementCopy.probeType = await this.probeTypeBackendService.getProbeType(this.selectedElementCopy.probeTypeId);
     }
   }
 }

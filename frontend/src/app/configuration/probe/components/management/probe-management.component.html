@@ -1,0 +1,83 @@
+<div class="container mt-4 d-flex flex-column align-items-center">
+    <div class="probe-container text-center mb-3">
+        <h2 *ngIf="probesService.selectedElementIsNew">Neue Sonde</h2>
+        <select *ngIf="!probesService.selectedElementIsNew && probesService.elements.length > 0"
+            class="probe-selector form-select w-150 mx-auto" id="probeSelect"
+            [(ngModel)]="selectedProbeId" (ngModelChange)="onProbeSelectionChange($event)">
+            <option *ngFor="let probe of probesService.elements" [value]="probe.id">Sonde #{{ probe.id }}</option>
+        </select>
+    </div>
+  
+    <div *ngIf="selectedProbe" class="card shadow-sm p-4 w-100" style="max-width: 850px; min-height: 600px;">
+        <div class="mb-3">
+            <label class="form-label">Sondentyp: <span class="text-danger">*</span></label>
+            <div class="border p-2 rounded bg-light">
+                <div *ngIf="selectedProbe.probeType; else noProbetype">
+                    <p class="mb-1"><strong>ID:</strong> {{ selectedProbetype!.id }}</p>
+                    <p class="mb-0"><strong>Name:</strong> {{ selectedProbetype!.name }}</p>
+                </div>
+                <ng-template #noProbetype>
+                    <p class="text-danger mb-0">Kein Sondentyp ausgewählt</p>
+                </ng-template>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openProbetypeSelect()">Sondentyp ändern...</button>
+        </div>
+  
+        <!-- Formulareingaben -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Name: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="name" placeholder="Name"
+                [(ngModel)]="selectedProbe.name" 
+                [class.is-invalid]="saveError && isFieldInvalid('name')">
+            <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
+        </div>
+  
+        <div class="mb-3">
+            <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor: <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="kalibrierungsfaktor" placeholder="Kalibrierungsfaktor"
+                [(ngModel)]="selectedProbe.kalibrierungsfaktor" min="0"
+                [class.is-invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')">
+            <div class="invalid-feedback">Bitte geben Sie einen Kalibrierungsfaktor ein.</div>
+        </div>
+  
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+            <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+            <button *ngIf="!probesService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+        </div>
+  
+        <!-- Erfolgsmeldung -->
+        <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+            {{ saveMessage }}
+        </div>
+    </div>
+  
+    <p class="text-danger text-center mt-3" *ngIf="!selectedProbe">Fehler: Sonde konnte nicht geladen werden.</p>
+  </div>
+  
+  <div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
+    [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title">Sonde löschen?</h5>
+        </div>
+  
+        <div class="modal-body">
+          <p>Sind Sie sicher, dass Sie diese Sonde löschen möchten?</p>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+            Abbrechen
+          </button>
+          <button type="button" class="btn btn-danger" (click)="deleteProbe()">
+            Löschen
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -5,22 +5,25 @@ namespace TrenchAPI.Core.Entities
 {
     public class SpuleTyp : EntityObject
     {
-        [Column(TypeName = "VARCHAR(100)")]
+        [Column(TypeName = "text")]
         public string Name { get; set; } = "";
 
         [Column(TypeName = "int")]
-        public int Schenkel { get; set; }
+        public int Schenkelzahl { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
-        public int Bandbreite { get; set; }
+        [Column(TypeName = "decimal")]
+        public decimal Bandbreite { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
-        public int Schichthoehe { get; set; }
+        [Column(TypeName = "decimal")]
+        public decimal Schichthoehe { get; set; }
 
-        [Column(TypeName = "decimal(8,3)")]
-        public int Durchmesser { get; set; }
+        [Column(TypeName = "decimal")]
+        public decimal Durchmesser { get; set; }
 
-        [Column(TypeName = "VARCHAR(250)")]
+        [Column(TypeName = "int")]
+        public int Toleranzbereich { get; set; }
+
+        [Column(TypeName = "text")]
         public string Notiz { get; set; } = "";
     }
 }

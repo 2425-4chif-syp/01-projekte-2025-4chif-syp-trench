@@ -7,9 +7,12 @@ import { DisplacementVisualizationComponent } from "../../visualization/displace
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
-import { Coil } from '../coil/interfaces/coil';
-import { BackendService } from '../../backend.service';
-import { Coiltype } from '../coiltype/interfaces/coiltype';
+import { MeasurementSettingsBackendService } from '../measurement-settings/services/measurement-settings-backend.service';
+import { CoilsBackendService } from '../coil/services/coils-backend.service';
+import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
+import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
+import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
+import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 
 registerLocaleData(localeDe);
 
@@ -23,7 +26,10 @@ registerLocaleData(localeDe);
 })
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
+  yokeData = signal<{ x: number; y: number }[][]>([]);
+  m_tot: number = 0;
   sensorValues: { [key: string]: number } = {}; 
+
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
   note: string = '';
@@ -37,14 +43,22 @@ export class StartMeasurementComponent implements OnDestroy {
 
   constructor(
     private webSocketService: WebSocketService,
+    private displacementCalculationService: DisplacementCalculationService,
     public measurementSettingsService: MeasurementSettingsService,
-    private backendService: BackendService
+    private measurementsBackendService: MeasurementsBackendService,
+    private coiltypesBackendService: CoiltypesBackendService,
+    private coilsBackendService: CoilsBackendService,
+    private probeTypesBackendService: ProbeTypesBackendService
   ) {
     this.loadMeasurementSettings();
   }
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
+  }
+
+  public get isWithinTolerance(): boolean {
+    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
   }
 
   async loadMeasurementSettings(): Promise<void> {
@@ -62,24 +76,70 @@ export class StartMeasurementComponent implements OnDestroy {
   async startMeasurement(): Promise<void> {
     if (!this.isValid()) {
       this.showIdError = true;
+      this.error = 'Bitte wählen Sie eine gültige Messeinstellung aus';
       return;
     }
 
     try {
-      let coil:Coil|null = this.selectedMeasurementSetting!.coil ?? null;
-      
-      if (coil === null) {
-        coil = await this.backendService.getCoil(this.selectedMeasurementSetting?.coilId!);
+      // Hole die Messeinstellung direkt vom Backend
+      const measurementSetting = await this.measurementSettingsService.reloadElementWithId(this.measurementSettingId!);
+      if (!measurementSetting) {
+        this.showIdError = true;
+        this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
+        throw new Error('Keine Messeinstellung ausgewählt');
       }
-      this.selectedMeasurementSetting!.coil = coil;
-      let coiltype:Coiltype|null = coil!.coiltype ?? null;
-      if (coiltype === null) {
-        coiltype = await this.backendService.getCoiltype(coil!.coiltypeId!);
-      }
-      this.selectedMeasurementSetting!.coil.coiltype = coiltype;
 
-      const yokeCount:number = coiltype.schenkel!;
-      const sensorCount:number = this.selectedMeasurementSetting!.sondenProSchenkel!; 
+      // Lade zuerst die Coil-Informationen
+      let coil = measurementSetting.coil;
+      if (!coil && measurementSetting.coilId) {
+        coil = await this.coilsBackendService.getCoil(measurementSetting.coilId);
+        if (!coil) {
+          throw new Error('Coil konnte nicht geladen werden');
+        }
+        measurementSetting.coil = coil;
+      }
+
+      if (!coil) {
+        throw new Error('Keine Coil-Informationen verfügbar');
+      }
+
+      // Dann lade die Coiltype-Informationen
+      let coiltype = coil.coiltype;
+      if (!coiltype && coil.coiltypeId) {
+        console.log('Lade Coiltype mit ID:', coil.coiltypeId);
+        coiltype = await this.coiltypesBackendService.getCoiltype(coil.coiltypeId);
+        if (!coiltype) {
+          throw new Error('Coiltype konnte nicht geladen werden');
+        }
+        coil.coiltype = coiltype;
+      }
+
+      if (!coiltype) {
+        throw new Error('Keine Coiltype-Informationen verfügbar');
+      }
+
+      // Überprüfe die Schenkelzahl
+      if (!coiltype.schenkel) {
+        throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
+      }
+
+      let probeType = this.selectedMeasurementSetting!.probeType;
+      if (probeType === null) {
+        probeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
+      }
+      this.selectedMeasurementSetting!.probeType = probeType;
+
+
+      const yokeCount = coiltype.schenkel;
+      const sensorCount = measurementSetting.sondenProSchenkel || 0;
+      
+      if (sensorCount <= 0) {
+        throw new Error('Ungültige Anzahl von Sonden pro Schenkel');
+      }
+
+      console.log(`Initialisiere ${yokeCount} Schenkel mit je ${sensorCount} Sensoren`);
+
+      // Initialisiere die Yokes und Sensoren
       this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
       
       this.startTime = new Date();
@@ -91,10 +151,12 @@ export class StartMeasurementComponent implements OnDestroy {
         }
       }
       
+      // Verbinde mit WebSocket
       await this.webSocketService.connect();
       this.isConnected = true;
       this.showIdError = false;
 
+      // Sende Konfiguration
       const config = {
         type: 'config',
         measurementSettingId: this.measurementSettingId,
@@ -105,8 +167,6 @@ export class StartMeasurementComponent implements OnDestroy {
 
       this.webSocketService.getMessages().subscribe({
         next: (message: string) => {
-          console.log('Received message:', message);
-  
           const [topic, value] = message.split(':'); 
           const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
           const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
@@ -122,7 +182,19 @@ export class StartMeasurementComponent implements OnDestroy {
             updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
             return updatedYokes;
           });
-          
+
+          const result = this.displacementCalculationService.calculateYokeData(
+            this.yokes(),
+            probeType!,
+            [],
+            coiltype!,
+            coil!,
+            measurementSetting!
+          );
+
+          this.yokeData.set(result.F);
+          this.m_tot = result.m_tot;
+
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;
           if (this.measurementData[key]) {
             this.measurementData[key].push(sensorValue);
@@ -155,12 +227,17 @@ export class StartMeasurementComponent implements OnDestroy {
             messeinstellungID: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
-            notiz: this.note,
-            messsonden: this.createMesssondenData()
+            notiz: this.note || "",
+            messsonden: this.createMesssondenData().map(sonde => ({
+              schenkel: sonde.schenkel,
+              position: sonde.position,
+              messwerte: sonde.messwerte,
+              durchschnittswert: sonde.durchschnittswert
+            }))
           };
           
           console.log('Speichere Messung:', measurementData);
-          await this.backendService.saveMeasurement(measurementData);
+          await this.measurementsBackendService.saveMeasurement(measurementData);
           console.log('Messung erfolgreich gespeichert');
         }
       } catch (error) {

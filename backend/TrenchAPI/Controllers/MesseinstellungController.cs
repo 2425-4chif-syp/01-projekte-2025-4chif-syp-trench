@@ -26,14 +26,23 @@ namespace TrenchAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Messeinstellung>>> GetMesseinstellungen()
         {
-            return await _context.Messeinstellung.ToListAsync();
+            return await _context.Messeinstellung
+                .Include(me => me.Spule)
+                    .ThenInclude(sp => sp.SpuleTyp)
+                .Include(me => me.SondenTyp)
+                .ToListAsync();
         }
+
 
         // GET: api/Messeinstellung/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Messeinstellung>> GetMesseinstellung(int id)
         {
-            var messeinstellung = await _context.Messeinstellung.FindAsync(id);
+            var messeinstellung = await _context.Messeinstellung
+                                            .Include(me => me.Spule)
+                                                .ThenInclude(sp => sp.SpuleTyp)
+                                            .Include(me => me.SondenTyp)
+                                            .FirstOrDefaultAsync(s => s.ID == id);
 
             if (messeinstellung == null)
             {
@@ -87,7 +96,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Die angegebene Spule existiert nicht.");
             }
 
-            if (!_context.MesssondenTyp.Any(m => m.ID == messeinstellungDto.MesssondenTypID))
+            if (!_context.SondenTyp.Any(m => m.ID == messeinstellungDto.SondenTypID))
             {
                 return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
             }
@@ -96,17 +105,13 @@ namespace TrenchAPI.Controllers
             {
                 ID = messeinstellungDto.ID,
                 SpuleID = messeinstellungDto.SpuleID,
-                MesssondenTypID = messeinstellungDto.MesssondenTypID,
-                Sonden_pro_schenkel = messeinstellungDto.Sonden_pro_schenkel,
-                Bemessungsspannung = messeinstellungDto.Bemessungsspannung,
-                Bemessungsfrequenz = messeinstellungDto.Bemessungsfrequenz,
-                Pruefspannung = messeinstellungDto.Pruefspannung,
-                Notiz = messeinstellungDto.Notiz
+                SondenTypID = messeinstellungDto.SondenTypID,
+                SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
+                Name = messeinstellungDto.Name,
             };
 
-            // Optionale Navigation Properties setzen
-            messeinstellung.Spule = await _context.Spule.FindAsync(messeinstellung.SpuleID);
-            messeinstellung.MesssondenTyp = await _context.MesssondenTyp.FindAsync(messeinstellung.MesssondenTypID);
+            messeinstellung.Spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(m => m.ID == messeinstellung.SpuleID);
+            messeinstellung.SondenTyp = await _context.SondenTyp.FindAsync(messeinstellung.SondenTypID);
 
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();

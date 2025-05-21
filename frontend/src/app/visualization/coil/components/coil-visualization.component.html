@@ -1,4 +1,6 @@
-<div class="container">
+<div class="container"
+    [style.height.px]="size"
+    [style.width.px]="size">
     <img
         class="coil-image"
         [src]="svgUrl"
@@ -6,8 +8,13 @@
         (loadstart)="onImageLoadStart()"
         (load)="onImageLoad()"
         (error)="onImageError()"
-        [style.height.px]="size"
+        [style.width.px]="size"
+        [style.transform]="'rotate('+rotationOffset+'deg) translate('+positionOffset.x*size+'px, '+positionOffset.y*size+'px)'"
     />
+
+    <!--
+    <div id="center-dot"></div>
+    -->
 </div>
 @if (!imageLoaded()) {
     @if (!imageLoadError()) {

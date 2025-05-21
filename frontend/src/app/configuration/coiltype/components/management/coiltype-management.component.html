@@ -60,6 +60,14 @@
                   <div class="invalid-feedback">Bitte geben Sie einen gültigen Durchmesser ein.</div>
               </div>
 
+              <div class="mb-3">
+                <label for="toleranzbereich" class="form-label">Toleranzbereich (kg):</label>
+                <input type="number" class="form-control" id="toleranzbereich" placeholder="Toleranzbereich in mm"
+                    min="0" [(ngModel)]="selectedCoiltype.toleranzbereich"
+                    [class.is-invalid]="saveError && isFieldInvalid('toleranzbereich')">
+                <div class="invalid-feedback">Bitte geben Sie einen gültigen Toleranzbereich ein.</div>
+            </div>
+
               <div class="form-group mb-4">
                 <label for="content">Notiz:</label>
                 <div class="content-editor">
@@ -95,8 +103,7 @@
       <!-- Visualisierung -->
       <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
           <app-coil-visualization *ngIf="selectedCoiltype"
-              [n]="selectedCoiltype.schenkel"
-              [size]="512">
+              [n]="selectedCoiltype.schenkel">
           </app-coil-visualization>
       </div>
   </div>

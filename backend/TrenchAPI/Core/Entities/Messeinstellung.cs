@@ -5,26 +5,22 @@ namespace TrenchAPI.Core.Entities
 {
     public class Messeinstellung : EntityObject
     {
-        [ForeignKey(nameof(SpuleID))]
-        public Spule? Spule { get; set; }
-
+        [Required]
         public int SpuleID { get; set; }
 
-        [ForeignKey(nameof(MesssondenTypID))]
-        public MesssondenTyp? MesssondenTyp { get; set; }
+        [ForeignKey(nameof(SpuleID))]
+        public virtual Spule Spule { get; set; }
 
-        public int MesssondenTypID { get; set; }
+        [Required]
+        public int SondenTypID { get; set; }
+
+        [ForeignKey(nameof(SondenTypID))]
+        public virtual SondenTyp SondenTyp { get; set; }
+
+        [Column(TypeName = "varchar")]
+        public string Name { get; set; } = "";
 
         [Column(TypeName = "int")]
-        public int Sonden_pro_schenkel {  get; set; }
-
-        public decimal Bemessungsspannung { get; set; }
-
-        [Column(TypeName = "decimal(8,3)")]
-        public decimal Bemessungsfrequenz { get; set; }
-
-        public decimal Pruefspannung { get; set; }
-
-        public string Notiz { get; set; } = "";
+        public int SondenProSchenkel { get; set; }
     }
 }

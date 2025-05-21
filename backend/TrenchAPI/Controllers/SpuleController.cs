@@ -93,11 +93,11 @@ namespace TrenchAPI.Controllers
             {
                 ID = spuleDto.ID,
                 SpuleTypID = spuleDto.SpuleTypID,
-                Ur = spuleDto.Ur,
-                Einheit = spuleDto.Einheit,
-                Auftragsnummer = spuleDto.Auftragsnummer,
+                Bemessungsspannung = spuleDto.Bemessungsspannung,
+                Bemessungsfrequenz = spuleDto.Bemessungsfrequenz,
+                Auftragsnr = spuleDto.Auftragsnr,
                 AuftragsPosNr = spuleDto.AuftragsPosNr,
-                Omega = spuleDto.Omega,
+                Einheit = spuleDto.Einheit,
             };
 
             var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypID);
