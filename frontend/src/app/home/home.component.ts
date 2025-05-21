@@ -21,20 +21,28 @@ export class HomeComponent {
       });
     }
 
-  navigateToCoilManagement() {
-    this.router.navigate(['/coil-management']);
-  }
-
   navigateToCoilTypeManagement() {
     this.router.navigate(['/coiltype-management']);
   }
 
-  navigateToMeasurementResult() {
-    this.router.navigate(['/measurement-result']);
+  navigateToCoilManagement() {
+    this.router.navigate(['/coil-management']);
   }
 
-  navigateToMeasureMentSettings(){
+  navigateToProbeTypeManagement() {
+    this.router.navigate(['/probe-type-management']);
+  }
+
+  navigateToProbeManagement() {
+    this.router.navigate(['/probe-management']);
+  }
+
+  navigateToMeasurementSettings(){
     this.router.navigate(['/measurement-settings-list']);
+  }
+
+  navigateToMeasurementManagement() {
+    this.router.navigate(['/measurement-management']);
   }
 
   logout(event: Event): void {

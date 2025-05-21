@@ -4,43 +4,45 @@
     <h1 class="mb-4">Trench ASC Sensor Visualization</h1>
   </div>
    
-  <div class="row row-cols-1 row-cols-md-4 g-4 w-80">
-    <div class="col">
-      <div class="card shadow-sm h-100 border-1 hover-effect" (click)="navigateToCoilTypeManagement()" style="cursor: pointer;">
-        <img src="/assets/Spulentyp.png" class="card-img-top mt-2" alt="Coil Management">
-        <div class="card-body text-center mt-5">
-          <h5 class="card-title mt-5">Spulentypenverwaltung</h5>
-        </div>
+  <div class="card-container">
+    <!-- Card 1 -->
+    <div class="card hover-card">
+      <div class="card-img-container">
+        <img src="/assets/Spulentyp.png" class="card-img" alt="Spulentypen">
+      </div>
+      <div class="card-action-top" (click)="navigateToCoilTypeManagement()">
+        <span class="action-label">Spulentypenverwaltung</span>
+      </div>
+      <div class="card-action-bottom" (click)="navigateToCoilManagement()">
+        <span class="action-label">Spulenverwaltung</span>
       </div>
     </div>
-    
-    <div class="col">
-      <div class="card shadow-sm h-100 border-1 hover-effect" (click)="navigateToCoilManagement()" style="cursor: pointer;">
-        <img src="/assets/spule.png" class="card-img-top mt-2" alt="New Feature">
-        <div class="card-body text-center mt-5">
-          <h5 class="card-title mt-5">Spulenverwaltung</h5>
-        </div>
+  
+    <!-- Card 2 -->
+    <div class="card hover-card">
+      <div class="card-img-container">
+        <img src="/assets/Spulentyp.png" class="card-img" alt="Sondentypen">
+      </div>
+      <div class="card-action-top" (click)="navigateToProbeTypeManagement()">
+        <span class="action-label">Sondentypenverwaltung</span>
+      </div>
+      <div class="card-action-bottom" (click)="navigateToProbeManagement()">
+        <span class="action-label">Sondenverwaltung</span>
       </div>
     </div>
-    
-    <div class="col">
-      <div class="card shadow-sm h-100 border-1 hover-effect" (click)="navigateToMeasureMentSettings()" style="cursor: pointer;">
-        <img src="/assets/svg-1.svg" class="card-img-top mt-2" alt="Measurement Management">
-        <div class="card-body text-center mt-5">
-          <h5 class="card-title mt-5">Messeinstellungen</h5>
-        </div>
+  
+    <!-- Card 3 -->
+    <div class="card hover-card">
+      <div class="card-img-container">
+        <img src="/assets/Spulentyp.png" class="card-img" alt="Messeinstellungen">
+      </div>
+      <div class="card-action-top" (click)="navigateToMeasurementSettings()">
+        <span class="action-label">Messeinstellungen</span>
+      </div>
+      <div class="card-action-bottom" (click)="navigateToMeasurementManagement()">
+        <span class="action-label">Messungen</span>
       </div>
     </div>
-
-    <div class="col">
-      <div class="card shadow-sm h-100 border-1 hover-effect" (click)="navigateToMeasurementResult()" style="cursor: pointer;">
-        <img src="/assets/vektor.png" class="card-img-top mt-2" alt="Measurement Management">
-        <div class="card-body text-center mt-5">
-          <h5 class="card-title mt-5">Messergebnisse</h5>
-        </div>
-      </div>
-    </div>
-      
   </div>
 
   <button *ngIf="!isLoginPage" (click)="logout($event)" class="btn btn-danger position-fixed bottom-0 start-0 m-3 shadow">

@@ -1,10 +1,140 @@
-.hover-effect {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Container für die drei Cards */
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+/* Card-Styling */
+.hover-card {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Bild-Container */
+.card-img-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  transition: filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+/* Aktionsbereiche */
+.card-action-top,
+.card-action-bottom {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.card-action-top {
+  top: 0;
+}
+
+.card-action-bottom {
+  bottom: 0;
+  border-top: 0px solid rgba(255,255,255,0.3);
+}
+
+/* Verbesserte Hover-Effekte */
+.hover-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Hover-Effekt für die obere Hälfte */
+.card-action-top:hover ~ .card-img-container .card-img {
+  filter: brightness(50%);
+}
+
+/* Hover-Effekt für die untere Hälfte */
+.card-action-bottom:hover ~ .card-img-container .card-img {
+  filter: brightness(50%);
+}
+
+/* Text-Skalierung und Hover-Highlight */
+.card-action-top:hover::after,
+.card-action-bottom:hover::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1;
+}
+
+.action-label {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(15px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 2;
+  position: relative;
+  text-align: center;
+  padding: 0 15px;
+}
+
+/* Text-Animation beim Hover */
+.card-action-top:hover .action-label,
+.card-action-bottom:hover .action-label {
+  opacity: 1;
+  transform: translateY(0) scale(1.1); /* Vergrößerung um 10% */
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Rahmen für aktive Hälfte */
+.card-action-top:hover,
+.card-action-bottom:hover {
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,0.9);
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 1024px) {
+  .card-container {
+    gap: 20px;
   }
-  .hover-effect:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+  .hover-card {
+    width: 280px;
+    height: 380px;
   }
-  .container {
-    padding-bottom: 80px;
+  .action-label {
+    font-size: 1.1rem;
   }
+}
+
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hover-card {
+    width: 100%;
+    max-width: 350px;
+  }
+}
