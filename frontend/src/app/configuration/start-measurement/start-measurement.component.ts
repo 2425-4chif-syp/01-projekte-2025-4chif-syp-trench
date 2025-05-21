@@ -12,6 +12,7 @@ import { CoilsBackendService } from '../coil/services/coils-backend.service';
 import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
+import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 
 registerLocaleData(localeDe);
 
@@ -25,7 +26,10 @@ registerLocaleData(localeDe);
 })
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
+  yokeData = signal<{ x: number; y: number }[][]>([]);
+  m_tot: number = 0;
   sensorValues: { [key: string]: number } = {}; 
+
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
   note: string = '';
@@ -39,8 +43,8 @@ export class StartMeasurementComponent implements OnDestroy {
 
   constructor(
     private webSocketService: WebSocketService,
+    private displacementCalculationService: DisplacementCalculationService,
     public measurementSettingsService: MeasurementSettingsService,
-    private measurementSettingsBackendService: MeasurementSettingsBackendService,
     private measurementsBackendService: MeasurementsBackendService,
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
@@ -51,6 +55,10 @@ export class StartMeasurementComponent implements OnDestroy {
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
+  }
+
+  public get isWithinTolerance(): boolean {
+    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
   }
 
   async loadMeasurementSettings(): Promise<void> {
@@ -115,11 +123,11 @@ export class StartMeasurementComponent implements OnDestroy {
         throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
       }
 
-      let measurementProbeType = this.selectedMeasurementSetting!.probeType;
-      if (measurementProbeType === null) {
-        measurementProbeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
+      let probeType = this.selectedMeasurementSetting!.probeType;
+      if (probeType === null) {
+        probeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
       }
-      this.selectedMeasurementSetting!.probeType = measurementProbeType;
+      this.selectedMeasurementSetting!.probeType = probeType;
 
 
       const yokeCount = coiltype.schenkel;
@@ -174,7 +182,19 @@ export class StartMeasurementComponent implements OnDestroy {
             updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
             return updatedYokes;
           });
-          
+
+          const result = this.displacementCalculationService.calculateYokeData(
+            this.yokes(),
+            probeType!,
+            [],
+            coiltype!,
+            coil!,
+            measurementSetting!
+          );
+
+          this.yokeData.set(result.F);
+          this.m_tot = result.m_tot;
+
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;
           if (this.measurementData[key]) {
             this.measurementData[key].push(sensorValue);
