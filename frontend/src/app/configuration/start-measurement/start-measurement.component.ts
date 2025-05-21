@@ -224,9 +224,13 @@ export class StartMeasurementComponent implements OnDestroy {
           const endTime = new Date();
           
           const measurementData = {
+            id: null,
             messeinstellungID: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
+            name: "",
+            tauchkernstellung: 0,
+            pruefspannung: 0,
             notiz: this.note || "",
             messsonden: this.createMesssondenData().map(sonde => ({
               schenkel: sonde.schenkel,
