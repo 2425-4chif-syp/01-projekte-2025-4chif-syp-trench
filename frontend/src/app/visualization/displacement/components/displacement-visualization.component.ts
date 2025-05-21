@@ -91,12 +91,12 @@ export class DisplacementVisualizationComponent {
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta - 0.125;
 
     return Math.cos(branch.angle) * newLength;
   }
   public scaledBranchResultY(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta - 0.125;
 
     return Math.sin(branch.angle) * newLength;
   }
@@ -134,13 +134,8 @@ export class DisplacementVisualizationComponent {
     }
   }
 
-  // TrackBy function to help Angular identify items in the *ngFor loop
-  trackByBranch(index: number, branch: { sensors: number[] }): number {
-    return index; // Use the index as the unique identifier
-  }
-
-  trackBySensor(index: number, sensor: number): number {
-    return index; // Use the index as the unique identifier
+  public get toleranceCircleRadius():number {
+    return this.finalVector.length / this.averageLength * 6; 
   }
 
   public getArrowColor(index:number):string {

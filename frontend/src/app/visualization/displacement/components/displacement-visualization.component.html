@@ -16,6 +16,11 @@
     >
       <g [attr.transform]="'translate('+internalTranslationOffset+', '+internalTranslationOffset+') scale('+size/512+')'">
         <g [attr.transform]="">
+          <g>
+            <!-- Tolerance circle -->
+            <circle cx="12" cy="12" [attr.r]="toleranceCircleRadius" fill="gray" />
+          </g>
+
           <g (mouseenter)="onBorderMouseEnter()" (mouseleave)="onBorderMouseLeave()">
             <!-- Border circle -->
             <circle cx="12" cy="12" r="6" 
