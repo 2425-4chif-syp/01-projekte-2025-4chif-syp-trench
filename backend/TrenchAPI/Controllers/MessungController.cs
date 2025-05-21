@@ -50,6 +50,33 @@ namespace TrenchAPI.Controllers
             return messung;
         }
 
+        // GET: api/Messung/5/Messwerte
+        [HttpGet("{id}/Messwerte")]
+        public async Task<ActionResult<IEnumerable<object>>> GetMesswerte(int id)
+        {
+            var messung = await _context.Messung
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (messung == null)
+            {
+                return NotFound("Messung nicht gefunden");
+            }
+
+            var messwerte = await _context.Messwert
+                .Where(m => m.MessungID == id)
+                .OrderBy(m => m.Zeitpunkt)
+                .Select(m => new {
+                    m.ID,
+                    m.MessungID,
+                    m.SondenPositionID,
+                    m.Wert,
+                    m.Zeitpunkt
+                })
+                .ToListAsync();
+
+            return messwerte;
+        }
+
         // PUT: api/Messung/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMessung(int id, Messung messung)
