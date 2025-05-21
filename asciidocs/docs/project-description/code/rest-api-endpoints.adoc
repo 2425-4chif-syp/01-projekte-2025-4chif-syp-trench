@@ -11,23 +11,24 @@ link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-202
 | Messeinstellung| GET    | `/api/Messeinstellung/{id}`| Get specific `Messeinstellung` by ID
 | Messeinstellung| PUT    | `/api/Messeinstellung/{id}`| Update a `Messeinstellung`
 | Messeinstellung| DELETE | `/api/Messeinstellung/{id}`| Delete a `Messeinstellung`
-| Messsonde      | GET    | `/api/Messsonde`         | Get all `Messsonde`
-| Messsonde      | POST   | `/api/Messsonde`         | Create a new `Messsonde`
-| Messsonde      | GET    | `/api/Messsonde/{id}`    | Get specific `Messsonde` by ID
-| Messsonde      | PUT    | `/api/Messsonde/{id}`    | Update a `Messsonde`
-| Messsonde      | DELETE | `/api/Messsonde/{id}`    | Delete a `Messsonde`
-| Messondenkalibrierung | GET    | `/api/Messondenkalibrierung`| Get all `Messondenkalibrierung`
-| Messondenkalibrierung | POST   | `/api/Messondenkalibrierung`| Create a new `Messondenkalibrierung`
-| Messondenkalibrierung | GET    | `/api/Messondenkalibrierung/{id}`| Get specific `Messondenkalibrierung` by ID
-| Messondenkalibrierung | PUT    | `/api/Messondenkalibrierung/{id}`| Update a `Messondenkalibrierung`
-| Messondenkalibrierung | DELETE | `/api/Messondenkalibrierung/{id}`| Delete a `Messondenkalibrierung`
-| MesssondenTyp  | GET    | `/api/MesssondenTyp`     | Get all `MesssondenTyp`
-| MesssondenTyp  | POST   | `/api/MesssondenTyp`     | Create a new `MesssondenTyp`
-| MesssondenTyp  | GET    | `/api/MesssondenTyp/{id}`| Get specific `MesssondenTyp` by ID
-| MesssondenTyp  | PUT    | `/api/MesssondenTyp/{id}`| Update a `MesssondenTyp`
-| MesssondenTyp  | DELETE | `/api/MesssondenTyp/{id}`| Delete a `MesssondenTyp`
+| Sonde      | GET    | `/api/Sonde`         | Get all `Sonde`
+| Sonde      | POST   | `/api/Sonde`         | Create a new `Sonde`
+| Sonde      | GET    | `/api/Sonde/{id}`    | Get specific `Sonde` by ID
+| Sonde      | PUT    | `/api/Sonde/{id}`    | Update a `Sonde`
+| Sonde      | DELETE | `/api/Sonde/{id}`    | Delete a `Sonde`
+| SondenPosition | GET    | `/api/SondenPosition`| Get all `SondenPosition`
+| SondenPosition | POST   | `/api/SondenPosition`| Create a new `SondenPosition`
+| SondenPosition | GET    | `/api/SondenPosition/{id}`| Get specific `SondenPosition` by ID
+| SondenPosition | PUT    | `/api/SondenPosition/{id}`| Update a `SondenPosition`
+| SondenPosition | DELETE | `/api/SondenPosition/{id}`| Delete a `SondenPosition`
+| SondenTyp  | GET    | `/api/SondenTyp`     | Get all `SondenTyp`
+| SondenTyp  | POST   | `/api/SondenTyp`     | Create a new `SondenTyp`
+| SondenTyp  | GET    | `/api/SondenTyp/{id}`  | Get specific `SondenTyp` by ID
+| SondenTyp  | PUT    | `/api/SondenTyp/{id}`  | Update a `SondenTyp`
+| SondenTyp  | DELETE | `/api/SondenTyp/{id}`  | Delete a `SondenTyp`
 | Messung        | GET    | `/api/Messung`           | Get all `Messung`
 | Messung        | POST   | `/api/Messung`           | Create a new `Messung`
+| Messung        | POST   | `/api/Messung/Complete`| Create a new `Messung` with complete data
 | Messung        | GET    | `/api/Messung/{id}`      | Get specific `Messung` by ID
 | Messung        | PUT    | `/api/Messung/{id}`      | Update a `Messung`
 | Messung        | DELETE | `/api/Messung/{id}`      | Delete a `Messung`
@@ -46,4 +47,5 @@ link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-202
 | SpuleTyp       | POST   | `/api/SpuleTyp`          | Create a new `SpuleTyp`
 | SpuleTyp       | PUT    | `/api/SpuleTyp/{id}`     | Update a `SpuleTyp`
 | SpuleTyp       | DELETE | `/api/SpuleTyp/{id}`     | Delete a `SpuleTyp`
+| Messstatus     | GET    | `/api/Messstatus`        | Get all `Messstatus`
 |===
