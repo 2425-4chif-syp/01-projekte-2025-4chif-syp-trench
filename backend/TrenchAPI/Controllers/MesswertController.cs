@@ -117,12 +117,12 @@ namespace TrenchAPI.Controllers
 
             if (!_context.Messung.Any(st => st.ID == messwertDto.MessungID))
             {
-                return BadRequest("Der angegebene Messung existiert nicht. (DEBUG: 1)");
+                return BadRequest("Der angegebene Messung existiert nicht.");
             }
 
             if (!_context.SondenPosition.Any(st => st.ID == messwertDto.SondenPositionID))
             {
-                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 1)");
+                return BadRequest("Der angegebene Messeinstellung existiert nicht.");
             }
 
             var messwert = new Messwert
