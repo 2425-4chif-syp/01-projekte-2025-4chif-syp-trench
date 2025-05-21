@@ -31,7 +31,8 @@ export class CoiltypeListComponent {
     'schenkel': 'Schenkelanzahl',
     'bandbreite': 'Bandbreite',
     'schichthoehe': 'Schichthöhe',
-    'durchmesser': 'Durchmesser'
+    'durchmesser': 'Durchmesser',
+    'toleranzbereich': 'Toleranzbereich'
   }
 
   constructor(public coiltypesService:CoiltypesService, public coilsService:CoilsService, private router:Router) {

@@ -9,23 +9,37 @@
         @if (authService.isLoggedIn()) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/coiltype-management" routerLinkActive="active">Spulentypenverwaltung</a>
+                    <!-- Spule Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle">
+                            Spule
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" routerLink="/coiltype-management" routerLinkActive="active">Spulentypenverwaltung</a>
+                            <a class="dropdown-item" routerLink="/coil-management" routerLinkActive="active">Spulenverwaltung</a>
+                        </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/coil-management" routerLinkActive="active">Spulenverwaltung</a>
+                    
+                    <!-- Sonde Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle">
+                            Sonde
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" routerLink="/probe-type-management" routerLinkActive="active">Sondentypenverwaltung</a>
+                            <a class="dropdown-item" routerLink="/probe-management" routerLinkActive="active">Sondenverwaltung</a>
+                        </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/probe-type-management" routerLinkActive="active">Sondentypen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/probe-management" routerLinkActive="active">Sonden</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/measurement-settings-list" routerLinkActive="active">Messeinstellungen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLink="/measurement-management" routerLinkActive="active">Messungen</a>
+                    
+                    <!-- Messung Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle">
+                            Messung
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" routerLink="/measurement-settings-list" routerLinkActive="active">Messeinstellungen</a>
+                            <a class="dropdown-item" routerLink="/measurement-management" routerLinkActive="active">Messungen</a>
+                        </div>
                     </li>
                 </ul>
             </div>
