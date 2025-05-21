@@ -190,10 +190,25 @@
         'left.px': mousePosition.x,
     }">
       @if (hoveredArrow !== null) {
-        <ul>
-          @if (hoveredArrow.branchIndex === -1 && hoveredArrow.sensorIndex === -1) {
+        @if (hoveredArrow.branchIndex === -1 && hoveredArrow.sensorIndex === -1) {
+          <ul>
             <li>
               <strong>Ergebnisvektor</strong>
+            </li>
+            <li>
+              <strong>Absolutwert der Summenkraft</strong>: {{ m_tot | number: '1.2-2' }}kg
+            </li>
+            <li>
+              <strong>Toleranzbereich</strong>: {{ coiltype.toleranzbereich | number: '1.2-2' }}kg
+            </li>
+            <li>
+              <strong>In der Toleranz</strong>: <span [ngClass]="{ 'text-success': isWithinTolerance, 'text-danger': !isWithinTolerance }">{{ isWithinTolerance ? 'Ja' : 'Nein' }}</span>
+            </li>
+            <li>
+              <strong>Kraft</strong> (Vektorlänge): {{ finalVector.length | number: '1.2-2' }}N
+            </li>
+            <li>
+              <strong>Winkel</strong>: {{ finalVector.angle * radToDeg | number: '1.2-2' }}°
             </li>
             <li>
               <strong>x</strong>: {{ finalVector.x | number: '1.2-2' }}
@@ -201,16 +216,18 @@
             <li>
               <strong>y</strong>: {{ finalVector.y | number: '1.2-2' }}
             </li>
-            <li>
-              <strong>Länge</strong>: {{ finalVector.length | number: '1.2-2' }}
-            </li>
-            <li>
-              <strong>Winkel</strong>: {{ finalVector.angle * radToDeg | number: '1.2-2' }}°
-            </li>
-          }
-          @else if (hoveredArrow.branchIndex !== -1 && hoveredArrow.sensorIndex === -1) {
+          </ul>
+        }
+        @else if (hoveredArrow.branchIndex !== -1 && hoveredArrow.sensorIndex === -1) {
+          <ul>
             <li>
               <strong>Schenkelvektor</strong>: Schenkel #{{ hoveredArrow.branchIndex + 1 }}
+            </li>
+            <li>
+              <strong>Kraft</strong> (Vektorlänge): {{ yokeVectors[hoveredArrow.branchIndex].length | number: '1.2-2' }}N
+            </li>
+            <li>
+              <strong>Winkel</strong>: {{ yokeVectors[hoveredArrow.branchIndex].angle * radToDeg | number: '1.2-2' }}°
             </li>
             <li>
               <strong>x</strong>: {{ yokeVectors[hoveredArrow.branchIndex].x | number: '1.2-2' }}
@@ -218,14 +235,10 @@
             <li>
               <strong>y</strong>: {{ yokeVectors[hoveredArrow.branchIndex].y | number: '1.2-2' }}
             </li>
-            <li>
-              <strong>Länge</strong>: {{ yokeVectors[hoveredArrow.branchIndex].length | number: '1.2-2' }}
-            </li>
-            <li>
-              <strong>Winkel</strong>: {{ yokeVectors[hoveredArrow.branchIndex].angle * radToDeg | number: '1.2-2' }}°
-            </li>
-          }
-          @else {
+          </ul>
+        }
+        @else {
+          <ul>
             <li>
               <strong>Schenkel</strong>: Schenkel #{{ hoveredArrow.branchIndex + 1 }}
             </li>
@@ -233,22 +246,22 @@
               <strong>Sensor</strong>: Sensor #{{ hoveredArrow.sensorIndex + 1 }}
             </li>
             <li>
+              <strong>Kraft</strong> (Vektorlänge): {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length | number: '1.2-2' }}N
+            </li>
+            <li>
+              <strong>Winkel</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].angle * radToDeg | number: '1.2-2' }}°
+            </li>
+            <li>
               <strong>x</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].x | number: '1.2-2' }}
             </li>
             <li>
               <strong>y</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].y | number: '1.2-2' }}
             </li>
-            <li>
-              <strong>Länge</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].length | number: '1.2-2' }}
-            </li>
-            <li>
-              <strong>Winkel</strong>: {{ calcResults[hoveredArrow.branchIndex][hoveredArrow.sensorIndex].angle * radToDeg | number: '1.2-2' }}°
-            </li>
-          }
-        </ul>
+          </ul>
+        }
       }
       @if (isHoveringOverBorder) {
-        <p><strong>Border radius</strong> (average length): {{averageLength | number: '1.2-2'}}</p>
+        <p><strong>Rahmenradius</strong> (Durchschnittskraft): {{averageLength | number: '1.2-2'}}N</p>
       }
     </div>  
   }

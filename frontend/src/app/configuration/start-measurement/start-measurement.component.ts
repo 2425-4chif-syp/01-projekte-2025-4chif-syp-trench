@@ -29,6 +29,7 @@ export class StartMeasurementComponent implements OnDestroy {
   yokeData = signal<{ x: number; y: number }[][]>([]);
   m_tot: number = 0;
   sensorValues: { [key: string]: number } = {}; 
+
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
   note: string = '';
@@ -54,6 +55,10 @@ export class StartMeasurementComponent implements OnDestroy {
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
+  }
+
+  public get isWithinTolerance(): boolean {
+    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
   }
 
   async loadMeasurementSettings(): Promise<void> {
