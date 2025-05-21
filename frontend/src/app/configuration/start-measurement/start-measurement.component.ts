@@ -78,17 +78,12 @@ export class StartMeasurementComponent implements OnDestroy {
 
     try {
       // Hole die Messeinstellung direkt vom Backend
-      const measurementSetting = await this.measurementSettingsBackendService.getMeasurementSettings(this.measurementSettingId!);
+      const measurementSetting = await this.measurementSettingsService.reloadElementWithId(this.measurementSettingId!);
       if (!measurementSetting) {
         this.showIdError = true;
         this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
         throw new Error('Keine Messeinstellung ausgewählt');
       }
-
-      this.error = null;
-      this.showIdError = false;
-
-      console.log('Ausgewählte Messeinstellung:', measurementSetting);
 
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
@@ -105,15 +100,14 @@ export class StartMeasurementComponent implements OnDestroy {
       }
 
       // Dann lade die Coiltype-Informationen
-      const coilData = coil as any;
-      let coiltype = coilData.spuleTyp;
-      if (!coiltype && coilData.spuleTypID) {
-        console.log('Lade Coiltype mit ID:', coilData.spuleTypID);
-        coiltype = await this.coiltypesBackendService.getCoiltype(coilData.spuleTypID);
+      let coiltype = coil.coiltype;
+      if (!coiltype && coil.coiltypeId) {
+        console.log('Lade Coiltype mit ID:', coil.coiltypeId);
+        coiltype = await this.coiltypesBackendService.getCoiltype(coil.coiltypeId);
         if (!coiltype) {
           throw new Error('Coiltype konnte nicht geladen werden');
         }
-        coilData.spuleTyp = coiltype;
+        coil.coiltype = coiltype;
       }
 
       if (!coiltype) {
@@ -121,7 +115,7 @@ export class StartMeasurementComponent implements OnDestroy {
       }
 
       // Überprüfe die Schenkelzahl
-      if (!coiltype.schenkelzahl) {
+      if (!coiltype.schenkel) {
         throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
       }
 
@@ -132,7 +126,7 @@ export class StartMeasurementComponent implements OnDestroy {
       this.selectedMeasurementSetting!.probeType = measurementProbeType;
 
 
-      const yokeCount = coiltype.schenkelzahl;
+      const yokeCount = coiltype.schenkel;
       const sensorCount = measurementSetting.sondenProSchenkel || 0;
       
       if (sensorCount <= 0) {
