@@ -135,10 +135,6 @@ export class DisplacementCalculationService {
       result.push(yokeResult);
     }
 
-    console.log('angle', angle);
-
-    console.log('F', F);
-
     // Summenkraft in N
     const F_tot_vec: { x: number; y: number } = { x: 0, y: 0 };
     for (let i = 0; i < yokes.length; i++) {
@@ -154,12 +150,9 @@ export class DisplacementCalculationService {
       y: F_tot_vec.y / 9.81
     };
 
-    console.log('m_tot_vec', m_tot_vec);
-
     // Absolutwert der Summenkraft in kg
     const m_tot:number = Math.sqrt(m_tot_vec.x * m_tot_vec.x + m_tot_vec.y * m_tot_vec.y);
-
-    console.log('m_tot', m_tot);
+    
     return {
       F: result,
       m_tot: m_tot
