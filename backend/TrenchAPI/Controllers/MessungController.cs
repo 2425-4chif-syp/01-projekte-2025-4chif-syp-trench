@@ -208,10 +208,10 @@ namespace TrenchAPI.Controllers
                 };
 
                 _context.SondenPosition.Add(sondenPosition);
-                await _context.SaveChangesAsync();
                 sondenPositionen[(messsonde.Schenkel, messsonde.Position)] = sondenPosition;
             }
 
+            await _context.SaveChangesAsync();
             // Speichere die Messwerte
             foreach (var messsonde in messungDto.Messsonden)
             {
