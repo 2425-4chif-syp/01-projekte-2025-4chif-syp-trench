@@ -29,8 +29,7 @@ export class ProbeTypeListComponent {
       'name': 'Name',
       'breite': 'Breite',
       'hoehe': 'Höhe',
-      'windungszahl': 'Windungszahl',
-      'notiz': 'Notiz'
+      'windungszahl': 'Windungszahl'
     }
     public readonly elementValueToStringMethods: { [key: string]: (element:ProbeType) => string } = {
 

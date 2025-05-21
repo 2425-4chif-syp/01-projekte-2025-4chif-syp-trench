@@ -25,19 +25,13 @@ export class MeasurementSettingsListComponent {
 
   public readonly keysAsColumns: { [key: string]: string } = {
     'coilId': 'Spule',
-    'measurementProbeTypeId': 'Sondentyp',
-    'windungszahl': 'Windungszahl',
-    'bemessungsspannung': 'Spannung',
-    'bemessungsfrequenz': 'Frequenz',
-    'pruefspannung': 'Prüfspannung',
-    'sondenProSchenkel': 'Sonden/Schenkel',
-    'test'  : 'Test',
-    //'notiz': 'Notiz'
+    'sondentyp_id': 'Sondentyp',
+    'name': 'Name',
+    'sondenProSchenkel': 'Sonden/Schenkel'
   }
 
   public readonly elementValueToStringMethods: { [key: string]: (element:MeasurementSetting) => string } = {
-    'coilId': (element) => element.coil?.coiltype?.name ?? `${element.coilId}`,
-    'test': (element) => element.coil?.coiltype?.name ?? `${element.coilId}`,
+    'coilId': (element) => element.coil?.coiltype?.name ?? `${element.coilId}`
     //'measurementProbeTypeId': (element) => element.measurementProbeType?.probeTypeID ?? `Sonde ${element.measurementProbeTypeId}`
   }
 
