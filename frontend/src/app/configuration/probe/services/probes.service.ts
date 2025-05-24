@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
 import { Probe } from '../interfaces/probe';
 import { ProbesBackendService } from './probes-backend.service';
+import { ProbePositionService } from '../../probe-position/services/probe-position.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,8 @@ export class ProbesService implements ListService<Probe> {
 
   public isProbeSelector:boolean = false;
 
-  constructor(private probeBackendService:ProbesBackendService) {
+  constructor(private probeBackendService:ProbesBackendService, private probePositionService:ProbePositionService) {
+    this.reloadElements();
   }
   public sortDirection: { [key: string]: boolean } = {};
 
@@ -37,9 +39,22 @@ export class ProbesService implements ListService<Probe> {
     return {...original};
   }
 
-  public async reloadElements():Promise<void> {
-    this.elements = await this.probeBackendService.getAllProbes();
+  async reloadElements(): Promise<void> {
+  const allProbes = await this.probeBackendService.getAllProbes();
+
+  if (this.isProbeSelector) {
+    const currentSetting = this.probePositionService.selectedElementCopy?.measurementSetting;
+    if (currentSetting) {
+      this.elements = allProbes.filter(
+        probe => probe.probeTypeId === currentSetting.probeTypeId
+      );
+      return;
+    }
   }
+
+  this.elements = allProbes;
+}
+
 
   public async reloadElementWithId(id:number):Promise<Probe> {
     id = Number(id);
