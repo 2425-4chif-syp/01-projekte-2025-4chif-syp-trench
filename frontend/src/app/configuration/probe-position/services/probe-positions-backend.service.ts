@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from '../../../backend.service';
 import { ProbePosition } from '../interfaces/probe-position.model';
+import { MeasurementSettingsBackendService } from '../../measurement-settings/services/measurement-settings-backend.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProbePositionsBackendService {
 
-  constructor(private backendService:BackendService) { }
+  constructor(private backendService:BackendService, private measurementSettingsBackendService: MeasurementSettingsBackendService) { }
 
   private probePositionBackendToFrontend(measurementProbePosition: any): ProbePosition {
     return {
       id: measurementProbePosition.id,
-      measurementSettingsId: measurementProbePosition.messeinstellung_id,
-      measurementSetting: measurementProbePosition.messeinstellung,
-      measurementProbeId: measurementProbePosition.messsonde_id,
-      measurementProbe: measurementProbePosition.messsonde,
+      measurementSettingsId: measurementProbePosition.messeinstellungID,
+      measurementSetting: this.measurementSettingsBackendService.measurementSettingsBackendToFrontend(measurementProbePosition.messeinstellung),
+      measurementProbeId: measurementProbePosition.sondeID,
+      measurementProbe: measurementProbePosition.sonde,
       schenkel: measurementProbePosition.schenkel,
       position: measurementProbePosition.position
     }
@@ -24,8 +25,8 @@ export class ProbePositionsBackendService {
   private probePositionFrontendToBackend(measurementProbePosition: ProbePosition): any {
     return {
       id: measurementProbePosition.id,
-      messeinstellung_id: measurementProbePosition.measurementSettingsId,
-      messsonde_id: measurementProbePosition.measurementProbeId,
+      messeinstellungID: measurementProbePosition.measurementSettingsId,
+      sondeID: measurementProbePosition.measurementProbeId,
       schenkel: measurementProbePosition.schenkel,
       position: measurementProbePosition.position
     }
@@ -35,7 +36,6 @@ export class ProbePositionsBackendService {
     const response: any = await this.backendService.httpGetRequest('SondenPosition');
     return response.map((pos: any) => this.probePositionBackendToFrontend(pos));
   }
-
   public async getMeasurementProbePosition(id: number): Promise<ProbePosition> {
     const response: any = await this.backendService.httpGetRequest('SondenPosition/' + id);
     return this.probePositionBackendToFrontend(response);

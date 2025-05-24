@@ -11,7 +11,7 @@ import { CoiltypesBackendService } from '../../coiltype/services/coiltypes-backe
 })
 export class MeasurementSettingsBackendService {
 
-  constructor(private backendService: BackendService ){}//, private coilBackendService: CoilsBackendService, private coilTypeBackendService: CoiltypesBackendService) { }
+  constructor(private backendService: BackendService, private coilBackendService: CoilsBackendService, private coilTypeBackendService: CoiltypesBackendService) { }
 
   private coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
@@ -29,7 +29,7 @@ export class MeasurementSettingsBackendService {
   private coilBackendToFrontend(coil: any): Coil {
     return {
       id: coil.id,
-      coiltype: this.coiltypeBackendToFrontend(coil.spuleTyp),
+      coiltype: this.coilTypeBackendService.coiltypeBackendToFrontend(coil.spuleTyp),
       coiltypeId: coil.spuleTypID,
       einheit: coil.einheit,
       auftragsnummer: coil.auftragsnr,
@@ -40,12 +40,12 @@ export class MeasurementSettingsBackendService {
     };
   }  
 
-  private measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSetting {
-    console.log("MAPPED Coiltype:", this.coilBackendToFrontend(measurementSettings.spule).coiltype);
+  public measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSetting {
+    console.log("MAPPED Coiltype:", this.coilBackendService.coilBackendToFrontend(measurementSettings.spule).coiltype);
     const tmp: MeasurementSetting = {
       id: measurementSettings.id,
-      //coil: this.coilBackendService.coilBackendToFrontend(measurementSettings.spule),
-      coil: this.coilBackendToFrontend(measurementSettings.spule),
+      coil: this.coilBackendService.coilBackendToFrontend(measurementSettings.spule),
+      //coil: this.coilBackendToFrontend(measurementSettings.spule),
       coilId: measurementSettings.spuleID,
       probeType: measurementSettings.sondenTyp,
       probeTypeId: measurementSettings.sondenTypID,
@@ -58,7 +58,7 @@ export class MeasurementSettingsBackendService {
     return tmp;
   }
 
-  private measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{
+  public measurementSettingsFrontendToBackend(measurementSettings: MeasurementSetting): any{
     return {
       id: measurementSettings.id,
       spuleID: measurementSettings.coilId,

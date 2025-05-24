@@ -35,6 +35,7 @@ export class ProbePositionService implements ListService<ProbePosition> {
 
   public async reloadElements(): Promise<void> {
     this.elements = await this.probePositionBackendService.getAllProbePositions();
+    console.log('pos', this.elements);
   }
 
   public async reloadElementWithId(id: number): Promise<ProbePosition> {
@@ -76,25 +77,34 @@ export class ProbePositionService implements ListService<ProbePosition> {
   }
 
   public createEmptyPositions(schenkelzahl: number, sondenProSchenkel: number, einstellung: MeasurementSetting): void {
-    if (this.elements.length > 0) {
-      return;
+    const existingBySchenkel: { [schenkel: number]: ProbePosition[] } = {};
+  
+    for (const pos of this.elements) {
+      if (!existingBySchenkel[pos.schenkel!]) {
+        existingBySchenkel[pos.schenkel!] = [];
+      }
+      existingBySchenkel[pos.schenkel!].push(pos);
     }
-
-    for (let i = 0; i < schenkelzahl; i++) {
-      for (let j = 0; j < sondenProSchenkel; j++) {
-        const position: ProbePosition = {
-          id: null,
+  
+    for (let schenkel = 1; schenkel <= schenkelzahl; schenkel++) {
+      const existing = existingBySchenkel[schenkel] ?? [];
+      const existingCount = existing.length;
+  
+      for (let posIndex = existingCount; posIndex < sondenProSchenkel; posIndex++) {
+        const newPos: ProbePosition = {
+          id: 0,
           measurementSettingsId: einstellung.id,
           measurementSetting: einstellung,
           measurementProbeId: null,
           measurementProbe: null,
-          schenkel: i + 1,
-          position: j + 1
+          schenkel: schenkel,
+          position: posIndex + 1
         };
-        this.elements.push(position);
+        this.elements.push(newPos);
       }
     }
   }
+  
 
   getGroupedProbePositions(): ProbePosition[][] {
     const grouped: { [key: number]: ProbePosition[] } = {};

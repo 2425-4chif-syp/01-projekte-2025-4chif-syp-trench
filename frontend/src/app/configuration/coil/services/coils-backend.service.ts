@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from '../../../backend.service';
 import { Coil } from '../interfaces/coil';
+import { CoiltypesBackendService } from '../../coiltype/services/coiltypes-backend.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoilsBackendService {
 
-  constructor(private backendService:BackendService) { }
+  constructor(private backendService:BackendService, private coilTypeBackendService: CoiltypesBackendService) { }
 
     public coilBackendToFrontend(coil: any): Coil {
         const newCoil: Coil = {
         id: coil.id,
-        coiltype: coil.spuleTyp,
+        coiltype: this.coilTypeBackendService.coiltypeBackendToFrontend(coil.spuleTyp),
         coiltypeId: coil.spuleTypID,
         einheit: coil.einheit,
         auftragsnummer: coil.auftragsnr,
