@@ -61,6 +61,7 @@ export class ProbeListComponent {
 
       this.probesService.isProbeSelector = false;
       this.router.navigate(['/measurement-settings-list']);
+      return;
     }
 
     this.probesService.selectElement(probeId);
