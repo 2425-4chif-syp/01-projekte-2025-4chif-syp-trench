@@ -99,4 +99,8 @@ export class ProbesService implements ListService<Probe> {
 
     this.selectedElementCopy = this.getCopyElement(probeIdNumber);
   }
+
+  returnSelectedProbe(probe: Probe): Probe {
+    return probe;
+  }
 }

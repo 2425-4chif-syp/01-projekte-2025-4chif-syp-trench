@@ -5,6 +5,8 @@ import { GenericListComponent } from '../../../../generic-list/components/generi
 import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
 import { Probe } from '../../interfaces/probe';
 import { Router } from '@angular/router';
+import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
+import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
 
 @Component({
   selector: 'app-probe-list',
@@ -35,7 +37,7 @@ export class ProbeListComponent {
     'probeType': (element:Probe) => element.probeType?.name ?? `Unnamed ProbeType (ID ${element.probeTypeId})`
   }
 
-  constructor(public probesService:ProbesService, private router:Router) {
+  constructor(public probesService:ProbesService, private probePositionService: ProbePositionService, private router:Router) {
 
   }
 
@@ -43,7 +45,22 @@ export class ProbeListComponent {
     const probeId = probe.id!;
 
     if (this.probesService.isProbeSelector) {
-      
+      console.log(`Probe selected: ${probeId}`);
+
+      const probePosition = this.probePositionService.selectedElementCopy;
+      let tmp = this.probePositionService.newElement;
+      tmp.id = 1;
+      tmp.measurementProbeId = probeId;
+      tmp.measurementProbe = probe;
+      tmp.measurementSettingsId = probePosition?.measurementSettingsId ?? 0;
+      tmp.measurementSetting = probePosition?.measurementSetting ?? null;
+      tmp.schenkel = probePosition?.schenkel ?? 0;
+      tmp.position = probePosition?.position ?? 0;
+
+      this.probePositionService.updateOrCreateElement(tmp);
+
+      this.probesService.isProbeSelector = false;
+      this.router.navigate(['/measurement-settings-list']);
     }
 
     this.probesService.selectElement(probeId);

@@ -1,14 +1,12 @@
-import { Component, signal } from '@angular/core';
-import { Probe } from '../../probe/interfaces/probe';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MeasurementSetting } from '../../measurement-settings/interfaces/measurement-settings';
-import { MeasurementSettingsService } from '../../measurement-settings/services/measurement-settings.service';
-import { MeasurementSettingsComponent } from '../../measurement-settings/components/management/measurement-settings.component';
-import { ProbePositionsBackendService } from '../services/probe-positions-backend.service';
-import { ProbesService } from '../../probe/services/probes.service';
-import { ProbesBackendService } from '../../probe/services/probes-backend.service';
+import { Probe } from '../../probe/interfaces/probe';
 import { ProbePosition } from '../interfaces/probe-position.model';
+import { ProbesService } from '../../probe/services/probes.service';
+import { MeasurementSettingsService } from '../../measurement-settings/services/measurement-settings.service';
+import { ProbePositionService } from '../services/probe-position.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-probe-position-management',
@@ -18,46 +16,49 @@ import { ProbePosition } from '../interfaces/probe-position.model';
   styleUrl: './probe-position-management.component.scss'
 })
 export class ProbePositionManagementComponent {
-  constructor(private measurementSettingsService: MeasurementSettingsService, private probeService: ProbesService) {}
   probes: Probe[] = [];
+  groupedProbePositions: ProbePosition[][] = [];
   probePositions: ProbePosition[][] = [];
   schenkelzahl = 3;
-  
+  selectedPositionForProbeSelection: ProbePosition | null = null;
+
+  constructor(
+    private measurementSettingsService: MeasurementSettingsService,
+    private probeService: ProbesService,
+    private probePositionService: ProbePositionService,
+    private router: Router
+  ) {}
+
   async ngOnInit(): Promise<void> {
-    console.log("Initialisiere Komponente...");
-  
-    await this.probeService.reloadElements().then(() => {
-      this.probes = this.probeService.elements;
-      console.log("Proben geladen:", this.probes);
-    }
+    await this.probeService.reloadElements();
+    this.probes = this.probeService.elements;
+
+    const einstellung = this.measurementSettingsService.selectedElementCopy!;
+    const sondenProSchenkel = einstellung.sondenProSchenkel ?? 0;
+
+    this.probePositionService.createEmptyPositions(
+      this.schenkelzahl,
+      sondenProSchenkel,
+      einstellung
     );
-    console.log("Sonden geladen:", this.probeService.elements);
+
+    console.log(this.probePositionService.elements);
+    this.loadGroupedProbePositions();
+  }
+
+  openProbeSelector(position: ProbePosition) {
+    console.log('Opening probe selector for position:', position);
+    console.log(this.probeService.isProbeSelector);
+    this.selectedPositionForProbeSelection = null;
+    this.probeService.isProbeSelector = true;
+    console.log(this.probeService.isProbeSelector);
+    this.probePositionService.selectedElementCopy = position;
     
-    console.log(this.measurementSettingsService.selectedElementCopy);
+    this.router.navigate(['/probe-management']);
+  }
 
-    //await this.generateAndSavePositions();
+  loadGroupedProbePositions(): void {
+    this.groupedProbePositions = this.probePositionService.getGroupedProbePositions();
+  }
 
-    this.createProbePositions();
-  } 
-
-  createProbePositions(): void {
-    this.probePositions = [];
-    for (let i = 0; i < this.schenkelzahl; i++) {
-      this.probePositions[i] = [];
-      for (let j = 0; j < this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel!; j++) {
-        const probePosition: ProbePosition = {
-          id: 0,
-          measurementSettingsId: this.measurementSettingsService.selectedElementCopy!.id,
-          measurementSetting: this.measurementSettingsService.selectedElementCopy,
-          measurementProbeId: null,
-          measurementProbe: null,
-          schenkel: i + 1,
-          position: j + 1
-        };
-        this.probePositions[i].push(probePosition);
-      }
-    }
-
-    console.log("ProbePositionen erstellt:", this.probePositions);
-  }  
 }
