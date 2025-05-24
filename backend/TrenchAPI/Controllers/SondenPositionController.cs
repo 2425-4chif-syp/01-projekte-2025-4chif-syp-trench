@@ -126,10 +126,14 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene Sonde existiert nicht. (DEBUG: 2)");
             }
 
+            sondenPosition.Sonde = existingSonde;
+
             if (existingMesseinstellung == null)
             {
                 return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 2)");
             }
+
+            sondenPosition.Messeinstellung = existingMesseinstellung;
 
             _context.SondenPosition.Add(sondenPosition);
             await _context.SaveChangesAsync();

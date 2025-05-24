@@ -30,9 +30,8 @@ export class ProbePositionManagementComponent {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    await this.probeService.reloadElements();
-    this.probes = this.probeService.elements;
-
+    await this.probePositionService.reloadElements();
+    
     const einstellung = this.measurementSettingsService.selectedElementCopy!;
     const sondenProSchenkel = einstellung.sondenProSchenkel ?? 0;
 
