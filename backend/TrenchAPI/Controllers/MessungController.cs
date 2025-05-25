@@ -16,6 +16,7 @@ namespace TrenchAPI.Controllers
     public class MessungController : ControllerBase
     {
         private readonly WebDbContext _context;
+        private static bool _isMeasuring = false;
 
         public MessungController(WebDbContext context)
         {
@@ -64,6 +65,53 @@ namespace TrenchAPI.Controllers
 
             var messwerte = await _context.Messwert
                 .Where(m => m.MessungID == id)
+                .OrderBy(m => m.Zeitpunkt)
+                .Select(m => new {
+                    m.ID,
+                    m.MessungID,
+                    m.SondenPositionID,
+                    m.Wert,
+                    m.Zeitpunkt
+                })
+                .ToListAsync();
+
+            return messwerte;
+        }
+
+        [HttpPost("startMeasuring")]
+        public ActionResult StartMeasuring()
+        {
+            _isMeasuring = true;
+            return Ok();
+        }
+
+        [HttpPost("stopMeasuring")]
+        public ActionResult StopMeasuring()
+        {
+            _isMeasuring = false;
+            return Ok();
+        }
+
+        // GET: api/Messung/Current/Values
+        [HttpGet("Current/Values")]
+        public async Task<ActionResult<IEnumerable<object>>> GetCurrentMessungValues()
+        {
+            if (!_isMeasuring)
+            {
+                return NotFound("Keine aktive Messung gefunden");
+            }
+
+            var currentMessung = await _context.Messung
+                .OrderByDescending(m => m.Anfangszeitpunkt)
+                .FirstOrDefaultAsync();
+
+            if (currentMessung == null)
+            {
+                return NotFound("Keine Messung gefunden");
+            }
+
+            var messwerte = await _context.Messwert
+                .Where(m => m.MessungID == currentMessung.ID)
                 .OrderBy(m => m.Zeitpunkt)
                 .Select(m => new {
                     m.ID,
