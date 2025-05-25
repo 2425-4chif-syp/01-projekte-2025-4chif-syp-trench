@@ -36,6 +36,7 @@ export class StartMeasurementComponent implements OnDestroy {
   showIdError: boolean = false;
   isLoading: boolean = true;
   error: string | null = null;
+  currentMeasurement: boolean = false;
   
   private startTime: Date | null = null;
   private measurementData: { [key: string]: number[] } = {};
@@ -88,6 +89,10 @@ export class StartMeasurementComponent implements OnDestroy {
         this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
         throw new Error('Keine Messeinstellung ausgewählt');
       }
+
+      // Starte die Messung im Backend
+      await this.measurementsBackendService.startMeasuring();
+      this.currentMeasurement = true;
 
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
@@ -220,6 +225,10 @@ export class StartMeasurementComponent implements OnDestroy {
       this.isConnected = false;
       
       try {
+        // Stoppe die Messung im Backend
+        await this.measurementsBackendService.stopMeasuring();
+        this.currentMeasurement = false;
+
         if (this.startTime && this.measurementSettingId) {
           const endTime = new Date();
           
