@@ -1,0 +1,116 @@
+<div class="container mt-4 d-flex flex-column align-items-center">
+  <div class="coil-container text-center mb-3">
+      <h2 *ngIf="coilsService.selectedElementIsNew">Neue Spule</h2>
+      <select *ngIf="!coilsService.selectedElementIsNew && coilsService.elements.length > 0"
+          class="coil-selector form-select w-150 mx-auto" id="coilSelect"
+          [(ngModel)]="selectedCoilId" (ngModelChange)="onCoilSelectionChange($event)">
+          <option *ngFor="let coil of coilsService.elements" [value]="coil.id">Spule #{{ coil.id }}</option>
+      </select>
+  </div>
+
+  <div *ngIf="selectedCoil" class="card shadow-sm p-4 w-100" style="max-width: 850px; min-height: 600px;">
+      <div class="mb-3">
+          <label class="form-label">Spulentyp: <span class="text-danger">*</span></label>
+          <div class="border p-2 rounded bg-light">
+              <div *ngIf="selectedCoil.coiltype; else noCoiltype">
+                  <p class="mb-1"><strong>ID:</strong> {{ selectedCoiltype!.id }}</p>
+                  <p class="mb-0"><strong>Name:</strong> {{ selectedCoiltype!.name }}</p>
+              </div>
+              <ng-template #noCoiltype>
+                  <p class="text-danger mb-0">Kein Spulentyp ausgewählt</p>
+              </ng-template>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openCoiltypeSelect()">Spulentyp ändern...</button>
+      </div>
+
+      <!-- Formulareingaben -->
+      <div class="mb-3">
+          <label for="auftragsNr" class="form-label">Auftrags-Nummer: <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="auftragsNr" placeholder="Auftrags-Nummer"
+              [(ngModel)]="selectedCoil.auftragsnummer" 
+              [class.is-invalid]="saveError ">
+          <div class="invalid-feedback">Bitte geben Sie eine Auftragsnummer ein.</div>
+      </div>
+
+      <div class="mb-3">
+          <label for="auftragsPosNr" class="form-label">AuftragsPosNr <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" id="auftragsPosNr" placeholder="AuftragsPosNr"
+              [(ngModel)]="selectedCoil.auftragsPosNr" min="0"
+              [class.is-invalid]="saveError && isFieldInvalid('auftragsPosNr')">
+          <div class="invalid-feedback">Bitte geben Sie eine AuftragsPosNr ein.</div>
+      </div>
+
+      <!---->
+      <div class="mb-3">
+          <label for="bemessungsspannung" class="form-label">Bemessungsspannung: <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" id="bemessungsspannung" placeholder="Bemessungsspannung"
+              [(ngModel)]="selectedCoil.bemessungsspannung" min="0"
+              [class.is-invalid]="saveError && isFieldInvalid('bemessungsspannung')">
+          <div class="invalid-feedback">Bitte geben Sie eine Bemessungsspannung ein.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="bemessungsfrequenz" placeholder="Bemessungsfrequenz"
+            [(ngModel)]="selectedCoil.bemessungsfrequenz" min="0"
+            [class.is-invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
+        <div class="invalid-feedback">Bitte geben Sie eine Bemessungsfrequenz ein.</div>
+      </div>
+
+      <div class="mb-3">
+          <label for="einheit" class="form-label">Einheit: <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" id="einheit" placeholder="Einheit"
+              [(ngModel)]="selectedCoil.einheit" min="0"
+              [class.is-invalid]="saveError && isFieldInvalid('einheit')">
+          <div class="invalid-feedback">Bitte geben Sie eine Einheit ein.</div>
+      </div>
+
+    <!--<div class="form-group mb-4">
+      <label for="content">Notiz:</label>
+      <div class="content-editor">
+                    <textarea id="content" class="form-control form-control-lg"
+                              name="content" rows="3" [(ngModel)]="selectedCoil.notiz"
+                              placeholder="Notiz..."></textarea>
+      </div>
+    </div>-->
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between mt-4">
+          <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+          <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+          <button *ngIf="!coilsService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+      </div>
+
+      <!-- Erfolgsmeldung -->
+      <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+          {{ saveMessage }}
+      </div>
+  </div>
+
+  <p class="text-danger text-center mt-3" *ngIf="!selectedCoil">Fehler: Spule konnte nicht geladen werden.</p>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
+  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Spule löschen?</h5>
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Spule löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteCoil()">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
