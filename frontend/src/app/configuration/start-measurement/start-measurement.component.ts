@@ -13,6 +13,7 @@ import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
 import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
+import { MessungService } from '../messung/services/messung.service';
 
 registerLocaleData(localeDe);
 
@@ -48,7 +49,8 @@ export class StartMeasurementComponent implements OnDestroy {
     private measurementsBackendService: MeasurementsBackendService,
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
-    private probeTypesBackendService: ProbeTypesBackendService
+    private probeTypesBackendService: ProbeTypesBackendService,
+    private messungService: MessungService
   ) {
     this.loadMeasurementSettings();
   }
@@ -282,5 +284,9 @@ export class StartMeasurementComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.stopMeasurement();
+  }
+
+  backToListing(): void {
+    this.messungService.selectedElementCopy = null;
   }
 }

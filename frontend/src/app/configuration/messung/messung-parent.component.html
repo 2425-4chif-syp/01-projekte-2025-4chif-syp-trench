@@ -1,6 +1,16 @@
-@if (coilsService.selectedElementCopy === null) {
-    <app-coil-list />
+<!--
+@if (messungService.selectedElementCopy === null) {
+    <app-messung-list />
 }
 @else {
-    <app-coil-management />
+    <app-messung-management />
+}
+    
+-->
+
+@if (messungService.selectedElementCopy === null) {
+    <app-messung-list />
+}
+@else {
+    <app-start-measurement />
 }

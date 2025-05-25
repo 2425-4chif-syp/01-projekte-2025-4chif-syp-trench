@@ -1,65 +1,47 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { CoilsService } from '../../services/coils.service';
-import { GenericListComponent } from '../../../../generic-list/components/generic-list.component';
-import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
-import { Coil } from '../../interfaces/coil';
+import { MessungService } from '../services/messung.service';
+import { GenericListComponent } from '../../../generic-list/components/generic-list.component';
+import { LIST_SERVICE_TOKEN } from '../../../generic-list/services/list-service';
+import { Messung } from '../interfaces/messung';
 import { Router } from '@angular/router';
-import { MeasurementSettingsService } from '../../../measurement-settings/services/measurement-settings.service';
 
 @Component({
-  selector: 'app-coil-list',
+  selector: 'app-messung-list',
   standalone: true,
   imports: [CommonModule, GenericListComponent],
   providers: [
     {
       provide: LIST_SERVICE_TOKEN,
-      useExisting: CoilsService
+      useExisting: MessungService
     }
   ],
-  templateUrl: './coil-list.component.html',
-  styleUrl: './coil-list.component.scss'
+  templateUrl: './messung-list.component.html',
+  styleUrl: './messung-list.component.scss'
 })
-export class CoilListComponent {
-  public hoveredCoil: Coil | null = null;
-  public mousePosition: { x: number, y: number }|null = null;
+export class MessungListComponent {
 
-  public get isCoilSelector(): boolean {
-    return this.coilsService.isCoilSelector;
+  public get isMessungSelector(): boolean {
+    return this.messungService.isMessungSelector;
   }
 
   public readonly keysAsColumns: { [key: string]: string } = {
-    'id': 'Spule',
-    'coiltype': 'Spulentyp',
-    'auftragsnummer': 'AuftragsNr',
-    'auftragsPosNr': 'AuftragsPosNr',
-    'einheit': 'Einheit',
-    'bemessungsspannung': 'Bemessungsspannung',
-    'bemessungsfrequenz': 'Bemessungsfrequenz'
+    'id': 'Messung',
+    'messeinstellungId': 'Messeinstellung',
+    'anfangszeitpunkt': 'Anfang',
+    'endzeitpunkt': 'Ende',
+    'name': 'Name',
+    'tauchkernstellung': 'Tauchkernstellung',
+    'pruefspannung': 'Prüfspannung'
   }
-  public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
-    'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coil (ID ${element.coiltypeId})`
-  }
-
-  constructor(public coilsService:CoilsService, public measurementSettingsService:MeasurementSettingsService, private router:Router) {
-
+  public readonly elementValueToStringMethods: { [key: string]: (element:Messung) => string } = {
   }
 
-  openCoil(coil:Coil) {
-    const coilId = coil.id!;
+  constructor(public messungService:MessungService, private router:Router) {
 
-    if (this.coilsService.isCoilSelector) {
-      console.log(this.measurementSettingsService.selectedElementCopy ?? "undefined 1");
+  }
 
-      this.measurementSettingsService.selectedElementCopy!.coilId = coilId;
-      console.log(this.measurementSettingsService.selectedElementCopy ?? "undefined");
-      this.measurementSettingsService.selectedElementCopy!.coil = this.coilsService.getCopyElement(coilId);
-      console.log("Test");
-
-      this.router.navigate(['/measurement-settings-list']);
-      return;
-    }
-
-    this.coilsService.selectElement(coilId);
+  openMessung(coil:Messung) {
+    
   }
 }

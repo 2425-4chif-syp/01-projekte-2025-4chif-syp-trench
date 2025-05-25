@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CoilListComponent } from './list/messung-list.component';
-import { CoilManagementComponent } from './management/messung-management.component';
-import { CoilsService } from '../services/coils.service';
+import { MessungListComponent } from './list/messung-list.component';
+import { StartMeasurementComponent } from '../start-measurement/start-measurement.component';
+// import { CoilManagementComponent } from './management/messung-management.component';
+import { MessungService } from './services/messung.service';
 
 @Component({
-  selector: 'app-coil-parent',
+  selector: 'app-messung-parent',
   standalone: true,
-  imports: [CommonModule, CoilListComponent, CoilManagementComponent],
-  templateUrl: './coil-parent.component.html',
-  styleUrl: './coil-parent.component.scss'
+  imports: [CommonModule, MessungListComponent, StartMeasurementComponent],
+  templateUrl: './messung-parent.component.html',
+  styleUrl: './messung-parent.component.scss'
 })
-export class CoilParentComponent {
-  constructor(public coilsService:CoilsService) {}
+export class MessungParentComponent {
+  constructor(public messungService:MessungService) {}
 }
