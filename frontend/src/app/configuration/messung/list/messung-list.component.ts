@@ -5,6 +5,7 @@ import { GenericListComponent } from '../../../generic-list/components/generic-l
 import { LIST_SERVICE_TOKEN } from '../../../generic-list/services/list-service';
 import { Messung } from '../interfaces/messung';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-messung-list',
@@ -14,7 +15,8 @@ import { Router } from '@angular/router';
     {
       provide: LIST_SERVICE_TOKEN,
       useExisting: MessungService
-    }
+    },
+    DatePipe
   ],
   templateUrl: './messung-list.component.html',
   styleUrl: './messung-list.component.scss'
@@ -27,17 +29,20 @@ export class MessungListComponent {
 
   public readonly keysAsColumns: { [key: string]: string } = {
     'id': 'Messung',
-    'messeinstellungId': 'Messeinstellung',
+    'name': 'Name',
+    'messeinstellung': 'Messeinstellung',
     'anfangszeitpunkt': 'Anfang',
     'endzeitpunkt': 'Ende',
-    'name': 'Name',
     'tauchkernstellung': 'Tauchkernstellung',
     'pruefspannung': 'Prüfspannung'
   }
   public readonly elementValueToStringMethods: { [key: string]: (element:Messung) => string } = {
+    'messeinstellung': (element:Messung) => element.messeinstellung?.name ?? `Unbekannte Messeinstellung (ID ${element.messeinstellungId})`,
+    'anfangszeitpunkt': (element:Messung) => this.datePipe.transform(element.anfangszeitpunkt!, 'dd.MM.yyyy HH:mm:ss') ?? `Unbekannt`,
+    'endzeitpunkt': (element:Messung) => this.datePipe.transform(element.endzeitpunkt!, 'dd.MM.yyyy HH:mm:ss') ?? `Unbekannt`
   }
 
-  constructor(public messungService:MessungService, private router:Router) {
+  constructor(public messungService:MessungService, private router:Router, private datePipe: DatePipe) {
 
   }
 
