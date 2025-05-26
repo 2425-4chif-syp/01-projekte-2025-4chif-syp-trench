@@ -206,6 +206,12 @@ export class StartMeasurementComponent implements OnDestroy {
           console.error('Fehler beim Laden der Messeinstellungen:', err);
           this.error = 'Fehler beim Laden der Messeinstellungen';
           this.isLoading = false;
+          console.log("yokeData: " + this.yokeData);
+          console.log("m_tot: " + this.m_tot);
+          console.log("selectedMeasurementSetting probeType: " + this.selectedMeasurementSetting!.probeType!);
+          console.log("coiltype: " + this.selectedMeasurementSetting!.coil!.coiltype);
+          console.log("coil: " + this.selectedMeasurementSetting!.coil!);
+          console.log("measurementSetting: " + this.selectedMeasurementSetting!);
         }
       });
     } catch (error) {
@@ -226,7 +232,7 @@ export class StartMeasurementComponent implements OnDestroy {
           const endTime = new Date();
           
           const measurementData = {
-            id: null,
+            id: 0,
             messeinstellungID: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
