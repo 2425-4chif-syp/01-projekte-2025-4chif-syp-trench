@@ -13,39 +13,11 @@ export class MeasurementSettingsBackendService {
 
   constructor(private backendService: BackendService, private coilBackendService: CoilsBackendService, private coilTypeBackendService: CoiltypesBackendService) { }
 
-  private coiltypeBackendToFrontend(coiltype: any): Coiltype {
-    return {
-      id: coiltype.id,
-      name: coiltype.name,
-      schenkel: coiltype.schenkelzahl,
-      bandbreite: coiltype.bandbreite,
-      schichthoehe: coiltype.schichthoehe,
-      durchmesser: coiltype.durchmesser,
-      toleranzbereich: coiltype.toleranzbereich,
-      notiz: coiltype.notiz
-    };
-  }
-  
-  private coilBackendToFrontend(coil: any): Coil {
-    return {
-      id: coil.id,
-      coiltype: this.coilTypeBackendService.coiltypeBackendToFrontend(coil.spuleTyp),
-      coiltypeId: coil.spuleTypID,
-      einheit: coil.einheit,
-      auftragsnummer: coil.auftragsnr,
-      auftragsPosNr: coil.auftragsPosNr,
-      bemessungsfrequenz: coil.bemessungsfrequenz,
-      bemessungsspannung: coil.bemessungsspannung,
-      notiz: coil.notiz
-    };
-  }  
-
   public measurementSettingsBackendToFrontend(measurementSettings: any): MeasurementSetting {
     console.log("MAPPED Coiltype:", this.coilBackendService.coilBackendToFrontend(measurementSettings.spule).coiltype);
     const tmp: MeasurementSetting = {
       id: measurementSettings.id,
       coil: this.coilBackendService.coilBackendToFrontend(measurementSettings.spule),
-      //coil: this.coilBackendToFrontend(measurementSettings.spule),
       coilId: measurementSettings.spuleID,
       probeType: measurementSettings.sondenTyp,
       probeTypeId: measurementSettings.sondenTypID,
