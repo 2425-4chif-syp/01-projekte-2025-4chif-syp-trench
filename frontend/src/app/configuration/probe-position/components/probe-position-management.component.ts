@@ -13,27 +13,29 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './probe-position-management.component.html',
-  styleUrl: './probe-position-management.component.scss'
+  styleUrl:    './probe-position-management.component.scss'
 })
 export class ProbePositionManagementComponent {
   probes: Probe[] = [];
   groupedProbePositions: ProbePosition[][] = [];
-  probePositions: ProbePosition[][] = [];
   schenkelzahl = 3;
-  selectedPositionForProbeSelection: ProbePosition | null = null;
 
   constructor(
     private measurementSettingsService: MeasurementSettingsService,
-    private probeService: ProbesService,
-    private probePositionService: ProbePositionService,
-    private router: Router
+    private probeService:              ProbesService,
+    private probePositionService:      ProbePositionService,
+    private router:                    Router
   ) {}
 
   async ngOnInit(): Promise<void> {
     await this.probePositionService.reloadElements();
-    
-    const einstellung = this.measurementSettingsService.selectedElementCopy!;
-    const sondenProSchenkel = einstellung.sondenProSchenkel ?? 0;
+
+    const einstellung        = this.measurementSettingsService.selectedElementCopy!;
+    const sondenProSchenkel  = einstellung.sondenProSchenkel ?? 0;
+
+    this.probePositionService.elements =
+      this.probePositionService.elements
+        .filter(p => p.measurementSettingsId === einstellung.id);
 
     this.probePositionService.createEmptyPositions(
       this.schenkelzahl,
@@ -41,23 +43,16 @@ export class ProbePositionManagementComponent {
       einstellung
     );
 
-    console.log(this.probePositionService.elements);
     this.loadGroupedProbePositions();
   }
 
-  openProbeSelector(position: ProbePosition) {
-    console.log('Opening probe selector for position:', position);
-    console.log(this.probeService.isProbeSelector);
-    this.selectedPositionForProbeSelection = null;
+  openProbeSelector(position: ProbePosition): void {
     this.probeService.isProbeSelector = true;
-    console.log(this.probeService.isProbeSelector);
     this.probePositionService.selectedElementCopy = position;
-    
     this.router.navigate(['/probe-management']);
   }
 
   loadGroupedProbePositions(): void {
     this.groupedProbePositions = this.probePositionService.getGroupedProbePositions();
   }
-
 }

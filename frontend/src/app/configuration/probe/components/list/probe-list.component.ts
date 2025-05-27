@@ -5,7 +5,6 @@ import { GenericListComponent } from '../../../../generic-list/components/generi
 import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
 import { Probe } from '../../interfaces/probe';
 import { Router } from '@angular/router';
-import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
 
 @Component({
@@ -13,57 +12,49 @@ import { ProbePositionService } from '../../../probe-position/services/probe-pos
   standalone: true,
   imports: [CommonModule, GenericListComponent],
   providers: [
-    {
-      provide: LIST_SERVICE_TOKEN,
-      useExisting: ProbesService
-    }
+    { provide: LIST_SERVICE_TOKEN, useExisting: ProbesService }
   ],
   templateUrl: './probe-list.component.html',
-  styleUrl: './probe-list.component.scss'
+  styleUrl:    './probe-list.component.scss'
 })
 export class ProbeListComponent {
-
-  public get isProbeSelector(): boolean {
+  get isProbeSelector(): boolean {
     return this.probesService.isProbeSelector;
   }
 
-  public readonly keysAsColumns: { [key: string]: string } = {
-    'id': 'Spule',
-    'name': 'Name',
-    'probeType': 'Sondentyp',
-    'kalibrierungsfaktor': 'Kalibrierungsfaktor'
-  }
-  public readonly elementValueToStringMethods: { [key: string]: (element:Probe) => string } = {
-    'probeType': (element:Probe) => element.probeType?.name ?? `Unnamed ProbeType (ID ${element.probeTypeId})`
-  }
+  readonly keysAsColumns: { [key: string]: string } = {
+    id: 'Spule',
+    name: 'Name',
+    probeType: 'Sondentyp',
+    kalibrierungsfaktor: 'Kalibrierungsfaktor'
+  };
 
-  constructor(public probesService:ProbesService, private probePositionService: ProbePositionService, private router:Router) {
+  readonly elementValueToStringMethods = {
+    probeType: (e: Probe) => e.probeType?.name ?? `Unnamed ProbeType (ID ${e.probeTypeId})`
+  };
 
-  }
+  constructor(
+    public  probesService:      ProbesService,
+    private probePositionService: ProbePositionService,
+    private router:             Router
+  ) {}
 
-  openProbe(probe:Probe) {
-    const probeId = probe.id!;
+
+  openProbe(probe: Probe): void {
 
     if (this.probesService.isProbeSelector) {
-      console.log(`Probe selected: ${probeId}`);
 
-      const probePosition = this.probePositionService.selectedElementCopy;
-      let tmp = this.probePositionService.newElement;
-      tmp.id = 1;
-      tmp.measurementProbeId = probeId;
-      tmp.measurementProbe = probe;
-      tmp.measurementSettingsId = probePosition?.measurementSettingsId ?? 0;
-      tmp.measurementSetting = probePosition?.measurementSetting ?? null;
-      tmp.schenkel = probePosition?.schenkel ?? 0;
-      tmp.position = probePosition?.position ?? 0;
+      const pos = this.probePositionService.selectedElementCopy!;
+      pos.measurementProbeId  = probe.id;
+      pos.measurementProbe    = probe;
 
-      this.probePositionService.updateOrCreateElement(tmp);
+      this.probePositionService.updateOrCreateElement(pos);
 
       this.probesService.isProbeSelector = false;
       this.router.navigate(['/measurement-settings-list']);
       return;
     }
 
-    this.probesService.selectElement(probeId);
+    this.probesService.selectElement(probe.id!);
   }
 }
