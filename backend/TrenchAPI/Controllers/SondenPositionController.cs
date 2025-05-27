@@ -57,36 +57,62 @@ namespace TrenchAPI.Controllers
             return sondenPosition;
         }
 
-        // PUT: api/SondenPosition/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSondenPosition(int id, SondenPosition sondenPosition)
-        {
-            if (id != sondenPosition.ID)
-            {
-                return BadRequest();
-            }
+        // PUT: api/SondenPosition/5 
+        [HttpPut("{id}")] 
+        public async Task<IActionResult> PutSondenPosition(int id, SondenPositionUpdateDto sondenPositionDto) 
+        { 
+            if (id != sondenPositionDto.ID) 
+            { 
+                return BadRequest("Die ID in der Route stimmt nicht mit der ID des DTO überein."); 
+            } 
 
-            _context.Entry(sondenPosition).State = EntityState.Modified;
+            if (!ModelState.IsValid) 
+            { 
+                return BadRequest(ModelState); 
+            } 
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SondenPositionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (!_context.Sonde.Any(st => st.ID == sondenPositionDto.SondeID)) 
+            { 
+                return BadRequest("Der angegebene Sonde existiert nicht."); 
+            } 
 
-            return NoContent();
-        }
+            if (!_context.Messeinstellung.Any(me => me.ID == sondenPositionDto.MesseinstellungID)) 
+            { 
+                return BadRequest("Die angegebene Messeinstellung existiert nicht."); 
+            } 
+
+            var sondenPosition = await _context.SondenPosition 
+                                               .FirstOrDefaultAsync(sp => sp.ID == id); 
+
+            if (sondenPosition == null) 
+            { 
+                return NotFound(); 
+            } 
+
+            // Entity aktualisieren 
+            sondenPosition.SondeID = sondenPositionDto.SondeID; 
+            sondenPosition.MesseinstellungID = sondenPositionDto.MesseinstellungID; 
+            sondenPosition.Position = sondenPositionDto.Position; 
+            sondenPosition.Schenkel = sondenPositionDto.Schenkel; 
+
+            try 
+            { 
+                await _context.SaveChangesAsync(); 
+            } 
+            catch (DbUpdateConcurrencyException) 
+            { 
+                if (!SondenPositionExists(id)) 
+                { 
+                    return NotFound(); 
+                } 
+                else 
+                { 
+                    throw; 
+                } 
+            } 
+
+            return NoContent(); 
+        } 
 
         // POST: api/SondenPosition
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
