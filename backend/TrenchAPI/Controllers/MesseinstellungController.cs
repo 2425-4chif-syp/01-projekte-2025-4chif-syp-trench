@@ -63,18 +63,15 @@ namespace TrenchAPI.Controllers
 
             if (messeinstellung == null) return NotFound();
 
-            // FK-Validierung
             if (!_context.Spule.Any(s => s.ID == dto.SpuleID))
                 return BadRequest("Die angegebene Spule existiert nicht.");
             if (!_context.SondenTyp.Any(st => st.ID == dto.SondenTypID))
                 return BadRequest("Der angegebene Sondentyp existiert nicht.");
 
-            // --- Mapping (manuell oder via AutoMapper) ------------------
             messeinstellung.SpuleID            = dto.SpuleID;
             messeinstellung.SondenTypID        = dto.SondenTypID;
             messeinstellung.SondenProSchenkel  = dto.SondenProSchenkel;
             messeinstellung.Name               = dto.Name;
-            // -------------------------------------------------------------
 
             await _context.SaveChangesAsync();
             return NoContent();

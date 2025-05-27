@@ -52,15 +52,12 @@ namespace TrenchAPI.Controllers
             var sonde = await _context.Sonde.FirstOrDefaultAsync(s => s.ID == id);
             if (sonde == null) return NotFound();
 
-            // FK-Validierung
             if (!_context.SondenTyp.Any(st => st.ID == dto.SondenTypID))
                 return BadRequest("Der angegebene Sondentyp existiert nicht.");
 
-            // --- Mapping (manuell oder via AutoMapper) ------------------
             sonde.SondenTypID        = dto.SondenTypID;
             sonde.Name               = dto.Name;
             sonde.Kalibrierungsfaktor= dto.Kalibrierungsfaktor;
-            // -------------------------------------------------------------
 
             await _context.SaveChangesAsync();
             return NoContent();
