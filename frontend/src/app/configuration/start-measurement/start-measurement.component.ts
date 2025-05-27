@@ -102,24 +102,22 @@ export class StartMeasurementComponent implements OnDestroy {
 
       // Dann lade die Coiltype-Informationen
       const coilData = coil as any;
-      let coiltype = coilData.coiltype;
-      if (!coiltype && coilData.coiltypeId) {
-        console.log('Lade Coiltype mit ID:', coilData.coiltypeId);
-        coiltype = await this.coiltypesBackendService.getCoiltype(coilData.coiltypeId);
+      let coiltype = coilData.spuleTyp;
+      if (!coiltype && coilData.spuleTypID) {
+        console.log('Lade Coiltype mit ID:', coilData.spuleTypID);
+        coiltype = await this.coiltypesBackendService.getCoiltype(coilData.spuleTypID);
         if (!coiltype) {
           throw new Error('Coiltype konnte nicht geladen werden');
         }
-        coilData.coiltype = coiltype;
+        coilData.spuleTyp = coiltype;
       }
-
-      console.log('Coiltype:', coilData.coiltype);
 
       if (!coiltype) {
         throw new Error('Keine Coiltype-Informationen verfügbar');
       }
 
       // Überprüfe die Schenkelzahl
-      if (!coiltype.schenkel) {
+      if (!coiltype.schenkelzahl) {
         throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
       }
 
@@ -130,7 +128,7 @@ export class StartMeasurementComponent implements OnDestroy {
       this.selectedMeasurementSetting!.probeType = measurementProbeType;
 
 
-      const yokeCount = coiltype.schenkel;
+      const yokeCount = coiltype.schenkelzahl;
       const sensorCount = measurementSetting.sondenProSchenkel || 0;
       
       if (sensorCount <= 0) {
