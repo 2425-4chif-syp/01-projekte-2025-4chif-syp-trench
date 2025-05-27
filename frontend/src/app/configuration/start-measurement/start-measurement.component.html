@@ -1,5 +1,7 @@
 <div class="container py-4">
-
+  <h2 class="mt-1 mb-5 text-center">
+    Messung
+  </h2>
   <div class="d-flex justify-content-center gap-3 mb-4">
     <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected || !isValid()">
       🧪 Messung starten
@@ -45,14 +47,31 @@
   </div>
 
   @if (isConnected) {
-    <app-displacement-visualization [size]="512" 
-    [yokes]="yokes"
-    [measurementProbeType]="selectedMeasurementSetting!.probeType!"
-    [measurementProbes]="[]"
-    [coiltype]="selectedMeasurementSetting!.coil!.coiltype!"
-    [coil]="selectedMeasurementSetting!.coil!"
-    [measurementSetting]="selectedMeasurementSetting!"
-    />
+    <div class="m-4">
+      <app-displacement-visualization [size]="512" 
+      [yokeData]="yokeData"
+      [m_tot]="m_tot"
+      [probeType]="selectedMeasurementSetting!.probeType!"
+      [probes]="[]"
+      [coiltype]="selectedMeasurementSetting!.coil!.coiltype!"
+      [coil]="selectedMeasurementSetting!.coil!"
+      [measurementSetting]="selectedMeasurementSetting!"
+      />
+    </div>
+
+    <div class="mt-4">
+      <ul>
+        <li>
+          <strong>Absolutwert der Summenkraft</strong>: {{ m_tot | number: '1.2-2' }}kg
+        </li>
+        <li>
+          <strong>Toleranzbereich</strong>: {{ selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich! | number: '1.2-2' }}kg
+        </li>
+        <li>
+          <strong>In der Toleranz</strong>: <span [ngClass]="{ 'text-success': isWithinTolerance, 'text-danger': !isWithinTolerance }">{{ isWithinTolerance ? 'Ja' : 'Nein' }}</span>
+        </li>
+      </ul>
+    </div>
 
     @for (yoke of yokes(); track $index) {
       <div class="mb-5">

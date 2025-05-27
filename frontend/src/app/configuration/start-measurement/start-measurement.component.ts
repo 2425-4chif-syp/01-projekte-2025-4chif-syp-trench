@@ -12,6 +12,7 @@ import { CoilsBackendService } from '../coil/services/coils-backend.service';
 import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
+import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 
 registerLocaleData(localeDe);
 
@@ -25,13 +26,17 @@ registerLocaleData(localeDe);
 })
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
+  yokeData = signal<{ x: number; y: number }[][]>([]);
+  m_tot: number = 0;
   sensorValues: { [key: string]: number } = {}; 
+
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
   note: string = '';
   showIdError: boolean = false;
   isLoading: boolean = true;
   error: string | null = null;
+  currentMeasurement: boolean = false;
   
   private startTime: Date | null = null;
   private measurementData: { [key: string]: number[] } = {};
@@ -39,8 +44,8 @@ export class StartMeasurementComponent implements OnDestroy {
 
   constructor(
     private webSocketService: WebSocketService,
+    private displacementCalculationService: DisplacementCalculationService,
     public measurementSettingsService: MeasurementSettingsService,
-    private measurementSettingsBackendService: MeasurementSettingsBackendService,
     private measurementsBackendService: MeasurementsBackendService,
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
@@ -51,6 +56,10 @@ export class StartMeasurementComponent implements OnDestroy {
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
+  }
+
+  public get isWithinTolerance(): boolean {
+    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
   }
 
   async loadMeasurementSettings(): Promise<void> {
@@ -74,17 +83,16 @@ export class StartMeasurementComponent implements OnDestroy {
 
     try {
       // Hole die Messeinstellung direkt vom Backend
-      const measurementSetting = await this.measurementSettingsBackendService.getMeasurementSettings(this.measurementSettingId!);
+      const measurementSetting = await this.measurementSettingsService.reloadElementWithId(this.measurementSettingId!);
       if (!measurementSetting) {
         this.showIdError = true;
         this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
         throw new Error('Keine Messeinstellung ausgewählt');
       }
 
-      this.error = null;
-      this.showIdError = false;
-
-      console.log('Ausgewählte Messeinstellung:', measurementSetting);
+      // Starte die Messung im Backend
+      await this.measurementsBackendService.startMeasuring();
+      this.currentMeasurement = true;
 
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
@@ -101,15 +109,14 @@ export class StartMeasurementComponent implements OnDestroy {
       }
 
       // Dann lade die Coiltype-Informationen
-      const coilData = coil as any;
-      let coiltype = coilData.spuleTyp;
-      if (!coiltype && coilData.spuleTypID) {
-        console.log('Lade Coiltype mit ID:', coilData.spuleTypID);
-        coiltype = await this.coiltypesBackendService.getCoiltype(coilData.spuleTypID);
+      let coiltype = coil.coiltype;
+      if (!coiltype && coil.coiltypeId) {
+        console.log('Lade Coiltype mit ID:', coil.coiltypeId);
+        coiltype = await this.coiltypesBackendService.getCoiltype(coil.coiltypeId);
         if (!coiltype) {
           throw new Error('Coiltype konnte nicht geladen werden');
         }
-        coilData.spuleTyp = coiltype;
+        coil.coiltype = coiltype;
       }
 
       if (!coiltype) {
@@ -117,18 +124,18 @@ export class StartMeasurementComponent implements OnDestroy {
       }
 
       // Überprüfe die Schenkelzahl
-      if (!coiltype.schenkelzahl) {
+      if (!coiltype.schenkel) {
         throw new Error('Keine Schenkel-Informationen im Coiltype verfügbar');
       }
 
-      let measurementProbeType = this.selectedMeasurementSetting!.probeType;
-      if (measurementProbeType === null) {
-        measurementProbeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
+      let probeType = this.selectedMeasurementSetting!.probeType;
+      if (probeType === null) {
+        probeType = await this.probeTypesBackendService.getProbeType(this.selectedMeasurementSetting?.probeTypeId!);
       }
-      this.selectedMeasurementSetting!.probeType = measurementProbeType;
+      this.selectedMeasurementSetting!.probeType = probeType;
 
 
-      const yokeCount = coiltype.schenkelzahl;
+      const yokeCount = coiltype.schenkel;
       const sensorCount = measurementSetting.sondenProSchenkel || 0;
       
       if (sensorCount <= 0) {
@@ -180,7 +187,19 @@ export class StartMeasurementComponent implements OnDestroy {
             updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
             return updatedYokes;
           });
-          
+
+          const result = this.displacementCalculationService.calculateYokeData(
+            this.yokes(),
+            probeType!,
+            [],
+            coiltype!,
+            coil!,
+            measurementSetting!
+          );
+
+          this.yokeData.set(result.F);
+          this.m_tot = result.m_tot;
+
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;
           if (this.measurementData[key]) {
             this.measurementData[key].push(sensorValue);
@@ -206,13 +225,21 @@ export class StartMeasurementComponent implements OnDestroy {
       this.isConnected = false;
       
       try {
+        // Stoppe die Messung im Backend
+        await this.measurementsBackendService.stopMeasuring();
+        this.currentMeasurement = false;
+
         if (this.startTime && this.measurementSettingId) {
           const endTime = new Date();
           
           const measurementData = {
+            id: null,
             messeinstellungID: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
+            name: "",
+            tauchkernstellung: 0,
+            pruefspannung: 0,
             notiz: this.note || "",
             messsonden: this.createMesssondenData().map(sonde => ({
               schenkel: sonde.schenkel,

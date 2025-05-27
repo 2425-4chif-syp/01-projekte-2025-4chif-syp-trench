@@ -63,4 +63,16 @@ export class MeasurementsBackendService {
   public async saveMeasurement(measurementData: any): Promise<any> {
     return this.backendService.httpPostRequest('Messung/Complete', measurementData);
   }
+
+  public async startMeasuring(): Promise<void> {
+    await this.backendService.httpPostRequest('Messung/startMeasuring', {});
+  }
+
+  public async stopMeasuring(): Promise<void> {
+    await this.backendService.httpPostRequest('Messung/stopMeasuring', {});
+  }
+
+  public async getCurrentMessungValues(): Promise<any[]> {
+    return this.backendService.httpGetRequest('Messung/Current/Values');
+  }
 }

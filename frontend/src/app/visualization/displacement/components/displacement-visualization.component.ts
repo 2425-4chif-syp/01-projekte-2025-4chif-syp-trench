@@ -18,9 +18,10 @@ import { Probe } from '../../../configuration/probe/interfaces/probe';
 })
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
-  @Input() yokes = signal<{sensors:number[]}[]>([]);
-  @Input() measurementProbeType:ProbeType = null!;
-  @Input() measurementProbes:Probe[] = [];
+  @Input() yokeData = signal<{ x: number; y: number }[][]>([]);
+  @Input() m_tot:number = 0;
+  @Input() probeType:ProbeType = null!;
+  @Input() probes:Probe[] = [];
   @Input() coil:Coil = null!;
   @Input() coiltype:Coiltype = null!;
   @Input() measurementSetting:MeasurementSetting = null!;
@@ -45,9 +46,9 @@ export class DisplacementVisualizationComponent {
     
     effect(() => {
       // Re-run updateVisualization whenever any of these signals/inputs change
-      this.yokes();
-      this.measurementProbeType;
-      this.measurementProbes;
+      this.yokeData();
+      this.probeType;
+      this.probes;
       this.coil;
       this.coiltype;
       this.measurementSetting;
@@ -56,16 +57,7 @@ export class DisplacementVisualizationComponent {
   }
 
   public updateVisualization():void {
-    const result = this.displacementCalculationService.calculateYokeData(
-      this.yokes(),
-      this.measurementProbeType,
-      this.measurementProbes,
-      this.coiltype,
-      this.coil,
-      this.measurementSetting
-    );
-
-    this.calcResults = result.map(branch => {
+    this.calcResults = this.yokeData().map(branch => {
       return branch.map(sensor => {
         const length = this.calculateVectorLength(sensor.x, sensor.y);
         const angle = this.calculateVectorAngle(sensor.x, sensor.y);
@@ -88,7 +80,7 @@ export class DisplacementVisualizationComponent {
   }
 
   public get rotationOffset():number {
-    switch (this.yokes().length) {
+    switch (this.coiltype.schenkel) {
       case 2:
         return 180;
       case 3:
@@ -100,12 +92,12 @@ export class DisplacementVisualizationComponent {
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta - 0.125;
 
     return Math.cos(branch.angle) * newLength;
   }
   public scaledBranchResultY(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta;
+    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta - 0.125;
 
     return Math.sin(branch.angle) * newLength;
   }
@@ -143,22 +135,23 @@ export class DisplacementVisualizationComponent {
     }
   }
 
-  // TrackBy function to help Angular identify items in the *ngFor loop
-  trackByBranch(index: number, branch: { sensors: number[] }): number {
-    return index; // Use the index as the unique identifier
+  public get toleranceCircleRadius():number {
+    return this.finalVector.length / this.averageLength / this.m_tot * this.coiltype.toleranzbereich! * 6;
   }
-
-  trackBySensor(index: number, sensor: number): number {
-    return index; // Use the index as the unique identifier
+  public get isWithinTolerance():boolean {
+    return this.m_tot < this.coiltype.toleranzbereich!;
+  }
+  public get toleranceColor():string {
+    return this.isWithinTolerance ? '#00FF00' : '#FF0000';
   }
 
   public getArrowColor(index:number):string {
     switch (index % 4) {
-      case 0: return 'red';
-      case 1: return 'lime';
-      case 2: return 'blue';
-      case 3: return 'yellow';
-      default: return 'black';
+      case 0: return '#800000';
+      case 1: return '#008000';
+      case 2: return '#004080';
+      case 3: return '#808000';
+      default: return '#000000';
     }
   }
 

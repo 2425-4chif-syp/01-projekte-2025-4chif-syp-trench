@@ -19,13 +19,13 @@ export class MeasurementSettingsBackendService {
       id: measurementSettings.id,
       coil: this.coilBackendService.coilBackendToFrontend(measurementSettings.spule),
       coilId: measurementSettings.spuleID,
-      probeType: measurementSettings.sondenTyp,
-      probeTypeId: measurementSettings.sondenTypID,
+      measurementProbeType: measurementSettings.sondenTyp,
+      measurementProbeTypeId: measurementSettings.sondenTypID,
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
-      name: measurementSettings.name
+      name: measurementSettings.name,
+      probeType: measurementSettings.sondenTyp,
+      probeTypeId: measurementSettings.sondenTypID
     };
-
-    console.log("MAPPED MeasurementSettings:", tmp);
 
     return tmp;
   }

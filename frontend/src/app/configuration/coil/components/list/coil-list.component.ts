@@ -33,9 +33,9 @@ export class CoilListComponent {
     'coiltype': 'Spulentyp',
     'auftragsnummer': 'AuftragsNr',
     'auftragsPosNr': 'AuftragsPosNr',
-    'ur': 'UR',
     'einheit': 'Einheit',
-    'omega': 'Omega'
+    'bemessungsspannung': 'Bemessungsspannung',
+    'bemessungsfrequenz': 'Bemessungsfrequenz'
   }
   public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
     'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coil (ID ${element.coiltypeId})`
