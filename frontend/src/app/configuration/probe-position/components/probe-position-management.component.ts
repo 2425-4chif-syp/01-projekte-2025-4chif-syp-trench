@@ -38,7 +38,7 @@ export class ProbePositionManagementComponent {
         .filter(p => p.measurementSettingsId === einstellung.id);
 
     this.probePositionService.createEmptyPositions(
-      this.schenkelzahl,
+      this.measurementSettingsService.selectedElementCopy!.coil?.coiltype?.schenkel ?? 0,
       sondenProSchenkel,
       einstellung
     );
