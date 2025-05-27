@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Trench Group Coil Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css">
+    <style>
+      body { background: #fff8f1; }
+      .section-title { color: #888; font-size: 1.2em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- Titelfolie -->
+        <section>
+          <h1>Trench Group Coil Visualization</h1>
+          <p>HTL Leonding – 4CHIF – SYP-Projekt</p>
+        </section>
+
+        <!-- ABOUT -->
+        <section>
+          <section>
+            <h2>ABOUT</h2>
+          </section>
+          <section>
+            <div class="section-title">ABOUT</div>
+            <h3>What is this project?</h3>
+            <p>This project is the SYP-Project of the 4CHIF class of the HTL Leonding.</p>
+            <p>It helps Trench Group visualize and validate <strong>core deviation</strong> in Arc Suppression Coils.</p>
+            <p>It checks whether deviations are within the <strong>allowed tolerance</strong>.</p>
+          </section>
+          <section>
+            <div class="section-title">ABOUT</div>
+            <h3>Project Team</h3>
+            <ul>
+              <li><strong>Filip Schauer</strong> — Frontend Lead</li>
+              <li><strong>Emil Silber</strong> — Backend Lead</li>
+              <li>Aaron Schreiegg — Frontend</li>
+              <li>Axel Csomany — Frontend</li>
+              <li>Simon Pesut — Backend, Database, Deployment</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- USAGE -->
+        <section>
+          <section>
+            <h2>USAGE</h2>
+          </section>
+          <section>
+            <div class="section-title">USAGE</div>
+            <h3>Benutzerrollen</h3>
+            <ul>
+              <li><strong>Admin:</strong> Voller Zugriff inkl. Benutzerverwaltung</li>
+              <li><strong>Monteur:</strong> Zugriff auf Funktionen, aber keine Schreibrechte für Typen</li>
+            </ul>
+          </section>
+          <section>
+            <div class="section-title">USAGE</div>
+            <h3>Entitäten</h3>
+            <ul>
+              <li>Spulentyp</li>
+              <li>Spule</li>
+              <li>Sondentyp</li>
+              <li>Sonde</li>
+              <li>Sondenposition</li>
+              <li>Messeinstellung</li>
+              <li>Messung</li>
+              <li>Messwert</li>	
+            </ul>
+          </section>
+          <section>
+            <div class="section-title">USAGE</div>
+            <h3>Messungen</h3>
+            <p>Messung starten durch Auswahl der Einstellung</p>
+            <p>Echtzeit-Visualisierung, global zugänglich, Optionen: Pause, Speichern, Abbrechen.</p>
+          </section>
+        </section>
+
+        <!-- CODE -->
+        <section>
+          <section>
+            <h2>CODE</h2>
+          </section>
+          <section>
+            <div class="section-title">CODE</div>
+            <h3>Filestructure</h3>
+            <ul>
+              <li><code>docs/</code> – Dokumentation (Asciidoctor + Reveal.js)</li>
+              <li><code>frontend/</code> – Angular App</li>
+              <li><code>backend/</code> – .NET Core + MQTT Simulation</li>
+            </ul>
+          </section>
+          <section>
+            <div class="section-title">CODE</div>
+            <h3>REST API (Kurzfassung)</h3>
+            <p><strong>Auth:</strong> POST</p>
+            <p><strong>Messeinstellung:</strong> GET/POST/PUT/DELETE</p>
+            <p><strong>Sonde/Sondentyp:</strong> GET/POST/PUT/DELETE</p>
+            <p><strong>Spule/Spulentyp:</strong> GET/POST/PUT/DELETE</p>
+            <p><strong>Sondenposition:</strong> GET/POST/PUT/DELETE</p>
+            <p><strong>Messung:</strong> GET/POST/PUT/DELETE</p>
+            <p><strong>Messwert:</strong> GET/POST/PUT/DELETE</p>
+          </section>
+        </section>
+
+        <!-- DIAGRAMS -->
+        <section>
+          <section>
+            <h2>DIAGRAMS</h2>
+          </section>
+          <section>
+            <div class="section-title">DIAGRAMS</div>
+            <h3>Architekturübersicht</h3>
+            <img src="images/architecture-diagram.png" style="width:80%">
+          </section>
+          <section>
+            <div class="section-title">DIAGRAMS</div>
+            <h3>ERD-Diagram</h3>
+            <img src="images/erd.png" style="width:80%">
+          </section>
+          <section>
+            <div class="section-title">DIAGRAMS</div>
+            <h3>USE-CASE-Diagram</h3>
+            <img src="images/use-case.png" style="width:80%">
+          </section>
+          <section>
+            <div class="section-title">DIAGRAMS</div>
+            <h3>USE-CASE-Diagram</h3>
+            <img src="images/use-case.png" style="width:80%">
+          </section>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({ hash: true });
+      hljs.highlightAll();
+    </script>
+  </body>
+</html>
