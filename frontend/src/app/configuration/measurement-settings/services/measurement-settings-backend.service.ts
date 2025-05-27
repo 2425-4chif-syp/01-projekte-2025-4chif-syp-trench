@@ -19,12 +19,10 @@ export class MeasurementSettingsBackendService {
       id: measurementSettings.id,
       coil: this.coilBackendService.coilBackendToFrontend(measurementSettings.spule),
       coilId: measurementSettings.spuleID,
-      measurementProbeType: measurementSettings.sondenTyp,
-      measurementProbeTypeId: measurementSettings.sondenTypID,
+      probeType: measurementSettings.sondenTyp,
+      probeTypeId: measurementSettings.sondenTypID,
       sondenProSchenkel: measurementSettings.sondenProSchenkel,
       name: measurementSettings.name,
-      probeType: measurementSettings.sondenTyp,
-      probeTypeId: measurementSettings.sondenTypID
     };
 
     return tmp;
