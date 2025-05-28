@@ -13,6 +13,7 @@ import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
 import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
+import { MessungService } from '../messung/services/messung.service';
 
 registerLocaleData(localeDe);
 
@@ -49,7 +50,8 @@ export class StartMeasurementComponent implements OnDestroy {
     private measurementsBackendService: MeasurementsBackendService,
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
-    private probeTypesBackendService: ProbeTypesBackendService
+    private probeTypesBackendService: ProbeTypesBackendService,
+    private messungService: MessungService
   ) {
     this.loadMeasurementSettings();
   }
@@ -209,6 +211,12 @@ export class StartMeasurementComponent implements OnDestroy {
           console.error('Fehler beim Laden der Messeinstellungen:', err);
           this.error = 'Fehler beim Laden der Messeinstellungen';
           this.isLoading = false;
+          console.log("yokeData: " + this.yokeData);
+          console.log("m_tot: " + this.m_tot);
+          console.log("selectedMeasurementSetting probeType: " + this.selectedMeasurementSetting!.probeType!);
+          console.log("coiltype: " + this.selectedMeasurementSetting!.coil!.coiltype);
+          console.log("coil: " + this.selectedMeasurementSetting!.coil!);
+          console.log("measurementSetting: " + this.selectedMeasurementSetting!);
         }
       });
     } catch (error) {
@@ -233,7 +241,7 @@ export class StartMeasurementComponent implements OnDestroy {
           const endTime = new Date();
           
           const measurementData = {
-            id: null,
+            id: 0,
             messeinstellungID: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
@@ -291,5 +299,9 @@ export class StartMeasurementComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.stopMeasurement();
+  }
+
+  backToListing(): void {
+    this.messungService.selectedElementCopy = null;
   }
 }
