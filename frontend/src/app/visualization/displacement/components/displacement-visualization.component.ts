@@ -145,6 +145,10 @@ export class DisplacementVisualizationComponent {
     return this.isWithinTolerance ? '#00FF00' : '#FF0000';
   }
 
+  public get toleranceMagnificationAmount():number {
+    return 12 / (this.toleranceCircleRadius * 1.5) / 2;
+  }
+
   public getArrowColor(index:number):string {
     switch (index % 4) {
       case 0: return '#800000';

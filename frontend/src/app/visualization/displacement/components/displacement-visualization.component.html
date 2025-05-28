@@ -195,12 +195,30 @@
           fill="none"
           [attr.transform]="'rotate('+rotationOffset+')'"
         >
+          <!-- Tolerance background -->
+          <g>
+            <mask id="tolerance-circle-mask">
+              <!-- The larger circle is filled with white (visible) -->
+              <rect width="100%" height="100%" fill="white" />
+              <!-- The smaller circle is filled with black (invisible) -->
+              <circle cx="12" cy="12" [attr.r]="toleranceCircleRadius * toleranceMagnificationAmount" fill="black" />
+            </mask>
+            <circle cx="12" cy="12" r="6" fill="red" mask="url(#tolerance-circle-mask)" 
+              [attr.fill-opacity]="isWithinTolerance ? '0.0625' : '0.25'"
+            />
+
+            <circle cx="12" cy="12" [attr.r]="toleranceCircleRadius * toleranceMagnificationAmount" fill="lime"
+            [attr.fill-opacity]="isWithinTolerance ? '0.25' : '0.0625'"  
+            />
+          </g>
+
+          <!-- Border circle -->
           <circle cx="12" cy="12" r="6" 
                 fill="none" 
                 stroke="#000000" 
-                [attr.stroke-width]="isHoveringOverBorder ? '0.125' : '0.0625'"
-                [attr.stroke-opacity]="isHoveringOverBorder ? '1' : '0.5'"
-                stroke-dasharray="0.0625,0.0625" 
+                stroke-width="0.125"
+                stroke-opacity="0.5"
+                stroke-dasharray="0.125,0.125" 
           />
         </svg>
       </div>
