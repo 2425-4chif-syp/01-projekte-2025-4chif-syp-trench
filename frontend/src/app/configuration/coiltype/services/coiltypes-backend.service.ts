@@ -10,7 +10,7 @@ export class CoiltypesBackendService {
   constructor(private backendService:BackendService) { }
 
 
-  private coiltypeBackendToFrontend(coiltype: any): Coiltype {
+  public coiltypeBackendToFrontend(coiltype: any): Coiltype {
     return {
       id: coiltype.id,
       name: coiltype.name,
@@ -23,7 +23,7 @@ export class CoiltypesBackendService {
     };
   }
 
-  private coiltypeFrontendToBackend(coiltype: Coiltype): any {
+  public coiltypeFrontendToBackend(coiltype: Coiltype): any {
     return {
       id: coiltype.id,
       name: coiltype.name,
