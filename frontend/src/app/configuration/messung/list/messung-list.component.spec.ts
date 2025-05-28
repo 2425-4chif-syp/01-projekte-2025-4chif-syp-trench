@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CoilListComponent } from './messung-list.component';
+import { MessungListComponent } from './messung-list.component';
 
-describe('CoilListComponent', () => {
-  let component: CoilListComponent;
-  let fixture: ComponentFixture<CoilListComponent>;
+describe('MessungListComponent', () => {
+  let component: MessungListComponent;
+  let fixture: ComponentFixture<MessungListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CoilListComponent]
+      imports: [MessungListComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(CoilListComponent);
+    fixture = TestBed.createComponent(MessungListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
