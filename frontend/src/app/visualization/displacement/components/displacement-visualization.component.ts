@@ -102,6 +102,15 @@ export class DisplacementVisualizationComponent {
     return Math.sin(branch.angle) * newLength;
   }
 
+  public multiplyVectorByScalar(vector: { x: number; y: number, angle:number, length:number }, scalar: number): { x: number; y: number, angle:number, length:number } {
+    return {
+      x: vector.x * scalar,
+      y: vector.y * scalar,
+      angle: vector.angle,
+      length: vector.length * scalar
+    };
+  }
+
   public get yokeVectors(): { x: number; y: number, angle:number, length:number }[] {
     // Yoke vectors are calculated by summing up all the x and y components of each yoke
     return this.calcResults.map(branch => {
@@ -143,6 +152,27 @@ export class DisplacementVisualizationComponent {
   }
   public get toleranceColor():string {
     return this.isWithinTolerance ? '#00FF00' : '#FF0000';
+  }
+
+  public get toleranceMagnificationAmount():number {
+    const PADDING = 1.1;
+
+    return Math.min(
+      12 / (this.toleranceCircleRadius * PADDING) / 2, 
+      this.averageLength / this.finalVector.length / PADDING);
+  }
+  public get generalYokeAngles():number[] {
+    return DisplacementCalculationService.getAngleLookup(this.yokeData().length);    
+  }
+
+  public get generalYokePositions():{ x: number; y: number }[] {
+    return this.generalYokeAngles.map(angle => {
+      const radianAngle = angle * Math.PI / 180;
+      return {
+        x: Math.cos(radianAngle),
+        y: Math.sin(radianAngle)
+      };
+    });
   }
 
   public getArrowColor(index:number):string {
