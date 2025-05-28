@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CoilParentComponent } from './messung-parent.component';
+import { MessungParentComponent } from './messung-parent.component';
 
-describe('CoilParentComponent', () => {
-  let component: CoilParentComponent;
-  let fixture: ComponentFixture<CoilParentComponent>;
+describe('MessungParentComponent', () => {
+  let component: MessungParentComponent;
+  let fixture: ComponentFixture<MessungParentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CoilParentComponent]
+      imports: [MessungParentComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(CoilParentComponent);
+    fixture = TestBed.createComponent(MessungParentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
