@@ -102,6 +102,15 @@ export class DisplacementVisualizationComponent {
     return Math.sin(branch.angle) * newLength;
   }
 
+  public multiplyVectorByScalar(vector: { x: number; y: number, angle:number, length:number }, scalar: number): { x: number; y: number, angle:number, length:number } {
+    return {
+      x: vector.x * scalar,
+      y: vector.y * scalar,
+      angle: vector.angle,
+      length: vector.length * scalar
+    };
+  }
+
   public get yokeVectors(): { x: number; y: number, angle:number, length:number }[] {
     // Yoke vectors are calculated by summing up all the x and y components of each yoke
     return this.calcResults.map(branch => {

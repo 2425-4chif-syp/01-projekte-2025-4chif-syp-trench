@@ -189,12 +189,13 @@
     <div class="col-4 visualization-magnification">
       <div [style.height.px]="size / 2" [style.width.px]="size / 2">
         <svg
-          width="512"
-          height="512"
+          width="1024"
+          height="1024"
           viewBox="0 0 24 24"
           fill="none"
           [attr.transform]="'rotate('+rotationOffset+')'"
         >
+        <g [attr.transform]="'translate('+internalTranslationOffset/2+', '+internalTranslationOffset/2+') scale('+size/512/2+')'">
           <!-- Tolerance background -->
           <g>
             <mask id="tolerance-circle-mask">
@@ -220,6 +221,40 @@
                 stroke-opacity="0.5"
                 stroke-dasharray="0.125,0.125" 
           />
+            <!-- Final vector -->
+            <g 
+            transform="translate(12, 12)"
+            (mouseenter)="onResultArrowMouseEnter()" (mouseleave)="onArrowMouseLeave()"
+            >
+            @if ((finalVector.length * toleranceMagnificationAmount) / averageLength > 0.01) {
+              <!-- Arrow body -->
+              @if ((finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.03) {
+                <line
+                  x1="0"
+                  y1="0"
+                  [attr.x2]="scaledBranchResultX(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() ? -0.25 : -0.125)"
+                  [attr.y2]="scaledBranchResultY(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() ? -0.25 : -0.125)"
+                  [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.5' : '0.25'"
+                  stroke="black"
+                />
+              }
+
+              <!-- Arrow triangle -->
+              <polygon
+                [attr.points]="((finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.05 || IsHoveringOverResultArrow()) ? '0.5,0 0,-0.25 0,0.25' : '0.5,0 0,-0.125 0,0.125'"
+                fill="black"
+                [attr.transform]="'translate('
+                +scaledBranchResultX(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() && (finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.05 ? -0.25 : -0.125)+', '
+                +scaledBranchResultY(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() && (finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.05 ? -0.25 : -0.125)
+                +') rotate('+(finalVector.angle * radToDeg)
+                +') scale('+(IsHoveringOverResultArrow() && (finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.05 ? '1.5' : '1')+')'"
+                />
+              }
+            
+              <!-- Center circle -->
+              <circle cx="0" cy="0" [attr.r]="IsHoveringOverResultArrow() ? '0.25' : '0.125'" fill="black" />
+            </g>
+          </g>
         </svg>
       </div>
     </div>
