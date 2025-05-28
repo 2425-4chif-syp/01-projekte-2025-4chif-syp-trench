@@ -236,7 +236,8 @@
             transform="translate(12, 12)"
             (mouseenter)="onResultArrowMouseEnter()" (mouseleave)="onArrowMouseLeave()"
             >
-            @if ((finalVector.length / averageLength) * toleranceMagnificationAmount > 0.01) {
+            <!-- TODO: Improve for small displacements -->
+            @if ((finalVector.length / averageLength) * toleranceMagnificationAmount > 0.05) {
               <!-- Arrow body -->
               @if ((finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.03) {
                 <line
