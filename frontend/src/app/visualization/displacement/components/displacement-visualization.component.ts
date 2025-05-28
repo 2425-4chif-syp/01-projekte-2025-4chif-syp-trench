@@ -161,6 +161,19 @@ export class DisplacementVisualizationComponent {
       12 / (this.toleranceCircleRadius * PADDING) / 2, 
       this.averageLength / this.finalVector.length / PADDING);
   }
+  public get generalYokeAngles():number[] {
+    return DisplacementCalculationService.getAngleLookup(this.yokeData().length);    
+  }
+
+  public get generalYokePositions():{ x: number; y: number }[] {
+    return this.generalYokeAngles.map(angle => {
+      const radianAngle = angle * Math.PI / 180;
+      return {
+        x: Math.cos(radianAngle),
+        y: Math.sin(radianAngle)
+      };
+    });
+  }
 
   public getArrowColor(index:number):string {
     switch (index % 4) {
