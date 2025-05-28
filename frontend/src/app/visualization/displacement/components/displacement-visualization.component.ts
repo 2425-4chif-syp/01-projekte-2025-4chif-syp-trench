@@ -155,7 +155,11 @@ export class DisplacementVisualizationComponent {
   }
 
   public get toleranceMagnificationAmount():number {
-    return 12 / (this.toleranceCircleRadius * 1.5) / 2;
+    const PADDING = 1.1;
+
+    return Math.min(
+      12 / (this.toleranceCircleRadius * PADDING) / 2, 
+      this.averageLength / this.finalVector.length / PADDING);
   }
 
   public getArrowColor(index:number):string {
