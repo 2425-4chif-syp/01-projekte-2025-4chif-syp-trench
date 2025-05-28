@@ -28,6 +28,13 @@
         filter: opacity(0.5);
     }
 }
-#visualization-magnification-container {
-    
+#magnification-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &>svg {    
+        position: absolute;
+        z-index: 2;
+    }
 }

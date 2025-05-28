@@ -186,16 +186,16 @@
     </div>
     
     <!-- Visualization magnification -->
-    <div class="col-4 visualization-magnification">
-      <div [style.height.px]="size / 2" [style.width.px]="size / 2">
+    <div class="col-4" id="magnification-container"
+      [style.height.px]="size" [style.width.px]="size">
         <svg
-          width="1024"
-          height="1024"
+          width="512"
+          height="512"
           viewBox="0 0 24 24"
           fill="none"
           [attr.transform]="'rotate('+rotationOffset+')'"
         >
-        <g [attr.transform]="'translate('+internalTranslationOffset/2+', '+internalTranslationOffset/2+') scale('+size/512/2+')'">
+        <g [attr.transform]="'translate('+internalTranslationOffset+', '+internalTranslationOffset+') scale('+size/512+')'">
           <!-- Tolerance background -->
           <g>
             <mask id="tolerance-circle-mask">
@@ -256,7 +256,6 @@
             </g>
           </g>
         </svg>
-      </div>
     </div>
   </div>
 
