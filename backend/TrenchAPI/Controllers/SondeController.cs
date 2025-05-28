@@ -44,35 +44,25 @@ namespace TrenchAPI.Controllers
         }
 
         // PUT: api/Sonde/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSonde(int id, Sonde Sonde)
+        public async Task<IActionResult> PutSonde(int id, SondeUpdateDto dto)
         {
-            if (id != Sonde.ID)
-            {
-                return BadRequest();
-            }
+            if (id != dto.ID) return BadRequest("ID in Route stimmt nicht mit DTO überein.");
 
-            _context.Entry(Sonde).State = EntityState.Modified;
+            var sonde = await _context.Sonde.FirstOrDefaultAsync(s => s.ID == id);
+            if (sonde == null) return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SondeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            if (!_context.SondenTyp.Any(st => st.ID == dto.SondenTypID))
+                return BadRequest("Der angegebene Sondentyp existiert nicht.");
 
+            sonde.SondenTypID        = dto.SondenTypID;
+            sonde.Name               = dto.Name;
+            sonde.Kalibrierungsfaktor= dto.Kalibrierungsfaktor;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
+
 
         // POST: api/Sonde
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
