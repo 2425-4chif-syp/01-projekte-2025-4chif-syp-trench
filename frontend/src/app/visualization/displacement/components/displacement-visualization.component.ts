@@ -185,13 +185,13 @@ export class DisplacementVisualizationComponent {
     }
   }
 
-  public IsHoveringOverArrow(branchIndex:number, sensorIndex:number):boolean {
+  public isHoveringOverArrow(branchIndex:number, sensorIndex:number):boolean {
     return this.hoveredArrow?.branchIndex === branchIndex && this.hoveredArrow?.sensorIndex === sensorIndex;
   }
-  public IsHoveringOverYokeArrow(branchIndex:number):boolean {
+  public isHoveringOverYokeArrow(branchIndex:number):boolean {
     return this.hoveredArrow?.branchIndex === branchIndex && this.hoveredArrow?.sensorIndex === -1;
   }
-  public IsHoveringOverResultArrow():boolean {
+  public isHoveringOverResultArrow():boolean {
     return this.hoveredArrow?.branchIndex === -1 && this.hoveredArrow?.sensorIndex === -1;
   }
 

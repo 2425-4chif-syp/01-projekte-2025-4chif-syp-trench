@@ -44,7 +44,7 @@
               <circle cx="12" cy="12" [attr.r]="finalVector.length / averageLength * 6" 
               fill="none" 
               [attr.stroke]="toleranceColor" 
-              [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.125' : '0.0625'"
+              [attr.stroke-width]="isHoveringOverResultArrow() ? '0.125' : '0.0625'"
               />
             </g>
 
@@ -77,11 +77,11 @@
                     <line
                       x1="0"
                       y1="0"
-                      [attr.x2]="scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)"
-                      [attr.y2]="scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)"
+                      [attr.x2]="scaledBranchResultX(vector, isHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)"
+                      [attr.y2]="scaledBranchResultY(vector, isHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)"
                       [attr.stroke]="getArrowColor(branchIndex)"
-                      [attr.stroke-width]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '0.125' : '0.0625'"
-                      [attr.stroke-opacity]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
+                      [attr.stroke-width]="isHoveringOverArrow(branchIndex, vectorIndex) ? '0.125' : '0.0625'"
+                      [attr.stroke-opacity]="isHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
                     /> <!-- [attr.stroke-dasharray]="hoveredArrow === $index ? '0' : '0.0625,0.0625'" --> 
 
                     <!-- Arrow triangle -->
@@ -89,10 +89,10 @@
                       points="0.125,0 0,-0.0625 0,0.0625"
                       [attr.fill]="getArrowColor(branchIndex)"
                       [attr.transform]="'translate('
-                        +scaledBranchResultX(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)+', '
-                        +scaledBranchResultY(vector, IsHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)
-                        +') rotate('+(vector.angle * radToDeg)+') scale('+(IsHoveringOverArrow(branchIndex, vectorIndex) ? '1.5' : '1')+')'"
-                      [attr.fill-opacity]="IsHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
+                        +scaledBranchResultX(vector, isHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)+', '
+                        +scaledBranchResultY(vector, isHoveringOverArrow(branchIndex, vectorIndex) ? -0.125 : -0.0625)
+                        +') rotate('+(vector.angle * radToDeg)+') scale('+(isHoveringOverArrow(branchIndex, vectorIndex) ? '1.5' : '1')+')'"
+                      [attr.fill-opacity]="isHoveringOverArrow(branchIndex, vectorIndex) ? '1' : '0.75'"
                       />
 
                     <!-- Arrow hitbox -->
@@ -120,22 +120,22 @@
                     <line
                       x1="0"
                       y1="0"
-                      [attr.x2]="scaledBranchResultX(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) ? -0.25 : -0.125)"
-                      [attr.y2]="scaledBranchResultY(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) ? -0.25 : -0.125)"
-                      [attr.stroke-width]="IsHoveringOverYokeArrow(yokeVectorIndex) ? '0.25' : '0.125'"
+                      [attr.x2]="scaledBranchResultX(yokeVector, isHoveringOverYokeArrow(yokeVectorIndex) ? -0.25 : -0.125)"
+                      [attr.y2]="scaledBranchResultY(yokeVector, isHoveringOverYokeArrow(yokeVectorIndex) ? -0.25 : -0.125)"
+                      [attr.stroke-width]="isHoveringOverYokeArrow(yokeVectorIndex) ? '0.25' : '0.125'"
                       [attr.stroke]="getArrowColor(yokeVectorIndex)"
                     />
                   }
 
                   <!-- Arrow triangle -->
                   <polygon
-                    [attr.points]="(yokeVector.length / averageLength >= 0.05 || IsHoveringOverYokeArrow(yokeVectorIndex)) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
+                    [attr.points]="(yokeVector.length / averageLength >= 0.05 || isHoveringOverYokeArrow(yokeVectorIndex)) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
                     [attr.fill]="getArrowColor(yokeVectorIndex)"
                     [attr.transform]="'translate('
-                    +scaledBranchResultX(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
-                    +scaledBranchResultY(yokeVector, IsHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
+                    +scaledBranchResultX(yokeVector, isHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
+                    +scaledBranchResultY(yokeVector, isHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
                     +') rotate('+(yokeVector.angle * radToDeg)
-                    +') scale('+(IsHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
+                    +') scale('+(isHoveringOverYokeArrow(yokeVectorIndex) && yokeVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
                     />
                   }
                 </g>
@@ -153,27 +153,27 @@
                 <line
                   x1="0"
                   y1="0"
-                  [attr.x2]="scaledBranchResultX(finalVector, IsHoveringOverResultArrow() ? -0.25 : -0.125)"
-                  [attr.y2]="scaledBranchResultY(finalVector, IsHoveringOverResultArrow() ? -0.25 : -0.125)"
-                  [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.25' : '0.125'"
+                  [attr.x2]="scaledBranchResultX(finalVector, isHoveringOverResultArrow() ? -0.25 : -0.125)"
+                  [attr.y2]="scaledBranchResultY(finalVector, isHoveringOverResultArrow() ? -0.25 : -0.125)"
+                  [attr.stroke-width]="isHoveringOverResultArrow() ? '0.25' : '0.125'"
                   stroke="black"
                 />
               }
 
               <!-- Arrow triangle -->
               <polygon
-                [attr.points]="(finalVector.length / averageLength >= 0.05 || IsHoveringOverResultArrow()) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
+                [attr.points]="(finalVector.length / averageLength >= 0.05 || isHoveringOverResultArrow()) ? '0.25,0 0,-0.125 0,0.125' : '0.25,0 0,-0.0625 0,0.0625'"
                 fill="black"
                 [attr.transform]="'translate('
-                +scaledBranchResultX(finalVector, IsHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
-                +scaledBranchResultY(finalVector, IsHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
+                +scaledBranchResultX(finalVector, isHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)+', '
+                +scaledBranchResultY(finalVector, isHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? -0.25 : -0.125)
                 +') rotate('+(finalVector.angle * radToDeg)
-                +') scale('+(IsHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
+                +') scale('+(isHoveringOverResultArrow() && finalVector.length / averageLength >= 0.05 ? '1.5' : '1')+')'"
                 />
               }
             
               <!-- Center circle -->
-              <circle cx="0" cy="0" [attr.r]="IsHoveringOverResultArrow() ? '0.125' : '0.0625'" fill="black" />
+              <circle cx="0" cy="0" [attr.r]="isHoveringOverResultArrow() ? '0.125' : '0.0625'" fill="black" />
             </g>
           </g>
         </g>
@@ -238,7 +238,7 @@
                 [attr.x2]="yokePosition.x * 6"
                 [attr.y2]="yokePosition.y * 6"
                 stroke="transparent"
-                [attr.stroke-width]="IsHoveringOverYokeArrow(yokeVectorIndex) ? '0.5' : '0.25'"
+                [attr.stroke-width]="isHoveringOverYokeArrow(yokeVectorIndex) ? '0.5' : '0.25'"
               />
             </g>
           }
@@ -248,7 +248,7 @@
             <circle cx="12" cy="12" [attr.r]="(finalVector.length / averageLength * 6) * toleranceMagnificationAmount" 
             fill="none" 
             [attr.stroke]="toleranceColor" 
-            [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.25' : '0.125'"
+            [attr.stroke-width]="isHoveringOverResultArrow() ? '0.25' : '0.125'"
             />
           </g>
 
@@ -273,27 +273,27 @@
                 <line
                   x1="0"
                   y1="0"
-                  [attr.x2]="scaledBranchResultX(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() ? -0.625 : -0.375)"
-                  [attr.y2]="scaledBranchResultY(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() ? -0.625 : -0.375)"
-                  [attr.stroke-width]="IsHoveringOverResultArrow() ? '0.5' : '0.25'"
+                  [attr.x2]="scaledBranchResultX(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), isHoveringOverResultArrow() ? -0.625 : -0.375)"
+                  [attr.y2]="scaledBranchResultY(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), isHoveringOverResultArrow() ? -0.625 : -0.375)"
+                  [attr.stroke-width]="isHoveringOverResultArrow() ? '0.5' : '0.25'"
                   stroke="black"
                 />
               }
 
               <!-- Arrow triangle -->
               <polygon
-                [attr.points]="((finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.05 || IsHoveringOverResultArrow()) ? '0.5,0 0,-0.25 0,0.25' : '0.5,0 0,-0.125 0,0.125'"
+                [attr.points]="((finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.05 || isHoveringOverResultArrow()) ? '0.5,0 0,-0.25 0,0.25' : '0.5,0 0,-0.125 0,0.125'"
                 fill="black"
                 [attr.transform]="'translate('
-                +scaledBranchResultX(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() && (finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.05 ? -0.625 : -0.375)+', '
-                +scaledBranchResultY(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), IsHoveringOverResultArrow() && (finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.05 ? -0.625 : -0.375)
+                +scaledBranchResultX(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), isHoveringOverResultArrow() && (finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.05 ? -0.625 : -0.375)+', '
+                +scaledBranchResultY(multiplyVectorByScalar(finalVector, toleranceMagnificationAmount), isHoveringOverResultArrow() && (finalVector.length / averageLength) * toleranceMagnificationAmount >= 0.05 ? -0.625 : -0.375)
                 +') rotate('+(finalVector.angle * radToDeg)
-                +') scale('+(IsHoveringOverResultArrow() && (finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.05 ? '1.5' : '1')+')'"
+                +') scale('+(isHoveringOverResultArrow() && (finalVector.length * toleranceMagnificationAmount) / averageLength >= 0.05 ? '1.5' : '1')+')'"
                 />
               }
             
               <!-- Center circle -->
-              <circle cx="0" cy="0" [attr.r]="IsHoveringOverResultArrow() ? '0.25' : '0.125'" fill="black" />
+              <circle cx="0" cy="0" [attr.r]="isHoveringOverResultArrow() ? '0.25' : '0.125'" fill="black" />
           </g>
         </g>
       </svg>
