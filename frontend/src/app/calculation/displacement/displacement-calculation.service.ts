@@ -20,17 +20,19 @@ export class DisplacementCalculationService {
   // false: A_JI = Bandbreite * Schichthoehe
   // true:  A_JI = Durchmesser * Pi * Bandbreite / 3
   private readonly alternativeBerechnungVonA_JI:boolean = false;
+  // false: 0, 120, 240   (Schenkel #2 und #3 vertauscht)
+  // true:  0, -120, 120  (nach Excel)
+  private static readonly alternativeThreeAngleLookup:boolean = false;
 
   private readonly Ur = 21000 / Math.sqrt(3);
   private readonly delta_ang = 15.5;
 
-  private getAngleLookup(yokeCount: number): number[] {
+  public static getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
       case 2:
         return [0, 180]; 
       case 3:
-        //return [0, -120, 120];
-        return [0, 120, 240];
+        return this.alternativeThreeAngleLookup ? [0, -120, 120] : [0, 120, 240];
       case 4:
         return [0, 90, 180, 270];
     }
@@ -90,7 +92,7 @@ export class DisplacementCalculationService {
     if (measurementSetting.sondenProSchenkel! < 4 || measurementSetting.sondenProSchenkel! % 2 != 0) {
       throw new Error('Invalid number of sensors per yoke (must be >=4 and even): ' + measurementSetting.sondenProSchenkel);
     }
-    const angleLookup = this.getAngleLookup(yokes.length);
+    const angleLookup = DisplacementCalculationService.getAngleLookup(yokes.length);
     const angle: { sensors: number[] }[] = [];
     for (let i = 0; i < yokes.length; i++) {
       let sensors: number[] = new Array(yokes[i].sensors.length);

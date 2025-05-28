@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Trench Group Coil Visualization</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css">
+  <style>
+    body {
+      background: #fff8f1;
+    }
+
+    .section-title {
+      color: #888;
+      font-size: 1.2em;
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Titelfolie -->
+      <section>
+        <h1>Trench Group Coil Visualization</h1>
+        <p>HTL Leonding – 4CHIF – SYP-Projekt</p>
+      </section>
+
+      <!-- ABOUT -->
+      <section>
+        <section>
+          <h2>ABOUT</h2>
+        </section>
+        <section>
+          <div class="section-title">ABOUT</div>
+          <h3>What is this project?</h3>
+          <p>This project is the SYP-Project of the 4CHIF class of the HTL Leonding.</p>
+          <p>It helps Trench Group visualize and validate <strong>core deviation</strong> in Arc Suppression Coils.</p>
+          <p>It checks whether deviations are within the <strong>allowed tolerance</strong>.</p>
+        </section>
+        <section>
+          <div class="section-title">ABOUT</div>
+          <h3>Project Team</h3>
+          <ul>
+            <li><strong>Filip Schauer</strong> — Frontend Lead</li>
+            <li><strong>Emil Silber</strong> — Backend Lead</li>
+            <li>Aaron Schreiegg — Frontend</li>
+            <li>Axel Csomany — Frontend</li>
+            <li>Simon Pesut — Backend, Database, Deployment</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- USAGE -->
+      <section>
+        <section>
+          <h2>USAGE</h2>
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h3>Benutzerrollen</h3>
+          <ul>
+            <li><strong>Admin:</strong> Voller Zugriff inkl. Benutzerverwaltung</li>
+            <li><strong>Monteur:</strong> Zugriff auf Funktionen, aber keine Schreibrechte für Typen</li>
+          </ul>
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h3>Entitäten</h3>
+          <ul>
+            <li>Spulentyp</li>
+            <li>Spule</li>
+            <li>Sondentyp</li>
+            <li>Sonde</li>
+            <li>Sondenposition</li>
+            <li>Messeinstellung</li>
+            <li>Messung</li>
+            <li>Messwert</li>
+          </ul>
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h5>Spulentyp und Messsondentyp werden von Admin erstellt</h5>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
+            <img src="images/spulentyp-erstellen.png" style="width: 60%; height: auto;">
+            <img src="images/messsondentyp-erstellen.png" style="width: 60%; height: auto;">
+          </div>
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h4>Spule und Sonde werden von Monteur erstellt</h4>
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h5>Spule anhand von Spulentyp erstellen</h5>
+          <img src="images/spule-erstellen.png" style="width:90%">
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h5>Sonde anhand von Messsondentyp erstellen</h5>
+          <img src="images/sonde-erstellen.png" style="width:90%">
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h5>Messeinstellung wird anhand von Spule und Messsondentyp erstellt</h5>
+          <img src="images/messeinstellung-erstellen.png" style="width:90%">
+        </section>
+        <section>
+          <h3>Messungen</h3>
+          <p>Messung starten durch Auswahl der Messeinstellung</p>
+          <p>Echtzeit-Visualisierung, global zugänglich, Optionen: Pause, Speichern, Abbrechen.</p>
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h5>Messung starten</h5>
+          <img src="images/messung-starten.png" style="width:75%">
+        </section>
+        <section>
+          <div class="section-title">USAGE</div>
+          <h5>Werte und Echtzeit-Visualisierung einsehen</h5>
+          <img src="images/werte-und-visualisierung.png" style="width:70%">
+        </section>
+      </section>
+
+      <!-- CODE -->
+      <section>
+        <section>
+          <h2>CODE</h2>
+        </section>
+        <section>
+          <div class="section-title">CODE</div>
+          <h3>Filestructure</h3>
+          <ul>
+            <li><code>docs/</code> – Dokumentation (Asciidoctor + Reveal.js)</li>
+            <li><code>frontend/</code> – Angular App</li>
+            <li><code>backend/</code> – .NET Core + MQTT Simulation</li>
+          </ul>
+          <img src="images/file-structure.png" style="width:22%">
+        </section>
+        <section>
+          <div class="section-title">CODE</div>
+          <h3>REST API (Kurzfassung)</h3>
+          <p><strong>Auth:</strong> POST</p>
+          <p><strong>Messeinstellung:</strong> CRUD</p>
+          <p><strong>Sonde/Sondentyp:</strong> CRUD</p>
+          <p><strong>Spule/Spulentyp:</strong> CRUD</p>
+          <p><strong>Sondenposition:</strong> CRUD</p>
+          <p><strong>Messung:</strong> CRUD</p>
+          <p><strong>Messwert:</strong> CRUD</p>
+        </section>
+      </section>
+
+      <!-- DIAGRAMS -->
+      <section>
+        <section>
+          <h2>DIAGRAMS</h2>
+        </section>
+        <section>
+          <div class="section-title">DIAGRAMS</div>
+          <h3>Architekturübersicht</h3>
+          <img src="images/system-architecture.png" style="width:70%">
+        </section>
+        <section>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem;">
+
+            <!-- Linker Sektor -->
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+              <div class="section-title" style="text-align: left;">DIAGRAMS</div>
+              <h3 style="margin-top: 1em;">ERD-Diagram</h3>
+            </div>
+
+            <!-- Rechter Sektor (Bild) -->
+            <div style="flex: 1; text-align: right;">
+              <img src="images/erd.svg" style="max-width: 290px; height: auto;">
+            </div>
+
+          </div>
+        </section>
+        <section>
+          <div class="section-title">DIAGRAMS</div>
+          <h3>USE-CASE-Diagram</h3>
+          <img src="images/use-case.svg" style="width:60%">
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>
+    Reveal.initialize({ hash: true });
+    hljs.highlightAll();
+  </script>
+</body>
+
+</html>
