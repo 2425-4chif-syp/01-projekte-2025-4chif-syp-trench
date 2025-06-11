@@ -8,6 +8,15 @@
     
 -->
 
+@if (messungService.isCurrentlyMeasuring() && messungService.selectedElementCopy === null) {
+    <div class="alert alert-info text-center mb-4">
+        <p class="mb-0">Es läuft bereits eine Messung!</p>
+        <button class="btn btn-primary mt-2" (click)="navigateToRunningMeasurement()">
+            🔄 Zur laufenden Messung
+        </button>
+    </div>
+}
+
 @if (messungService.selectedElementCopy === null) {
     <app-messung-list />
 }
