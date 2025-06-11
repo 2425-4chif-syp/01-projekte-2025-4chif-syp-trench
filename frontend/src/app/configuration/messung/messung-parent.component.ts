@@ -14,4 +14,10 @@ import { MessungService } from './services/messung.service';
 })
 export class MessungParentComponent {
   constructor(public messungService:MessungService) {}
+
+  navigateToRunningMeasurement(): void {
+    if (this.messungService.isCurrentlyMeasuring()) {
+      this.messungService.selectedElementCopy = this.messungService.newElement;
+    }
+  }
 }
