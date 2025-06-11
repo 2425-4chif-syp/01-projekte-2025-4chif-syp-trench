@@ -175,4 +175,28 @@ export class MessungService implements ListService<Messung> {
     console.log('selectedMessungCopy nach Laden:', this.selectedElementCopy);
   }
   
+  public async loadCurrentMeasurement(): Promise<void> {
+    try {
+      // Lade alle Messungen
+      await this.reloadElements();
+      
+      // Finde die aktive Messung (ohne endzeitpunkt)
+      const activeMeasurement = this.elements.find(m => m.endzeitpunkt === null);
+      
+      if (activeMeasurement) {
+        // Lade die vollständigen Messungsdaten
+        const currentMeasurement = await this.messungBackendService.getMessung(activeMeasurement.id!);
+        
+        // Setze die Messungsdaten
+        this.currentMeasurementSettingId = currentMeasurement.messeinstellungId;
+        this.measurementStartTime = currentMeasurement.anfangszeitpunkt;
+        
+        // Setze den Messungsstatus
+        this.isMeasuringSubject.next(true);
+      }
+    } catch (error) {
+      console.error('Fehler beim Laden der aktuellen Messung:', error);
+      this.isMeasuringSubject.next(false);
+    }
+  }
 }
