@@ -14,11 +14,18 @@ export class ProbePositionsBackendService {
   ) {}
 
   private probePositionBackendToFrontend(mp: any): ProbePosition {
-    return {
+    console.log('ProbePositionBackendToFrontend', mp);
+    /*return {
       id:                   mp.id,
       measurementSettingsId: mp.messeinstellungID,
       measurementSetting:    this.measurementSettingsBackendService
-                                .measurementSettingsBackendToFrontend(mp.messeinstellung),
+                                .measurementSettingsBackendToFrontend(mp.messeinstellung!),*/
+      const ms = mp.messeinstellung
+                    ? this.measurementSettingsBackendService.measurementSettingsBackendToFrontend(mp.messeinstellung) : null;
+      return{
+      id:                  mp.id,
+      measurementSettingsId: mp.messeinstellungID,
+      measurementSetting:   ms,  
       measurementProbeId:   mp.sondeID,
       measurementProbe:     mp.sonde,
       schenkel:             mp.schenkel,
@@ -39,6 +46,15 @@ export class ProbePositionsBackendService {
 
   async getAllProbePositions(): Promise<ProbePosition[]> {
     const res = await this.backendService.httpGetRequest('SondenPosition');
+    return res.map((p: any) => this.probePositionBackendToFrontend(p));
+  }
+
+  async getPositionsForMeasurementSettings(
+    measurementSettingsId: number
+    ): Promise<ProbePosition[]> {
+    const res = await this.backendService.httpGetRequest(
+      `SondenPosition/Messeinstellung/${measurementSettingsId}`
+    );
     return res.map((p: any) => this.probePositionBackendToFrontend(p));
   }
 

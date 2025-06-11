@@ -94,7 +94,7 @@
                         [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
                         [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')">
                   @for (amount of schenkelAnzahl(); track $index) {
-                    <option [value]="amount">{{ amount }}</option>
+                    <option [ngValue]="amount">{{ amount }}</option>
                   }
                 </select>
               </div>

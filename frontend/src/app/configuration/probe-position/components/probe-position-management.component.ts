@@ -17,20 +17,18 @@ import { Router } from '@angular/router';
 })
 export class ProbePositionManagementComponent {
   probes: Probe[] = [];
-  groupedProbePositions: ProbePosition[][] = [];
-  schenkelzahl = 3;
 
   constructor(
     private measurementSettingsService: MeasurementSettingsService,
     private probeService:              ProbesService,
-    private probePositionService:      ProbePositionService,
+    public probePositionService:      ProbePositionService,
     private router:                    Router
   ) {}
 
   async ngOnInit(): Promise<void> {
     await this.probePositionService.reloadElements();
 
-    const einstellung        = this.measurementSettingsService.selectedElementCopy!;
+    /*const einstellung        = this.measurementSettingsService.selectedElementCopy!;
     const sondenProSchenkel  = einstellung.sondenProSchenkel ?? 0;
 
     this.probePositionService.elements =
@@ -41,9 +39,9 @@ export class ProbePositionManagementComponent {
       this.measurementSettingsService.selectedElementCopy!.coil?.coiltype?.schenkel ?? 0,
       sondenProSchenkel,
       einstellung
-    );
+    );*/
 
-    this.loadGroupedProbePositions();
+    this.probePositionService.loadGroupedProbePositions();
   }
 
   openProbeSelector(position: ProbePosition): void {
@@ -52,7 +50,11 @@ export class ProbePositionManagementComponent {
     this.router.navigate(['/probe-management']);
   }
 
-  loadGroupedProbePositions(): void {
-    this.groupedProbePositions = this.probePositionService.getGroupedProbePositions();
+  deleteProbePosition(position: ProbePosition): void {
+    const pos = position;
+    pos.measurementProbeId = null;
+    pos.measurementProbe = null;
+    this.probePositionService.updateOrCreateElement(pos);
+    this.probePositionService.loadGroupedProbePositions();
   }
 }

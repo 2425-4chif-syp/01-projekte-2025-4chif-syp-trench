@@ -33,7 +33,7 @@
 
 <div class="container">
    <div class="row mt-4">
-       @for (group of groupedProbePositions; track $index) {
+       @for (group of this.probePositionService.groupedProbePositions; track $index) {
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
@@ -46,19 +46,31 @@
                                 <tr>
                                     <th>Position</th>
                                     <th>Schenkel</th>
-                                    <th>Probe</th>
+                                    <th>Sonde</th>
                                     <th>Aktion</th>
+                                    <th>Löschen</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (probePosition of groupedProbePositions[$index]; track $index) {
+                                @for (probePosition of this.probePositionService.groupedProbePositions[$index]; track $index) {
                                     <tr>
                                         <td>{{probePosition.position}}</td>
                                         <td>{{probePosition.schenkel}}</td>
-                                        <td>{{ probePosition.measurementProbe?.name || 'Keine Probe zugewiesen' }}</td>
+                                        <td>{{ probePosition.measurementProbe?.name || 'Keine Sonde zugewiesen' }}</td>
                                         <td>
-                                          <button class="btn btn-primary btn-sm" (click)="openProbeSelector(probePosition)">Probe auswählen</button>
+                                          <button class="btn btn-primary btn-sm" (click)="openProbeSelector(probePosition)">
+                                            @if(probePosition.measurementProbe == null) {
+                                              <span>Sonde auswählen</span>
+                                            } 
+                                            @else {
+                                              <span>Sonde ändern</span>
+                                            }
+                                          </button>
                                         </td>
+                                        <td>
+                                          <button class="btn btn-outline-danger btn-sm" [disabled]="probePosition.measurementProbe == null" (click)="deleteProbePosition(probePosition)">Löschen</button>
+                                        </td>
+                                        
                                     </tr>
                                 }
                             </tbody>
