@@ -14,13 +14,14 @@ import { LIST_SERVICE_TOKEN, ListService } from '../services/list-service';
 export class GenericListComponent<TElement, TListService extends ListService<TElement>> { 
   @Input() public keysAsColumns: { [key: string]: string } = {};
   @Input() public elementValueToStringMethods: { [key: string]: (element:TElement) => string } = {};
-  @Input() public elementsToIgnore:TElement[] = [];
+  @Input() public elementIdsToIgnore:number[] = [];
   @Input() public isSelector: boolean = false;
   @Input() public newElementButtonLabel: string = 'New Element';
   @Input() public showButton: boolean = true;
 
   @Output() onElementClick = new EventEmitter<TElement>();
   @Output() hoveringElement = new EventEmitter<{element:TElement|null, mousePosition:{x:number, y:number}|null}>();
+  @Output() cancelSelection = new EventEmitter<void>();  
 
   public sortedElements:TElement[] = [];
 
@@ -43,22 +44,21 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   }
 
   constructor(@Inject(LIST_SERVICE_TOKEN) public elementsService:TListService, private router:Router) {
-    this.initialize();
   }
 
-  ngOnInit():void {
-    this.initialize();
+  async ngOnInit():Promise<void> {
+    await this.initialize();
   }
 
   async initialize() {
     await this.elementsService.reloadElements();
 
-    // console.log('-----------------')
-    // console.log('ELements to ignore', this.elementsToIgnore);
-    // console.log('elementsService.elements', this.elementsService.elements);
+     console.log('-----------------')
+     console.log('ELements to ignore ids', this.elementIdsToIgnore);
+    console.log('elementsService.elements', this.elementsService.elements);
 
     this.sortedElements = [...this.elementsService.elements]
-      .filter(e => !this.elementsToIgnore.some(el => (el as any)['id'] === (e as any)['id']));
+      .filter(e => !this.elementIdsToIgnore.some(e_id => e_id === (e as any)['id']));
   }
 
   public onElementHoverStart(element:TElement) {
@@ -97,5 +97,9 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
     if (this.hoveredElement !== null) {
       this.hoveringElement.emit({element:this.hoveredElement, mousePosition:this.mousePosition});
     }
+  }
+
+  public onCancelSelection(): void {
+    this.cancelSelection.emit();
   }
 }

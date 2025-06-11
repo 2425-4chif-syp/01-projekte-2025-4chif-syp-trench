@@ -25,20 +25,8 @@ export class ProbeListComponent {
     return this.probesService.isProbeSelector;
   }
 
-  private probePositions:ProbePosition[] = [];
-  public get elementsToIgnore(): Probe[] {
-    if (!this.isProbeSelector) {
-      return [];
-    }
-
-    const output = this.probePositions 
-      .filter(pp => pp.measurementProbeId != null)
-      .map(pp => pp.measurementProbe!);
-
-    console.log('ProbeListComponent.elementsToIgnore output', output);
-
-    return output;
-  }
+  public hasLoadedElementIdsToIgnore: boolean = false;
+  public elementIdsToIgnore: number[] = [];
 
   readonly keysAsColumns: { [key: string]: string } = {
     id: 'Spule',
@@ -60,11 +48,35 @@ export class ProbeListComponent {
   ) {}
 
   async ngOnInit():Promise<void> {
-    if (this.isProbeSelector) {
-      this.probePositions = await this.probePositionsBackendService.getPositionsForMeasurementSettings(
-        this.measurementSettingsService.selectedElementCopy?.id!
-      );
+    this.hasLoadedElementIdsToIgnore = false;
+    await this.loadElementsToIgnore();
+  }
+
+  private async loadElementsToIgnore(): Promise<void> {
+    if (!this.probesService.isProbeSelector) {
+      this.elementIdsToIgnore = [];
+      this.hasLoadedElementIdsToIgnore = true;
+      return;
     }
+
+    const probePositions = await this.probePositionsBackendService.getPositionsForMeasurementSettings(
+      this.measurementSettingsService.selectedElementCopy?.id!
+    );
+
+    this.elementIdsToIgnore = probePositions 
+      .filter(pp => pp.measurementProbeId != null)
+      .map(pp => pp.measurementProbe!.id)
+      .filter((value, index, self) => self.indexOf(value) === index); // distinct ids
+
+    this.hasLoadedElementIdsToIgnore = true;
+
+    console.log('ProbeListComponent.loadElementsToIgnore() called, elementsToIgnore set to:', this.elementIdsToIgnore);
+  }
+
+  handleBack(){
+    this.probesService.isProbeSelector = false;
+    this.router.navigate(['/measurement-settings-list']);
+    console.log('ProbeListComponent.handleBack() called, isProbeSelector set to false');
   }
 
 

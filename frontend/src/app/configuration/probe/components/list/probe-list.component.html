@@ -2,10 +2,15 @@
     <h2 class="mt-3 mb-1 text-center">
         Sonden
     </h2>
-    <app-generic-list 
-    [keysAsColumns]="keysAsColumns"
-    [elementValueToStringMethods]="elementValueToStringMethods"
-    [elementsToIgnore]="elementsToIgnore"
-    [newElementButtonLabel]="'Neue Sonde'"
-    (onElementClick)="openProbe($event)" />
+
+    @if (hasLoadedElementIdsToIgnore) {
+        <app-generic-list 
+        [keysAsColumns]="keysAsColumns"
+        [elementValueToStringMethods]="elementValueToStringMethods"
+        [elementIdsToIgnore]="elementIdsToIgnore"
+        [newElementButtonLabel]="'Neue Sonde'"
+        [isSelector]="probesService.isProbeSelector"
+        (cancelSelection)="handleBack()"
+        (onElementClick)="openProbe($event)" />
+    }
 </div>
