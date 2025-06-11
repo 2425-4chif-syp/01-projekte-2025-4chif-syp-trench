@@ -6,6 +6,9 @@ import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-servi
 import { Probe } from '../../interfaces/probe';
 import { Router } from '@angular/router';
 import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
+import { ProbePosition } from '../../../probe-position/interfaces/probe-position.model';
+import { ProbePositionsBackendService } from '../../../probe-position/services/probe-positions-backend.service';
+import { MeasurementSettingsService } from '../../../measurement-settings/services/measurement-settings.service';
 
 @Component({
   selector: 'app-probe-list',
@@ -22,6 +25,21 @@ export class ProbeListComponent {
     return this.probesService.isProbeSelector;
   }
 
+  private probePositions:ProbePosition[] = [];
+  public get elementsToIgnore(): Probe[] {
+    if (!this.isProbeSelector) {
+      return [];
+    }
+
+    const output = this.probePositions 
+      .filter(pp => pp.measurementProbeId != null)
+      .map(pp => pp.measurementProbe!);
+
+    console.log('ProbeListComponent.elementsToIgnore output', output);
+
+    return output;
+  }
+
   readonly keysAsColumns: { [key: string]: string } = {
     id: 'Spule',
     name: 'Name',
@@ -34,10 +52,20 @@ export class ProbeListComponent {
   };
 
   constructor(
-    public  probesService:      ProbesService,
-    private probePositionService: ProbePositionService,
-    private router:             Router
+    public  probesService:                ProbesService,
+    private probePositionService:         ProbePositionService,
+    private probePositionsBackendService: ProbePositionsBackendService,
+    private measurementSettingsService:   MeasurementSettingsService,
+    private router:                       Router
   ) {}
+
+  async ngOnInit():Promise<void> {
+    if (this.isProbeSelector) {
+      this.probePositions = await this.probePositionsBackendService.getPositionsForMeasurementSettings(
+        this.measurementSettingsService.selectedElementCopy?.id!
+      );
+    }
+  }
 
 
   openProbe(probe: Probe): void {

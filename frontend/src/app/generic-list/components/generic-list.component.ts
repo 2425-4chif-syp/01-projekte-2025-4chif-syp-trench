@@ -11,9 +11,10 @@ import { LIST_SERVICE_TOKEN, ListService } from '../services/list-service';
   templateUrl: './generic-list.component.html',
   styleUrl: './generic-list.component.scss'
 })
-export class GenericListComponent<TElement, TListService extends ListService<TElement>> {
+export class GenericListComponent<TElement, TListService extends ListService<TElement>> { 
   @Input() public keysAsColumns: { [key: string]: string } = {};
   @Input() public elementValueToStringMethods: { [key: string]: (element:TElement) => string } = {};
+  @Input() public elementsToIgnore:TElement[] = [];
   @Input() public isSelector: boolean = false;
   @Input() public newElementButtonLabel: string = 'New Element';
   @Input() public showButton: boolean = true;
@@ -45,9 +46,19 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
     this.initialize();
   }
 
+  ngOnInit():void {
+    this.initialize();
+  }
+
   async initialize() {
     await this.elementsService.reloadElements();
+
+    // console.log('-----------------')
+    // console.log('ELements to ignore', this.elementsToIgnore);
+    // console.log('elementsService.elements', this.elementsService.elements);
+
     this.sortedElements = [...this.elementsService.elements]
+      .filter(e => !this.elementsToIgnore.some(el => (el as any)['id'] === (e as any)['id']));
   }
 
   public onElementHoverStart(element:TElement) {
