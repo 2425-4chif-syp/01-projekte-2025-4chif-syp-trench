@@ -11,11 +11,11 @@ namespace TrenchAPI.Core.Entities
         [ForeignKey(nameof(MesseinstellungID))]
         public virtual Messeinstellung Messeinstellung { get; set; }
 
-        [Required]
-        public int SondeID { get; set; }
+        //[Required]
+        public int? SondeID { get; set; }
 
         [ForeignKey(nameof(SondeID))]
-        public virtual Sonde Sonde { get; set; }
+        public virtual Sonde? Sonde { get; set; }
 
         [Column(TypeName = "int")]
         public int Schenkel { get; set; }
