@@ -51,9 +51,23 @@ export class StartMeasurementComponent implements OnDestroy {
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
     private probeTypesBackendService: ProbeTypesBackendService,
-    private messungService: MessungService
+    public messungService: MessungService
   ) {
     this.loadMeasurementSettings();
+    // Überprüfe, ob bereits eine Messung läuft
+    this.currentMeasurement = this.messungService.isCurrentlyMeasuring();
+    if (this.currentMeasurement) {
+      this.measurementSettingId = this.messungService.getCurrentMeasurementSettingId();
+      this.startTime = this.messungService.getMeasurementStartTime();
+      this.measurementData = this.messungService.getCurrentMeasurementData();
+      this.yokeData.set(this.messungService.getCurrentYokeData());
+      this.m_tot = this.messungService.getCurrentMTot();
+      
+      // Initialisiere die Yokes basierend auf den gespeicherten Messungsdaten
+      this.initializeYokesFromMeasurementData();
+      
+      this.connectToWebSocket();
+    }
   }
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
@@ -76,6 +90,99 @@ export class StartMeasurementComponent implements OnDestroy {
     return this.measurementSettingId !== null && this.measurementSettingId > 0;
   }
 
+  private initializeYokesFromMeasurementData(): void {
+    if (!this.selectedMeasurementSetting) return;
+
+    const yokeCount = this.selectedMeasurementSetting.coil?.coiltype?.schenkel || 0;
+    const sensorCount = this.selectedMeasurementSetting.sondenProSchenkel || 0;
+
+    // Initialisiere die Yokes mit Nullen
+    this.yokes.set(Array.from({ length: yokeCount }, () => ({ sensors: Array(sensorCount).fill(0) })));
+
+    // Fülle die Yokes mit den gespeicherten Werten
+    for (let yokeIndex = 0; yokeIndex < yokeCount; yokeIndex++) {
+      for (let sensorIndex = 0; sensorIndex < sensorCount; sensorIndex++) {
+        const key = `S${yokeIndex+1}S${sensorIndex+1}`;
+        const values = this.measurementData[key] || [];
+        if (values.length > 0) {
+          // Nimm den letzten Wert für die Anzeige
+          const lastValue = values[values.length - 1];
+          this.yokes.update(prevYokes => {
+            const updatedYokes = [...prevYokes];
+            updatedYokes[yokeIndex].sensors[sensorIndex] = lastValue;
+            return updatedYokes;
+          });
+        }
+      }
+    }
+  }
+
+  private async connectToWebSocket(): Promise<void> {
+    try {
+      await this.webSocketService.connect();
+      this.isConnected = true;
+      
+      // Sende Konfiguration
+      const config = {
+        type: 'config',
+        measurementSettingId: this.measurementSettingId,
+        note: this.note
+      };
+      console.log('Sende Konfiguration:', config);
+      this.webSocketService.sendMessage(JSON.stringify(config));
+
+      this.webSocketService.getMessages().subscribe({
+        next: (message: string) => {
+          const [topic, value] = message.split(':'); 
+          const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
+          const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
+          const sensorValue: number = parseFloat(value);
+
+          const yokeCount = this.selectedMeasurementSetting?.coil?.coiltype?.schenkel || 0;
+          const sensorCount = this.selectedMeasurementSetting?.sondenProSchenkel || 0;
+
+          if (yokeIndex >= yokeCount || sensorIndex >= sensorCount) {
+            console.log(`Skipped message: Yoke ${yokeIndex+1}, Sensor ${sensorIndex+1}, Value ${sensorValue}`);
+            return;
+          }
+    
+          this.yokes.update((prevYokes) => {
+            const updatedYokes = [...prevYokes];
+            updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
+            return updatedYokes;
+          });
+
+          const result = this.displacementCalculationService.calculateYokeData(
+            this.yokes(),
+            this.selectedMeasurementSetting!.probeType!,
+            [],
+            this.selectedMeasurementSetting!.coil!.coiltype!,
+            this.selectedMeasurementSetting!.coil!,
+            this.selectedMeasurementSetting!
+          );
+
+          this.yokeData.set(result.F);
+          this.m_tot = result.m_tot;
+
+          // Speichere die Daten im Service
+          const key = `S${yokeIndex+1}S${sensorIndex+1}`;
+          this.messungService.addMeasurementData(key, sensorValue);
+          this.messungService.updateYokeData(result.F);
+          this.messungService.updateMTot(result.m_tot);
+        },
+        error: (err: any) => {
+          console.error('Fehler beim Laden der Messeinstellungen:', err);
+          this.error = 'Fehler beim Laden der Messeinstellungen';
+          this.isLoading = false;
+        }
+      });
+    } catch (error) {
+      console.error('Fehler beim Verbinden:', error);
+      this.isConnected = false;
+      this.showIdError = true;
+    }
+  }
+
   async startMeasurement(): Promise<void> {
     if (!this.isValid()) {
       this.showIdError = true;
@@ -95,6 +202,7 @@ export class StartMeasurementComponent implements OnDestroy {
       // Starte die Messung im Backend
       await this.measurementsBackendService.startMeasuring();
       this.currentMeasurement = true;
+      this.messungService.startGlobalMeasurement(this.measurementSettingId!);
 
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
@@ -136,7 +244,6 @@ export class StartMeasurementComponent implements OnDestroy {
       }
       this.selectedMeasurementSetting!.probeType = probeType;
 
-
       const yokeCount = coiltype.schenkel;
       const sensorCount = measurementSetting.sondenProSchenkel || 0;
       
@@ -151,74 +258,9 @@ export class StartMeasurementComponent implements OnDestroy {
       
       this.startTime = new Date();
       this.measurementData = {};
-      for (let i = 0; i < yokeCount; i++) {
-        for (let j = 0; j < sensorCount; j++) {
-          const key = `S${i+1}S${j+1}`;
-          this.measurementData[key] = [];
-        }
-      }
       
-      // Verbinde mit WebSocket
-      await this.webSocketService.connect();
-      this.isConnected = true;
+      await this.connectToWebSocket();
       this.showIdError = false;
-
-      // Sende Konfiguration
-      const config = {
-        type: 'config',
-        measurementSettingId: this.measurementSettingId,
-        note: this.note
-      };
-      console.log('Sende Konfiguration:', config);
-      this.webSocketService.sendMessage(JSON.stringify(config));
-
-      this.webSocketService.getMessages().subscribe({
-        next: (message: string) => {
-          const [topic, value] = message.split(':'); 
-          const yokeIndex: number = parseInt(topic.split('S')[1]) - 1;
-          const sensorIndex: number = parseInt(topic.split('S')[2]) - 1;
-          const sensorValue: number = parseFloat(value);
-
-          if (yokeIndex >= yokeCount || sensorIndex >= sensorCount) {
-            console.log(`Skipped message: Yoke ${yokeIndex+1}, Sensor ${sensorIndex+1}, Value ${sensorValue}`);
-            return;
-          }
-    
-          this.yokes.update((prevYokes) => {
-            const updatedYokes = [...prevYokes];
-            updatedYokes[yokeIndex].sensors[sensorIndex] = sensorValue;
-            return updatedYokes;
-          });
-
-          const result = this.displacementCalculationService.calculateYokeData(
-            this.yokes(),
-            probeType!,
-            [],
-            coiltype!,
-            coil!,
-            measurementSetting!
-          );
-
-          this.yokeData.set(result.F);
-          this.m_tot = result.m_tot;
-
-          const key = `S${yokeIndex+1}S${sensorIndex+1}`;
-          if (this.measurementData[key]) {
-            this.measurementData[key].push(sensorValue);
-          }
-        },
-        error: (err: any) => {
-          console.error('Fehler beim Laden der Messeinstellungen:', err);
-          this.error = 'Fehler beim Laden der Messeinstellungen';
-          this.isLoading = false;
-          console.log("yokeData: " + this.yokeData);
-          console.log("m_tot: " + this.m_tot);
-          console.log("selectedMeasurementSetting probeType: " + this.selectedMeasurementSetting!.probeType!);
-          console.log("coiltype: " + this.selectedMeasurementSetting!.coil!.coiltype);
-          console.log("coil: " + this.selectedMeasurementSetting!.coil!);
-          console.log("measurementSetting: " + this.selectedMeasurementSetting!);
-        }
-      });
     } catch (error) {
       console.error('Fehler beim Verbinden:', error);
       this.isConnected = false;
@@ -236,6 +278,7 @@ export class StartMeasurementComponent implements OnDestroy {
         // Stoppe die Messung im Backend
         await this.measurementsBackendService.stopMeasuring();
         this.currentMeasurement = false;
+        this.messungService.stopGlobalMeasurement();
 
         if (this.startTime && this.measurementSettingId) {
           const endTime = new Date();
@@ -298,7 +341,9 @@ export class StartMeasurementComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.stopMeasurement();
+    if (this.isConnected) {
+      this.webSocketService.disconnect();
+    }
   }
 
   backToListing(): void {

@@ -14,4 +14,12 @@ import { MessungService } from './services/messung.service';
 })
 export class MessungParentComponent {
   constructor(public messungService:MessungService) {}
+
+  async navigateToRunningMeasurement(): Promise<void> {
+    // Lade die aktuelle Messung
+    await this.messungService.loadCurrentMeasurement();
+    
+    // Navigiere zur Messung
+    this.messungService.selectedElementCopy = this.messungService.newElement;
+  }
 }
