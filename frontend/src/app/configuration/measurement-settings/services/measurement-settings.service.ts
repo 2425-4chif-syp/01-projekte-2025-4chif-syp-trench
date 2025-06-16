@@ -87,7 +87,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   }
 
   public async deleteElement(id: number): Promise<void> {
-    const index = this.elements.findIndex(e => e.coilId === id);
+    const index = this.elements.findIndex(e => e.id === id);
     if (index === -1) throw new Error(`Element with ID ${id} not found.`);
     await this.measurementSettingsBackendService.deleteMeasurementSettings(this.elements[index]);
     this.elements.splice(index, 1);
