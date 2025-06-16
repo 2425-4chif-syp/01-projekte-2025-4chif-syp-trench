@@ -35,6 +35,10 @@ export class ProbePositionService implements ListService<ProbePosition> {
     return { ...original };
   }
 
+  // ------------------------------------------------------------
+  // LADEN & SPEICHERN
+  // ------------------------------------------------------------
+
   async reloadElements(): Promise<void> {
     try{
       this.elements = await this.backend.getPositionsForMeasurementSettings(this.measurementSettingsService.selectedElementCopy?.id!); 
