@@ -57,85 +57,96 @@ namespace TrenchAPI.Controllers
             return sondenPosition;
         }
 
-        // PUT: api/SondenPosition/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutSondenPosition(int id, SondenPosition sondenPosition)
+        [HttpGet("Messeinstellung/{messeinstellungId}")]
+        public async Task<ActionResult<IEnumerable<SondenPosition>>> GetSondenPositionByMesseinstellung(int messeinstellungId)
         {
-            if (id != sondenPosition.ID)
+            var sondenPosition = await _context.SondenPosition
+                .Include(sp => sp.Sonde)
+                    .ThenInclude(s => s.SondenTyp)
+                .Include(sp => sp.Messeinstellung)
+                    .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(sp => sp.Messeinstellung)
+                    .ThenInclude(me => me.SondenTyp)
+                .Where(sp => sp.MesseinstellungID == messeinstellungId)
+                .ToListAsync();
+
+            if (sondenPosition.Count == 0)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(sondenPosition).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SondenPositionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return sondenPosition;
         }
+
+        // PUT: api/SondenPosition/5 
+        [HttpPut("{id}")]
+public async Task<IActionResult> PutSondenPosition(int id, SondenPositionUpdateDto dto)
+{
+    if (id != dto.ID) return BadRequest("ID passt nicht.");
+    if (!ModelState.IsValid) return BadRequest(ModelState);
+
+    var sondenPosition = await _context.SondenPosition
+                                       .FirstOrDefaultAsync(sp => sp.ID == id);
+    if (sondenPosition is null) return NotFound();
+
+    // Messeinstellung prüfen
+    if (!_context.Messeinstellung.Any(me => me.ID == dto.MesseinstellungID))
+        return BadRequest("Die angegebene Messeinstellung existiert nicht.");
+
+    // Sonde nur prüfen, wenn sie angegeben wurde
+    if (dto.SondeID.HasValue &&
+        !_context.Sonde.Any(s => s.ID == dto.SondeID.Value))
+        return BadRequest("Die angegebene Sonde existiert nicht.");
+
+    // Werte übernehmen
+    sondenPosition.SondeID = dto.SondeID;            // null oder Wert
+    sondenPosition.MesseinstellungID = dto.MesseinstellungID;
+    sondenPosition.Position = dto.Position;
+    sondenPosition.Schenkel = dto.Schenkel;
+
+    await _context.SaveChangesAsync();
+    return NoContent();
+}
+
 
         // POST: api/SondenPosition
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
         [HttpPost]
-        public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPositionCreateDto sondenPositionDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPositionCreateDto dto)
+{
+    if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_context.Sonde.Any(st => st.ID == sondenPositionDto.SondeID))
-            {
-                return BadRequest("Der angegebene Sonde existiert nicht. (DEBUG: 1)");
-            }
+    // Messeinstellung MUSS existieren
+    if (!_context.Messeinstellung.Any(me => me.ID == dto.MesseinstellungID))
+        return BadRequest("Die angegebene Messeinstellung existiert nicht.");
 
-            if (!_context.Messeinstellung.Any(st => st.ID == sondenPositionDto.MesseinstellungID))
-            {
-                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 1)");
-            }
+    // Sonde nur prüfen, wenn sie angegeben wurde
+    Sonde? existingSonde = null;
+    if (dto.SondeID.HasValue)
+    {
+        existingSonde = await _context.Sonde.FindAsync(dto.SondeID.Value);
+        if (existingSonde is null)
+            return BadRequest("Die angegebene Sonde existiert nicht.");
+    }
 
-            var sondenPosition = new SondenPosition
-            {
-                ID = sondenPositionDto.ID,
-                SondeID = sondenPositionDto.SondeID,
-                MesseinstellungID = sondenPositionDto.MesseinstellungID,
-                Position = sondenPositionDto.Position,
-                Schenkel = sondenPositionDto.Schenkel
-            };
+    var sondenPosition = new SondenPosition
+    {
+        SondeID = dto.SondeID,                // kann null sein
+        Sonde   = existingSonde,              // null oder Entity
+        MesseinstellungID = dto.MesseinstellungID,
+        Position = dto.Position,
+        Schenkel = dto.Schenkel
+    };
 
-            var existingSonde = _context.Sonde.Find(sondenPosition.SondeID);
-            var existingMesseinstellung = _context.Messeinstellung.Find(sondenPosition.MesseinstellungID);
+    _context.SondenPosition.Add(sondenPosition);
+    await _context.SaveChangesAsync();
 
-            if (existingSonde == null)
-            {
-                return BadRequest("Der angegebene Sonde existiert nicht. (DEBUG: 2)");
-            }
+    return CreatedAtAction(nameof(GetSondenPosition),
+                           new { id = sondenPosition.ID },
+                           sondenPosition);
+}
 
-            if (existingMesseinstellung == null)
-            {
-                return BadRequest("Der angegebene Messeinstellung existiert nicht. (DEBUG: 2)");
-            }
-
-            _context.SondenPosition.Add(sondenPosition);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetSondenPosition", new { id = sondenPosition.ID }, sondenPosition);
-        }
 
         // DELETE: api/SondenPosition/5
         [HttpDelete("{id}")]

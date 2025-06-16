@@ -5,47 +5,96 @@ import { GenericListComponent } from '../../../../generic-list/components/generi
 import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
 import { Probe } from '../../interfaces/probe';
 import { Router } from '@angular/router';
+import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
+import { ProbePosition } from '../../../probe-position/interfaces/probe-position.model';
+import { ProbePositionsBackendService } from '../../../probe-position/services/probe-positions-backend.service';
+import { MeasurementSettingsService } from '../../../measurement-settings/services/measurement-settings.service';
 
 @Component({
   selector: 'app-probe-list',
   standalone: true,
   imports: [CommonModule, GenericListComponent],
   providers: [
-    {
-      provide: LIST_SERVICE_TOKEN,
-      useExisting: ProbesService
-    }
+    { provide: LIST_SERVICE_TOKEN, useExisting: ProbesService }
   ],
   templateUrl: './probe-list.component.html',
-  styleUrl: './probe-list.component.scss'
+  styleUrl:    './probe-list.component.scss'
 })
 export class ProbeListComponent {
-
-  public get isProbeSelector(): boolean {
+  get isProbeSelector(): boolean {
     return this.probesService.isProbeSelector;
   }
 
-  public readonly keysAsColumns: { [key: string]: string } = {
-    'id': 'Spule',
-    'name': 'Name',
-    'probeType': 'Sondentyp',
-    'kalibrierungsfaktor': 'Kalibrierungsfaktor'
+  public hasLoadedElementIdsToIgnore: boolean = false;
+  public elementIdsToIgnore: number[] = [];
+
+  readonly keysAsColumns: { [key: string]: string } = {
+    id: 'Spule',
+    name: 'Name',
+    probeType: 'Sondentyp',
+    kalibrierungsfaktor: 'Kalibrierungsfaktor'
+  };
+
+  readonly elementValueToStringMethods = {
+    probeType: (e: Probe) => e.probeType?.name ?? `Unnamed ProbeType (ID ${e.probeTypeId})`
+  };
+
+  constructor(
+    public  probesService:                ProbesService,
+    private probePositionService:         ProbePositionService,
+    private probePositionsBackendService: ProbePositionsBackendService,
+    private measurementSettingsService:   MeasurementSettingsService,
+    private router:                       Router
+  ) {}
+
+  async ngOnInit():Promise<void> {
+    this.hasLoadedElementIdsToIgnore = false;
+    await this.loadElementsToIgnore();
   }
-  public readonly elementValueToStringMethods: { [key: string]: (element:Probe) => string } = {
-    'probeType': (element:Probe) => element.probeType?.name ?? `Unnamed ProbeType (ID ${element.probeTypeId})`
-  }
 
-  constructor(public probesService:ProbesService, private router:Router) {
-
-  }
-
-  openProbe(probe:Probe) {
-    const probeId = probe.id!;
-
-    if (this.probesService.isProbeSelector) {
-      
+  private async loadElementsToIgnore(): Promise<void> {
+    if (!this.probesService.isProbeSelector) {
+      this.elementIdsToIgnore = [];
+      this.hasLoadedElementIdsToIgnore = true;
+      return;
     }
 
-    this.probesService.selectElement(probeId);
+    const probePositions = await this.probePositionsBackendService.getPositionsForMeasurementSettings(
+      this.measurementSettingsService.selectedElementCopy?.id!
+    );
+
+    this.elementIdsToIgnore = probePositions 
+      .filter(pp => pp.measurementProbeId != null)
+      .map(pp => pp.measurementProbe!.id)
+      .filter((value, index, self) => self.indexOf(value) === index); // distinct ids
+
+    this.hasLoadedElementIdsToIgnore = true;
+
+    console.log('ProbeListComponent.loadElementsToIgnore() called, elementsToIgnore set to:', this.elementIdsToIgnore);
+  }
+
+  handleBack(){
+    this.probesService.isProbeSelector = false;
+    this.router.navigate(['/measurement-settings-list']);
+    console.log('ProbeListComponent.handleBack() called, isProbeSelector set to false');
+  }
+
+
+  openProbe(probe: Probe): void {
+
+    if (this.probesService.isProbeSelector) {
+
+      const pos = this.probePositionService.selectedElementCopy!;
+      pos.measurementProbeId  = probe.id;
+      pos.measurementProbe    = probe;
+
+      this.probePositionService.updateOrCreateElement(pos);
+
+      this.probesService.isProbeSelector = false;
+      this.router.navigate(['/measurement-settings-list']);
+      return;
+    }
+
+    this.probesService.selectElement(probe.id!);
   }
 }

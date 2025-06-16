@@ -1,56 +1,80 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from '../../../backend.service';
 import { ProbePosition } from '../interfaces/probe-position.model';
+import { MeasurementSettingsBackendService } from '../../measurement-settings/services/measurement-settings-backend.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProbePositionsBackendService {
 
-  constructor(private backendService:BackendService) { }
+  constructor(
+    private backendService: BackendService,
+    private measurementSettingsBackendService: MeasurementSettingsBackendService
+  ) {}
 
-  private probePositionBackendToFrontend(measurementProbePosition: any): ProbePosition {
-    return {
-      id: measurementProbePosition.id,
-      measurementSettingsId: measurementProbePosition.messeinstellung_id,
-      measurementSetting: measurementProbePosition.messeinstellung,
-      measurementProbeId: measurementProbePosition.messsonde_id,
-      measurementProbe: measurementProbePosition.messsonde,
-      schenkel: measurementProbePosition.schenkel,
-      position: measurementProbePosition.position
-    }
+  private probePositionBackendToFrontend(mp: any): ProbePosition {
+    console.log('ProbePositionBackendToFrontend', mp);
+    /*return {
+      id:                   mp.id,
+      measurementSettingsId: mp.messeinstellungID,
+      measurementSetting:    this.measurementSettingsBackendService
+                                .measurementSettingsBackendToFrontend(mp.messeinstellung!),*/
+      const ms = mp.messeinstellung
+                    ? this.measurementSettingsBackendService.measurementSettingsBackendToFrontend(mp.messeinstellung) : null;
+      return{
+      id:                  mp.id,
+      measurementSettingsId: mp.messeinstellungID,
+      measurementSetting:   ms,  
+      measurementProbeId:   mp.sondeID,
+      measurementProbe:     mp.sonde,
+      schenkel:             mp.schenkel,
+      position:             mp.position
+    };
   }
 
-  private probePositionFrontendToBackend(measurementProbePosition: ProbePosition): any {
-    return {
-      id: measurementProbePosition.id,
-      messeinstellung_id: measurementProbePosition.measurementSettingsId,
-      messsonde_id: measurementProbePosition.measurementProbeId,
-      schenkel: measurementProbePosition.schenkel,
-      position: measurementProbePosition.position
-    }
-  }
-  
-  public async getAllProbePositions(): Promise<ProbePosition[]> {
-    const response: any = await this.backendService.httpGetRequest('MesssondenPosition');
-    return response.map((pos: any) => this.probePositionBackendToFrontend(pos));
+  private probePositionFrontendToBackend(pp: ProbePosition): any {
+    const dto: any = {
+      messeinstellungID: pp.measurementSettingsId,
+      sondeID:           pp.measurementProbeId,
+      schenkel:          pp.schenkel,
+      position:          pp.position
+    };
+    if (pp.id != null) dto.id = pp.id;
+    return dto;
   }
 
-  public async getMeasurementProbePosition(id: number): Promise<ProbePosition> {
-    const response: any = await this.backendService.httpGetRequest('MesssondenPosition/' + id);
-    return this.probePositionBackendToFrontend(response);
+  async getAllProbePositions(): Promise<ProbePosition[]> {
+    const res = await this.backendService.httpGetRequest('SondenPosition');
+    return res.map((p: any) => this.probePositionBackendToFrontend(p));
   }
 
-  public async addProbePosition(pos: ProbePosition): Promise<ProbePosition> {
-    const response: any = await this.backendService.httpPostRequest('MesssondenPosition', this.probePositionFrontendToBackend(pos));
-    return this.probePositionBackendToFrontend(response);
+  async getPositionsForMeasurementSettings(
+    measurementSettingsId: number
+    ): Promise<ProbePosition[]> {
+    const res = await this.backendService.httpGetRequest(
+      `SondenPosition/Messeinstellung/${measurementSettingsId}`
+    );
+    return res.map((p: any) => this.probePositionBackendToFrontend(p));
   }
 
-  public async updateProbePosition(pos: ProbePosition): Promise<void> {
-    await this.backendService.httpPutRequest('MesssondenPosition/' + pos.id, this.probePositionFrontendToBackend(pos));
+  async getMeasurementProbePosition(id: number): Promise<ProbePosition> {
+    const res = await this.backendService.httpGetRequest(`SondenPosition/${id}`);
+    return this.probePositionBackendToFrontend(res);
   }
 
-  public async deleteProbePosition(pos: ProbePosition): Promise<void> {
-    await this.backendService.httpDeleteRequest('MesssondenPosition/' + pos.id);
+  async addProbePosition(pos: ProbePosition): Promise<ProbePosition> {
+    const res = await this.backendService
+      .httpPostRequest('SondenPosition', this.probePositionFrontendToBackend(pos));
+    return this.probePositionBackendToFrontend(res);
+  }
+
+  async updateProbePosition(pos: ProbePosition): Promise<void> {
+    await this.backendService
+      .httpPutRequest(`SondenPosition/${pos.id}`, this.probePositionFrontendToBackend(pos));
+  }
+
+  async deleteProbePosition(pos: ProbePosition): Promise<void> {
+    await this.backendService.httpDeleteRequest(`SondenPosition/${pos.id}`);
   }
 }

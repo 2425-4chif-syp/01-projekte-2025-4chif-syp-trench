@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { CoilsService } from '../../../coil/services/coils.service';
 import { ProbesService } from '../../../probe/services/probes.service';
 import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
+import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
 
 
 @Component({
@@ -45,11 +46,11 @@ export class MeasurementSettingsComponent implements OnInit {
     }
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private router: Router){
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private probePositionService: ProbePositionService, private router: Router){
     this.coilsService.isCoilSelector = false;
     this.probeTypesService.isMeasurementSettingsSelector = false;
   }
-
+  
   async saveChanges() {
     if (!this.originalMeasurementSetting) return;
 
@@ -58,11 +59,7 @@ export class MeasurementSettingsComponent implements OnInit {
     const requiredFields: (keyof MeasurementSetting)[] = [
       'coilId',
       'probeTypeId',
-      //'bemessungsspannung',
-      //'bemessungsfrequenz',
-      //'pruefspannung',
       'sondenProSchenkel',
-      // -> 'name'
     ];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
@@ -71,14 +68,17 @@ export class MeasurementSettingsComponent implements OnInit {
       return;
     }
 
-
     try {
       this.selectedMeasurementSetting!.id = this.measurementSettingsService.selectedElementCopy?.id! || 0;
-      //this.selectedMeasurementSetting!.notiz = "";
+      this.selectedMeasurementSetting!.coilId             = Number(this.selectedMeasurementSetting!.coilId);
+      this.selectedMeasurementSetting!.probeTypeId        = Number(this.selectedMeasurementSetting!.probeTypeId);
+      this.selectedMeasurementSetting!.sondenProSchenkel  = Number(this.selectedMeasurementSetting!.sondenProSchenkel);
       console.log(this.selectedMeasurementSetting!);
+
       await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting!);
       this.onSettingSelectionChange(this.selectedSettingId!);
 
+      this.createEmptyProbePositions();
       this.saveMessage = "Änderungen gespeichert!";
       setTimeout(() => {
         this.saveMessage = null;
@@ -87,6 +87,8 @@ export class MeasurementSettingsComponent implements OnInit {
       this.saveError = false;
 
       this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
+      this.measurementSettingsService.selectElement(this.selectedMeasurementSetting!.id!);
+      console.log("Änderungen gespeichert:", this.measurementSettingsService.selectedElementCopy);
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
       this.saveMessage = "Fehler beim Speichern!";
@@ -97,6 +99,15 @@ export class MeasurementSettingsComponent implements OnInit {
     const settingIdNumber: number = Number(SettingId);
 
     await this.measurementSettingsService.selectElement(settingIdNumber);
+  }
+
+  createEmptyProbePositions() {
+    console.log("Creating empty probe positions for measurement setting:", this.measurementSettingsService.selectedElementCopy);
+    this.probePositionService.createEmptyPositions(
+      this.measurementSettingsService.selectedElementCopy?.coil?.coiltype?.schenkel ?? 0,
+      this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel ?? 0,
+      this.measurementSettingsService.selectedElementCopy!
+    );
   }
 
   isFieldInvalid(field: keyof MeasurementSetting): boolean {
@@ -156,8 +167,16 @@ export class MeasurementSettingsComponent implements OnInit {
     this.showDeleteModal = false;
 
     if (this.selectedMeasurementSetting?.id == null) return;
+    
+    try{
+      await this.measurementSettingsService.deleteElement(this.selectedMeasurementSetting.id);
+    }
+    catch(err){
+      console.error("Fehler beim Löschen der Einstellung:", err);
+      this.saveMessage = "Fehler beim Löschen der Einstellung!";
+      return;
+    }
 
-    await this.measurementSettingsService.deleteElement(this.selectedMeasurementSetting.id);
     this.backToListing();
   }
 }
