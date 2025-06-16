@@ -50,7 +50,7 @@ export class MeasurementSettingsComponent implements OnInit {
     this.coilsService.isCoilSelector = false;
     this.probeTypesService.isMeasurementSettingsSelector = false;
   }
-
+  
   async saveChanges() {
     if (!this.originalMeasurementSetting) return;
 
@@ -167,8 +167,16 @@ export class MeasurementSettingsComponent implements OnInit {
     this.showDeleteModal = false;
 
     if (this.selectedMeasurementSetting?.id == null) return;
+    
+    try{
+      await this.measurementSettingsService.deleteElement(this.selectedMeasurementSetting.id);
+    }
+    catch(err){
+      console.error("Fehler beim Löschen der Einstellung:", err);
+      this.saveMessage = "Fehler beim Löschen der Einstellung!";
+      return;
+    }
 
-    await this.measurementSettingsService.deleteElement(this.selectedMeasurementSetting.id);
     this.backToListing();
   }
 }
