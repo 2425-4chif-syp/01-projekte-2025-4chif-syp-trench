@@ -1,6 +1,6 @@
 = Conversation Protocols
 
-https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Conversation Protocols*
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Conversation Protocols*
 
 == Lessons
 |===

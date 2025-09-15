@@ -1,0 +1,96 @@
+[plantuml, format="svg"]
+----
+@startuml Trench ERD
+
+entity spulentyp {
+  * id : integer
+  --
+  name : varchar
+  schenkelzahl : integer
+  bandbreite : decimal
+  schichthoehe : decimal
+  durchmesser : decimal
+  toleranzbereich : integer
+  notiz : varchar
+}
+
+entity spule {
+  * id : integer
+  --
+  spuletyp_id : integer
+  auftragsnr : varchar
+  auftragsposnr : integer
+  bemessungsspannung : decimal
+  bemessungsfrequenz : decimal
+  einheit : integer
+  notiz : varchar
+}
+
+entity sondentyp {
+  * id : integer
+  --
+  name : varchar
+  breite : decimal
+  hoehe : decimal
+  windungszahl : integer
+  notiz : varchar
+}
+
+entity messeinstellung {
+  * id : integer
+  --
+  spule_id : integer
+  sondentyp_id : integer
+  name : varchar
+  sonden_pro_schenkel : integer
+}
+
+entity messung {
+  * id : integer
+  --
+  messeinstellung_id : integer
+  anfangszeitpunkt : timestamp
+  endzeitpunkt : timestamp
+  name : varchar
+  tauchkernstellung : decimal
+  pruefspannung : decimal
+  notiz : varchar
+}
+
+entity sondenposition {
+  * id : integer
+  --
+  sonde_id : integer
+  messeinstellung_id : integer
+  schenkel : integer
+  position : integer
+}
+
+entity messwert {
+  * id : integer
+  --
+  messung_id : integer
+  sondenposition_id : integer
+  wert : decimal
+  zeitpunkt : timestamp
+}
+
+entity sonde {
+  * id : integer
+  --
+  sondentyp_id : integer
+  name : varchar
+  kalibrierungsfaktor : decimal
+}
+
+spule }o--|| spulentyp : "spuletyp_id"
+messeinstellung }o--|| spule : "spule_id"
+messeinstellung }o--|| sondentyp : "sondentyp_id"
+messung }o--|| messeinstellung : "messeinstellung_id"
+sondenposition }o--|| sonde : "sonde_id"
+sondenposition }o--|| messeinstellung : "messeinstellung_id"
+messwert }o--|| messung : "messung_id"
+messwert }o--|| sondenposition : "sondenposition_id"
+sonde }o--|| sondentyp : "sondentyp_id"
+
+@enduml
