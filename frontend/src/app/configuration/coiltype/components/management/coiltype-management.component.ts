@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
 import { CoiltypesService } from '../../services/coiltypes.service';
@@ -12,94 +12,86 @@ import { Coiltype } from '../../interfaces/coiltype';
   templateUrl: './coiltype-management.component.html',
   styleUrl: './coiltype-management.component.scss'
 })
-export class CoiltypeManagementComponent {
-    constructor(public coiltypesService:CoiltypesService) { }
-    saveError: boolean = false;
-    saveMessage: string | null = null;
-    originalCoiltype: Coiltype | null = null; 
+export class CoiltypeManagementComponent implements OnInit {
+  @ViewChild('coiltypeSelectEl') coiltypeSelect?: ElementRef<HTMLSelectElement>;
 
-    public get selectedCoiltype():Coiltype|null {
-      return this.coiltypesService.selectedElementCopy;
+  constructor(public coiltypesService: CoiltypesService) {}
+
+  saveMessage: string | null = null;
+  originalCoiltype: Coiltype | null = null;
+
+  public get selectedCoiltype(): Coiltype | null {
+    return this.coiltypesService.selectedElementCopy;
+  }
+  public get selectedCoiltypeId(): number | undefined {
+    return this.coiltypesService.selectedElementCopy?.id!;
+  }
+  public set selectedCoiltypeId(id: number) {
+    this.coiltypesService.selectElement(Number(id));
+  }
+
+  ngOnInit() {
+    if (this.selectedCoiltype) {
+      this.originalCoiltype = { ...this.selectedCoiltype };
     }
-    public get selectedCoiltypeId():number|undefined {
-      return this.coiltypesService.selectedElementCopy?.id!;
-    }
-    public set selectedCoiltypeId(id:number) {
-      this.coiltypesService.selectElement(Number(id));
-    }
+  }
 
-    ngOnInit() {
-      if (this.selectedCoiltype) {
-          this.originalCoiltype = { ...this.selectedCoiltype }; 
-      }
-    }
+  hasChanges(): boolean {
+    if (!this.originalCoiltype || !this.selectedCoiltype) return false;
+    return JSON.stringify(this.originalCoiltype) !== JSON.stringify(this.selectedCoiltype);
+  }
 
-    isFieldInvalid(field: string): boolean {
-      if (!this.selectedCoiltype) return false;
-      let value = this.selectedCoiltype[field as keyof Coiltype];
-      return value === null || value === undefined || (typeof value === 'number' && value <= 0);
-    }
+  async onSubmit(form: NgForm) {
+    if (!form.valid || !this.selectedCoiltype) return;
 
-    hasChanges(): boolean {
-      if (!this.originalCoiltype || !this.selectedCoiltype) return false;
-      return JSON.stringify(this.originalCoiltype) !== JSON.stringify(this.selectedCoiltype);
-    }
-    
-    async saveChanges() {
-      if (!this.selectedCoiltype) return;
-  
-      this.saveError = true; 
-  
-      const requiredFields = ['name', 'bandbreite', 'schichthoehe', 'durchmesser', 'toleranzbereich'];
-      const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
-  
-      if (invalidFields.length > 0) {
-          this.saveMessage = "Bitte füllen Sie alle Pflichtfelder korrekt aus.";
-          return;
-      }
-  
-      try {
-          await this.coiltypesService.updateOrCreateElement(this.selectedCoiltype);
-          this.onCoiltypeSelectionChange(this.selectedCoiltypeId!);
-  
-          this.saveMessage = "Änderungen gespeichert!";
-          setTimeout(() => {
-              this.saveMessage = null;
-          }, 1500);
-  
-          this.saveError = false; // Fehlerprüfung zurücksetzen
-          this.originalCoiltype = { ...this.selectedCoiltype };
-      } catch (error) {
-          console.error("Fehler beim Speichern:", error);
-          this.saveMessage = "Fehler beim Speichern!";
-      }
-    }
-  
+    try {
+      await this.coiltypesService.updateOrCreateElement(this.selectedCoiltype);
 
-    async onCoiltypeSelectionChange(coiltypeId: number) {
-      const coiltypeIdNumber:number = Number(coiltypeId);
-
-      await this.coiltypesService.selectElement(coiltypeIdNumber);
-    }
-
-    showDeleteModal = false;
-
-    openDeleteModal(): void {
-      this.showDeleteModal = true;
-    }
-
-    async deleteCoiltype(): Promise<void> {
-      this.showDeleteModal = false;
-
-      if (this.coiltypesService.selectedElementCopy === null) {
-        return;
+      // Element nach dem Speichern neu laden (falls z. B. ID neu vergeben wurde)
+      if (this.selectedCoiltypeId != null) {
+        await this.coiltypesService.selectElement(this.selectedCoiltypeId);
       }
 
-      await this.coiltypesService.deleteElement(this.coiltypesService.selectedElementCopy.id!);
-    }
+      this.saveMessage = 'Änderungen gespeichert!';
+      setTimeout(() => (this.saveMessage = null), 1500);
 
-    backToListing():void {
-      this.coiltypesService.selectedElementCopy = null;
+      // Change-Tracking zurücksetzen
+      this.originalCoiltype = this.selectedCoiltype ? { ...this.selectedCoiltype } : null;
+      form.form.markAsPristine();
+
+      // Dropdown wieder schließen, damit das Layout nicht verschoben wird
+      this.coiltypeSelect?.nativeElement.blur();
+    } catch (error) {
+      console.error('Fehler beim Speichern:', error);
+      this.saveMessage = 'Fehler beim Speichern!';
     }
+  }
+
+  async onCoiltypeSelectionChange(coiltypeId: number) {
+    const coiltypeIdNumber: number = Number(coiltypeId);
+    await this.coiltypesService.selectElement(coiltypeIdNumber);
+    this.coiltypeSelect?.nativeElement.blur();
+    // Neues Original setzen, damit hasChanges korrekt ist
+    if (this.selectedCoiltype) {
+      this.originalCoiltype = { ...this.selectedCoiltype };
+    }
+  }
+
+  showDeleteModal = false;
+
+  openDeleteModal(): void {
+    this.showDeleteModal = true;
+  }
+
+  async deleteCoiltype(): Promise<void> {
+    this.showDeleteModal = false;
+    if (this.coiltypesService.selectedElementCopy === null) return;
+    await this.coiltypesService.deleteElement(this.coiltypesService.selectedElementCopy.id!);
+    this.originalCoiltype = null;
+  }
+
+  backToListing(): void {
+    this.coiltypesService.selectedElementCopy = null;
+    this.originalCoiltype = null;
+  }
 }
-
