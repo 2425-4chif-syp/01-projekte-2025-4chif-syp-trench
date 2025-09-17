@@ -43,21 +43,10 @@
   font-weight: 600;
 }
 
-.visualization-column {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.visualization-shell {
-  flex: 1;
-  min-height: 360px;
-}
-
 .select-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 0;
+  margin-bottom: 1.25rem;
 }
 
 .select-shell {
@@ -309,14 +298,6 @@
   .select-shell {
     width: 100%;
     max-width: 20rem;
-  }
-
-  .visualization-column {
-    gap: 0.85rem;
-  }
-
-  .visualization-shell {
-    min-height: 260px;
   }
 
   .form-actions {
