@@ -112,3 +112,42 @@
     right: 0;
     left: auto;
 }
+
+/* Disabled Navigation Styles */
+.disabled-nav {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+.disabled-dropdown-item {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    color: #6c757d !important;
+}
+
+.admin-only-text {
+    font-size: 0.8rem;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Navigation Mode-Indikatoren */
+.nav-mode-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: 8px;
+    vertical-align: middle;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nav-mode-indicator.admin-mode {
+    background: linear-gradient(135deg, rgba(47, 167, 174, 0.9) 0%, rgba(114, 185, 0, 0.9) 100%);
+}
+
+.nav-mode-indicator.monteur-mode {
+    background: linear-gradient(135deg, rgba(0, 21, 104, 0.9) 0%, rgba(47, 167, 174, 0.9) 100%);
+}
