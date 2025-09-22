@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { ProbeType } from '../../interfaces/probe-type';
@@ -12,6 +12,8 @@ import { ProbeType } from '../../interfaces/probe-type';
   styleUrl: './probe-type-management.component.scss'
 })
 export class ProbeTypeManagementComponent implements OnInit {
+  @Input() readOnly: boolean = false;
+  
   saveMessage: string | null = null;
   saveError: boolean = false;
   originalProbeType: ProbeType | null = null;
