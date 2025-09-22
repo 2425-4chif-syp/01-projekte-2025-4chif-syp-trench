@@ -1,46 +1,109 @@
 <div class="container text-center vh-90 d-flex flex-column align-items-center justify-content-center">
+      <!-- Simple Mode Toggle Slider -->
+      <div class="mode-toggle-container">
+        <div class="mode-toggle-slider" (click)="toggleMode()">
+          <div class="slider-track" [class.admin-active]="modeService.isAdminMode()">
+            <div class="slider-thumb" [class.admin-position]="modeService.isAdminMode()">
+              <i class="fas" [class.fa-user-shield]="modeService.isAdminMode()" [class.fa-user-cog]="modeService.isMonteurMode()"></i>
+            </div>
+          </div>
+          <div class="mode-labels">
+            <span class="mode-label monteur-label" [class.active]="modeService.isMonteurMode()">Monteur</span>
+            <span class="mode-label admin-label" [class.active]="modeService.isAdminMode()">Admin</span>
+          </div>
+        </div>
+      </div>
+
   <div class="mb-5 mt-5">
     <img src="/assets/logo-black.png" alt="Trench Logo" class="img-fluid mb-4" style="max-width: 400px;">
     <h1 class="mb-4">Trench ASC Sensor Visualization</h1>
+    
+    <!-- Active Mode Display -->
+    <div class="active-mode-display" [class.admin-mode]="modeService.isAdminMode()" [class.monteur-mode]="modeService.isMonteurMode()">
+      <div class="mode-icon">
+        <i class="fas" [class.fa-user-shield]="modeService.isAdminMode()" [class.fa-user-cog]="modeService.isMonteurMode()"></i>
+      </div>
+      <div class="mode-info">
+        <div class="mode-title">{{ modeService.isAdminMode() ? 'Admin-Modus' : 'Monteur-Modus' }} aktiv</div>
+        <div class="mode-description">
+          {{ modeService.isAdminMode() ? 'Vollzugriff auf alle Bereiche inklusive Spulentypen und Sondentypen' : 'Zugriff auf alle Bereiche außer Spulentypen und Sondentypen' }}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Admin Access Warning -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="showAdminWarning">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>Admin-Bereich!</strong> Sie müssen im Admin-Modus sein, um Spulentypen und Sondentypen zu bearbeiten.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="dismissAdminWarning()"></button>
+    </div>
   </div>
    
   <div class="card-container">
-    <!-- Card 1 -->
+    <!-- Card 1 - Spule -->
     <div class="card hover-card">
       <div class="card-img-container">
         <img src="/assets/home/spule.png" class="card-img" alt="Spulentypen">
+        <div class="mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
+        </div>
       </div>
-      <div class="card-action-top" (click)="navigateToCoilTypeManagement()">
-        <span class="action-label">Spulentypenverwaltung</span>
+      <div class="card-action-top" (click)="navigateToCoilTypeManagement()" 
+           [title]="modeService.isMonteurMode() ? 'Nur Ansicht - Wechseln Sie in den Admin-Modus zum Bearbeiten' : 'Spulentypen bearbeiten'">
+        <span class="action-label">
+          <i class="fas fa-cog me-2"></i>
+          Spulentypenverwaltung
+        </span>
       </div>
       <div class="card-action-bottom" (click)="navigateToCoilManagement()">
-        <span class="action-label">Spulenverwaltung</span>
+        <span class="action-label">
+          <i class="fas fa-list me-2"></i>
+          Spulenverwaltung
+        </span>
       </div>
     </div>
   
-    <!-- Card 2 -->
+    <!-- Card 2 - Sonde -->
     <div class="card hover-card">
       <div class="card-img-container">
         <img src="/assets/home/sonde.png" class="card-img" alt="Sondentypen">
+        <div class="mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
+        </div>
       </div>
-      <div class="card-action-top" (click)="navigateToProbeTypeManagement()">
-        <span class="action-label">Sondentypenverwaltung</span>
+      <div class="card-action-top" (click)="navigateToProbeTypeManagement()" 
+           [title]="modeService.isMonteurMode() ? 'Nur Ansicht - Wechseln Sie in den Admin-Modus zum Bearbeiten' : 'Sondentypen bearbeiten'">
+        <span class="action-label">
+          <i class="fas fa-cog me-2"></i>
+          Sondentypenverwaltung
+        </span>
       </div>
       <div class="card-action-bottom" (click)="navigateToProbeManagement()">
-        <span class="action-label">Sondenverwaltung</span>
+        <span class="action-label">
+          <i class="fas fa-list me-2"></i>
+          Sondenverwaltung
+        </span>
       </div>
     </div>
   
-    <!-- Card 3 -->
+    <!-- Card 3 - Messung -->
     <div class="card hover-card">
       <div class="card-img-container">
         <img src="/assets/home/messung.png" class="card-img" alt="Messeinstellungen">
+        <div class="mode-indicator" 
+             [class.admin-mode]="modeService.isAdminMode()"
+             [class.monteur-mode]="modeService.isMonteurMode()">
+        </div>
       </div>
       <div class="card-action-top" (click)="navigateToMeasurementSettings()">
-        <span class="action-label">Messeinstellungen</span>
+        <span class="action-label">
+          <i class="fas fa-cog me-2"></i>
+          Messeinstellungen
+        </span>
       </div>
       <div class="card-action-bottom" (click)="navigateToMeasurementManagement()">
-        <span class="action-label">Messungen</span>
+        <span class="action-label">
+          <i class="fas fa-list me-2"></i>
+          Messungen
+        </span>
       </div>
     </div>
   </div>
