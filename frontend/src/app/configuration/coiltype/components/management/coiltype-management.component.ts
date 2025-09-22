@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
@@ -13,6 +13,8 @@ import { Coiltype } from '../../interfaces/coiltype';
   styleUrl: './coiltype-management.component.scss'
 })
 export class CoiltypeManagementComponent {
+    @Input() readOnly: boolean = false;
+    
     constructor(public coiltypesService:CoiltypesService) { }
     saveError: boolean = false;
     saveMessage: string | null = null;
