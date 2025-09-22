@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 import { LoginComponent } from './auth/login/login.component';
 import { CoilParentComponent } from './configuration/coil/components/coil-parent.component';
 import { CoiltypeParentComponent } from './configuration/coiltype/components/coiltype-parent.component';
