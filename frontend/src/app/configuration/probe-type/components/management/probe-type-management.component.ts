@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { ProbeType } from '../../interfaces/probe-type';
+import { ModeService } from '../../../../services/mode.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-probe-type-management',
@@ -11,17 +13,32 @@ import { ProbeType } from '../../interfaces/probe-type';
   templateUrl: './probe-type-management.component.html',
   styleUrl: './probe-type-management.component.scss'
 })
-export class ProbeTypeManagementComponent implements OnInit {
+export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
+  @Input() readOnly: boolean = false;
+  private modeSubscription?: Subscription;
+  
   saveMessage: string | null = null;
   saveError: boolean = false;
   originalProbeType: ProbeType | null = null;
   showDeleteModal = false;
 
-  constructor(private measurementProbeTypesService: ProbeTypesService) {}
+  constructor(private measurementProbeTypesService: ProbeTypesService, public modeService: ModeService) {}
 
   ngOnInit() {
     if (this.selectedProbeType) {
       this.originalProbeType = { ...this.selectedProbeType };
+    }
+    
+    // Subscribe to mode changes
+    this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
+      // Force change detection
+      this.readOnly = this.modeService.isMonteurMode();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.modeSubscription) {
+      this.modeSubscription.unsubscribe();
     }
   }
 
@@ -98,4 +115,5 @@ export class ProbeTypeManagementComponent implements OnInit {
   get scaledHeight(): number {
     return (this.selectedProbeType?.hoehe ?? 0) * this.scale;
   }
+
 }

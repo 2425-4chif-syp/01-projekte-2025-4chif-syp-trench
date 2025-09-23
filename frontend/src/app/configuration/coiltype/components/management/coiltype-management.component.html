@@ -1,4 +1,17 @@
-<div class="container mt-5">
+<div class="container mt-3">
+  <!-- Monteur-Modus Hinweis -->
+  @if (readOnly) {
+    <div class="monteur-mode-notice">
+      <div class="notice-icon">
+        <i class="fas fa-user-cog"></i>
+      </div>
+      <div class="notice-content">
+        <div class="notice-title">Monteur-Modus</div>
+        <div class="notice-description">Felder sind schreibgeschützt</div>
+      </div>
+    </div>
+  }
+  
   <div class="row justify-content-center">
       <!-- Spulentyp Verwaltung -->
       <div class="col-lg-5 col-md-6">
@@ -8,28 +21,34 @@
 
           <!-- Dropdown zur Auswahl eines Spulentypen -->
           <div class="mb-3 text-center">
-              <select *ngIf="!coiltypesService.selectedElementIsNew" class="form-select w-75 mx-auto"
+              @if (!coiltypesService.selectedElementIsNew) {
+              <select class="form-select w-75 mx-auto"
                   id="coiltypeSelect" [(ngModel)]="selectedCoiltypeId"
                   (ngModelChange)="onCoiltypeSelectionChange($event)">
-                  <option *ngFor="let coiltype of coiltypesService.elements" [value]="coiltype.id">
+                  @for (coiltype of coiltypesService.elements; track coiltype.id) {
+                  <option [value]="coiltype.id">
                       Spulentyp #{{ coiltype.id }} ({{ coiltype.name }})
                   </option>
+                  }
               </select>
+              }
           </div>
 
           <!-- Spulentyp Eingabe -->
-          <div *ngIf="selectedCoiltype" class="card shadow-sm p-4" style="min-height: 600px;">
+          @if (selectedCoiltype) {
+          <div class="card shadow-sm p-4" style="min-height: 600px;">
               <div class="mb-3">
                   <label for="name" class="form-label">Spulentyp-Name:</label>
                   <input type="text" class="form-control" id="name" placeholder="Spulenname eingeben"
                       [(ngModel)]="selectedCoiltype.name"
+                      [readonly]="readOnly"
                       [class.is-invalid]="saveError && isFieldInvalid('name')">
                   <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
               </div>
 
               <div class="mb-3">
                   <label for="numberSelect" class="form-label">Schenkelanzahl:</label>
-                  <select class="form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel">
+                  <select class="form-select" id="numberSelect" [(ngModel)]="selectedCoiltype.schenkel" [disabled]="readOnly">
                       <option [value]="2">2</option>
                       <option [value]="3">3</option>
                       <option [value]="4">4</option>
@@ -40,6 +59,7 @@
                   <label for="bandbreite" class="form-label">Bandbreite (mm):</label>
                   <input type="number" class="form-control" id="bandbreite" placeholder="Bandbreite in mm"
                       [(ngModel)]="selectedCoiltype.bandbreite" min="0"
+                      [readonly]="readOnly"
                       [class.is-invalid]="saveError && isFieldInvalid('bandbreite')">
                   <div class="invalid-feedback">Bitte geben Sie eine gültige Bandbreite ein.</div>
               </div>
@@ -48,6 +68,7 @@
                   <label for="schichthoehe" class="form-label">Schichthöhe (mm):</label>
                   <input type="number" class="form-control" id="schichthoehe" placeholder="Schichthöhe in mm"
                       [(ngModel)]="selectedCoiltype.schichthoehe" min="0"
+                      [readonly]="readOnly"
                       [class.is-invalid]="saveError && isFieldInvalid('schichthoehe')">
                   <div class="invalid-feedback">Bitte geben Sie eine gültige Schichthöhe ein.</div>
               </div>
@@ -56,6 +77,7 @@
                   <label for="durchmesser" class="form-label">Durchmesser (mm):</label>
                   <input type="number" class="form-control" id="durchmesser" placeholder="Durchmesser in mm"
                       [(ngModel)]="selectedCoiltype.durchmesser" min="0"
+                      [readonly]="readOnly"
                       [class.is-invalid]="saveError && isFieldInvalid('durchmesser')">
                   <div class="invalid-feedback">Bitte geben Sie einen gültigen Durchmesser ein.</div>
               </div>
@@ -64,6 +86,7 @@
                 <label for="toleranzbereich" class="form-label">Toleranzbereich (kg):</label>
                 <input type="number" class="form-control" id="toleranzbereich" placeholder="Toleranzbereich in mm"
                     min="0" [(ngModel)]="selectedCoiltype.toleranzbereich"
+                    [readonly]="readOnly"
                     [class.is-invalid]="saveError && isFieldInvalid('toleranzbereich')">
                 <div class="invalid-feedback">Bitte geben Sie einen gültigen Toleranzbereich ein.</div>
             </div>
@@ -73,26 +96,42 @@
                 <div class="content-editor">
                     <textarea id="content" class="form-control form-control-lg"
                               name="content" rows="3" [(ngModel)]="selectedCoiltype.notiz"
+                              [readonly]="readOnly"
                               placeholder="Notiz..."></textarea>
                 </div>
             </div>
 
               <!-- Buttons -->
               <div class="d-flex justify-content-between mt-4">
+                  @if (!readOnly) {
                   <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+                  } @else {
+                  <button [disabled]="true" class="btn btn-secondary w-100 me-2" title="Im Monteur-Modus nicht verfügbar">Speichern</button>
+                  }
                   <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-                  <button *ngIf="!coiltypesService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+                  @if (!coiltypesService.selectedElementIsNew) {
+                  @if (!readOnly) {
+                  <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+                  } @else {
+                  <button [disabled]="true" class="btn btn-secondary w-100" title="Im Monteur-Modus nicht verfügbar">Löschen</button>
+                  }
+                  }
               </div>
 
               <!-- Erfolgsmeldung -->
-              <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+              @if (saveMessage) {
+              <div class="text-center mt-3 text-success fw-bold">
                   {{ saveMessage }}
               </div>
+              }
           </div>
 
-          <p class="text-danger text-center mt-3" *ngIf="!selectedCoiltype">
+          @if (!selectedCoiltype) {
+          <p class="text-danger text-center mt-3">
               Bitte wählen Sie einen Spulentypen aus.
           </p>
+          }
+          }
       </div>
 
       <!-- Trennlinie -->
@@ -102,9 +141,11 @@
 
       <!-- Visualisierung -->
       <div class="col-lg-6 col-md-6 d-flex align-items-center justify-content-center">
-          <app-coil-visualization *ngIf="selectedCoiltype"
+          @if (selectedCoiltype) {
+          <app-coil-visualization
               [n]="selectedCoiltype.schenkel">
           </app-coil-visualization>
+          }
       </div>
   </div>
 </div>

@@ -2,5 +2,5 @@
     <app-probe-type-list />
 }
 @else {
-    <app-probe-type-management />
+    <app-probe-type-management [readOnly]="modeService.isMonteurMode()" />
 }

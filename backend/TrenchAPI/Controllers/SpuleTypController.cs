@@ -45,6 +45,7 @@ namespace TrenchAPI.Controllers
         // PUT: api/SpuleTyp/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ApiKeyAuth]
         public async Task<IActionResult> PutSpuleTyp(int id, SpuleTyp spuleTyp)
         {
             if (id != spuleTyp.ID)
@@ -76,6 +77,7 @@ namespace TrenchAPI.Controllers
         // POST: api/SpuleTyp
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ApiKeyAuth]
         public async Task<ActionResult<SpuleTyp>> PostSpuleTyp(SpuleTyp spuleTyp)
         {
             _context.SpuleTyp.Add(spuleTyp);
