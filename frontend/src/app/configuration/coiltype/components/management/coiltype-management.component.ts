@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
 import { CoiltypesService } from '../../services/coiltypes.service';
 import { Coiltype } from '../../interfaces/coiltype';
+import { ModeService } from '../../../../services/mode.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-coiltype-management',
@@ -12,10 +14,11 @@ import { Coiltype } from '../../interfaces/coiltype';
   templateUrl: './coiltype-management.component.html',
   styleUrl: './coiltype-management.component.scss'
 })
-export class CoiltypeManagementComponent {
+export class CoiltypeManagementComponent implements OnInit, OnDestroy {
     @Input() readOnly: boolean = false;
+    private modeSubscription?: Subscription;
     
-    constructor(public coiltypesService:CoiltypesService) { }
+    constructor(public coiltypesService:CoiltypesService, public modeService:ModeService) { }
     saveError: boolean = false;
     saveMessage: string | null = null;
     originalCoiltype: Coiltype | null = null; 
@@ -33,6 +36,18 @@ export class CoiltypeManagementComponent {
     ngOnInit() {
       if (this.selectedCoiltype) {
           this.originalCoiltype = { ...this.selectedCoiltype }; 
+      }
+      
+      // Subscribe to mode changes
+      this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
+        // Force change detection
+        this.readOnly = this.modeService.isMonteurMode();
+      });
+    }
+
+    ngOnDestroy() {
+      if (this.modeSubscription) {
+        this.modeSubscription.unsubscribe();
       }
     }
 
@@ -103,5 +118,6 @@ export class CoiltypeManagementComponent {
     backToListing():void {
       this.coiltypesService.selectedElementCopy = null;
     }
+
 }
 
