@@ -14,5 +14,5 @@ export class ProbeTypeParentComponent {
   constructor(
     public measurementProbeTypesService: ProbeTypesService,
     public modeService: ModeService
-  ) { }
+  ) {}
 }

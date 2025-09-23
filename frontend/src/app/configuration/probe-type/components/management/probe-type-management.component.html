@@ -1,9 +1,22 @@
-<div class="row mt-5 justify-content-center">
-    <div class="card col-5 mt-5 d-flex flex-column">
-      <h2 class="text-center mt-5">Messsondentypen Verwaltung</h2>
+<!-- Monteur-Modus Hinweis -->
+@if (readOnly) {
+  <div class="monteur-mode-notice">
+    <div class="notice-icon">
+      <i class="fas fa-user-cog"></i>
+    </div>
+    <div class="notice-content">
+      <div class="notice-title">Monteur-Modus</div>
+      <div class="notice-description">Felder sind schreibgeschützt</div>
+    </div>
+  </div>
+}
+
+<div class="row mt-3 justify-content-center">
+    <div class="card col-5 mt-3 d-flex flex-column">
+      <h2 class="text-center mt-3">Messsondentypen Verwaltung</h2>
       <div class="row flex-grow-1">
         <!-- Eingabefelder -->
-        <div class="col-md-12 mt-5">
+        <div class="col-md-12 mt-3">
           <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input id="name" type="text" class="form-control" [(ngModel)]="selectedProbeType!.name"
@@ -39,19 +52,25 @@
         </div>
 
         <div class="mt-auto mb-4 px-3">
-          <div class="d-flex justify-content-between" *ngIf="!readOnly">
+          <div class="d-flex justify-content-between">
+            @if (!readOnly) {
             <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+            } @else {
+            <button [disabled]="true" class="btn btn-secondary w-100 me-2" title="Im Monteur-Modus nicht verfügbar">Speichern</button>
+            }
             <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+            @if (!readOnly) {
             <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
-          </div>
-          
-          <div class="d-flex justify-content-center" *ngIf="readOnly">
-            <button class="btn btn-secondary w-100" (click)="backToListing()">Zurück</button>
+            } @else {
+            <button [disabled]="true" class="btn btn-secondary w-100" title="Im Monteur-Modus nicht verfügbar">Löschen</button>
+            }
           </div>
 
-          <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+          @if (saveMessage) {
+          <div class="text-center mt-3 text-success fw-bold">
             {{ saveMessage }}
-          </div>          
+          </div>
+          }          
         </div>    
       </div>
     </div>
