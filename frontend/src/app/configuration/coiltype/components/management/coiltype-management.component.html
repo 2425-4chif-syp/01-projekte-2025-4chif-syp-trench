@@ -30,7 +30,7 @@
               <!-- Name -->
               <div class="form-field">
                 <label for="name" class="form-label">Spulentyp-Name</label>
-                <div class="input-shell" [class.invalid]="nameElement.invalid && (nameElement.touched || coiltypeForm.submitted)">
+                <div class="input-shell" [class.invalid]="shouldShowFieldError('name', nameElement)">
                   <input
                     type="text"
                     class="form-control"
@@ -41,14 +41,13 @@
                     #nameElement="ngModel"
                     minlength="2"
                     required
-                    [class.is-invalid]="nameElement.invalid && (nameElement.touched || coiltypeForm.submitted)"
+                    (ngModelChange)="onFieldChange('name')"
+                    (blur)="onFieldBlur('name')"
+                    [class.is-invalid]="shouldShowFieldError('name', nameElement)"
                   />
                 </div>
-                @if(nameElement?.errors?.['required']){
-                  <div class="invalid-feedback">Name ist erforderlich.</div>
-                }
-                @if(nameElement?.errors?.['minlength']){
-                  <div class="invalid-feedback">Name muss mindestens 2 Zeichen lang sein.</div>
+                @if(fieldError('name')){
+                  <div class="invalid-feedback">{{ fieldError('name') }}</div>
                 }
               </div>
 
@@ -59,7 +58,7 @@
                   class="segment-group"
                   role="group"
                   aria-label="Schenkelanzahl"
-                  [class.invalid]="schenkelElement.invalid && (schenkelElement.touched || coiltypeForm.submitted)"
+                  [class.invalid]="shouldShowFieldError('schenkel', schenkelElement)"
                 >
                   <input
                     type="radio"
@@ -70,6 +69,7 @@
                     [(ngModel)]="selectedCoiltype.schenkel"
                     #schenkelElement="ngModel"
                     required
+                    (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
                   />
                   <label class="btn segment-btn" for="sch-2">2</label>
 
@@ -81,6 +81,7 @@
                     [value]="3"
                     [(ngModel)]="selectedCoiltype.schenkel"
                     required
+                    (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
                   />
                   <label class="btn segment-btn" for="sch-3">3</label>
 
@@ -92,12 +93,13 @@
                     [value]="4"
                     [(ngModel)]="selectedCoiltype.schenkel"
                     required
+                    (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
                   />
                   <label class="btn segment-btn" for="sch-4">4</label>
                 </div>
-                @if(schenkelElement?.invalid && (schenkelElement.touched || coiltypeForm.submitted)){
-                  <div class="invalid-feedback d-block">Bitte wählen.</div>
-                }
+                <!--@if(fieldError('schenkel')){
+                  <div class="invalid-feedback d-block">{{ fieldError('schenkel') }}</div>
+                }-->
               </div>
             </div>
 
@@ -106,8 +108,7 @@
                 <!-- Bandbreite -->
                 <div class="form-field metric-field">
                   <label for="bandbreite" class="form-label">Bandbreite (mm)</label>
-                  <div class="input-shell" [class.invalid]="bandbreiteElement.invalid && (bandbreiteElement.touched || coiltypeForm.submitted)"
-                  >
+                  <div class="input-shell" [class.invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)">
                     <input
                       type="number"
                       class="form-control"
@@ -119,22 +120,20 @@
                       min="0.01"
                       step="0.01"
                       required
-                      [class.is-invalid]="bandbreiteElement.invalid && (bandbreiteElement.touched || coiltypeForm.submitted)"
+                      (ngModelChange)="onFieldChange('bandbreite')"
+                      (blur)="onFieldBlur('bandbreite')"
+                      [class.is-invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)"
                     />
                   </div>
-                  @if(bandbreiteElement?.errors?.['required']){
-                    <div class="invalid-feedback">Bandbreite ist erforderlich.</div>
-                  }
-                  @if(bandbreiteElement?.errors?.['min']){
-                    <div class="invalid-feedback">Bandbreite muss größer als 0 sein.</div>
+                  @if(fieldError('bandbreite')){
+                    <div class="invalid-feedback">{{ fieldError('bandbreite') }}</div>
                   }
                 </div>
 
                 <!-- Schichthöhe -->
                 <div class="form-field metric-field">
                   <label for="schichthoehe" class="form-label">Schichthöhe (mm)</label>
-                  <div class="input-shell" [class.invalid]="schichthoeheElement.invalid && (schichthoeheElement.touched || coiltypeForm.submitted)"
-                  >
+                  <div class="input-shell" [class.invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)">
                     <input
                       type="number"
                       class="form-control"
@@ -146,22 +145,20 @@
                       min="0.01"
                       step="0.01"
                       required
-                      [class.is-invalid]="schichthoeheElement.invalid && (schichthoeheElement.touched || coiltypeForm.submitted)"
+                      (ngModelChange)="onFieldChange('schichthoehe')"
+                      (blur)="onFieldBlur('schichthoehe')"
+                      [class.is-invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)"
                     />
                   </div>
-                  @if(schichthoeheElement?.errors?.['required']){
-                    <div class="invalid-feedback">Schichthöhe ist erforderlich.</div>
-                  }
-                  @if(schichthoeheElement?.errors?.['min']){
-                    <div class="invalid-feedback">Schichthöhe muss größer als 0 sein.</div>
+                  @if(fieldError('schichthoehe')){
+                    <div class="invalid-feedback">{{ fieldError('schichthoehe') }}</div>
                   }
                 </div>
 
                 <!-- Durchmesser -->
                 <div class="form-field metric-field">
                   <label for="durchmesser" class="form-label">Durchmesser (mm)</label>
-                  <div class="input-shell" [class.invalid]="durchmesserElement.invalid && (durchmesserElement.touched || coiltypeForm.submitted)"
-                  >
+                  <div class="input-shell" [class.invalid]="shouldShowFieldError('durchmesser', durchmesserElement)">
                     <input
                       type="number"
                       class="form-control"
@@ -173,22 +170,20 @@
                       min="0.01"
                       step="0.01"
                       required
-                      [class.is-invalid]="durchmesserElement.invalid && (durchmesserElement.touched || coiltypeForm.submitted)"
+                      (ngModelChange)="onFieldChange('durchmesser')"
+                      (blur)="onFieldBlur('durchmesser')"
+                      [class.is-invalid]="shouldShowFieldError('durchmesser', durchmesserElement)"
                     />
                   </div>
-                  @if(durchmesserElement?.errors?.['required']){
-                    <div class="invalid-feedback">Durchmesser ist erforderlich.</div>
-                  }
-                  @if(durchmesserElement?.errors?.['min']){
-                    <div class="invalid-feedback">Durchmesser muss größer als 0 sein.</div>
+                  @if(fieldError('durchmesser')){
+                    <div class="invalid-feedback">{{ fieldError('durchmesser') }}</div>
                   }
                 </div>
 
                 <!-- Toleranzbereich -->
                 <div class="form-field metric-field">
                   <label for="toleranzbereich" class="form-label">Toleranzbereich (kg)</label>
-                  <div class="input-shell" [class.invalid]="toleranzElement.invalid && (toleranzElement.touched || coiltypeForm.submitted)"
-                  >
+                  <div class="input-shell" [class.invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)">
                     <input
                       type="number"
                       class="form-control"
@@ -200,14 +195,13 @@
                       min="0.01"
                       step="0.01"
                       required
-                      [class.is-invalid]="toleranzElement.invalid && (toleranzElement.touched || coiltypeForm.submitted)"
+                      (ngModelChange)="onFieldChange('toleranzbereich')"
+                      (blur)="onFieldBlur('toleranzbereich')"
+                      [class.is-invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)"
                     />
                   </div>
-                  @if(toleranzElement?.errors?.['required']){
-                    <div class="invalid-feedback">Toleranzbereich ist erforderlich.</div>
-                  }
-                  @if(toleranzElement?.errors?.['min']){
-                    <div class="invalid-feedback">Toleranzbereich muss größer als 0 sein.</div>
+                  @if(fieldError('toleranzbereich')){
+                    <div class="invalid-feedback">{{ fieldError('toleranzbereich') }}</div>
                   }
                 </div>
               </div>
@@ -234,7 +228,7 @@
             <button
               type="submit"
               class="btn btn-primary btn-modern"
-              [disabled]="!coiltypeForm.form.valid || !hasChanges()"
+              [disabled]="!coiltypeForm.form.valid || !hasChanges() || hasValidationErrors()"
             >
               Speichern
             </button>
