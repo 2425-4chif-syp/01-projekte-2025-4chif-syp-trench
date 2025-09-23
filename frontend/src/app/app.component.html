@@ -17,7 +17,8 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" 
                                routerLink="/coiltype-management" 
-                               routerLinkActive="active">
+                               routerLinkActive="active"
+                               [class.navbar-disabled]="modeService.isMonteurMode()">
                                Spulentypenverwaltung
                                <div class="nav-mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
                                </div>
@@ -41,7 +42,8 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" 
                                routerLink="/probe-type-management" 
-                               routerLinkActive="active">
+                               routerLinkActive="active"
+                               [class.navbar-disabled]="modeService.isMonteurMode()">
                                Sondentypenverwaltung
                                <div class="nav-mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
                                </div>
