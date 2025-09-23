@@ -294,25 +294,33 @@
 
 <!-- Delete Modal -->
 <div
-  class="modal fade"
+  class="modal fade modern-modal"
   tabindex="-1"
   role="dialog"
-  [ngClass]="{ 'show': showDeleteModal }"
-  [ngStyle]="{ 'display': showDeleteModal ? 'block' : 'none' }"
+  [ngClass]="{ show: showDeleteModal }"
+  [ngStyle]="{ display: showDeleteModal ? 'block' : 'none' }"
 >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
+        <div class="modal-icon danger">
+          <span aria-hidden="true">⚠</span>
+        </div>
         <h5 class="modal-title">Spulentyp löschen?</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="showDeleteModal = false"></button>
       </div>
 
       <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diesen Spulentypen löschen möchten?</p>
+        <p>Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie den Spulentyp endgültig löschen?</p>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">Abbrechen</button>
-        <button type="button" class="btn btn-danger" (click)="deleteCoiltype()">Löschen</button>
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" (click)="deleteCoiltype()">
+          Löschen
+        </button>
       </div>
     </div>
   </div>
