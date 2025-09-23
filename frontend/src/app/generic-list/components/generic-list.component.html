@@ -40,7 +40,13 @@
     @if (!isSelector && showButton) {
         <div class="text-center">
             <div class="text-center">
-                <button class="btn btn-primary new-coil-button" id="new-element-button" (click)="addNewElement()">{{newElementButtonLabel}}</button>
+                <button class="btn new-coil-button" 
+                        id="new-element-button" 
+                        [disabled]="isButtonDisabled()"
+                        [class.btn-secondary]="isButtonDisabled()"
+                        [class.btn-primary]="!isButtonDisabled()"
+                        [class.disabled-button]="isButtonDisabled()"
+                        (click)="addNewElement()">{{newElementButtonLabel}}</button>
             </div>
         </div>
     }
