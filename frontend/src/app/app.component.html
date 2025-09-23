@@ -17,11 +17,12 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" 
                                routerLink="/coiltype-management" 
-                               routerLinkActive="active"
-                               [class.navbar-disabled]="modeService.isMonteurMode()">
+                               routerLinkActive="active">
                                Spulentypenverwaltung
-                               <div class="nav-mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
+                               @if (modeService.isAdminMode()) {
+                               <div class="nav-mode-indicator admin-mode">
                                </div>
+                               }
                             </a>
                             <a class="dropdown-item" routerLink="/coil-management" routerLinkActive="active">
                                 Spulenverwaltung
@@ -42,11 +43,12 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" 
                                routerLink="/probe-type-management" 
-                               routerLinkActive="active"
-                               [class.navbar-disabled]="modeService.isMonteurMode()">
+                               routerLinkActive="active">
                                Sondentypenverwaltung
-                               <div class="nav-mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
+                               @if (modeService.isAdminMode()) {
+                               <div class="nav-mode-indicator admin-mode">
                                </div>
+                               }
                             </a>
                             <a class="dropdown-item" routerLink="/probe-management" routerLinkActive="active">
                                 Sondenverwaltung
