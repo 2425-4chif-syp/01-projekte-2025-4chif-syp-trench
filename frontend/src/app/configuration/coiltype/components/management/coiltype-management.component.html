@@ -3,15 +3,25 @@
     <!-- Spulentyp Verwaltung -->
     <div class="col-lg-5 col-md-6">
       <h2 class="mb-4 text-center">
-        {{ coiltypesService.selectedElementIsNew ? 'Neuer Spulentyp' : 'Spulentyp auswählen' }}
+        {{ coiltypesService.selectedElementIsNew ? 'Neuer Spulentyp' : 'Spulentyp bearbeiten' }}
       </h2>
 
       <!-- Spulentyp Eingabe -->
       <div *ngIf="selectedCoiltype" class="card shadow-sm modern-card">
         <div class="form-header">
-          <span class="form-badge">{{ coiltypesService.selectedElementIsNew ? 'Neu' : 'Bearbeitung' }}</span>
-          <h3>{{ selectedCoiltype.name || 'Spulentyp konfigurieren' }}</h3>
-          <!--<p>Definiere Maße und Toleranzen für einen kompakten Überblick.</p>-->
+          <div class="form-header__titles">
+            <h3>{{ selectedCoiltype.name || 'Spulentyp konfigurieren' }}</h3>
+            <!--<p>
+              {{
+                coiltypesService.selectedElementIsNew
+                  ? 'Lege Maße und Toleranzen für einen neuen Spulentyp fest.'
+                  : 'Passe die hinterlegten Parameter des Spulentypen an.'
+              }}
+            </p>-->
+          </div>
+          <span class="form-tag" [ngClass]="coiltypesService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
+            {{ coiltypesService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
+          </span>
         </div>
 
         <form #coiltypeForm="ngForm" (ngSubmit)="onSubmit(coiltypeForm)" class="modern-form was-validated">
