@@ -113,7 +113,6 @@
     left: auto;
 }
 
-/* Disabled Navigation Styles */
 .disabled-nav {
     opacity: 0.5 !important;
     cursor: not-allowed !important;
@@ -133,7 +132,6 @@
     font-weight: bold;
 }
 
-/* Navigation Mode-Indikatoren */
 .nav-mode-indicator {
     display: inline-block;
     width: 8px;
@@ -152,7 +150,6 @@
     background: linear-gradient(135deg, rgba(0, 21, 104, 0.9) 0%, rgba(47, 167, 174, 0.9) 100%);
 }
 
-/* Ausgegraute Navbar-Links im Monteur-Modus */
 .navbar-disabled {
     opacity: 0.5;
     filter: grayscale(50%);
