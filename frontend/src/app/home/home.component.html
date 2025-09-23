@@ -41,46 +41,68 @@
    
   <div class="card-container">
     <!-- Card 1 - Spule -->
-    <div class="card hover-card">
+    <div class="card hover-card" 
+         [class.monteur-disabled]="modeService.isMonteurMode()"
+         [class.admin-enabled]="modeService.isAdminMode()"
+         [class.monteur-enabled]="modeService.isMonteurMode()"
+         (click)="modeService.isMonteurMode() ? navigateToCoilManagement() : null">
       <div class="card-img-container">
         <img src="/assets/home/spule.png" class="card-img" alt="Spulentypen">
-        <div class="mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
+      </div>
+      
+      <!-- Admin-Modus: Beide Bereiche -->
+      <div *ngIf="modeService.isAdminMode()">
+        <div class="card-action-top" (click)="navigateToCoilTypeManagement()" 
+             [title]="'Spulentypen bearbeiten'">
+          <span class="action-label">
+            <i class="fas fa-cog me-2"></i>
+            Spulentypenverwaltung
+          </span>
+        </div>
+        <div class="card-action-bottom" (click)="navigateToCoilManagement()">
+          <span class="action-label">
+            <i class="fas fa-list me-2"></i>
+            Spulenverwaltung
+          </span>
         </div>
       </div>
-      <div class="card-action-top" (click)="navigateToCoilTypeManagement()" 
-           [title]="modeService.isMonteurMode() ? 'Nur Ansicht - Wechseln Sie in den Admin-Modus zum Bearbeiten' : 'Spulentypen bearbeiten'">
-        <span class="action-label">
-          <i class="fas fa-cog me-2"></i>
-          Spulentypenverwaltung
-        </span>
-      </div>
-      <div class="card-action-bottom" (click)="navigateToCoilManagement()">
-        <span class="action-label">
-          <i class="fas fa-list me-2"></i>
-          Spulenverwaltung
-        </span>
+      
+      <!-- Monteur-Modus: Nur Spulenverwaltung -->
+      <div *ngIf="modeService.isMonteurMode()" class="monteur-card-title">
+        <div class="card-title">Spulenverwaltung</div>
       </div>
     </div>
   
     <!-- Card 2 - Sonde -->
-    <div class="card hover-card">
+    <div class="card hover-card"
+         [class.monteur-disabled]="modeService.isMonteurMode()"
+         [class.admin-enabled]="modeService.isAdminMode()"
+         [class.monteur-enabled]="modeService.isMonteurMode()"
+         (click)="modeService.isMonteurMode() ? navigateToProbeManagement() : null">
       <div class="card-img-container">
         <img src="/assets/home/sonde.png" class="card-img" alt="Sondentypen">
-        <div class="mode-indicator admin-mode" *ngIf="modeService.isAdminMode()">
+      </div>
+      
+      <!-- Admin-Modus: Beide Bereiche -->
+      <div *ngIf="modeService.isAdminMode()">
+        <div class="card-action-top" (click)="navigateToProbeTypeManagement()" 
+             [title]="'Sondentypen bearbeiten'">
+          <span class="action-label">
+            <i class="fas fa-cog me-2"></i>
+            Sondentypenverwaltung
+          </span>
+        </div>
+        <div class="card-action-bottom" (click)="navigateToProbeManagement()">
+          <span class="action-label">
+            <i class="fas fa-list me-2"></i>
+            Sondenverwaltung
+          </span>
         </div>
       </div>
-      <div class="card-action-top" (click)="navigateToProbeTypeManagement()" 
-           [title]="modeService.isMonteurMode() ? 'Nur Ansicht - Wechseln Sie in den Admin-Modus zum Bearbeiten' : 'Sondentypen bearbeiten'">
-        <span class="action-label">
-          <i class="fas fa-cog me-2"></i>
-          Sondentypenverwaltung
-        </span>
-      </div>
-      <div class="card-action-bottom" (click)="navigateToProbeManagement()">
-        <span class="action-label">
-          <i class="fas fa-list me-2"></i>
-          Sondenverwaltung
-        </span>
+      
+      <!-- Monteur-Modus: Nur Sondenverwaltung -->
+      <div *ngIf="modeService.isMonteurMode()" class="monteur-card-title">
+        <div class="card-title">Sondenverwaltung</div>
       </div>
     </div>
   
@@ -88,10 +110,6 @@
     <div class="card hover-card">
       <div class="card-img-container">
         <img src="/assets/home/messung.png" class="card-img" alt="Messeinstellungen">
-        <div class="mode-indicator" 
-             [class.admin-mode]="modeService.isAdminMode()"
-             [class.monteur-mode]="modeService.isMonteurMode()">
-        </div>
       </div>
       <div class="card-action-top" (click)="navigateToMeasurementSettings()">
         <span class="action-label">

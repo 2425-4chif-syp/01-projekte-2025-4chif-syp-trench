@@ -201,6 +201,64 @@
   filter: grayscale(100%) !important;
 }
 
+/* Card Animation States */
+.monteur-disabled {
+  transition: all 0.3s ease;
+  
+  .card-action-top {
+    pointer-events: none;
+  }
+}
+
+.monteur-enabled {
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 21, 104, 0.15);
+  }
+}
+
+/* Monteur Card Title - zentriert in der Card, nur beim Hover sichtbar */
+.monteur-card-title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    z-index: 10;
+  }
+}
+
+/* Hover-Effekt für Monteur-Cards */
+.monteur-enabled:hover .monteur-card-title {
+  opacity: 1;
+}
+
+.admin-enabled {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(47, 167, 174, 0.2);
+  }
+}
+
 /* Simple Mode Toggle Slider */
 .mode-toggle-container {
   position: fixed;
