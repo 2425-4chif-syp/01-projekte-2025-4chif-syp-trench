@@ -36,30 +36,34 @@
                 <div class="coiltype-summary__meta">
                   <span class="coiltype-summary__eyebrow">Spulentyp</span>
                   <h4>{{ selectedCoiltype?.name || 'Noch kein Spulentyp ausgewählt' }}</h4>
-                  <p class="coiltype-summary__id" *ngIf="selectedCoiltype">ID {{ selectedCoiltype?.id }}</p>
+                  <!--<p class="coiltype-summary__id" *ngIf="selectedCoiltype">ID {{ selectedCoiltype?.id }}</p>-->
                 </div>
 
                 <ng-container *ngIf="selectedCoiltype; else coiltypeHint">
                   <div class="coiltype-summary__metrics">
-                    <div class="metric-pill metric-pill--full">
-                      <span class="metric-pill__label">Schenkel</span>
-                      <span class="metric-pill__value">{{ selectedCoiltype?.schenkel }}</span>
+                    <div class="metric-pill metric-pill">
+                      <span class="metric-pill__label text-center">ID</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.id }}</span>
+                    </div>
+                    <div class="metric-pill metric-pill">
+                      <span class="metric-pill__label text-center">Schenkel</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.schenkel }}</span>
                     </div>
                     <div class="metric-pill">
-                      <span class="metric-pill__label">Bandbreite</span>
-                      <span class="metric-pill__value">{{ selectedCoiltype?.bandbreite | number: '1.0-1' }} mm</span>
+                      <span class="metric-pill__label text-center">Bandbreite</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.bandbreite | number: '1.0-1' }} mm</span>
                     </div>
                     <div class="metric-pill">
-                      <span class="metric-pill__label">Schichthöhe</span>
-                      <span class="metric-pill__value">{{ selectedCoiltype?.schichthoehe | number: '1.0-1' }} mm</span>
+                      <span class="metric-pill__label text-center">Schichthöhe</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.schichthoehe | number: '1.0-1' }} mm</span>
                     </div>
                     <div class="metric-pill">
-                      <span class="metric-pill__label">Durchmesser</span>
-                      <span class="metric-pill__value">{{ selectedCoiltype?.durchmesser | number: '1.0-1' }} mm</span>
+                      <span class="metric-pill__label text-center">Durchmesser</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.durchmesser | number: '1.0-1' }} mm</span>
                     </div>
                     <div class="metric-pill">
-                      <span class="metric-pill__label">Toleranz</span>
-                      <span class="metric-pill__value">{{ selectedCoiltype?.toleranzbereich | number: '1.0-1' }} kg</span>
+                      <span class="metric-pill__label text-center">Toleranz</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.toleranzbereich | number: '1.0-1' }} kg</span>
                     </div>
                   </div>
                 </ng-container>
@@ -70,7 +74,7 @@
                   </p>
                 </ng-template>
 
-                <div class="coiltype-summary__footer">
+                <div class="coiltype-summary__footer justify-content-center">
                   <button type="button" class="coiltype-link" (click)="openCoiltypeSelect()">
                     <span>{{ selectedCoiltype ? 'Spulentyp ändern' : 'Spulentyp wählen' }}</span>
                     <span aria-hidden="true" class="coiltype-link__icon">→</span>
