@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, Input } from '@angular/core';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
@@ -26,10 +26,10 @@ interface NumericConstraint {
 })
 export class CoiltypeManagementComponent implements OnInit, OnDestroy {
   @ViewChild('coiltypeSelectEl') coiltypeSelect?: ElementRef<HTMLSelectElement>;
+  @Input() readOnly: boolean = false;
+  private modeSubscription?: Subscription;
 
   constructor(public coiltypesService: CoiltypesService, public modeService:ModeService) {}
-  private modeSubscription?: Subscription;
-  @Input() readOnly: boolean = false;
   saveMessage: string | null = null;
   originalCoiltype: Coiltype | null = null;
   private formSubmitAttempted = false;
@@ -69,6 +69,12 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
       this.originalCoiltype = { ...this.selectedCoiltype };
     }
     this.resetValidationState();
+    
+    // Subscribe to mode changes
+    this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
+      // Force change detection
+      this.readOnly = this.modeService.isMonteurMode();
+    });
   }
 
   hasChanges(): boolean {
@@ -112,17 +118,6 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
       console.error('Fehler beim Speichern:', error);
       this.saveMessage = 'Fehler beim Speichern!';
       
-      // Subscribe to mode changes
-      this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
-        // Force change detection
-        this.readOnly = this.modeService.isMonteurMode();
-      });
-    }
-
-    ngOnDestroy() {
-      if (this.modeSubscription) {
-        this.modeSubscription.unsubscribe();
-      }
     }
   }
 
@@ -268,6 +263,12 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
     this.validationErrors = {};
     if (this.selectedCoiltype) {
       this.validateForm();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.modeSubscription) {
+      this.modeSubscription.unsubscribe();
     }
   }
 }

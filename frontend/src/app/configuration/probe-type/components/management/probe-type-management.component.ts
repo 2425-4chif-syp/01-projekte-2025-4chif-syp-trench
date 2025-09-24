@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { ProbeType } from '../../interfaces/probe-type';
-import { ProbeTypeFormComponent } from '../form/probe-type-form.component';
 import { ProbeTypeVisualizationComponent } from '../visualization/probe-type-visualization.component';
 import { FormsModule } from '@angular/forms';
 import { ModeService } from '../../../../services/mode.service';
@@ -11,7 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-probe-type-management',
   standalone: true,
-  imports: [CommonModule, ProbeTypeFormComponent, ProbeTypeVisualizationComponent, FormsModule],
+  imports: [CommonModule, ProbeTypeVisualizationComponent, FormsModule],
   templateUrl: './probe-type-management.component.html',
   styleUrls: ['./probe-type-management.component.scss']
 })
@@ -64,34 +63,40 @@ export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
     return JSON.stringify(this.selectedProbeType) !== JSON.stringify(this.originalProbeType);
   }
 
-  saveChanges() {
-    // Beispiel-Methode, ggf. durch Service implementieren
+  async saveChanges() {
     if (!this.readOnly && this.selectedProbeType) {
-      this.measurementProbeTypesService.saveElement(this.selectedProbeType).then(() => {
-        this.saveMessage = 'Messsonde erfolgreich gespeichert';
+      try {
+        await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
+        this.saveMessage = 'Messsondentyp erfolgreich gespeichert';
         this.originalProbeType = { ...this.selectedProbeType };
         this.saveError = false;
-      }).catch(() => {
+      } catch (error) {
         this.saveError = true;
-        this.saveMessage = null;
-      });
+        this.saveMessage = 'Fehler beim Speichern';
+      }
     }
   }
 
   backToListing() {
-    // Navigation zurück zur Übersicht implementieren
+    this.measurementProbeTypesService.selectedElementCopy = null;
+    this.originalProbeType = null;
   }
 
   openDeleteModal() {
     this.showDeleteModal = true;
   }
 
-  deleteProbeType() {
-    if (!this.readOnly && this.selectedProbeType) {
-      this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id).then(() => {
+  async deleteProbeType() {
+    if (!this.readOnly && this.selectedProbeType && this.selectedProbeType.id) {
+      try {
+        await this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id);
         this.showDeleteModal = false;
-        this.saveMessage = 'Messsonde gelöscht';
-      });
+        this.saveMessage = 'Messsondentyp gelöscht';
+        this.measurementProbeTypesService.selectedElementCopy = null;
+      } catch (error) {
+        this.saveError = true;
+        this.saveMessage = 'Fehler beim Löschen';
+      }
     }
   }
 
