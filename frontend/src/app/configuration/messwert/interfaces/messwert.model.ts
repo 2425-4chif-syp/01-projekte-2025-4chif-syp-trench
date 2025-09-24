@@ -5,8 +5,8 @@ export interface Messwert {
     id: number | null;
     messungID: number | null;
     measurement: Measurement | null;
-    measurementProbePositionId: number | null;
-    measurementProbePosition: ProbePosition | null;
+    sondenPositionID: number | null;
+    sondenPosition: ProbePosition | null;
     wert: number | null;
     zeitpunkt: Date | null;
 }

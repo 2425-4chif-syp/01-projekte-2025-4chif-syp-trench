@@ -14,8 +14,8 @@ export class MesswertBackendService {
       id: messwert.id,
       messungID: messwert.messungID,
       measurement: messwert.messung,
-      measurementProbePositionId: messwert.messsondenPosition_id,
-      measurementProbePosition: messwert.messsondenPosition,
+      sondenPositionID: messwert.sondenPositionID,
+      sondenPosition: messwert.sondenPosition,
       wert: messwert.wert,
       zeitpunkt: messwert.zeitpunkt
     }
@@ -25,7 +25,7 @@ export class MesswertBackendService {
     return {
       id: messwert.id,
       messungID: messwert.messungID,
-      messsondenPosition_id: messwert.measurementProbePositionId,
+      sondenPositionID: messwert.sondenPositionID,
       wert: messwert.wert,
       zeitpunkt: messwert.zeitpunkt
     }
