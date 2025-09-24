@@ -1,37 +1,41 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { ProbeType } from '../../interfaces/probe-type';
+import { ProbeTypeFormComponent } from '../form/probe-type-form.component';
+import { ProbeTypeVisualizationComponent } from '../visualization/probe-type-visualization.component';
+import { FormsModule } from '@angular/forms';
 import { ModeService } from '../../../../services/mode.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-probe-type-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ProbeTypeFormComponent, ProbeTypeVisualizationComponent, FormsModule],
   templateUrl: './probe-type-management.component.html',
-  styleUrl: './probe-type-management.component.scss'
+  styleUrls: ['./probe-type-management.component.scss']
 })
 export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
   @Input() readOnly: boolean = false;
   private modeSubscription?: Subscription;
-  
+
   saveMessage: string | null = null;
   saveError: boolean = false;
   originalProbeType: ProbeType | null = null;
   showDeleteModal = false;
 
-  constructor(private measurementProbeTypesService: ProbeTypesService, public modeService: ModeService) {}
+  constructor(
+    public measurementProbeTypesService: ProbeTypesService,
+    public modeService: ModeService
+  ) {}
 
   ngOnInit() {
     if (this.selectedProbeType) {
       this.originalProbeType = { ...this.selectedProbeType };
     }
-    
+
     // Subscribe to mode changes
-    this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
-      // Force change detection
+    this.modeSubscription = this.modeService.currentMode$.subscribe(() => {
       this.readOnly = this.modeService.isMonteurMode();
     });
   }
@@ -46,74 +50,54 @@ export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
     return this.measurementProbeTypesService.selectedElementCopy;
   }
 
+  get selectedProbeTypeId(): number | undefined {
+    return this.measurementProbeTypesService.selectedElementCopy?.id ?? undefined;
+  }
+
+  async onProbeTypeSelectionChange(probeTypeId: number): Promise<void> {
+    const numericId = Number(probeTypeId);
+    await this.measurementProbeTypesService.selectElement(numericId);
+  }
+
   hasChanges(): boolean {
-    if (!this.originalProbeType || !this.selectedProbeType) return false;
-    return JSON.stringify(this.originalProbeType) !== JSON.stringify(this.selectedProbeType);
+    if (!this.selectedProbeType || !this.originalProbeType) return false;
+    return JSON.stringify(this.selectedProbeType) !== JSON.stringify(this.originalProbeType);
   }
 
-  async saveChanges() {
-    if (!this.selectedProbeType) return;
-
-    this.saveError = true;
-
-    const requiredFields = ['hoehe', 'breite', 'windungszahl'];
-    const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
-
-    if (invalidFields.length > 0) {
-      this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
-      return;
-    }
-
-    try {
-      if(this.selectedProbeType.notiz === null) this.selectedProbeType.notiz = "";
-      await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
-      this.saveMessage = "Änderungen gespeichert!";
-      setTimeout(() => {
+  saveChanges() {
+    // Beispiel-Methode, ggf. durch Service implementieren
+    if (!this.readOnly && this.selectedProbeType) {
+      this.measurementProbeTypesService.saveElement(this.selectedProbeType).then(() => {
+        this.saveMessage = 'Messsonde erfolgreich gespeichert';
+        this.originalProbeType = { ...this.selectedProbeType };
+        this.saveError = false;
+      }).catch(() => {
+        this.saveError = true;
         this.saveMessage = null;
-      }, 3000);
-
-      this.saveError = false;
-      this.originalProbeType = { ...this.selectedProbeType };
-    } catch (error) {
-      console.error("Fehler beim Speichern:", error);
-      this.saveMessage = "Fehler beim Speichern!";
+      });
     }
   }
 
-  isFieldInvalid(field: string): boolean {
-    if (!this.selectedProbeType) return false;
-    let value = this.selectedProbeType[field as keyof ProbeType];
-    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+  backToListing() {
+    // Navigation zurück zur Übersicht implementieren
   }
 
-  openDeleteModal(): void {
+  openDeleteModal() {
     this.showDeleteModal = true;
   }
-  
-  async confirmDeleteProbeType(): Promise<void> {
-    this.showDeleteModal = false;
-  
-    if (this.selectedProbeType === null) return;
-  
-    await this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id!);
-    this.backToListing();
-  }
-  
 
-  backToListing(): void {
-    this.measurementProbeTypesService.selectedElementCopy = null;
+  deleteProbeType() {
+    if (!this.readOnly && this.selectedProbeType) {
+      this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id).then(() => {
+        this.showDeleteModal = false;
+        this.saveMessage = 'Messsonde gelöscht';
+      });
+    }
   }
 
-  get scale(): number {
-    return 2; // Factor for scaling the drawing
+  isFieldInvalid(field: keyof ProbeType): boolean {
+    if (!this.selectedProbeType) return false;
+    const value = this.selectedProbeType[field];
+    return value === null || value === undefined || value === '';
   }
-
-  get scaledWidth(): number {
-    return (this.selectedProbeType?.breite ?? 0) * this.scale;
-  }
-
-  get scaledHeight(): number {
-    return (this.selectedProbeType?.hoehe ?? 0) * this.scale;
-  }
-
 }

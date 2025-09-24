@@ -27,12 +27,6 @@
     font-weight: 600;
     letter-spacing: -0.02em;
   }
-
-  p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: rgba(31, 39, 77, 0.6);
-  }
 }
 
 .form-tag {
@@ -62,47 +56,6 @@
   border-color: rgba(13, 110, 253, 0.18);
 }
 
-.visualization-column {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.visualization-shell {
-  flex: 1;
-  min-height: 360px;
-}
-
-.select-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 0;
-}
-
-.select-shell {
-  width: clamp(14rem, 60%, 22rem);
-  display: flex;
-}
-
-.select-control {
-  border-radius: 999px;
-  padding: 0.55rem 1.15rem;
-  font-weight: 600;
-  border: 1px solid var(--bs-border-color-translucent, rgba(73, 80, 87, 0.2));
-  background-color: var(--bs-body-bg, #ffffff);
-  color: var(--bs-body-color, #1f274d);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
-  &:focus {
-    border-color: var(--bs-primary, #0d6efd);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
-  }
-
-  option {
-    font-weight: 500;
-  }
-}
-
 .modern-form {
   display: flex;
   flex-direction: column;
@@ -125,10 +78,6 @@
 .form-column--main,
 .form-column--metrics {
   min-width: 0;
-}
-
-.metric-field .form-label {
-  letter-spacing: 0.04em;
 }
 
 .metric-grid {
@@ -184,7 +133,6 @@
   }
 
   .form-control,
-  .form-select,
   textarea {
     width: 100%;
     border: none;
@@ -198,11 +146,6 @@
     &:focus {
       box-shadow: none;
     }
-  }
-
-  .form-select {
-    padding-right: 2.5rem;
-    background-position: calc(100% - 0.75rem) 50%;
   }
 
   textarea {
@@ -388,23 +331,5 @@
 
   .form-column {
     gap: 0.85rem;
-  }
-
-  .select-shell {
-    width: 100%;
-    max-width: 20rem;
-  }
-
-  .visualization-column {
-    gap: 0.85rem;
-  }
-
-  .visualization-shell {
-    min-height: 260px;
-  }
-
-  .form-actions {
-    flex-direction: column;
-    align-items: stretch;
   }
 }

@@ -1,83 +1,179 @@
-<div class="container mt-4 d-flex flex-column align-items-center">
-    <div class="probe-container text-center mb-3">
-        <h2 *ngIf="probesService.selectedElementIsNew">Neue Sonde</h2>
-        <select *ngIf="!probesService.selectedElementIsNew && probesService.elements.length > 0"
-            class="probe-selector form-select w-150 mx-auto" id="probeSelect"
-            [(ngModel)]="selectedProbeId" (ngModelChange)="onProbeSelectionChange($event)">
-            <option *ngFor="let probe of probesService.elements" [value]="probe.id">Sonde #{{ probe.id }}</option>
-        </select>
-    </div>
-  
-    <div *ngIf="selectedProbe" class="card shadow-sm p-4 w-100" style="max-width: 850px; min-height: 600px;">
-        <div class="mb-3">
-            <label class="form-label">Sondentyp: <span class="text-danger">*</span></label>
-            <div class="border p-2 rounded bg-light">
-                <div *ngIf="selectedProbe.probeType; else noProbetype">
-                    <p class="mb-1"><strong>ID:</strong> {{ selectedProbetype!.id }}</p>
-                    <p class="mb-0"><strong>Name:</strong> {{ selectedProbetype!.name }}</p>
-                </div>
-                <ng-template #noProbetype>
-                    <p class="text-danger mb-0">Kein Sondentyp ausgewählt</p>
-                </ng-template>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-xl-10 col-lg-11">
+      <ng-container *ngIf="selectedProbe; else loadError">
+        <div class="card shadow-sm modern-card">
+          <div class="form-header">
+            <div class="form-header__titles">
+              <h3>{{ probesService.selectedElementIsNew ? 'Neue Sonde' : 'Sonde bearbeiten' }}</h3>
             </div>
-            <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openProbetypeSelect()">Sondentyp ändern...</button>
-        </div>
-  
-        <!-- Formulareingaben -->
-        <div class="mb-3">
-            <label for="name" class="form-label">Name: <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="name" placeholder="Name"
-                [(ngModel)]="selectedProbe.name" 
-                [class.is-invalid]="saveError && isFieldInvalid('name')">
-            <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
-        </div>
-  
-        <div class="mb-3">
-            <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor: <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" id="kalibrierungsfaktor" placeholder="Kalibrierungsfaktor"
-                [(ngModel)]="selectedProbe.kalibrierungsfaktor" min="0"
-                [class.is-invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')">
-            <div class="invalid-feedback">Bitte geben Sie einen Kalibrierungsfaktor ein.</div>
-        </div>
-  
-        <!-- Buttons -->
-        <div class="d-flex justify-content-between mt-4">
-            <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
-            <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-            <button *ngIf="!probesService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
-        </div>
-  
-        <!-- Erfolgsmeldung -->
-        <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+            <span class="form-tag" [ngClass]="probesService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
+              {{ probesService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
+            </span>
+          </div>
+
+          <div class="card-intro" *ngIf="!probesService.selectedElementIsNew && probesService.elements.length > 0">
+            <label for="probeSelect" class="visually-hidden">Sonde auswählen</label>
+            <div class="select-shell select-shell--full">
+              <select
+                class="form-select select-control"
+                id="probeSelect"
+                name="probeSelect"
+                [(ngModel)]="selectedProbeId"
+                (ngModelChange)="onProbeSelectionChange($event)"
+              >
+                <option *ngFor="let probe of probesService.elements" [value]="probe.id">
+                  Sonde #{{ probe.id }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="coildetail-grid">
+            <section class="coildetail-panel">
+              <div class="coiltype-summary" [class.is-empty]="!selectedProbetype">
+                <div class="coiltype-summary__meta">
+                  <span class="coiltype-summary__eyebrow">Sondentyp</span>
+                  <h4>{{ selectedProbetype?.name?.trim() || 'Noch kein Sondentyp ausgewählt' }}</h4>
+                </div>
+
+                <ng-container *ngIf="selectedProbetype; else probetypeHint">
+                  <div class="coiltype-summary__metrics">
+                    <div class="metric-pill">
+                      <span class="metric-pill__label text-center">ID</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedProbetype!.id }}</span>
+                    </div>
+                    <div class="metric-pill" *ngIf="selectedProbetype!.breite !== null">
+                      <span class="metric-pill__label text-center">Breite</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedProbetype!.breite | number: '1.0-2' }} mm</span>
+                    </div>
+                    <div class="metric-pill" *ngIf="selectedProbetype!.hoehe !== null">
+                      <span class="metric-pill__label text-center">Höhe</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedProbetype!.hoehe | number: '1.0-2' }} mm</span>
+                    </div>
+                    <div class="metric-pill" *ngIf="selectedProbetype!.windungszahl !== null">
+                      <span class="metric-pill__label text-center">Windungen</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedProbetype!.windungszahl }}</span>
+                    </div>
+                  </div>
+                  <p class="coiltype-summary__note" *ngIf="selectedProbetype!.notiz?.trim()">
+                    {{ selectedProbetype!.notiz }}
+                  </p>
+                </ng-container>
+
+                <ng-template #probetypeHint>
+                  <p class="coiltype-summary__hint">Wählen Sie einen Sondentyp</p>
+                </ng-template>
+
+                <div class="coiltype-summary__footer justify-content-center">
+                  <button type="button" class="coiltype-link" (click)="openProbetypeSelect()">
+                    <span>{{ selectedProbetype ? 'Sondentyp ändern' : 'Sondentyp wählen' }}</span>
+                    <span aria-hidden="true" class="coiltype-link__icon">→</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="form-field">
+                <label for="name" class="form-label">Name *</label>
+                <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('name')">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    placeholder="Messsonden-Name"
+                    [(ngModel)]="selectedProbe!.name"
+                    name="name"
+                    [class.is-invalid]="saveError && isFieldInvalid('name')"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('name')">
+                  Bitte geben Sie einen Namen ein.
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor *</label>
+                <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')">
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="kalibrierungsfaktor"
+                    placeholder="Kalibrierungsfaktor"
+                    [(ngModel)]="selectedProbe!.kalibrierungsfaktor"
+                    name="kalibrierungsfaktor"
+                    min="0"
+                    step="0.01"
+                    [class.is-invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('kalibrierungsfaktor')">
+                  Bitte geben Sie einen Kalibrierungsfaktor ein.
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges()" (click)="saveChanges()">
+              Speichern
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
+              Zurück
+            </button>
+            <button
+              *ngIf="!probesService.selectedElementIsNew"
+              type="button"
+              class="btn btn-outline-danger btn-modern"
+              (click)="openDeleteModal()"
+            >
+              Löschen
+            </button>
+          </div>
+
+          <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
             {{ saveMessage }}
+          </div>
         </div>
+      </ng-container>
     </div>
-  
-    <p class="text-danger text-center mt-3" *ngIf="!selectedProbe">Fehler: Sonde konnte nicht geladen werden.</p>
   </div>
-  
-  <div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-    [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-  
-        <div class="modal-header">
-          <h5 class="modal-title">Sonde löschen?</h5>
+</div>
+
+<ng-template #loadError>
+  <p class="text-danger text-center mt-3">Fehler: Sonde konnte nicht geladen werden.</p>
+</ng-template>
+
+<div
+  class="modal fade modern-modal"
+  tabindex="-1"
+  role="dialog"
+  [ngClass]="{ show: showDeleteModal }"
+  [ngStyle]="{ display: showDeleteModal ? 'block' : 'none' }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon danger">
+          <span aria-hidden="true">⚠</span>
         </div>
-  
-        <div class="modal-body">
-          <p>Sind Sie sicher, dass Sie diese Sonde löschen möchten?</p>
-        </div>
-  
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
-            Abbrechen
-          </button>
-          <button type="button" class="btn btn-danger" (click)="deleteProbe()">
-            Löschen
-          </button>
-        </div>
+        <h5 class="modal-title">Sonde löschen?</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="showDeleteModal = false"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie die Sonde endgültig löschen?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" (click)="deleteProbe()">
+          Löschen
+        </button>
       </div>
     </div>
   </div>
-  
+</div>
