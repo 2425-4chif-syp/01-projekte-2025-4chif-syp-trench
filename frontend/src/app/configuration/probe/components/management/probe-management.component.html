@@ -15,7 +15,7 @@
           <div class="card-intro" *ngIf="!probesService.selectedElementIsNew && probesService.elements.length > 0">
             <label for="probeSelect" class="visually-hidden">Sonde auswählen</label>
             <div class="select-shell select-shell--full">
-              <select
+              <!--<select
                 class="form-select select-control"
                 id="probeSelect"
                 name="probeSelect"
@@ -25,7 +25,7 @@
                 <option *ngFor="let probe of probesService.elements" [value]="probe.id">
                   Sonde #{{ probe.id }}
                 </option>
-              </select>
+              </select>-->
             </div>
           </div>
 

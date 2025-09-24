@@ -1,7 +1,7 @@
 <div class="visualization-column">
   <div *ngIf="!isNew && elements.length > 0" class="select-wrapper">
     <div class="select-shell">
-      <select
+      <!--<select
         class="form-select select-control"
         id="probeTypeSelect"
         name="probeTypeSelect"
@@ -11,7 +11,7 @@
         <option *ngFor="let probeType of elements" [ngValue]="probeType.id">
           Messsondentyp #{{ probeType.id }} ({{ probeType.name || 'Ohne Namen' }})
         </option>
-      </select>
+      </select>-->
     </div>
   </div>
 

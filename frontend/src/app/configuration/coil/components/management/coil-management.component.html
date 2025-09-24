@@ -16,7 +16,7 @@
           <div class="card-intro" *ngIf="!coilsService.selectedElementIsNew && coilsService.elements.length > 0">
             <label for="coilSelect" class="visually-hidden">Spule auswählen</label>
             <div class="select-shell select-shell--full">
-              <select
+              <!--<select
                 class="form-select select-control"
                 id="coilSelect"
                 name="coilSelect"
@@ -26,7 +26,7 @@
                 <option *ngFor="let coil of coilsService.elements" [value]="coil.id">
                   Spule #{{ coil.id }}
                 </option>
-              </select>
+              </select>-->
             </div>
           </div>
 
