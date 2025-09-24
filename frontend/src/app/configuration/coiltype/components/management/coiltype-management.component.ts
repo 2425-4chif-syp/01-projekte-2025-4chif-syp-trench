@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { CoilVisualizationComponent } from '../../../../visualization/coil/components/coil-visualization.component';
 import { CoiltypesService } from '../../services/coiltypes.service';
 import { Coiltype } from '../../interfaces/coiltype';
+import { ModeService } from '../../../../services/mode.service';
+import { Subscription } from 'rxjs';
 
 type CoiltypeField = keyof Coiltype;
 type NumericField = 'bandbreite' | 'schichthoehe' | 'durchmesser' | 'toleranzbereich';
@@ -22,11 +24,12 @@ interface NumericConstraint {
   templateUrl: './coiltype-management.component.html',
   styleUrl: './coiltype-management.component.scss'
 })
-export class CoiltypeManagementComponent implements OnInit {
+export class CoiltypeManagementComponent implements OnInit, OnDestroy {
   @ViewChild('coiltypeSelectEl') coiltypeSelect?: ElementRef<HTMLSelectElement>;
 
-  constructor(public coiltypesService: CoiltypesService) {}
-
+  constructor(public coiltypesService: CoiltypesService, public modeService:ModeService) {}
+  private modeSubscription?: Subscription;
+  @Input() readOnly: boolean = false;
   saveMessage: string | null = null;
   originalCoiltype: Coiltype | null = null;
   private formSubmitAttempted = false;
@@ -108,6 +111,18 @@ export class CoiltypeManagementComponent implements OnInit {
     } catch (error) {
       console.error('Fehler beim Speichern:', error);
       this.saveMessage = 'Fehler beim Speichern!';
+      
+      // Subscribe to mode changes
+      this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
+        // Force change detection
+        this.readOnly = this.modeService.isMonteurMode();
+      });
+    }
+
+    ngOnDestroy() {
+      if (this.modeSubscription) {
+        this.modeSubscription.unsubscribe();
+      }
     }
   }
 

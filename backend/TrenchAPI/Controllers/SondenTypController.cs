@@ -45,6 +45,7 @@ namespace TrenchAPI.Controllers
         // PUT: api/SondenTyp/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ApiKeyAuth]
         public async Task<IActionResult> PutSondenTyp(int id, SondenTyp SondenTyp)
         {
             if (id != SondenTyp.ID)
@@ -76,6 +77,7 @@ namespace TrenchAPI.Controllers
         // POST: api/SondenTyp
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ApiKeyAuth]
         public async Task<ActionResult<SondenTyp>> PostSondenTyp(SondenTyp SondenTyp)
         {
             _context.SondenTyp.Add(SondenTyp);

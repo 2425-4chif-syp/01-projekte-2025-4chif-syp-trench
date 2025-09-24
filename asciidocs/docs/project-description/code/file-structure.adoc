@@ -1,0 +1,9 @@
+= File Structure
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/project-description/[Project Description] / link:/01-projekte-2025-4chif-syp-trench/project-description/[Code] / *File Structure*
+
+The project has three main folders:
+
+- `docs`: Contains the documentation of the project, including the project description, usage instructions, diagrams and RevealJS Slides. This is written using https://asciidoctor.org/[Asciidoctor].
+- `frontend`: Contains the frontend code of the project, which is built using https://angular.dev/[Angular].
+- `backend`: Contains the backend code of the project, which is built using https://dotnet.microsoft.com/en-us/learn/dotnet/what-is-dotnet[.NET]. This includes the main project folder `TrenchAPI` and another C# project folder `ConsoleMQTT` for mocking MQTT messages.

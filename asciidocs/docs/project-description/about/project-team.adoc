@@ -1,0 +1,7 @@
+*Project Leader*: Filip Schauer
+
+- *Filip Schauer*: Project Leader, Frontend Visualization
+- *Aaron Schreiegg*: Frontend
+- *Axel Csomany*: Frontend
+- *Emil Silber*: Backend
+- *Simon Pesut*: Backend, Database

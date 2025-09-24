@@ -1,4 +1,17 @@
-<div class="container mt-5">
+<div class="container mt-3">
+  <!-- Monteur-Modus Hinweis -->
+  @if (readOnly) {
+    <div class="monteur-mode-notice">
+      <div class="notice-icon">
+        <i class="fas fa-user-cog"></i>
+      </div>
+      <div class="notice-content">
+        <div class="notice-title">Monteur-Modus</div>
+        <div class="notice-description">Felder sind schreibgeschützt</div>
+      </div>
+    </div>
+  }
+
   <div class="row justify-content-center">
     <!-- Spulentyp Verwaltung -->
     <div class="col-lg-5 col-md-6">
@@ -11,13 +24,6 @@
         <div class="form-header">
           <div class="form-header__titles">
             <h3>{{ selectedCoiltype.name || 'Spulentyp konfigurieren' }}</h3>
-            <!--<p>
-              {{
-                coiltypesService.selectedElementIsNew
-                  ? 'Lege Maße und Toleranzen für einen neuen Spulentyp fest.'
-                  : 'Passe die hinterlegten Parameter des Spulentypen an.'
-              }}
-            </p>-->
           </div>
           <span class="form-tag" [ngClass]="coiltypesService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
             {{ coiltypesService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
@@ -41,6 +47,7 @@
                     #nameElement="ngModel"
                     minlength="2"
                     required
+                    [readonly]="readOnly"
                     (ngModelChange)="onFieldChange('name')"
                     (blur)="onFieldBlur('name')"
                     [class.is-invalid]="shouldShowFieldError('name', nameElement)"
@@ -69,6 +76,7 @@
                     [(ngModel)]="selectedCoiltype.schenkel"
                     #schenkelElement="ngModel"
                     required
+                    [disabled]="readOnly"
                     (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
                   />
                   <label class="btn segment-btn" for="sch-2">2</label>
@@ -81,6 +89,7 @@
                     [value]="3"
                     [(ngModel)]="selectedCoiltype.schenkel"
                     required
+                    [disabled]="readOnly"
                     (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
                   />
                   <label class="btn segment-btn" for="sch-3">3</label>
@@ -93,13 +102,11 @@
                     [value]="4"
                     [(ngModel)]="selectedCoiltype.schenkel"
                     required
+                    [disabled]="readOnly"
                     (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
                   />
                   <label class="btn segment-btn" for="sch-4">4</label>
                 </div>
-                <!--@if(fieldError('schenkel')){
-                  <div class="invalid-feedback d-block">{{ fieldError('schenkel') }}</div>
-                }-->
               </div>
             </div>
 
@@ -120,6 +127,7 @@
                       min="0.01"
                       step="0.01"
                       required
+                      [readonly]="readOnly"
                       (ngModelChange)="onFieldChange('bandbreite')"
                       (blur)="onFieldBlur('bandbreite')"
                       [class.is-invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)"
@@ -145,6 +153,7 @@
                       min="0.01"
                       step="0.01"
                       required
+                      [readonly]="readOnly"
                       (ngModelChange)="onFieldChange('schichthoehe')"
                       (blur)="onFieldBlur('schichthoehe')"
                       [class.is-invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)"
@@ -170,6 +179,7 @@
                       min="0.01"
                       step="0.01"
                       required
+                      [readonly]="readOnly"
                       (ngModelChange)="onFieldChange('durchmesser')"
                       (blur)="onFieldBlur('durchmesser')"
                       [class.is-invalid]="shouldShowFieldError('durchmesser', durchmesserElement)"
@@ -195,6 +205,7 @@
                       min="0.01"
                       step="0.01"
                       required
+                      [readonly]="readOnly"
                       (ngModelChange)="onFieldChange('toleranzbereich')"
                       (blur)="onFieldBlur('toleranzbereich')"
                       [class.is-invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)"
@@ -219,30 +230,46 @@
                 rows="3"
                 [(ngModel)]="selectedCoiltype.notiz"
                 placeholder="Notiz..."
+                [readonly]="readOnly"
               ></textarea>
             </div>
           </div>
 
           <!-- Buttons -->
           <div class="form-actions">
-            <button
-              type="submit"
-              class="btn btn-primary btn-modern"
-              [disabled]="!coiltypeForm.form.valid || !hasChanges() || hasValidationErrors()"
-            >
-              Speichern
-            </button>
+            @if (!readOnly) {
+              <button
+                type="submit"
+                class="btn btn-primary btn-modern"
+                [disabled]="!coiltypeForm.form.valid || !hasChanges() || hasValidationErrors()"
+              >
+                Speichern
+              </button>
+            } @else {
+              <button type="button" class="btn btn-secondary btn-modern" disabled>
+                Speichern
+              </button>
+            }
+
             <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
               Zurück
             </button>
-            <button
-              *ngIf="!coiltypesService.selectedElementIsNew"
-              type="button"
-              class="btn btn-outline-danger btn-modern"
-              (click)="openDeleteModal()"
-            >
-              Löschen
-            </button>
+
+            @if (!coiltypesService.selectedElementIsNew) {
+              @if (!readOnly) {
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-modern"
+                  (click)="openDeleteModal()"
+                >
+                  Löschen
+                </button>
+              } @else {
+                <button type="button" class="btn btn-secondary btn-modern" disabled>
+                  Löschen
+                </button>
+              }
+            }
           </div>
 
           <!-- Erfolgsmeldung -->
@@ -264,7 +291,6 @@
 
     <!-- Visualisierung -->
     <div class="col-lg-6 col-md-6 visualization-column">
-      <!-- Dropdown zur Auswahl vorhandener Spulentypen -->
       <div
         *ngIf="!coiltypesService.selectedElementIsNew && coiltypesService.elements.length > 0"
         class="select-wrapper"
@@ -284,7 +310,6 @@
           </select>
         </div>
       </div>
-
       <div class="visualization-shell d-flex align-items-center justify-content-center">
         <app-coil-visualization *ngIf="selectedCoiltype" [n]="selectedCoiltype.schenkel"></app-coil-visualization>
       </div>

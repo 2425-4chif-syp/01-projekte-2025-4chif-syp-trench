@@ -1,5 +1,18 @@
 <div class="management-wrapper">
   <div class="container">
+    <!-- Monteur-Modus Hinweis -->
+    @if (readOnly) {
+      <div class="monteur-mode-notice">
+        <div class="notice-icon">
+          <i class="fas fa-user-cog"></i>
+        </div>
+        <div class="notice-content">
+          <div class="notice-title">Monteur-Modus</div>
+          <div class="notice-description">Felder sind schreibgeschützt</div>
+        </div>
+      </div>
+    }
+
     <div class="management-row">
       <!-- Form column -->
       <div class="management-column management-column--form">
@@ -7,8 +20,117 @@
           {{ measurementProbeTypesService.selectedElementIsNew ? 'Neuer Messsondentyp' : 'Messsondentyp bearbeiten' }}
         </h2>
 
-        <app-probe-type-form></app-probe-type-form>
+        <div *ngIf="selectedProbeType" class="card shadow-sm modern-card p-4">
+          <div class="form-field">
+            <label for="name" class="form-label">Name</label>
+            <input
+              id="name"
+              type="text"
+              class="form-control"
+              [(ngModel)]="selectedProbeType!.name"
+              [readonly]="readOnly"
+              [class.is-invalid]="saveError && isFieldInvalid('name')"
+            />
+            <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="hoehe" class="form-label">Höhe (mm)</label>
+            <input
+              id="hoehe"
+              type="number"
+              class="form-control"
+              [(ngModel)]="selectedProbeType!.hoehe"
+              min="0"
+              [readonly]="readOnly"
+              [class.is-invalid]="saveError && isFieldInvalid('hoehe')"
+            />
+            <div class="invalid-feedback">Bitte geben Sie eine Höhe ein.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="breite" class="form-label">Breite (mm)</label>
+            <input
+              id="breite"
+              type="number"
+              class="form-control"
+              [(ngModel)]="selectedProbeType!.breite"
+              min="0"
+              [readonly]="readOnly"
+              [class.is-invalid]="saveError && isFieldInvalid('breite')"
+            />
+            <div class="invalid-feedback">Bitte geben Sie eine Breite ein.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="windungszahl" class="form-label">Windungszahl</label>
+            <input
+              id="windungszahl"
+              type="number"
+              class="form-control"
+              [(ngModel)]="selectedProbeType!.windungszahl"
+              min="0"
+              [readonly]="readOnly"
+              [class.is-invalid]="saveError && isFieldInvalid('windungszahl')"
+            />
+            <div class="invalid-feedback">Bitte geben Sie eine Windungszahl ein.</div>
+          </div>
+
+          <div class="form-field">
+            <label for="notiz" class="form-label">Notiz</label>
+            <textarea
+              id="notiz"
+              class="form-control"
+              [(ngModel)]="selectedProbeType!.notiz"
+              [readonly]="readOnly"
+            ></textarea>
+          </div>
+
+          <!-- Buttons -->
+          <div class="form-actions mt-4">
+            @if (!readOnly) {
+              <button
+                [disabled]="!hasChanges()"
+                class="btn btn-primary w-100 me-2"
+                (click)="saveChanges()"
+              >
+                Speichern
+              </button>
+            } @else {
+              <button
+                [disabled]="true"
+                class="btn btn-secondary w-100 me-2"
+                title="Im Monteur-Modus nicht verfügbar"
+              >
+                Speichern
+              </button>
+            }
+
+            <button class="btn btn-outline-secondary w-100 me-2" (click)="backToListing()">
+              Zurück
+            </button>
+
+            @if (!readOnly) {
+              <button class="btn btn-outline-danger w-100" (click)="openDeleteModal()">Löschen</button>
+            } @else {
+              <button
+                [disabled]="true"
+                class="btn btn-secondary w-100"
+                title="Im Monteur-Modus nicht verfügbar"
+              >
+                Löschen
+              </button>
+            }
+          </div>
+
+          @if (saveMessage) {
+            <div class="text-center mt-3 text-success fw-bold">
+              {{ saveMessage }}
+            </div>
+          }
+        </div>
       </div>
+
       <!-- Visualization column -->
       <div class="management-column management-column--visualization">
         <app-probe-type-visualization
@@ -18,6 +140,49 @@
           [isNew]="measurementProbeTypesService.selectedElementIsNew"
           (selectionChange)="onProbeTypeSelectionChange($event)"
         ></app-probe-type-visualization>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade modern-modal"
+  tabindex="-1"
+  role="dialog"
+  [ngClass]="{ show: showDeleteModal }"
+  [ngStyle]="{ display: showDeleteModal ? 'block' : 'none' }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon danger">
+          <span aria-hidden="true">⚠</span>
+        </div>
+        <h5 class="modal-title">Messsonde löschen?</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="showDeleteModal = false"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Sind Sie sicher, dass Sie diese Messsonde löschen möchten?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-modern"
+          (click)="showDeleteModal = false"
+        >
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" (click)="deleteProbeType()">
+          Löschen
+        </button>
       </div>
     </div>
   </div>
