@@ -11,6 +11,7 @@ export class MessungService implements ListService<Messung> {
   public elements: Messung[] = [];
   public selectedElementCopy: Messung|null = null;
   public selectedElementIsNew: boolean = false;
+  public clickedMessung: Messung | null = null;
   
   public isMessungSelector: boolean = false;
 

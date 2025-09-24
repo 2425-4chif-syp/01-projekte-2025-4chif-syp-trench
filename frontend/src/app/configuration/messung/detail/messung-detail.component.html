@@ -1,1 +1,16 @@
-<p>detail works!</p>
+<div class="text-center">
+    <h2>Messung #{{ curMessung!.id }}</h2>
+
+    @if (recentMesswerte().length < 1) {
+        <p>Keine Messwerte vorhanden!</p>
+    }
+    @else {
+        @for (messwert of recentMesswerte(); track $index) {
+            <p>-------- {{ $index }} --------</p>
+            <p>ID: {{ messwert.id }}</p>
+            <p>MessungID: {{ messwert.messungID }}</p>
+            <p>Zeitpunkt: {{ messwert.zeitpunkt }}</p>
+            <p></p>
+        }
+    }   
+</div>

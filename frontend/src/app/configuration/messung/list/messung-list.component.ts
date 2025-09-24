@@ -47,6 +47,7 @@ export class MessungListComponent {
   }
 
   openMessung(messung:Messung) {
-    
+    this.messungService.clickedMessung = messung
+    this.router.navigate(['/measurement-detail']);
   }
 }

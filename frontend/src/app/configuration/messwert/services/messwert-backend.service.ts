@@ -12,7 +12,7 @@ export class MesswertBackendService {
   private messwertBackendToFrontend(messwert: any): Messwert {
     return {
       id: messwert.id,
-      measurement_id: messwert.messung_id,
+      messungID: messwert.messungID,
       measurement: messwert.messung,
       measurementProbePositionId: messwert.messsondenPosition_id,
       measurementProbePosition: messwert.messsondenPosition,
@@ -24,7 +24,7 @@ export class MesswertBackendService {
   private messwertFrontendToBackend(messwert: Messwert): any {
     return {
       id: messwert.id,
-      messung_id: messwert.measurement_id,
+      messungID: messwert.messungID,
       messsondenPosition_id: messwert.measurementProbePositionId,
       wert: messwert.wert,
       zeitpunkt: messwert.zeitpunkt
