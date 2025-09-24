@@ -74,6 +74,38 @@ namespace TrenchAPI.Controllers
             return messwert;
         }
 
+        // GET: api/Messwert/messung/5
+        [HttpGet("messung/{messungId}")]
+        public async Task<ActionResult<IEnumerable<Messwert>>> GetMesswertByMessungId(int messungId)
+        {
+            // Check if Messung exists
+            if (!await _context.Messung.AnyAsync(m => m.ID == messungId))
+            {
+                return NotFound($"Messung with ID {messungId} not found.");
+            }
+
+            var messwerte = await _context.Messwert
+                .Where(m => m.MessungID == messungId)
+                .Include(m => m.Messung)
+                    .ThenInclude(m => m.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(m => m.Messung)
+                    .ThenInclude(m => m.Messeinstellung)
+                        .ThenInclude(me => me.SondenTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Messeinstellung)
+                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Messeinstellung)
+                        .ThenInclude(me => me.SondenTyp)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Sonde)
+                        .ThenInclude(s => s!.SondenTyp)
+                .ToListAsync();
+
+            return Ok(messwerte);
+        }
+
         // PUT: api/Messwert/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
