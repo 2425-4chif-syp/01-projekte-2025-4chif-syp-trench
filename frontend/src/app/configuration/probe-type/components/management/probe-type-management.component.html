@@ -1,115 +1,318 @@
-<div class="row mt-5 justify-content-center">
-    <div class="card col-5 mt-5 d-flex flex-column">
-      <h2 class="text-center mt-5">Messsondentypen Verwaltung</h2>
-      <div class="row flex-grow-1">
-        <!-- Eingabefelder -->
-        <div class="col-md-12 mt-5">
-          <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input id="name" type="text" class="form-control" [(ngModel)]="selectedProbeType!.name"
-              [class.is-invalid]="saveError && isFieldInvalid('name')">
-            <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
+<div class="container mt-5">
+  <div class="row justify-content-center mt-5">
+    <!-- Form column -->
+    <div class="col-lg-5 col-md-6">
+      <h2 class="mb-4 text-center">
+        {{ measurementProbeTypesService.selectedElementIsNew ? 'Neuer Messsondentyp' : 'Messsondentyp bearbeiten' }}
+      </h2>
+
+      <ng-container *ngIf="selectedProbeType; else noSelection">
+        <div class="card shadow-sm modern-card">
+          <div class="form-header">
+            <div class="form-header__titles">
+              <h3>{{ selectedProbeType.name?.trim() || 'Messsondentyp konfigurieren' }}</h3>
+            </div>
+            <span
+              class="form-tag"
+              [ngClass]="measurementProbeTypesService.selectedElementIsNew ? 'tag-new' : 'tag-edit'"
+            >
+              {{ measurementProbeTypesService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
+            </span>
           </div>
-          <div class="mb-3">
-            <label for="hoehe" class="form-label">Höhe (mm)</label>
-            <input id="hoehe" type="number" class="form-control" [(ngModel)]="selectedProbeType!.hoehe" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('hoehe')">
-            <div class="invalid-feedback">Bitte geben Sie eine Höhe ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="breite" class="form-label">Breite (mm)</label>
-            <input id="breite" type="number" class="form-control" [(ngModel)]="selectedProbeType!.breite" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('breite')">
-            <div class="invalid-feedback">Bitte geben Sie eine Breite ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="windungszahl" class="form-label">Windungszahl</label>
-            <input id="windungszahl" type="number" class="form-control" [(ngModel)]="selectedProbeType!.windungszahl" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('windungszahl')">
-            <div class="invalid-feedback">Bitte geben Sie eine Windungszahl ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="notiz" class="form-label">Notiz</label>
-            <textarea id="notiz" class="form-control" [(ngModel)]="selectedProbeType!.notiz"></textarea>
-          </div>
+
+          <form #probeTypeForm="ngForm" (ngSubmit)="onSubmit(probeTypeForm)" class="modern-form">
+            <div class="form-layout">
+              <div class="form-column form-column--main">
+                <div class="form-field">
+                  <label for="name" class="form-label">Messsondentyp-Name</label>
+                  <div
+                    class="input-shell"
+                    [class.invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')"
+                  >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      minlength="2"
+                      required
+                      placeholder="Name eingeben"
+                      [(ngModel)]="selectedProbeType!.name"
+                      #nameElement="ngModel"
+                      [class.is-invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')"
+                    />
+                  </div>
+                  <div class="invalid-feedback" *ngIf="(saveError || nameElement.touched) && isFieldInvalid('name')">
+                    Bitte geben Sie einen gültigen Namen ein.
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-column form-column--metrics">
+                <div class="metric-grid">
+                  <div class="form-field metric-field">
+                    <label for="hoehe" class="form-label">Höhe (mm)</label>
+                    <div
+                      class="input-shell"
+                      [class.invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')"
+                    >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="hoehe"
+                        name="hoehe"
+                        min="0.01"
+                        step="0.01"
+                        required
+                        placeholder="Höhe in mm"
+                        [(ngModel)]="selectedProbeType!.hoehe"
+                        #hoeheElement="ngModel"
+                        [class.is-invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')"
+                      />
+                    </div>
+                    <div class="invalid-feedback" *ngIf="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
+                      Bitte geben Sie eine gültige Höhe ein.
+                    </div>
+                  </div>
+
+                  <div class="form-field metric-field">
+                    <label for="breite" class="form-label">Breite (mm)</label>
+                    <div
+                      class="input-shell"
+                      [class.invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')"
+                    >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="breite"
+                        name="breite"
+                        min="0.01"
+                        step="0.01"
+                        required
+                        placeholder="Breite in mm"
+                        [(ngModel)]="selectedProbeType!.breite"
+                        #breiteElement="ngModel"
+                        [class.is-invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')"
+                      />
+                    </div>
+                    <div class="invalid-feedback" *ngIf="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
+                      Bitte geben Sie eine gültige Breite ein.
+                    </div>
+                  </div>
+
+                  <div class="form-field metric-field">
+                    <label for="windungszahl" class="form-label">Windungszahl</label>
+                    <div
+                      class="input-shell"
+                      [class.invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                    >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="windungszahl"
+                        name="windungszahl"
+                        min="1"
+                        step="1"
+                        required
+                        placeholder="Windungszahl"
+                        [(ngModel)]="selectedProbeType!.windungszahl"
+                        #windungszahlElement="ngModel"
+                        [class.is-invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                      />
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                    >
+                      Bitte geben Sie eine gültige Windungszahl ein.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-field form-field--wide note-field">
+              <label for="notiz" class="form-label">Notiz</label>
+              <div class="input-shell">
+                <textarea
+                  id="notiz"
+                  class="form-control"
+                  name="notiz"
+                  rows="3"
+                  placeholder="Notiz hinzufügen..."
+                  [(ngModel)]="selectedProbeType!.notiz"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="btn btn-primary btn-modern"
+                [disabled]="probeTypeForm.invalid || !hasChanges()"
+              >
+                Speichern
+              </button>
+              <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
+                Zurück
+              </button>
+              <button
+                *ngIf="!measurementProbeTypesService.selectedElementIsNew"
+                type="button"
+                class="btn btn-outline-danger btn-modern"
+                (click)="openDeleteModal()"
+              >
+                Löschen
+              </button>
+            </div>
+
+            <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+              {{ saveMessage }}
+            </div>
+          </form>
+        </div>
+      </ng-container>
+
+      <ng-template #noSelection>
+        <p class="text-danger text-center mt-3">Bitte wählen Sie einen Messsondentyp aus.</p>
+      </ng-template>
+    </div>
+
+    <!-- Divider -->
+    <div class="col-lg-1 d-none d-lg-flex align-items-center justify-content-center">
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Visualization column -->
+    <div class="col-lg-6 col-md-6 visualization-column">
+      <div
+        *ngIf="!measurementProbeTypesService.selectedElementIsNew && measurementProbeTypesService.elements.length > 0"
+        class="select-wrapper"
+      >
+        <div class="select-shell">
+          <select
+            class="form-select select-control"
+            id="probeTypeSelect"
+            name="probeTypeSelect"
+            [(ngModel)]="selectedProbeTypeId"
+            (ngModelChange)="onProbeTypeSelectionChange($event)"
+          >
+            <option *ngFor="let probeType of measurementProbeTypesService.elements" [ngValue]="probeType.id">
+              Messsondentyp #{{ probeType.id }} ({{ probeType.name || 'Ohne Namen' }})
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="visualization-shell">
+        <div class="visualization-inner" *ngIf="selectedProbeType; else visualizationPlaceholder">
+          <svg
+            [attr.width]="scaledWidth + 80"
+            [attr.height]="scaledHeight + 80"
+            class="probe-visualization"
+          >
+            <rect
+              x="40"
+              y="40"
+              [attr.width]="scaledWidth"
+              [attr.height]="scaledHeight"
+              stroke="currentColor"
+              fill="none"
+              stroke-width="2"
+            ></rect>
+
+            <line
+              [attr.x1]="40"
+              [attr.y1]="scaledHeight + 60"
+              [attr.x2]="40 + scaledWidth"
+              [attr.y2]="scaledHeight + 60"
+              stroke="currentColor"
+              stroke-width="2"
+            ></line>
+            <polygon
+              [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)"
+              fill="currentColor"
+            ></polygon>
+            <polygon
+              [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
+              fill="currentColor"
+            ></polygon>
+            <text
+              [attr.x]="40 + scaledWidth / 2"
+              [attr.y]="scaledHeight + 75"
+              font-size="14"
+              text-anchor="middle"
+            >
+              {{ selectedProbeType?.breite ?? 0 }} mm
+            </text>
+
+            <line
+              [attr.x1]="scaledWidth + 60"
+              [attr.y1]="40"
+              [attr.x2]="scaledWidth + 60"
+              [attr.y2]="40 + scaledHeight"
+              stroke="currentColor"
+              stroke-width="2"
+            ></line>
+            <polygon
+              [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
+              fill="currentColor"
+            ></polygon>
+            <polygon
+              [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)"
+              fill="currentColor"
+            ></polygon>
+            <text
+              [attr.x]="scaledWidth + 55"
+              [attr.y]="20 + scaledHeight / 2"
+              font-size="14"
+              text-anchor="middle"
+              [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'"
+            >
+              {{ selectedProbeType?.hoehe ?? 0 }} mm
+            </text>
+          </svg>
         </div>
 
-        <div class="mt-auto mb-4 px-3">
-          <div class="d-flex justify-content-between">
-            <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
-            <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-            <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
-          </div>
-
-          <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
-            {{ saveMessage }}
-          </div>          
-        </div>    
-      </div>
-    </div>
-  
-    <div class="col-6" style="max-height: 600px;">
-      <!-- SVG-Zeichnung -->
-      <div class="d-flex justify-content-center align-items-center mt-5">
-        <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
-          <!-- Rechteck der Sonde -->
-          <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="red" fill="none"
-            stroke-width="2"></rect>
-  
-          <!-- Pfeil für die Breite (horizontale Linie unterhalb der Sonde) -->
-          <line [attr.x1]="40" [attr.y1]="scaledHeight + 60" [attr.x2]="40 + scaledWidth"
-            [attr.y2]="scaledHeight + 60" stroke="black" stroke-width="2"></line>
-          <!-- Pfeilspitzen für die Breite -->
-          <polygon [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + 
-                            (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + 
-                            (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)" fill="black"></polygon>
-          <polygon
-            [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
-            fill="black"></polygon>
-          <!-- Beschriftung für die Breite -->
-          <text [attr.x]="40 + scaledWidth / 2" [attr.y]="scaledHeight + 75" font-size="14" text-anchor="middle">
-            {{ selectedProbeType?.breite ?? 0 }} mm
-          </text>
-  
-          <!-- Pfeil für die Höhe (vertikale Linie rechts neben der Sonde) -->
-          <line [attr.x1]="scaledWidth + 60" [attr.y1]="40" [attr.x2]="scaledWidth + 60"
-            [attr.y2]="40 + scaledHeight" stroke="black" stroke-width="2"></line>
-          <!-- Pfeilspitzen für die Höhe -->
-          <polygon
-            [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
-            fill="black"></polygon>
-          <polygon [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + 
-                            (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + 
-                            (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)" fill="black"></polygon>
-          <!-- Beschriftung für die Höhe -->
-          <text [attr.x]="scaledWidth + 55" [attr.y]="20 + scaledHeight / 2" font-size="14" text-anchor="middle"
-            [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'">
-            {{ selectedProbeType?.hoehe ?? 0 }} mm
-          </text>
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Messsonde löschen?</h5>
-      </div>
-
-      <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diese Messsonde löschen möchten?</p>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">Abbrechen</button>
-        <button type="button" class="btn btn-danger" (click)="confirmDeleteProbeType()">Löschen</button>
+        <ng-template #visualizationPlaceholder>
+          <p class="visualization-placeholder text-center">
+            Wählen Sie einen Messsondentyp, um die Visualisierung zu sehen.
+          </p>
+        </ng-template>
       </div>
     </div>
   </div>
 </div>
 
-  
+<div
+  class="modal fade modern-modal"
+  tabindex="-1"
+  role="dialog"
+  [ngClass]="{ show: showDeleteModal }"
+  [ngStyle]="{ display: showDeleteModal ? 'block' : 'none' }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon danger">
+          <span aria-hidden="true">⚠</span>
+        </div>
+        <h5 class="modal-title">Messsondentyp löschen?</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="showDeleteModal = false"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie den Messsondentyp endgültig löschen?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" (click)="confirmDeleteProbeType()">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
