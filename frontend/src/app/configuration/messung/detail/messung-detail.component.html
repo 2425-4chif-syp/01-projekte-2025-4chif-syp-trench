@@ -6,7 +6,6 @@
     }
     @else {
         @for (messwert of recentMesswerte(); track $index) {
-            <!--
             <p>-------- {{ $index }} --------</p>
             <p>ID: {{ messwert.id }}</p>
             <p>MessungID: {{ messwert.messungID }}</p>
@@ -15,20 +14,6 @@
             <p>Schenkel: {{ messwert.sondenPosition!.schenkel }}</p>
             <p>Postion: {{ messwert.sondenPosition!.position }}</p>
             <p></p>
-            -->
-            <div class="mb-5">
-                <h4 class="mb-3 text-primary border-bottom pb-1">Schenkel #{{ messwert.sondenPosition!.schenkel }}</h4>
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-                    <div class="col">
-                        <div class="card text-center h-100 border border-primary shadow-sm">
-                            <div class="card-body text-center">
-                                <h6 class="card-title text-muted small">Sensor #{{ messwert.sondenPosition!.position }}</h6>
-                                <p class="card-text fs-4 fw-bold">{{ messwert.wert }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         }
     }   
 </div>
