@@ -5,9 +5,10 @@ import { MeasurementSetting } from '../../interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../../services/measurement-settings.service';
 import { Router } from '@angular/router';
 import { CoilsService } from '../../../coil/services/coils.service';
-import { ProbesService } from '../../../probe/services/probes.service';
 import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
+import { Coil } from '../../../coil/interfaces/coil';
+import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 
 
 @Component({
@@ -40,6 +41,24 @@ export class MeasurementSettingsComponent implements OnInit {
     this.measurementSettingsService.selectElement(Number(id));
   }
 
+  public get selectedCoil(): Coil | null {
+    if (!this.selectedMeasurementSetting) return null;
+    if (this.selectedMeasurementSetting.coil) {
+      return this.selectedMeasurementSetting.coil;
+    }
+
+    return this.coilsService.elements.find(coil => coil.id === this.selectedMeasurementSetting?.coilId) ?? null;
+  }
+
+  public get selectedProbeType(): ProbeType | null {
+    if (!this.selectedMeasurementSetting) return null;
+    if (this.selectedMeasurementSetting.probeType) {
+      return this.selectedMeasurementSetting.probeType;
+    }
+
+    return this.probeTypesService.elements.find(type => type.id === this.selectedMeasurementSetting?.probeTypeId) ?? null;
+  }
+
   ngOnInit() {
     if (this.selectedMeasurementSetting) {
       this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
@@ -53,10 +72,14 @@ export class MeasurementSettingsComponent implements OnInit {
   
   async saveChanges() {
     if (!this.originalMeasurementSetting) return;
+    if (!this.selectedMeasurementSetting) return;
 
     this.saveError = true; // Fehlerprüfung aktivieren
 
+    this.selectedMeasurementSetting.name = (this.selectedMeasurementSetting.name || '').trim();
+
     const requiredFields: (keyof MeasurementSetting)[] = [
+      'name',
       'coilId',
       'probeTypeId',
       'sondenProSchenkel',
@@ -69,13 +92,12 @@ export class MeasurementSettingsComponent implements OnInit {
     }
 
     try {
-      this.selectedMeasurementSetting!.id = this.measurementSettingsService.selectedElementCopy?.id! || 0;
-      this.selectedMeasurementSetting!.coilId             = Number(this.selectedMeasurementSetting!.coilId);
-      this.selectedMeasurementSetting!.probeTypeId        = Number(this.selectedMeasurementSetting!.probeTypeId);
-      this.selectedMeasurementSetting!.sondenProSchenkel  = Number(this.selectedMeasurementSetting!.sondenProSchenkel);
-      console.log(this.selectedMeasurementSetting!);
+      this.selectedMeasurementSetting.id = this.measurementSettingsService.selectedElementCopy?.id! || 0;
+      this.selectedMeasurementSetting.coilId             = Number(this.selectedMeasurementSetting.coilId);
+      this.selectedMeasurementSetting.probeTypeId        = Number(this.selectedMeasurementSetting.probeTypeId);
+      this.selectedMeasurementSetting.sondenProSchenkel  = Number(this.selectedMeasurementSetting.sondenProSchenkel);
 
-      await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting!);
+      await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting);
       this.onSettingSelectionChange(this.selectedSettingId!);
 
       this.createEmptyProbePositions();
@@ -86,9 +108,8 @@ export class MeasurementSettingsComponent implements OnInit {
 
       this.saveError = false;
 
-      this.originalMeasurementSetting = {...this.selectedMeasurementSetting!};
-      this.measurementSettingsService.selectElement(this.selectedMeasurementSetting!.id!);
-      console.log("Änderungen gespeichert:", this.measurementSettingsService.selectedElementCopy);
+      this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
+      this.measurementSettingsService.selectElement(this.selectedMeasurementSetting.id!);
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
       this.saveMessage = "Fehler beim Speichern!";
@@ -113,7 +134,20 @@ export class MeasurementSettingsComponent implements OnInit {
   isFieldInvalid(field: keyof MeasurementSetting): boolean {
     if (!this.selectedMeasurementSetting) return false;
     const value = this.selectedMeasurementSetting[field];
-    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+
+    if (value === null || value === undefined) {
+      return true;
+    }
+
+    if (typeof value === 'number') {
+      return value <= 0 || Number.isNaN(value);
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length === 0;
+    }
+
+    return false;
   }
 
   coilOrProbeChanged(): boolean {
