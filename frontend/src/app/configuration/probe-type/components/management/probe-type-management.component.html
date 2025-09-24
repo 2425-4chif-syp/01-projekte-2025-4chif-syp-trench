@@ -1,5 +1,18 @@
 <div class="management-wrapper">
   <div class="container">
+    <!-- Monteur-Modus Hinweis -->
+    @if (readOnly) {
+      <div class="monteur-mode-notice">
+        <div class="notice-icon">
+          <i class="fas fa-user-cog"></i>
+        </div>
+        <div class="notice-content">
+          <div class="notice-title">Monteur-Modus</div>
+          <div class="notice-description">Felder sind schreibgeschützt</div>
+        </div>
+      </div>
+    }
+
     <div class="management-row">
       <!-- Form column -->
       <div class="management-column management-column--form">
@@ -7,7 +20,7 @@
           {{ measurementProbeTypesService.selectedElementIsNew ? 'Neuer Messsondentyp' : 'Messsondentyp bearbeiten' }}
         </h2>
 
-        <app-probe-type-form></app-probe-type-form>
+        <app-probe-type-form [readOnly]="readOnly"></app-probe-type-form>
       </div>
       <!-- Visualization column -->
       <div class="management-column management-column--visualization">
@@ -20,5 +33,30 @@
         ></app-probe-type-visualization>
       </div>
     </div>
+
+    <!-- Button-Bereich -->
+    <div class="d-flex justify-content-between mt-4">
+      @if (!readOnly) {
+        <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
+      } @else {
+        <button [disabled]="true" class="btn btn-secondary w-100 me-2" title="Im Monteur-Modus nicht verfügbar">Speichern</button>
+      }
+      <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
+      @if (!measurementProbeTypesService.selectedElementIsNew) {
+        @if (!readOnly) {
+          <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
+        } @else {
+          <button [disabled]="true" class="btn btn-secondary w-100" title="Im Monteur-Modus nicht verfügbar">Löschen</button>
+        }
+      }
+    </div>
+
+    <!-- Save Message -->
+    @if (saveMessage) {
+      <div class="text-center mt-3 text-success fw-bold">{{ saveMessage }}</div>
+    }
+    @if (saveError) {
+      <div class="text-center mt-3 text-danger fw-bold">Fehler beim Speichern</div>
+    }
   </div>
 </div>

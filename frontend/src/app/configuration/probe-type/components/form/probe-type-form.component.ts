@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ProbeType } from '../../interfaces/probe-type';
 import { ProbeTypesService } from '../../services/probe-types.service';
@@ -12,6 +12,7 @@ import { ProbeTypesService } from '../../services/probe-types.service';
   styleUrl: './probe-type-form.component.scss'
 })
 export class ProbeTypeFormComponent implements OnInit, DoCheck {
+  @Input() readOnly: boolean = false;
   saveMessage: string | null = null;
   saveError = false;
   originalProbeType: ProbeType | null = null;
