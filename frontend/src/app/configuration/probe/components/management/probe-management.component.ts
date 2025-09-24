@@ -59,8 +59,21 @@ export class ProbeManagementComponent {
 
   isFieldInvalid(field: keyof Probe): boolean {
     if (!this.selectedProbe) return false;
-    let value = this.selectedProbe[field];
-    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+    const value = this.selectedProbe[field];
+
+    if (value === null || value === undefined) {
+      return true;
+    }
+
+    if (typeof value === 'number') {
+      return value <= 0;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length === 0;
+    }
+
+    return false;
   }
 
 
@@ -158,4 +171,3 @@ export class ProbeManagementComponent {
     return probetype ? probetype.name! : 'Sondentyp auswählen';
   }
 }
-
