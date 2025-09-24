@@ -5,12 +5,14 @@ link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-202
 == Benutzerrollen
 
 Es gibt zwei verschiedene Benutzerrollen in der Anwendung:
+
 - *Admin*: Hat vollen Zugriff auf alle Funktionen der Anwendung, einschließlich der Verwaltung von Benutzern und deren Berechtigungen. Erfordert eine Authentifizierung mit einem Passwort.
 - *Monteur*: Hat vollen Zugriff auf alle Funktionen der Anwendung, jedoch sind Spulentypen und Sensortypen schreibgeschützt.
 
 == Entitäten
 
 Bevor Messungen erstellt werden können, müssen folgende Entitäten erstellt werden:
+
 - *Spulentyp*: Ein allgemeiner Typ einer Spule, inklusive Schenkelzahl, Bandbreite, Schichthöhe, Durchmessers und eines Toleranzbereiches, 
   der die maximal akzeptable Abweichung der Spule angibt. 
 - *Spule*: Eine konkrete Spule eines bestimmten Spulentypen, inklusive Auftragsnummer, AuftragsPosNummer, Bemessungsspannung und -frequenz, Einheit.
