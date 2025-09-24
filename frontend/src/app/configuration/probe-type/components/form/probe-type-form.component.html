@@ -1,0 +1,184 @@
+<ng-container *ngIf="selectedProbeType; else noSelection">
+  <div class="card shadow-sm modern-card">
+    <div class="form-header">
+      <div class="form-header__titles">
+        <h3>{{ selectedProbeType.name?.trim() || 'Messsondentyp konfigurieren' }}</h3>
+      </div>
+      <span class="form-tag" [ngClass]="isNew ? 'tag-new' : 'tag-edit'">
+        {{ isNew ? 'Neu' : 'Bearbeiten' }}
+      </span>
+    </div>
+
+    <form #probeTypeForm="ngForm" (ngSubmit)="onSubmit(probeTypeForm)" class="modern-form">
+      <div class="form-layout">
+        <div class="form-column form-column--main">
+          <div class="form-field">
+            <label for="name" class="form-label">Messsondentyp-Name</label>
+            <div class="input-shell" [class.invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')">
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                minlength="2"
+                required
+                placeholder="Name eingeben"
+                [(ngModel)]="selectedProbeType!.name"
+                #nameElement="ngModel"
+                [class.is-invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')"
+              />
+            </div>
+            <div class="invalid-feedback" *ngIf="(saveError || nameElement.touched) && isFieldInvalid('name')">
+              Bitte geben Sie einen gültigen Namen ein.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-column form-column--metrics">
+          <div class="metric-grid">
+            <div class="form-field metric-field">
+              <label for="hoehe" class="form-label">Höhe (mm)</label>
+              <div class="input-shell" [class.invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="hoehe"
+                  name="hoehe"
+                  min="0.01"
+                  step="0.01"
+                  required
+                  placeholder="Höhe in mm"
+                  [(ngModel)]="selectedProbeType!.hoehe"
+                  #hoeheElement="ngModel"
+                  [class.is-invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
+                Bitte geben Sie eine gültige Höhe ein.
+              </div>
+            </div>
+
+            <div class="form-field metric-field">
+              <label for="breite" class="form-label">Breite (mm)</label>
+              <div class="input-shell" [class.invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="breite"
+                  name="breite"
+                  min="0.01"
+                  step="0.01"
+                  required
+                  placeholder="Breite in mm"
+                  [(ngModel)]="selectedProbeType!.breite"
+                  #breiteElement="ngModel"
+                  [class.is-invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
+                Bitte geben Sie eine gültige Breite ein.
+              </div>
+            </div>
+
+            <div class="form-field metric-field">
+              <label for="windungszahl" class="form-label">Windungszahl</label>
+              <div
+                class="input-shell"
+                [class.invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+              >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="windungszahl"
+                  name="windungszahl"
+                  min="1"
+                  step="1"
+                  required
+                  placeholder="Windungszahl"
+                  [(ngModel)]="selectedProbeType!.windungszahl"
+                  #windungszahlElement="ngModel"
+                  [class.is-invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')">
+                Bitte geben Sie eine gültige Windungszahl ein.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field form-field--wide note-field">
+        <label for="notiz" class="form-label">Notiz</label>
+        <div class="input-shell">
+          <textarea
+            id="notiz"
+            class="form-control"
+            name="notiz"
+            rows="3"
+            placeholder="Notiz hinzufügen..."
+            [(ngModel)]="selectedProbeType!.notiz"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-modern" [disabled]="probeTypeForm.invalid || !hasChanges()">
+          Speichern
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
+          Zurück
+        </button>
+        <button
+          *ngIf="!isNew"
+          type="button"
+          class="btn btn-outline-danger btn-modern"
+          (click)="openDeleteModal()"
+        >
+          Löschen
+        </button>
+      </div>
+
+      <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
+        {{ saveMessage }}
+      </div>
+    </form>
+  </div>
+</ng-container>
+
+<ng-template #noSelection>
+  <p class="text-danger text-center mt-3">Bitte wählen Sie einen Messsondentyp aus.</p>
+</ng-template>
+
+<div
+  class="modal fade modern-modal"
+  tabindex="-1"
+  role="dialog"
+  [ngClass]="{ show: showDeleteModal }"
+  [ngStyle]="{ display: showDeleteModal ? 'block' : 'none' }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon danger">
+          <span aria-hidden="true">⚠</span>
+        </div>
+        <h5 class="modal-title">Messsondentyp löschen?</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="showDeleteModal = false"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie den Messsondentyp endgültig löschen?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="showDeleteModal = false">
+          Abbrechen
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" (click)="confirmDeleteProbeType()">
+          Löschen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
