@@ -85,7 +85,7 @@
 
             <section class="form-section">
               <div class="form-field">
-                <label for="auftragsNr" class="form-label">Auftrags-Nummer *</label>
+                <label for="auftragsNr" class="form-label">Auftrags-Nummer</label>
                 <div class="input-shell" [class.invalid]="saveError && !selectedCoil?.auftragsnummer">
                   <input
                     type="text"
@@ -102,7 +102,7 @@
               </div>
 
               <div class="form-field">
-                <label for="auftragsPosNr" class="form-label">Auftrags-Position *</label>
+                <label for="auftragsPosNr" class="form-label">Auftrags-Position</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('auftragsPosNr')">
                   <input
                     type="number"
@@ -120,13 +120,13 @@
               </div>
 
               <div class="form-field">
-                <label for="bemessungsspannung" class="form-label">Bemessungsspannung *</label>
+                <label for="bemessungsspannung" class="form-label">Bemessungsspannung (V)</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsspannung')">
                   <input
                     type="number"
                     class="form-control"
                     id="bemessungsspannung"
-                    placeholder="Bemessungsspannung"
+                    placeholder="Bemessungsspannung in V"
                     [(ngModel)]="selectedCoil!.bemessungsspannung"
                     name="bemessungsspannung"
                     min="0"
@@ -138,13 +138,13 @@
               </div>
 
               <div class="form-field">
-                <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz *</label>
+                <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz (Hz)</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
                   <input
                     type="number"
                     class="form-control"
                     id="bemessungsfrequenz"
-                    placeholder="Bemessungsfrequenz"
+                    placeholder="Bemessungsfrequenz in Hz"
                     [(ngModel)]="selectedCoil!.bemessungsfrequenz"
                     name="bemessungsfrequenz"
                     min="0"
@@ -156,7 +156,7 @@
               </div>
 
               <div class="form-field">
-                <label for="einheit" class="form-label">Einheit *</label>
+                <label for="einheit" class="form-label">Einheit</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('einheit')">
                   <input
                     type="number"

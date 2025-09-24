@@ -1,4 +1,4 @@
-<ng-container *ngIf="selectedProbeType; else noSelection">
+@if (selectedProbeType) {
   <div class="card shadow-sm modern-card">
     <div class="form-header">
       <div class="form-header__titles">
@@ -26,11 +26,14 @@
                 [(ngModel)]="selectedProbeType!.name"
                 #nameElement="ngModel"
                 [class.is-invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')"
+                [readonly]="readOnly"
               />
             </div>
-            <div class="invalid-feedback" *ngIf="(saveError || nameElement.touched) && isFieldInvalid('name')">
-              Bitte geben Sie einen gültigen Namen ein.
-            </div>
+            @if ((saveError || nameElement.touched) && isFieldInvalid('name')) {
+              <div class="invalid-feedback">
+                Bitte geben Sie einen gültigen Namen ein.
+              </div>
+            }
           </div>
         </div>
 
@@ -51,11 +54,14 @@
                   [(ngModel)]="selectedProbeType!.hoehe"
                   #hoeheElement="ngModel"
                   [class.is-invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')"
+                  [readonly]="readOnly"
                 />
               </div>
-              <div class="invalid-feedback" *ngIf="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
-                Bitte geben Sie eine gültige Höhe ein.
-              </div>
+              @if ((saveError || hoeheElement.touched) && isFieldInvalid('hoehe')) {
+                <div class="invalid-feedback">
+                  Bitte geben Sie eine gültige Höhe ein.
+                </div>
+              }
             </div>
 
             <div class="form-field metric-field">
@@ -73,11 +79,14 @@
                   [(ngModel)]="selectedProbeType!.breite"
                   #breiteElement="ngModel"
                   [class.is-invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')"
+                  [readonly]="readOnly"
                 />
               </div>
-              <div class="invalid-feedback" *ngIf="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
-                Bitte geben Sie eine gültige Breite ein.
-              </div>
+              @if ((saveError || breiteElement.touched) && isFieldInvalid('breite')) {
+                <div class="invalid-feedback">
+                  Bitte geben Sie eine gültige Breite ein.
+                </div>
+              }
             </div>
 
             <div class="form-field metric-field">
@@ -98,11 +107,14 @@
                   [(ngModel)]="selectedProbeType!.windungszahl"
                   #windungszahlElement="ngModel"
                   [class.is-invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                  [readonly]="readOnly"
                 />
               </div>
-              <div class="invalid-feedback" *ngIf="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')">
-                Bitte geben Sie eine gültige Windungszahl ein.
-              </div>
+              @if ((saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')) {
+                <div class="invalid-feedback">
+                  Bitte geben Sie eine gültige Windungszahl ein.
+                </div>
+              }
             </div>
           </div>
         </div>
@@ -118,37 +130,56 @@
             rows="3"
             placeholder="Notiz hinzufügen..."
             [(ngModel)]="selectedProbeType!.notiz"
+            [readonly]="readOnly"
           ></textarea>
         </div>
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn btn-primary btn-modern" [disabled]="probeTypeForm.invalid || !hasChanges()">
-          Speichern
-        </button>
+        @if (!readOnly) {
+          <button type="submit" class="btn btn-primary btn-modern" [disabled]="probeTypeForm.invalid || !hasChanges()">
+            Speichern
+          </button>
+        } @else {
+          <button type="button" class="btn btn-secondary btn-modern" [disabled]="true" title="Im Monteur-Modus nicht verfügbar">
+            Speichern
+          </button>
+        }
         <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
           Zurück
         </button>
-        <button
-          *ngIf="!isNew"
-          type="button"
-          class="btn btn-outline-danger btn-modern"
-          (click)="openDeleteModal()"
-        >
-          Löschen
-        </button>
+        @if (!isNew) {
+          @if (!readOnly) {
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-modern"
+              (click)="openDeleteModal()"
+            >
+              Löschen
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-modern"
+              [disabled]="true"
+              title="Im Monteur-Modus nicht verfügbar"
+            >
+              Löschen
+            </button>
+          }
+        }
       </div>
 
-      <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
-        {{ saveMessage }}
-      </div>
+      @if (saveMessage) {
+        <div class="text-center mt-3 text-success fw-bold">
+          {{ saveMessage }}
+        </div>
+      }
     </form>
   </div>
-</ng-container>
-
-<ng-template #noSelection>
+} @else {
   <p class="text-danger text-center mt-3">Bitte wählen Sie einen Messsondentyp aus.</p>
-</ng-template>
+}
 
 <div
   class="modal fade modern-modal"

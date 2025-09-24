@@ -26,10 +26,8 @@ export class ProbeManagementComponent {
   originalProbe: Probe | null = null;
 
   ngOnInit() {
-    if (this.selectedProbe) {
-        this.originalProbe = { ...this.selectedProbe };
-    }
-}
+    this.syncOriginalProbeSnapshot();
+  }
 
   public get selectedProbe(): Probe | null {
     return this.probesService.selectedElementCopy;
@@ -99,7 +97,7 @@ export class ProbeManagementComponent {
 
     try {
         await this.probesService.updateOrCreateElement(this.selectedProbe);
-        this.onProbeSelectionChange(this.selectedProbeId!);
+        await this.onProbeSelectionChange(this.selectedProbeId!);
 
         this.saveMessage = "Änderungen gespeichert!";
         setTimeout(() => {
@@ -107,7 +105,6 @@ export class ProbeManagementComponent {
         }, 3000);
 
         this.saveError = false;
-        this.originalProbe = { ...this.selectedProbe };
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
         this.saveMessage = "Fehler beim Speichern!";
@@ -125,6 +122,8 @@ export class ProbeManagementComponent {
     const probeIdNumber: number = Number(probeId);
 
     await this.probesService.selectElement(probeIdNumber);
+    this.syncOriginalProbeSnapshot();
+    this.saveError = false;
   }
 
   showDeleteModal = false;
@@ -145,6 +144,7 @@ export class ProbeManagementComponent {
 
   backToListing(): void {
     this.probesService.selectedElementCopy = null;
+    this.originalProbe = null;
   }
 
   showProbetypeDropdown: boolean = false;
@@ -169,5 +169,26 @@ export class ProbeManagementComponent {
     const probe = this.probesService.elements.find(probe => probe.id === this.selectedProbeId);
     const probetype = this.probeTypesService.elements.find(type => type.id === this.selectedProbe?.probeTypeId);
     return probetype ? probetype.name! : 'Sondentyp auswählen';
+  }
+
+  private syncOriginalProbeSnapshot(): void {
+    const selected = this.selectedProbe;
+
+    if (!selected) {
+      this.originalProbe = null;
+      return;
+    }
+
+    if (this.probesService.selectedElementIsNew || selected.id == null || selected.id === 0) {
+      this.originalProbe = { ...selected };
+      return;
+    }
+
+    try {
+      this.originalProbe = this.probesService.getCopyElement(selected.id);
+    } catch (error) {
+      // Fallback to current values if original data is unavailable
+      this.originalProbe = { ...selected };
+    }
   }
 }
