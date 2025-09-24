@@ -4,4 +4,4 @@
 - *Aaron Schreiegg*: Frontend
 - *Axel Csomany*: Frontend
 - *Emil Silber*: Backend
-- *Simon Pesut*: Backend, Database, Deployment
+- *Simon Pesut*: Backend, Database
