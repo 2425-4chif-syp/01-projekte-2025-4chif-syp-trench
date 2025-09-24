@@ -1,0 +1,18 @@
+<div class="text-center">
+    <h2>Messung #{{ curMessung!.id }}</h2>
+
+    @if (recentMesswerte().length < 1) {
+        <p>Keine Messwerte vorhanden!</p>
+    }
+    @else {
+        @for (messwert of recentMesswerte(); track $index) {
+            <p>-------- {{ $index }} --------</p>
+            <p>ID: {{ messwert.id }}</p>
+            <p>MessungID: {{ messwert.messungID }}</p>
+            <p>Zeitpunkt: {{ messwert.zeitpunkt }}</p>
+            <p>Schenkel: {{ messwert.sondenPosition!.schenkel }}</p>
+            <p>Postion: {{ messwert.sondenPosition!.position }}</p>
+            <p></p>
+        }
+    }   
+</div>
