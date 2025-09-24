@@ -26,10 +26,8 @@ export class CoilManagementComponent {
   originalCoil: Coil | null = null;
 
   ngOnInit() {
-    if (this.selectedCoil) {
-        this.originalCoil = { ...this.selectedCoil }; // Erstellt eine Kopie der Originalwerte
-    }
-}
+    this.syncOriginalCoilSnapshot();
+  }
 
   public get selectedCoil(): Coil | null {
     //console.log(this.coilsService.selectedCoilCopy);
@@ -88,7 +86,7 @@ export class CoilManagementComponent {
 
     try {
         await this.coilsService.updateOrCreateElement(this.selectedCoil);
-        this.onCoilSelectionChange(this.selectedCoilId!);
+        await this.onCoilSelectionChange(this.selectedCoilId!);
 
         this.saveMessage = "Änderungen gespeichert!";
         setTimeout(() => {
@@ -96,7 +94,6 @@ export class CoilManagementComponent {
         }, 3000);
 
         this.saveError = false;
-        this.originalCoil = { ...this.selectedCoil };
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
         this.saveMessage = "Fehler beim Speichern!";
@@ -116,6 +113,8 @@ export class CoilManagementComponent {
     const coilIdNumber: number = Number(coilId);
 
     await this.coilsService.selectElement(coilIdNumber);
+    this.syncOriginalCoilSnapshot();
+    this.saveError = false;
   }
 
   showDeleteModal = false;
@@ -136,6 +135,7 @@ export class CoilManagementComponent {
 
   backToListing(): void {
     this.coilsService.selectedElementCopy = null;
+    this.originalCoil = null;
   }
 
   showCoiltypeDropdown: boolean = false;
@@ -161,5 +161,24 @@ export class CoilManagementComponent {
     const coiltype = this.coiltypesService.elements.find(type => type.id === this.selectedCoil?.coiltypeId);
     return coiltype ? coiltype.name : 'Spulentyp auswählen';
   }
-}
 
+  private syncOriginalCoilSnapshot(): void {
+    const selected = this.selectedCoil;
+
+    if (!selected) {
+      this.originalCoil = null;
+      return;
+    }
+
+    if (this.coilsService.selectedElementIsNew || selected.id == null || selected.id === 0) {
+      this.originalCoil = { ...selected };
+      return;
+    }
+
+    try {
+      this.originalCoil = this.coilsService.getCopyElement(selected.id);
+    } catch (error) {
+      this.originalCoil = { ...selected };
+    }
+  }
+}

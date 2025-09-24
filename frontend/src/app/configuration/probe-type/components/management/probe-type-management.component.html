@@ -34,23 +34,6 @@
       </div>
     </div>
 
-    <!-- Button-Bereich -->
-    <div class="d-flex justify-content-between mt-4">
-      @if (!readOnly) {
-        <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
-      } @else {
-        <button [disabled]="true" class="btn btn-secondary w-100 me-2" title="Im Monteur-Modus nicht verfügbar">Speichern</button>
-      }
-      <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-      @if (!measurementProbeTypesService.selectedElementIsNew) {
-        @if (!readOnly) {
-          <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
-        } @else {
-          <button [disabled]="true" class="btn btn-secondary w-100" title="Im Monteur-Modus nicht verfügbar">Löschen</button>
-        }
-      }
-    </div>
-
     <!-- Save Message -->
     @if (saveMessage) {
       <div class="text-center mt-3 text-success fw-bold">{{ saveMessage }}</div>

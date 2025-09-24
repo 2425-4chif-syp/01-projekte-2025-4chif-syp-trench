@@ -76,7 +76,7 @@
 
             <section class="form-section">
               <div class="form-field">
-                <label for="name" class="form-label">Name *</label>
+                <label for="name" class="form-label">Name</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('name')">
                   <input
                     type="text"
@@ -94,13 +94,13 @@
               </div>
 
               <div class="form-field">
-                <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor *</label>
+                <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')">
                   <input
                     type="number"
                     class="form-control"
                     id="kalibrierungsfaktor"
-                    placeholder="Kalibrierungsfaktor"
+                    placeholder="Kalibrierungsfaktor in %"
                     [(ngModel)]="selectedProbe!.kalibrierungsfaktor"
                     name="kalibrierungsfaktor"
                     min="0"
