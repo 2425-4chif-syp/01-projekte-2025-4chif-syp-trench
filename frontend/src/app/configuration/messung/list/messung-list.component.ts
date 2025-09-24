@@ -46,7 +46,7 @@ export class MessungListComponent {
 
   }
 
-  openMessung(coil:Messung) {
+  openMessung(messung:Messung) {
     
   }
 }

@@ -38,7 +38,7 @@ export class CoilListComponent {
     'bemessungsfrequenz': 'Bemessungsfrequenz'
   }
   public readonly elementValueToStringMethods: { [key: string]: (element:Coil) => string } = {
-    'coiltype': (element:Coil) => element.coiltype?.name ?? `Unnamed Coil (ID ${element.coiltypeId})`
+    'coiltype': (element:Coil) => element.coiltype?.name ?? `Unbekannte Spule (ID ${element.coiltypeId})`
   }
 
   constructor(public coilsService:CoilsService, public measurementSettingsService:MeasurementSettingsService, private router:Router) {

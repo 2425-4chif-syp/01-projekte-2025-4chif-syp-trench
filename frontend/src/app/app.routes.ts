@@ -16,6 +16,7 @@ import { DisplacementVisualizationTestComponent } from './visualization/displace
 import { ProbeTypeParentComponent } from './configuration/probe-type/components/probe-type-parent.component';
 import { ProbeParentComponent } from './configuration/probe/components/probe-parent.component';
 import { MessungParentComponent } from './configuration/messung/messung-parent.component';
+import { MessungDetailComponent } from './configuration/messung/detail/messung-detail.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -31,5 +32,6 @@ export const routes: Routes = [
     {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history-homescreen', component: MeasurementManagementParentComponent, canActivate: [AuthGuard]},
-    {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]}
+    {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-detail', component: MessungDetailComponent, canActivate: [AuthGuard]}
 ];
