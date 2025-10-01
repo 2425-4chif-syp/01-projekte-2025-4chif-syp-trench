@@ -1,5 +1,7 @@
 using BCrypt.Net;
 
+namespace TrenchAPI.Utils;
+
 public class PasswordHasher
 {
     public static string HashPassword(string password)

@@ -10,7 +10,7 @@ namespace TrenchAPI.Core.Entities
         public int MesseinstellungID { get; set; }
 
         [ForeignKey(nameof(MesseinstellungID))]
-        public virtual Messeinstellung Messeinstellung { get; set; }
+        public virtual Messeinstellung? Messeinstellung { get; set; }
 
         [Column(TypeName = "timestamp with time zone")]
         public DateTime Anfangszeitpunkt { get; set; }

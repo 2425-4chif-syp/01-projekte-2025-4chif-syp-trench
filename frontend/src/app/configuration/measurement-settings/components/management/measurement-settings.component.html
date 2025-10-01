@@ -40,22 +40,22 @@
                 {{ selectedCoil?.auftragsnummer?.trim() || 'Keine Spule ausgewählt' }}
               </h4>
               <p class="selection-card__subtitle" *ngIf="selectedCoil">
-                <span *ngIf="selectedCoil?.coiltype?.name">Typ {{ selectedCoil?.coiltype?.name }}</span>
-                <span *ngIf="selectedCoil?.coiltype?.name && selectedCoil?.id">·</span>
-                <span *ngIf="selectedCoil?.id">ID {{ selectedCoil?.id }}</span>
+                <span *ngIf="selectedCoil.coiltype?.name">Typ {{ selectedCoil.coiltype?.name }}</span>
+                <span *ngIf="selectedCoil.coiltype?.name && selectedCoil.id">·</span>
+                <span *ngIf="selectedCoil.id">ID {{ selectedCoil.id }}</span>
               </p>
               <p class="selection-card__empty" *ngIf="!selectedCoil">
                 Wählen Sie eine Spule für diese Messeinstellung.
               </p>
               <div class="selection-card__chips" *ngIf="selectedCoil">
-                <span class="selection-chip" *ngIf="selectedCoil?.coiltype?.schenkel != null">
-                  Schenkel: {{ selectedCoil?.coiltype?.schenkel }}
+                <span class="selection-chip" *ngIf="selectedCoil.coiltype?.schenkel != null">
+                  Schenkel: {{ selectedCoil.coiltype?.schenkel }}
                 </span>
-                <span class="selection-chip" *ngIf="selectedCoil?.coiltype?.bandbreite != null">
-                  Bandbreite: {{ selectedCoil?.coiltype?.bandbreite | number: '1.0-1' }} mm
+                <span class="selection-chip" *ngIf="selectedCoil.coiltype?.bandbreite != null">
+                  Bandbreite: {{ selectedCoil.coiltype?.bandbreite | number: '1.0-1' }} mm
                 </span>
-                <span class="selection-chip" *ngIf="selectedCoil?.coiltype?.durchmesser != null">
-                  Ø {{ selectedCoil?.coiltype?.durchmesser | number: '1.0-1' }} mm
+                <span class="selection-chip" *ngIf="selectedCoil.coiltype?.durchmesser != null">
+                  Ø {{ selectedCoil.coiltype?.durchmesser | number: '1.0-1' }} mm
                 </span>
               </div>
               <p class="selection-card__note" *ngIf="selectedCoil?.notiz?.trim()">
@@ -77,20 +77,20 @@
                 {{ selectedProbeType?.name?.trim() || 'Kein Messsondentyp ausgewählt' }}
               </h4>
               <p class="selection-card__subtitle" *ngIf="selectedProbeType">
-                ID {{ selectedProbeType?.id }}
+                ID {{ selectedProbeType.id }}
               </p>
               <p class="selection-card__empty" *ngIf="!selectedProbeType">
                 Wählen Sie einen Messsondentyp, um die Sonde zuzuordnen.
               </p>
               <div class="selection-card__chips" *ngIf="selectedProbeType">
-                <span class="selection-chip" *ngIf="selectedProbeType?.breite != null">
-                  Breite: {{ selectedProbeType?.breite | number: '1.0-1' }} mm
+                <span class="selection-chip" *ngIf="selectedProbeType.breite != null">
+                  Breite: {{ selectedProbeType.breite | number: '1.0-1' }} mm
                 </span>
-                <span class="selection-chip" *ngIf="selectedProbeType?.hoehe != null">
-                  Höhe: {{ selectedProbeType?.hoehe | number: '1.0-1' }} mm
+                <span class="selection-chip" *ngIf="selectedProbeType.hoehe != null">
+                  Höhe: {{ selectedProbeType.hoehe | number: '1.0-1' }} mm
                 </span>
-                <span class="selection-chip" *ngIf="selectedProbeType?.windungszahl != null">
-                  Windungen: {{ selectedProbeType?.windungszahl }}
+                <span class="selection-chip" *ngIf="selectedProbeType.windungszahl != null">
+                  Windungen: {{ selectedProbeType.windungszahl }}
                 </span>
               </div>
               <p class="selection-card__note" *ngIf="selectedProbeType?.notiz?.trim()">

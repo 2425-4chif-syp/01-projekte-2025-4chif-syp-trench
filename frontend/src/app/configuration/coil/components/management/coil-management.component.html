@@ -43,27 +43,27 @@
                   <div class="coiltype-summary__metrics">
                     <div class="metric-pill metric-pill">
                       <span class="metric-pill__label text-center">ID</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.id }}</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.id }}</span>
                     </div>
                     <div class="metric-pill metric-pill">
                       <span class="metric-pill__label text-center">Schenkel</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.schenkel }}</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.schenkel }}</span>
                     </div>
                     <div class="metric-pill">
                       <span class="metric-pill__label text-center">Bandbreite</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.bandbreite | number: '1.0-1' }} mm</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.bandbreite | number: '1.0-1' }} mm</span>
                     </div>
                     <div class="metric-pill">
                       <span class="metric-pill__label text-center">Schichthöhe</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.schichthoehe | number: '1.0-1' }} mm</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.schichthoehe | number: '1.0-1' }} mm</span>
                     </div>
                     <div class="metric-pill">
                       <span class="metric-pill__label text-center">Durchmesser</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.durchmesser | number: '1.0-1' }} mm</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.durchmesser | number: '1.0-1' }} mm</span>
                     </div>
                     <div class="metric-pill">
                       <span class="metric-pill__label text-center">Toleranz</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype?.toleranzbereich | number: '1.0-1' }} kg</span>
+                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.toleranzbereich | number: '1.0-1' }} kg</span>
                     </div>
                   </div>
                 </ng-container>
@@ -86,7 +86,7 @@
             <section class="form-section">
               <div class="form-field">
                 <label for="auftragsNr" class="form-label">Auftrags-Nummer</label>
-                <div class="input-shell" [class.invalid]="saveError && !selectedCoil?.auftragsnummer">
+                <div class="input-shell" [class.invalid]="saveError && !selectedCoil.auftragsnummer">
                   <input
                     type="text"
                     class="form-control"

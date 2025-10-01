@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrenchAPI", "TrenchAPI\Tren
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleMQTT", "ConsoleMQTT\ConsoleMQTT.csproj", "{AA6FADD5-0138-4BA7-A4FE-8B050CC45EA1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleFillDb", "TrenchAPI\ConsoleFillDb\ConsoleFillDb.csproj", "{E1234567-1234-1234-1234-123456789ABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,11 +23,15 @@ Global
 		{AA6FADD5-0138-4BA7-A4FE-8B050CC45EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA6FADD5-0138-4BA7-A4FE-8B050CC45EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA6FADD5-0138-4BA7-A4FE-8B050CC45EA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1234567-1234-1234-1234-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1234567-1234-1234-1234-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1234567-1234-1234-1234-123456789ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1234567-1234-1234-1234-123456789ABC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3BF43561-BC11-41EE-B457-B9A6A30EC823}
+		SolutionGuid = {1AF5BEB1-B1FF-4542-9DB0-A8F73A5D636E}
 	EndGlobalSection
 EndGlobal

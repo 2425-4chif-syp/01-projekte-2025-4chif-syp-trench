@@ -54,7 +54,7 @@
           font-size="14"
           text-anchor="middle"
         >
-          {{ selectedProbeType?.breite ?? 0 }} mm
+          {{ selectedProbeType.breite ?? 0 }} mm
         </text>
 
         <line
@@ -80,7 +80,7 @@
           text-anchor="middle"
           [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'"
         >
-          {{ selectedProbeType?.hoehe ?? 0 }} mm
+          {{ selectedProbeType.hoehe ?? 0 }} mm
         </text>
       </svg>
     </div>

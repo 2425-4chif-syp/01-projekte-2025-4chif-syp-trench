@@ -9,13 +9,13 @@ namespace TrenchAPI.Core.Entities
         public int SpuleID { get; set; }
 
         [ForeignKey(nameof(SpuleID))]
-        public virtual Spule Spule { get; set; }
+        public virtual Spule? Spule { get; set; }
 
         [Required]
         public int SondenTypID { get; set; }
 
         [ForeignKey(nameof(SondenTypID))]
-        public virtual SondenTyp SondenTyp { get; set; }
+        public virtual SondenTyp? SondenTyp { get; set; }
 
         [Column(TypeName = "varchar")]
         public string Name { get; set; } = "";

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TrenchAPI.Utils;
 
 [ApiController]
 [Route("api/auth")]

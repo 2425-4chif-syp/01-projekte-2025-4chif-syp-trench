@@ -124,7 +124,7 @@ namespace TrenchAPI.Controllers
 
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
                 }

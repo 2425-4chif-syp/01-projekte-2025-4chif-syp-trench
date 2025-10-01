@@ -9,11 +9,11 @@ namespace TrenchAPI.Core.Entities
         [Required]
         public int MessungID { get; set; }
         [ForeignKey(nameof(MessungID))]
-        public virtual Messung Messung { get; set; }
+        public virtual Messung? Messung { get; set; }
         [Required]
         public int SondenPositionID { get; set; }
         [ForeignKey(nameof(SondenPositionID))]
-        public virtual SondenPosition SondenPosition { get; set; }
+        public virtual SondenPosition? SondenPosition { get; set; }
         [Column(TypeName = "decimal")]
         public decimal Wert { get; set; }
         [Column(TypeName = "timestamp with time zone")]

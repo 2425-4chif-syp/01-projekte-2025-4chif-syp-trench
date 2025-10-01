@@ -9,7 +9,7 @@ namespace TrenchAPI.Core.Entities
         public int SondenTypID { get; set; }
 
         [ForeignKey(nameof(SondenTypID))]
-        public virtual SondenTyp SondenTyp { get; set; }
+        public virtual SondenTyp? SondenTyp { get; set; }
 
         [Column(TypeName = "varchar")]
         public string Name { get; set; } = "";

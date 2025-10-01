@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+/*using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TrenchAPI.Core.Entities;
 
@@ -24,11 +23,9 @@ namespace TrenchAPI.Persistence
         public DbSet<Messeinstellung> Messeinstellung { get; set; }
         public DbSet<Messung> Messung { get; set; }
         public DbSet<Messwert> Messwert { get; set; }
-
         public DbSet<Sonde> Sonde { get; set; }
         public DbSet<SondenPosition> SondenPosition { get; set; }
         public DbSet<SondenTyp> SondenTyp { get; set; }
-
         public DbSet<Spule> Spule { get; set; }
         public DbSet<SpuleTyp> SpuleTyp { get; set; }
 
@@ -52,60 +49,51 @@ namespace TrenchAPI.Persistence
         {
             base.OnModelCreating(modelBuilder);
             
-            // Configure foreign key relationships properly
+            // Configure relationships and any special mappings here
             modelBuilder.Entity<Messeinstellung>()
                 .HasOne(m => m.Spule)
                 .WithMany()
-                .HasForeignKey(m => m.SpuleID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(m => m.SpuleID);
 
             modelBuilder.Entity<Messeinstellung>()
                 .HasOne(m => m.SondenTyp)
                 .WithMany()
-                .HasForeignKey(m => m.SondenTypID)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Spule>()
-                .HasOne(s => s.SpuleTyp)
-                .WithMany()
-                .HasForeignKey(s => s.SpuleTypID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(m => m.SondenTypID);
 
             modelBuilder.Entity<Messung>()
                 .HasOne(m => m.Messeinstellung)
                 .WithMany()
-                .HasForeignKey(m => m.MesseinstellungID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(m => m.MesseinstellungID);
 
             modelBuilder.Entity<Messwert>()
                 .HasOne(m => m.Messung)
                 .WithMany()
-                .HasForeignKey(m => m.MessungID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(m => m.MessungID);
 
             modelBuilder.Entity<Messwert>()
                 .HasOne(m => m.SondenPosition)
                 .WithMany()
-                .HasForeignKey(m => m.SondenPositionID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(m => m.SondenPositionID);
 
             modelBuilder.Entity<Sonde>()
                 .HasOne(s => s.SondenTyp)
                 .WithMany()
-                .HasForeignKey(s => s.SondenTypID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(s => s.SondenTypID);
 
             modelBuilder.Entity<SondenPosition>()
                 .HasOne(sp => sp.Messeinstellung)
                 .WithMany()
-                .HasForeignKey(sp => sp.MesseinstellungID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(sp => sp.MesseinstellungID);
 
             modelBuilder.Entity<SondenPosition>()
                 .HasOne(sp => sp.Sonde)
                 .WithMany()
-                .HasForeignKey(sp => sp.SondeID)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(sp => sp.SondeID);
+
+            modelBuilder.Entity<Spule>()
+                .HasOne(s => s.SpuleTyp)
+                .WithMany()
+                .HasForeignKey(s => s.SpuleTypID);
         }
     }
-}
+}*/
