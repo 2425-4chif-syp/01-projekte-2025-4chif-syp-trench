@@ -55,6 +55,20 @@ services:
     networks:
       - internalnet
 
+  filldb:
+    container_name: filldb_container
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.filldb
+    environment:
+      - ConnectionStrings__DevConnection=Host=postgres;Port=5432;Database=postgres;Username=postgres;Password=TRENCH123;
+    depends_on:
+      - postgres
+    networks:
+      - internalnet
+    profiles:
+      - tools
+
 volumes:
   postgres_data:
 

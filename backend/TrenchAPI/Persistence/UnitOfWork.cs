@@ -92,8 +92,20 @@ namespace TrenchAPI.Persistence
 
         public async Task FillDbAsync()
         {
-            await this.DeleteDatabaseAsync();
-            await this.MigrateDatabaseAsync();
+            // Instead of deleting the database, drop all tables and recreate them
+            Console.WriteLine("Dropping all tables...");
+            await _dbContext.Database.ExecuteSqlRawAsync(@"
+                DO $$ DECLARE
+                    r RECORD;
+                BEGIN
+                    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+                    END LOOP;
+                END $$;
+            ");
+
+            Console.WriteLine("Creating tables...");
+            await this.CreateDatabaseAsync(); // Use EnsureCreated instead of Migrate
 
             // Import data from CSV files in the correct order (considering dependencies)
             await ImportSpuleTypenAsync();
