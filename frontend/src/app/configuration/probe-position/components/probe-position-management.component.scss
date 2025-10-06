@@ -17,5 +17,15 @@
     }
   }
 
-  
-  
+.icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: -0.125em; 
+  pointer-events: none;    
+}  
+
+.btn-primary .icon,
+.btn-danger .icon {
+  filter: invert(1); 
+}

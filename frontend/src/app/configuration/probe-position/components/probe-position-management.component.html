@@ -32,56 +32,58 @@
 -->
 
 <div class="container">
-   <div class="row mt-4">
-       @for (group of this.probePositionService.groupedProbePositions; track $index) {
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    Joch {{ $index + 1 }}
-                </div>
-                <div class="card-body d-flex flex-column p-0" style="height: 300px;">
-                    <div class="table-responsive flex-grow-1 overflow-auto">
-                        <table class="table table-hover mb-0 text-center">
-                            <thead>
-                                <tr>
-                                    <th>Position</th>
-                                    <th>Schenkel</th>
-                                    <th>Sonde</th>
-                                    <th>Aktion</th>
-                                    <th>Löschen</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for (probePosition of this.probePositionService.groupedProbePositions[$index]; track $index) {
-                                    <tr>
-                                        <td>{{probePosition.position}}</td>
-                                        <td>{{probePosition.schenkel}}</td>
-                                        <td>{{ probePosition.measurementProbe?.name || 'Keine Sonde zugewiesen' }}</td>
-                                        <td>
-                                          <button class="btn btn-primary btn-sm" (click)="openProbeSelector(probePosition)">
-                                            @if(probePosition.measurementProbe == null) {
-                                              <span>Sonde auswählen</span>
-                                            } 
-                                            @else {
-                                              <span>Sonde ändern</span>
-                                            }
-                                          </button>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-outline-danger btn-sm" [disabled]="probePosition.measurementProbe == null" (click)="deleteProbePosition(probePosition)">Sonde entfernen</button>
-                                        </td>
-                                        
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-center p-3 mt-auto">
-                    </div>  
-                </div>
-            </div>
+  <div class="row mt-4">
+    @for (group of this.probePositionService.groupedProbePositions; track $index) {
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-header">
+          Joch {{ $index + 1 }}
         </div>
-        }
+        <div class="card-body d-flex flex-column p-0" style="height: 300px;">
+          <div class="table-responsive flex-grow-1 overflow-auto">
+            <table class="table table-hover mb-0 text-center">
+              <thead>
+                <tr>
+                  <th>Position</th>
+                  <th>Sonde</th>
+                  <th>Aktionen</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (probePosition of this.probePositionService.groupedProbePositions[$index]; track $index) {
+                <tr>
+                  <td>{{probePosition.position}}</td>
+                  <td>{{ probePosition.measurementProbe?.name || 'Keine Sonde zugewiesen' }}</td>
+                  <td>
+                    <div>
+                      <button class="btn btn-primary btn-sm" (click)="openProbeSelector(probePosition)"
+                        [attr.aria-label]="probePosition.measurementProbe ? 'Sonde bearbeiten' : 'Sonde hinzufügen'"
+                        title="{{ probePosition.measurementProbe ? 'Bearbeiten' : 'Hinzufügen' }}">
+                        @if (probePosition.measurementProbe == null) {
+                        <img src="assets/plus.svg" alt="" class="icon" />
+                        } @else {
+                        <img src="assets/pencil.svg" alt="" class="icon" />
+                        }
+                      </button>
+
+                      <button class="btn btn-danger btn-sm ms-1" [disabled]="probePosition.measurementProbe == null"
+                        (click)="deleteProbePosition(probePosition)" aria-label="Sonde entfernen" title="Löschen">
+                        <img src="assets/trash.svg" alt="" class="icon" />
+                      </button>
+
+                    </div>
+
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <div class="text-center p-3 mt-auto">
+          </div>
+        </div>
+      </div>
     </div>
+    }
+  </div>
 </div>
-  
