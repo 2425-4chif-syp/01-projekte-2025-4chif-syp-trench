@@ -71,6 +71,11 @@ obj/
 *.db-shm
 *.db-wal
 
+# Data folders
+data/
+**/data/
+backend/TrenchAPI/ConsoleFillDb/data/
+
 # Processed files
 *.vsidx
 backend/ConsoleMQTT/Properties/launchSettings.json
