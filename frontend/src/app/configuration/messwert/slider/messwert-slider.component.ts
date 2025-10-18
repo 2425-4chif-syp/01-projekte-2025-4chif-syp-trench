@@ -63,9 +63,9 @@ export class MesswertSliderComponent implements OnInit, OnChanges {
 
   getCurrentViewLabel(): string {
     if (this.currentStep === 0) {
-      return 'Latest Data (Current)';
+      return 'Neueste Daten (MOMENTAN)';
     } else {
-      return `${this.currentStep} Step${this.currentStep > 1 ? 's' : ''} Back in Time`;
+      return `${this.currentStep} Schritt${this.currentStep > 1 ? 'e' : ''} zurück im Verlauf`;
     }
   }
 
