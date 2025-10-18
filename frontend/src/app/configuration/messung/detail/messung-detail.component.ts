@@ -17,7 +17,7 @@ export class MessungDetailComponent {
     public messwertService: MesswertBackendService) {}
 
   curMessung: Messung | null = null;
-  recentMesswerte = signal<Messwert[]>([]);
+  messwerte = signal<Messwert[]>([]);
 
   async ngOnInit(): Promise<void> {
     this.curMessung = this.messungService.clickedMessung;
@@ -32,6 +32,6 @@ export class MessungDetailComponent {
         filteredMesswerte.push(mw);
       }
     });
-    this.recentMesswerte.set(filteredMesswerte);
+    this.messwerte.set(filteredMesswerte);
   }
 }
