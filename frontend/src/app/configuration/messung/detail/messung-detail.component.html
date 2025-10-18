@@ -1,3 +1,4 @@
+<!--
 <div class="text-center">
     <h2>Messung #{{ curMessung!.id }}</h2>
 
@@ -14,3 +15,15 @@
         }
     }   
 </div>
+-->
+
+<app-messwert-slider
+    [messwerte]="allMesswerte()"
+    (dataChange)="onDataChange($event)">
+</app-messwert-slider>
+
+@for (messwert of currentMesswerte(); track $index) {
+    <p>Schenkel / Position: {{ messwert.sondenPosition?.schenkel }} / {{ messwert.sondenPosition?.position }}</p>
+    <p>Wert: {{ messwert.wert }}</p>
+    <p>Zeit: {{ messwert.zeitpunkt }}</p>
+}
