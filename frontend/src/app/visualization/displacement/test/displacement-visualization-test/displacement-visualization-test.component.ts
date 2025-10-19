@@ -66,7 +66,7 @@ export class DisplacementVisualizationTestComponent {
     coiltypeId: 0,
     einheit: 123457890,
     auftragsnummer: 'Instanz',
-    auftragsPosNr: 0,
+    auftragsPosNr: '',
     bemessungsspannung: 900,
     bemessungsfrequenz: 50,
     notiz: ""
