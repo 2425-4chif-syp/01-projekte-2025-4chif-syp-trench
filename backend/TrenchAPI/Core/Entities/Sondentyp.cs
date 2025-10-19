@@ -13,7 +13,7 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "decimal")]
         public decimal Hoehe { get; set; }
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int Windungszahl { get; set; }
 
         [Column(TypeName = "varchar")]

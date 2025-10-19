@@ -17,10 +17,10 @@ namespace TrenchAPI.Core.Entities
         [ForeignKey(nameof(SondeID))]
         public virtual Sonde? Sonde { get; set; }
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int Schenkel { get; set; }
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int Position { get; set; }
     }
 }
