@@ -61,4 +61,13 @@ export class CoiltypeListComponent {
     this.hoveredCoiltype = event.element;
     this.mousePosition = event.mousePosition;
   }
+
+  public handleBack(): void {
+    if (this.coiltypesService.isCoilSelector) {
+      this.coiltypesService.isCoilSelector = false;
+      // Return to the originating page (measurement settings or coil management)
+      // Here, coil type selection is only used from coil management, so navigate back there
+      this.router.navigate(['/coil-management']);
+    }
+  }
 }

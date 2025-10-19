@@ -62,4 +62,11 @@ export class CoilListComponent {
 
     this.coilsService.selectElement(coilId);
   }
+
+  handleBack(): void {
+    if (this.coilsService.isCoilSelector) {
+      this.coilsService.isCoilSelector = false;
+      this.router.navigate(['/measurement-settings-list']);
+    }
+  }
 }

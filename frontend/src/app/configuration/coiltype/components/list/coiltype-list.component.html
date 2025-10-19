@@ -9,7 +9,8 @@
         [newElementButtonLabel]="'Neuer Spulentyp'"
         [disableButtonInMonteurMode]="true"
         (onElementClick)="openCoiltype($event)"
-        (hoveringElement)="updateHoveredCoiltype($event)" />
+    (hoveringElement)="updateHoveredCoiltype($event)"
+    (cancelSelection)="handleBack()" />
     </div>
 </div>
 
