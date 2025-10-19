@@ -98,7 +98,7 @@ namespace TrenchAPI.Controllers
 
             var messeinstellung = new Messeinstellung
             {
-                ID = messeinstellungDto.ID,
+                // ID wird automatisch von der Datenbank generiert
                 SpuleID = messeinstellungDto.SpuleID,
                 SondenTypID = messeinstellungDto.SondenTypID,
                 SondenProSchenkel = messeinstellungDto.SondenProSchenkel,

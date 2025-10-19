@@ -91,7 +91,7 @@ namespace TrenchAPI.Controllers
 
             var spule = new Spule
             {
-                ID = spuleDto.ID,
+                // ID wird automatisch von der Datenbank generiert
                 SpuleTypID = spuleDto.SpuleTypID,
                 Bemessungsspannung = spuleDto.Bemessungsspannung,
                 Bemessungsfrequenz = spuleDto.Bemessungsfrequenz,
