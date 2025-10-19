@@ -118,6 +118,28 @@ namespace TrenchAPI.Persistence
             await ImportMesswerteAsync();
 
             await SaveChangesAsync();
+            
+            // Reset sequences to continue from the highest ID
+            await ResetSequencesAsync();
+        }
+        
+        private async Task ResetSequencesAsync()
+        {
+            Console.WriteLine("Resetting sequences...");
+            
+            // Reset all sequences to continue from the highest ID in each table
+            await _dbContext.Database.ExecuteSqlRawAsync(@"
+                SELECT setval(pg_get_serial_sequence('""SpuleTyp""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""SpuleTyp"";
+                SELECT setval(pg_get_serial_sequence('""Spule""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""Spule"";
+                SELECT setval(pg_get_serial_sequence('""SondenTyp""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""SondenTyp"";
+                SELECT setval(pg_get_serial_sequence('""Sonde""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""Sonde"";
+                SELECT setval(pg_get_serial_sequence('""Messeinstellung""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""Messeinstellung"";
+                SELECT setval(pg_get_serial_sequence('""SondenPosition""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""SondenPosition"";
+                SELECT setval(pg_get_serial_sequence('""Messung""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""Messung"";
+                SELECT setval(pg_get_serial_sequence('""Messwert""', 'ID'), COALESCE(MAX(""ID""), 0) + 1, false) FROM ""Messwert"";
+            ");
+            
+            Console.WriteLine("Sequences reset successfully!");
         }
 
         private async Task ImportSpuleTypenAsync()
@@ -150,7 +172,7 @@ namespace TrenchAPI.Persistence
                 ID = Convert.ToInt32(line[0]),
                 SpuleTypID = Convert.ToInt32(line[1]),
                 Auftragsnr = line[2],
-                AuftragsPosNr = line[3],
+                AuftragsPosNr = Convert.ToInt32(line[3]),
                 Bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
                 Bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
                 Einheit = Convert.ToInt32(line[6]),

@@ -20,7 +20,7 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "varchar")]
         public string Name { get; set; } = "";
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int SondenProSchenkel { get; set; }
     }
 }

@@ -159,7 +159,7 @@ namespace TrenchAPI.Controllers
 
             var messwert = new Messwert
             {
-                ID = messwertDto.ID,
+                // ID wird automatisch von der Datenbank generiert
                 MessungID = messwertDto.MessungID,
                 SondenPositionID = messwertDto.SondenPositionID,
                 Wert = messwertDto.Wert,

@@ -171,7 +171,7 @@ namespace TrenchAPI.Controllers
 
             var messung = new Messung
             {
-                ID = messungDto.ID,
+                // ID wird automatisch von der Datenbank generiert
                 MesseinstellungID = messungDto.MesseinstellungID,
                 Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
                 Endzeitpunkt = messungDto.Endzeitpunkt,

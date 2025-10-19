@@ -24,8 +24,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Copy CSV data files
-COPY TrenchAPI/ConsoleFillDb/data ./data
+# Copy CSV data files (they are in the ConsoleFillDb directory)
+COPY TrenchAPI/ConsoleFillDb/*.csv ./
 
 ENTRYPOINT ["dotnet", "TrenchFillDatabase.dll"]
 

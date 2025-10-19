@@ -1,0 +1,33 @@
+<div class="slider-container">
+  <label>Zeitverlauf: {{ getCurrentViewLabel() }}</label>
+  <div class="slider-controls">
+    <button (click)="goForwardInTime()" [disabled]="currentStep === 0" title="View older data">
+      ← Neuer
+    </button>
+    
+    <div class="slider-wrapper">
+      <span class="slider-label">Neuste</span>
+      <input 
+        type="range" 
+        min="0" 
+        [max]="maxSteps" 
+        [value]="getSliderValue()"
+        (input)="onSliderChange($event)"
+        class="slider"
+      >
+      <span class="slider-label">Ältere</span>
+    </div>
+    
+    <button (click)="goBackInTime()" [disabled]="currentStep === maxSteps" title="View newer data">
+      Älter →
+    </button>
+  </div>
+  
+  <div class="step-info">
+    <div>Zeitschritte: 
+      <span *ngIf="currentStep === 0" class="latest">MOMENTAN</span>
+      <span *ngIf="currentStep > 0" class="past">{{ currentStep }} Schritt{{ currentStep > 1 ? 'e' : '' }} zurück</span>
+    </div>
+    <div class="range">Slider: 0 (Neuste) bis {{ maxSteps }}</div>
+  </div>
+</div>

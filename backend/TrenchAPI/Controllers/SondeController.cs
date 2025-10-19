@@ -81,7 +81,7 @@ namespace TrenchAPI.Controllers
 
             var sonde = new Sonde
             {
-                ID = sondeDto.ID,
+                // ID wird automatisch von der Datenbank generiert
                 SondenTypID = sondeDto.SondenTypID,
                 Name = sondeDto.Name,
                 Kalibrierungsfaktor = sondeDto.Kalibrierungsfaktor,

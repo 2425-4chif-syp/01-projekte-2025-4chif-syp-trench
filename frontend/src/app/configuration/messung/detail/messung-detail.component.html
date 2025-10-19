@@ -1,19 +1,30 @@
+<!--
 <div class="text-center">
     <h2>Messung #{{ curMessung!.id }}</h2>
 
-    @if (recentMesswerte().length < 1) {
+    @if (messwerte().length < 1) {
         <p>Keine Messwerte vorhanden!</p>
     }
     @else {
-        @for (messwert of recentMesswerte(); track $index) {
+        @for (messwert of messwerte(); track $index) {
             <p>-------- {{ $index }} --------</p>
-            <p>ID: {{ messwert.id }}</p>
-            <p>MessungID: {{ messwert.messungID }}</p>
+            <p>Schenkel/Position: {{ messwert.sondenPosition!.schenkel }} / {{ messwert.sondenPosition!.position }}</p>
             <p>Wert: {{ messwert.wert }}</p>
             <p>Zeitpunkt: {{ messwert.zeitpunkt }}</p>
-            <p>Schenkel: {{ messwert.sondenPosition!.schenkel }}</p>
-            <p>Postion: {{ messwert.sondenPosition!.position }}</p>
             <p></p>
         }
     }   
 </div>
+-->
+
+<app-messwert-slider
+    [messwerte]="allMesswerte()"
+    (dataChange)="onDataChange($event)">
+</app-messwert-slider>
+
+@for (messwert of currentMesswerte(); track $index) {
+    <p>Schenkel / Position: {{ messwert.sondenPosition?.schenkel }} / {{ messwert.sondenPosition?.position }}</p>
+    <p>Wert: {{ messwert.wert }}</p>
+    <p>Zeit: {{ messwert.zeitpunkt }}</p>
+    <p>-----------</p>
+}

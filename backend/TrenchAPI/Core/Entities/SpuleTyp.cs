@@ -8,7 +8,7 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "text")]
         public string Name { get; set; } = "";
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int Schenkelzahl { get; set; }
 
         [Column(TypeName = "decimal")]
@@ -20,7 +20,7 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "decimal")]
         public decimal Durchmesser { get; set; }
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int Toleranzbereich { get; set; }
 
         [Column(TypeName = "text")]

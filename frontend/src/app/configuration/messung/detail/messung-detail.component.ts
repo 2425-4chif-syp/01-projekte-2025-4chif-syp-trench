@@ -3,11 +3,13 @@ import { MessungService } from '../services/messung.service';
 import { Messung } from '../interfaces/messung';
 import { MesswertBackendService } from '../../messwert/services/messwert-backend.service';
 import { Messwert } from '../../messwert/interfaces/messwert.model';
+import { CommonModule } from '@angular/common';
+import { MesswertSliderComponent } from '../../messwert/slider/messwert-slider.component';
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, MesswertSliderComponent],
   templateUrl: './messung-detail.component.html',
   styleUrl: './messung-detail.component.scss'
 })
@@ -17,7 +19,8 @@ export class MessungDetailComponent {
     public messwertService: MesswertBackendService) {}
 
   curMessung: Messung | null = null;
-  recentMesswerte = signal<Messwert[]>([]);
+  allMesswerte = signal<Messwert[]>([]);
+  currentMesswerte = signal<Messwert[]>([]);
 
   async ngOnInit(): Promise<void> {
     this.curMessung = this.messungService.clickedMessung;
@@ -32,6 +35,10 @@ export class MessungDetailComponent {
         filteredMesswerte.push(mw);
       }
     });
-    this.recentMesswerte.set(filteredMesswerte);
+    this.allMesswerte.set(filteredMesswerte);
+  }
+
+  onDataChange(data: Messwert[]) {
+    this.currentMesswerte.set(data)
   }
 }

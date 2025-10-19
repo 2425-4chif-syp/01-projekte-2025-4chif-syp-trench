@@ -13,8 +13,8 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "varchar")]
         public string Auftragsnr { get; set; } = "";
 
-        [Column(TypeName = "varchar")]
-        public string AuftragsPosNr { get; set; } = "";
+        [Column(TypeName = "integer")]
+        public int AuftragsPosNr { get; set; }
 
         [Column(TypeName = "decimal")]
         public decimal Bemessungsspannung { get; set; }
@@ -22,7 +22,7 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "decimal")]
         public decimal Bemessungsfrequenz { get; set; }
 
-        [Column(TypeName = "int")]
+        [Column(TypeName = "integer")]
         public int Einheit { get; set; }
 
         [Column(TypeName = "varchar")]
