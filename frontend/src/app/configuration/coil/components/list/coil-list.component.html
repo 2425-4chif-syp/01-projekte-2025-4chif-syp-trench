@@ -4,7 +4,9 @@
     </h2>
     <app-generic-list 
     [keysAsColumns]="keysAsColumns"
+    [isSelector]="isCoilSelector"
     [elementValueToStringMethods]="elementValueToStringMethods"
     [newElementButtonLabel]="'Neue Spule'"
-    (onElementClick)="openCoil($event)" />
+    (onElementClick)="openCoil($event)"
+    (cancelSelection)="handleBack()" />
 </div>

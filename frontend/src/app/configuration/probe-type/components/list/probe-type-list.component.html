@@ -4,9 +4,10 @@
     </h2>
     <app-generic-list 
     [keysAsColumns]="keysAsColumns"
-    [isSelector]="isProbeTypeSelector"
+    [isSelector]="isSelector"
     [elementValueToStringMethods]="elementValueToStringMethods"
     [newElementButtonLabel]="'Neuer Messsondentyp'"
     [disableButtonInMonteurMode]="true"
-    (onElementClick)="openProbeType($event)" />
+    (onElementClick)="openProbeType($event)"
+    (cancelSelection)="handleBack()" />
 </div>

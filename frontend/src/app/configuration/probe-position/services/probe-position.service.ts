@@ -111,36 +111,43 @@ export class ProbePositionService implements ListService<ProbePosition> {
   ): Promise<void> {
     console.log('setting:', einstellung);
 
-    if (this.elements.length > 0) {
-      this.loadGroupedProbePositions();
-      return;
+    const current = await this.backend.getPositionsForMeasurementSettings(einstellung.id!);
+
+    const desiredKeys = new Set<string>();
+    for (let schenkel = 1; schenkel <= schenkelzahl; schenkel++) {
+      for (let pos = 1; pos <= sondenProSchenkel; pos++) {
+        desiredKeys.add(`${schenkel}:${pos}`);
+      }
     }
 
-    const toSave: ProbePosition[] = [];
+    const currentMap = new Map<string, ProbePosition>();
+    for (const p of current) {
+      currentMap.set(`${p.schenkel}:${p.position}`, p);
+    }
 
-    for (let schenkel = 1; schenkel <= schenkelzahl; schenkel++) {
-      for (let posNr = 1; posNr <= sondenProSchenkel; posNr++) {
-        toSave.push({
+    const toDelete = current.filter(p => !desiredKeys.has(`${p.schenkel}:${p.position}`));
+    await Promise.all(toDelete.map(del => this.backend.deleteProbePosition(del)));
+
+    const toAdd: ProbePosition[] = [];
+    for (const key of desiredKeys) {
+      if (!currentMap.has(key)) {
+        const [s, pos] = key.split(':').map(x => Number(x));
+        toAdd.push({
           id: null,
           measurementSettingsId: einstellung.id,
           measurementSetting: einstellung,
           measurementProbeId: null,
           measurementProbe: null,
-          schenkel,
-          position: posNr,
+          schenkel: s,
+          position: pos
         });
       }
     }
 
-    const saved = await Promise.all(
-      toSave.map((p) => this.backend.addProbePosition(p))
-    );
-    
-    //this.elements.push(...saved);
+    const added = await Promise.all(toAdd.map(p => this.backend.addProbePosition(p)));
+    added.forEach(p => p.measurementSetting = einstellung);
 
-    saved.forEach((p) => { p.measurementSetting = einstellung; });
-    this.elements = saved;
-
+    this.elements = await this.backend.getPositionsForMeasurementSettings(einstellung.id!);
     this.loadGroupedProbePositions();
   }
 

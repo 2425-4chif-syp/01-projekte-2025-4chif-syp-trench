@@ -129,6 +129,7 @@
                   class="form-select"
                   id="sonden-pro-schenkel"
                   [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
+                  (ngModelChange)="createEmptyProbePositions()"
                   name="sondenProSchenkel"
                   [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')"
                 >
@@ -144,7 +145,7 @@
           </section>
 
           <div class="form-actions">
-            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges() && coilOrProbeChanged()" (click)="saveChanges()">
+            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges() && !coilOrProbeChanged()" (click)="saveChanges()">
               Speichern
             </button>
             <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">

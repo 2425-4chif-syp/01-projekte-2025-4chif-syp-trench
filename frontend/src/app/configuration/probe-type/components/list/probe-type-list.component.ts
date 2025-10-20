@@ -43,6 +43,10 @@ export class ProbeTypeListComponent {
       return this.probesTypesService.isMeasurementSettingsSelector;
     }
 
+    public get isSelector(): boolean {
+      return this.probesTypesService.isMeasurementSettingsSelector || this.probesTypesService.isProbeSelector;
+    }
+
     openProbeType(probeType:ProbeType) {
       const id:number = probeType.id!;
 
@@ -61,5 +65,18 @@ export class ProbeTypeListComponent {
       }
 
       this.probesTypesService.selectElement(id);
+    }
+
+    handleBack(): void {
+      if (this.probesTypesService.isMeasurementSettingsSelector) {
+        this.probesTypesService.isMeasurementSettingsSelector = false;
+        this.router.navigate(['/measurement-settings-list']);
+        return;
+      }
+      if (this.probesTypesService.isProbeSelector) {
+        this.probesTypesService.isProbeSelector = false;
+        this.router.navigate(['/probe-management']);
+        return;
+      }
     }
 }

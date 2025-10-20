@@ -120,6 +120,8 @@ export class MeasurementSettingsComponent implements OnInit {
     const settingIdNumber: number = Number(SettingId);
 
     await this.measurementSettingsService.selectElement(settingIdNumber);
+    // Reload probe positions for the selected setting
+    this.createEmptyProbePositions();
   }
 
   createEmptyProbePositions() {

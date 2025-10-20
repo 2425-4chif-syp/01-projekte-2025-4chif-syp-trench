@@ -60,15 +60,15 @@
                         [attr.aria-label]="probePosition.measurementProbe ? 'Sonde bearbeiten' : 'Sonde hinzufügen'"
                         title="{{ probePosition.measurementProbe ? 'Bearbeiten' : 'Hinzufügen' }}">
                         @if (probePosition.measurementProbe == null) {
-                        <img src="assets/plus.svg" alt="" class="icon" />
+                        <img src="/assets/plus.svg" alt="" class="icon" />
                         } @else {
-                        <img src="assets/pencil.svg" alt="" class="icon" />
+                        <img src="/assets/pencil.svg" alt="" class="icon" />
                         }
                       </button>
 
                       <button class="btn btn-danger btn-sm ms-1" [disabled]="probePosition.measurementProbe == null"
                         (click)="deleteProbePosition(probePosition)" aria-label="Sonde entfernen" title="Löschen">
-                        <img src="assets/trash.svg" alt="" class="icon" />
+                        <img src="/assets/trash.svg" alt="" class="icon" />
                       </button>
 
                     </div>

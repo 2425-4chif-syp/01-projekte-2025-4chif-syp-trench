@@ -6,7 +6,7 @@ export interface Coil {
     coiltypeId: number | null;
     einheit: number | null;
     auftragsnummer: string | null;
-    auftragsPosNr: number | null;
+    auftragsPosNr: string | null;
     bemessungsspannung: number | null;
     bemessungsfrequenz: number | null;
     notiz: string | null;

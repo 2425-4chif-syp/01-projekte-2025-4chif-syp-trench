@@ -53,7 +53,23 @@ export class CoilManagementComponent {
   }
 
   hasChanges(): boolean {
-    if (!this.originalCoil || !this.selectedCoil) return false;
+    if (!this.selectedCoil) return false;
+
+    // For new coils, compare against the default blank element rather than an "original" snapshot
+    if (this.coilsService.selectedElementIsNew || this.selectedCoil.id == null || this.selectedCoil.id === 0) {
+      const s = this.selectedCoil;
+      const nonEmpty = (
+        (s.auftragsnummer?.trim()?.length ?? 0) > 0 ||
+        (s.auftragsPosNr?.trim()?.length ?? 0) > 0 ||
+        (s.einheit ?? 0) > 0 ||
+        (s.bemessungsspannung ?? 0) > 0 ||
+        (s.bemessungsfrequenz ?? 0) > 0 ||
+        (s.coiltypeId ?? null) !== null
+      );
+      return nonEmpty;
+    }
+
+    if (!this.originalCoil) return false;
     return JSON.stringify(this.originalCoil) !== JSON.stringify(this.selectedCoil);
  }
 
@@ -170,8 +186,28 @@ export class CoilManagementComponent {
       return;
     }
 
-    if (this.coilsService.selectedElementIsNew || selected.id == null || selected.id === 0) {
-      this.originalCoil = { ...selected };
+    // Do not overwrite the original snapshot if we're still working on the
+    // same (new) element – this preserves "hasChanges()" when navigating
+    // to selector pages (e.g., Spulentyp wählen) and back.
+    if (this.originalCoil === null) {
+      if (this.coilsService.selectedElementIsNew || selected.id == null || selected.id === 0) {
+        this.originalCoil = { ...selected };
+        return;
+      }
+    } else {
+      // If the selected element changed (different id), update snapshot
+      const currentId = selected.id ?? 0;
+      const originalId = this.originalCoil.id ?? 0;
+      if (currentId !== originalId && currentId !== 0) {
+        try {
+          this.originalCoil = this.coilsService.getCopyElement(currentId);
+          return;
+        } catch (_) {
+          this.originalCoil = { ...selected };
+          return;
+        }
+      }
+      // Otherwise keep existing snapshot to maintain change tracking
       return;
     }
 
