@@ -26,8 +26,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Persistence\Migrations\SpuleTyp\" />
-    <Folder Include="Persistence\Migrations\Spule\" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="..\Persistence\Migrations\SpuleTyp\" />
+    <Folder Include="..\Persistence\Migrations\Spule\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,17 +9,18 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy the solution file
-COPY ["backend.sln", "./"]
+COPY ["TrenchAPI.sln", "./"]
 
 # Copy project files so we can restore them
-COPY ["TrenchAPI/TrenchAPI.csproj", "TrenchAPI/"]
+COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
 COPY ["ConsoleMQTT/ConsoleMQTT.csproj", "ConsoleMQTT/"]
-COPY ["TrenchAPI/ConsoleFillDb/ConsoleFillDb.csproj", "TrenchAPI/ConsoleFillDb/"]
+COPY ["ConsoleFillDb/ConsoleFillDb.csproj", "ConsoleFillDb/"]
+COPY ["Core/Core.csproj", "Core/"]
+COPY ["Persistence/Persistence.csproj", "Persistence/"]
+COPY ["Utils/Utils.csproj", "Utils/"]
 
-# Restore individual projects instead of solution
-RUN dotnet restore "TrenchAPI/TrenchAPI.csproj"
-RUN dotnet restore "ConsoleMQTT/ConsoleMQTT.csproj"
-RUN dotnet restore "TrenchAPI/ConsoleFillDb/ConsoleFillDb.csproj"
+# Restore solution
+RUN dotnet restore "TrenchAPI.sln"
 
 # Copy the rest of the source code
 COPY . .
@@ -35,12 +36,12 @@ RUN find . -name "obj" -type d -exec rm -rf {} + || true
 RUN find . -name "bin" -type d -exec rm -rf {} + || true
 
 # Build the entire solution first to resolve dependencies
-RUN dotnet build backend.sln -c Release
+RUN dotnet build TrenchAPI.sln -c Release
 
 # Now publish each project individually to separate output directories
-RUN dotnet publish "TrenchAPI/TrenchAPI.csproj" -c Release -o /app/publish/api --no-build
+RUN dotnet publish "WebAPI/WebAPI.csproj" -c Release -o /app/publish/api --no-build
 RUN dotnet publish "ConsoleMQTT/ConsoleMQTT.csproj" -c Release -o /app/publish/mqtt --no-build  
-RUN dotnet publish "TrenchAPI/ConsoleFillDb/ConsoleFillDb.csproj" -c Release -o /app/publish/filldb --no-build
+RUN dotnet publish "ConsoleFillDb/ConsoleFillDb.csproj" -c Release -o /app/publish/filldb --no-build
 
 # 3) Final stage: copy published files and run
 FROM base AS final
@@ -51,4 +52,4 @@ COPY --from=build /app/publish/mqtt ./mqtt
 COPY --from=build /app/publish/filldb ./filldb
 
 # Run both apps in one container
-CMD ["sh", "-c", "dotnet ./mqtt/ConsoleMQTT.dll & dotnet ./api/TrenchAPI.dll"]
+CMD ["sh", "-c", "dotnet ./mqtt/ConsoleMQTT.dll & dotnet ./api/WebAPI.dll"]
