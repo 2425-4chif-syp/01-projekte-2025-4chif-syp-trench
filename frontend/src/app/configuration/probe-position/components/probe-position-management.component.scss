@@ -27,8 +27,5 @@
 
 .btn-primary .icon,
 .btn-danger .icon {
-  filter: none;
+  filter: brightness(0) invert(1);
 }
-
-.btn-primary .icon { filter: brightness(0) invert(1); }
-.btn-danger .icon { filter: brightness(0) invert(1); }
