@@ -60,7 +60,7 @@ export class CoilManagementComponent {
       const s = this.selectedCoil;
       const nonEmpty = (
         (s.auftragsnummer?.trim()?.length ?? 0) > 0 ||
-        (s.auftragsPosNr?.toString()?.trim()?.length ?? 0) > 0 ||
+        (s.auftragsPosNr?.trim()?.length ?? 0) > 0 ||
         (s.einheit ?? 0) > 0 ||
         (s.bemessungsspannung ?? 0) > 0 ||
         (s.bemessungsfrequenz ?? 0) > 0 ||
