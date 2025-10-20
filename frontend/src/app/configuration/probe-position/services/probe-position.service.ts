@@ -126,9 +126,7 @@ export class ProbePositionService implements ListService<ProbePosition> {
     }
 
     const toDelete = current.filter(p => !desiredKeys.has(`${p.schenkel}:${p.position}`));
-    for (const del of toDelete) {
-      await this.backend.deleteProbePosition(del);
-    }
+    await Promise.all(toDelete.map(del => this.backend.deleteProbePosition(del)));
 
     const toAdd: ProbePosition[] = [];
     for (const key of desiredKeys) {
