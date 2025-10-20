@@ -1,0 +1,31 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy the project files
+COPY ["ConsoleFillDb/ConsoleFillDb.csproj", "ConsoleFillDb/"]
+COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
+COPY ["Core/Core.csproj", "Core/"]
+COPY ["Persistence/Persistence.csproj", "Persistence/"]
+COPY ["Utils/Utils.csproj", "Utils/"]
+
+# Restore dependencies
+RUN dotnet restore "ConsoleFillDb/ConsoleFillDb.csproj"
+
+# Copy everything else
+COPY . .
+
+# Build and publish
+WORKDIR "/src/ConsoleFillDb"
+RUN dotnet build "ConsoleFillDb.csproj" -c Release -o /app/build
+RUN dotnet publish "ConsoleFillDb.csproj" -c Release -o /app/publish
+
+# Final stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/publish .
+
+# Copy CSV data files
+COPY ConsoleFillDb/data ./data
+
+ENTRYPOINT ["dotnet", "TrenchFillDatabase.dll"]
+
