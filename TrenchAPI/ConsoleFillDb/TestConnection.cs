@@ -8,7 +8,7 @@ namespace ConsoleFillDb
     {
         public static async Task TestDatabaseConnectionAsync()
         {
-            var connectionString = "Host=postgres; Port=5432; Database=postgres; Username=postgres; Password=TRENCH123;";
+            var connectionString = "Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=TRENCH123;";
             
             try
             {
