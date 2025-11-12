@@ -6,6 +6,7 @@ import { CoiltypesService } from '../../services/coiltypes.service';
 import { Coiltype } from '../../interfaces/coiltype';
 import { ModeService } from '../../../../services/mode.service';
 import { Subscription } from 'rxjs';
+import { AlertService } from '../../../../services/alert.service';
 
 type CoiltypeField = keyof Coiltype;
 type NumericField = 'bandbreite' | 'schichthoehe' | 'durchmesser' | 'toleranzbereich';
@@ -29,7 +30,7 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
   @Input() readOnly: boolean = false;
   private modeSubscription?: Subscription;
 
-  constructor(public coiltypesService: CoiltypesService, public modeService:ModeService) {}
+  constructor(public coiltypesService: CoiltypesService, public modeService:ModeService, private alerts: AlertService) {}
   saveMessage: string | null = null;
   originalCoiltype: Coiltype | null = null;
   private formSubmitAttempted = false;
@@ -91,8 +92,7 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
     const formIsValid = this.validateForm();
 
     if (!form.valid || !formIsValid) {
-      this.saveMessage = 'Bitte korrigieren Sie die markierten Eingaben.';
-      setTimeout(() => (this.saveMessage = null), 3000);
+      this.alerts.error('Bitte korrigieren Sie die markierten Eingaben.');
       return;
     }
 
@@ -104,8 +104,7 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
         await this.coiltypesService.selectElement(this.selectedCoiltypeId);
       }
 
-      this.saveMessage = 'Änderungen gespeichert!';
-      setTimeout(() => (this.saveMessage = null), 1500);
+      this.alerts.success('Änderungen gespeichert!');
 
       // Change-Tracking zurücksetzen
       this.originalCoiltype = this.selectedCoiltype ? { ...this.selectedCoiltype } : null;
@@ -116,8 +115,7 @@ export class CoiltypeManagementComponent implements OnInit, OnDestroy {
       this.coiltypeSelect?.nativeElement.blur();
     } catch (error) {
       console.error('Fehler beim Speichern:', error);
-      this.saveMessage = 'Fehler beim Speichern!';
-      
+      this.alerts.error('Fehler beim Speichern!', error);
     }
   }
 
