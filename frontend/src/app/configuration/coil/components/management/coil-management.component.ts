@@ -6,6 +6,7 @@ import { CoilsService } from '../../services/coils.service';
 import { CoiltypesService } from '../../../coiltype/services/coiltypes.service';
 import { Coil } from '../../interfaces/coil';
 import { Coiltype } from '../../../coiltype/interfaces/coiltype';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-coil-management',
@@ -15,7 +16,7 @@ import { Coiltype } from '../../../coiltype/interfaces/coiltype';
   styleUrl: './coil-management.component.scss'
 })
 export class CoilManagementComponent {
-  constructor(public coilsService: CoilsService, private coiltypesService: CoiltypesService, private router:Router) {
+  constructor(public coilsService: CoilsService, private coiltypesService: CoiltypesService, private router:Router, private alerts: AlertService) {
     this.coiltypesService.isCoilSelector = false;
     this.coiltypesService.reloadElements();
   }
@@ -96,7 +97,7 @@ export class CoilManagementComponent {
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-        this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+        this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
         return;
     }
 
@@ -104,15 +105,12 @@ export class CoilManagementComponent {
         await this.coilsService.updateOrCreateElement(this.selectedCoil);
         await this.onCoilSelectionChange(this.selectedCoilId!);
 
-        this.saveMessage = "Änderungen gespeichert!";
-        setTimeout(() => {
-            this.saveMessage = null;
-        }, 3000);
+        this.alerts.success('Änderungen gespeichert!');
 
         this.saveError = false;
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
-        this.saveMessage = "Fehler beim Speichern!";
+        this.alerts.error('Fehler beim Speichern!', error);
     }
 }
 
