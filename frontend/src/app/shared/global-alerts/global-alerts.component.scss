@@ -1,0 +1,86 @@
+.global-alerts {
+  position: fixed;
+  top: 0; /* dynamic from component */
+  right: 16px;
+  z-index: 2000; /* above content, below modals */
+  pointer-events: none; /* allow clicks through gaps */
+}
+
+.global-alerts__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* right align items */
+  gap: 8px;
+  max-width: 92vw;
+}
+
+.global-alerts__item {
+  pointer-events: auto; /* clickable close button */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 280px;
+  max-width: 420px;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* reserve space for the progress bar when present */
+  padding-bottom: 6px;
+  max-height: var(--global-alert-max-h, 160px);
+  overflow: hidden;
+}
+
+.global-alerts__item.is-expanded .alert-content {
+  max-height: none;
+}
+
+/* Fading overlay to indicate more content when collapsed */
+/* Remove gradient overlay, use explicit indicator instead */
+
+.alert-message {
+  display: flex;
+  gap: 6px;
+}
+
+.alert-details {
+  margin-top: 4px;
+}
+
+/* Progress bar */
+@keyframes progressShrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+.alert-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 0 0 2px 2px;
+  opacity: 0.9;
+  animation-name: progressShrink;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.alert-more-indicator {
+  position: absolute;
+  right: 8px;
+  bottom: 10px; /* sits above progress bar */
+  font-size: 12px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+  pointer-events: none; /* click handled by container */
+}
+
+/* Color mapping to Bootstrap alert variants */
+.alert-success .alert-progress { background-color: #198754; }
+.alert-danger  .alert-progress { background-color: #dc3545; }
+.alert-warning .alert-progress { background-color: #ffc107; }
+.alert-info    .alert-progress { background-color: #0dcaf0; }
