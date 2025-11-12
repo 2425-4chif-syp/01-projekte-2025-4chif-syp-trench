@@ -14,6 +14,7 @@ import { ProbeTypesBackendService } from '../probe-type/services/probe-types-bac
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
 import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 import { MessungService } from '../messung/services/messung.service';
+import { AlertService } from '../../services/alert.service';
 
 registerLocaleData(localeDe);
 
@@ -51,7 +52,8 @@ export class StartMeasurementComponent implements OnDestroy {
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
     private probeTypesBackendService: ProbeTypesBackendService,
-    public messungService: MessungService
+    public messungService: MessungService,
+    private alerts: AlertService
   ) {
     this.loadMeasurementSettings();
     // Überprüfe, ob bereits eine Messung läuft
@@ -178,6 +180,7 @@ export class StartMeasurementComponent implements OnDestroy {
       });
     } catch (error) {
       console.error('Fehler beim Verbinden:', error);
+      this.alerts.error('Fehler beim Verbinden', error);
       this.isConnected = false;
       this.showIdError = true;
     }
@@ -263,6 +266,7 @@ export class StartMeasurementComponent implements OnDestroy {
       this.showIdError = false;
     } catch (error) {
       console.error('Fehler beim Verbinden:', error);
+      this.alerts.error('Fehler beim Verbinden', error);
       this.isConnected = false;
       this.showIdError = true;
     }
@@ -303,10 +307,12 @@ export class StartMeasurementComponent implements OnDestroy {
           console.log('Speichere Messung:', measurementData);
           await this.measurementsBackendService.saveMeasurement(measurementData);
           console.log('Messung erfolgreich gespeichert');
+          this.alerts.success('Messung erfolgreich gespeichert');
         }
       } catch (error) {
         console.error('Fehler beim Speichern der Messung:', error);
         this.error = 'Fehler beim Speichern der Messung';
+        this.alerts.error('Fehler beim Speichern der Messung', error);
       } finally {
         this.isSaving = false;
         this.yokes.set([]); 

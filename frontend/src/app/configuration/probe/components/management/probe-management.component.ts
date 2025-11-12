@@ -6,6 +6,7 @@ import { ProbesService } from '../../services/probes.service';
 import { Probe } from '../../interfaces/probe';
 import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-probe-management',
@@ -15,7 +16,7 @@ import { ProbeType } from '../../../probe-type/interfaces/probe-type';
   styleUrl: './probe-management.component.scss'
 })
 export class ProbeManagementComponent {
-  constructor(public probesService: ProbesService, private probeTypesService: ProbeTypesService, private router:Router) {
+  constructor(public probesService: ProbesService, private probeTypesService: ProbeTypesService, private router:Router, private alerts: AlertService) {
     this.probeTypesService.isMeasurementSettingsSelector = false;
     this.probeTypesService.reloadElements();
   }
@@ -91,7 +92,7 @@ export class ProbeManagementComponent {
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-        this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+        this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
         return;
     }
 
@@ -99,15 +100,12 @@ export class ProbeManagementComponent {
         await this.probesService.updateOrCreateElement(this.selectedProbe);
         await this.onProbeSelectionChange(this.selectedProbeId!);
 
-        this.saveMessage = "Änderungen gespeichert!";
-        setTimeout(() => {
-            this.saveMessage = null;
-        }, 3000);
+        this.alerts.success('Änderungen gespeichert!');
 
         this.saveError = false;
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
-        this.saveMessage = "Fehler beim Speichern!";
+        this.alerts.error('Fehler beim Speichern!', error);
     }
 }
 

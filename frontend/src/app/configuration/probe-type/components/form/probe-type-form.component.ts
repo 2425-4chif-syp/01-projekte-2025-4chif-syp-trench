@@ -3,6 +3,7 @@ import { Component, DoCheck, OnInit, Input } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { ProbeType } from '../../interfaces/probe-type';
 import { ProbeTypesService } from '../../services/probe-types.service';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-probe-type-form',
@@ -22,7 +23,7 @@ export class ProbeTypeFormComponent implements OnInit, DoCheck {
   private lastIsNew = false;
   private preserveMessageOnNextSync = false;
 
-  constructor(public measurementProbeTypesService: ProbeTypesService) {}
+  constructor(public measurementProbeTypesService: ProbeTypesService, private alerts: AlertService) {}
 
   ngOnInit(): void {
     this.syncWithSelection(false);
@@ -65,8 +66,7 @@ export class ProbeTypeFormComponent implements OnInit, DoCheck {
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (form.invalid || invalidFields.length > 0) {
-      this.saveMessage = 'Bitte füllen Sie alle Pflichtfelder aus.';
-      setTimeout(() => (this.saveMessage = null), 3000);
+      this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
     }
 
@@ -82,15 +82,14 @@ export class ProbeTypeFormComponent implements OnInit, DoCheck {
         await this.measurementProbeTypesService.selectElement(this.selectedProbeType.id);
       }
 
-      this.saveMessage = 'Änderungen gespeichert!';
-      setTimeout(() => (this.saveMessage = null), 2000);
+      this.alerts.success('Änderungen gespeichert!');
 
       this.saveError = false;
       this.originalProbeType = this.selectedProbeType ? { ...this.selectedProbeType } : null;
       form.form.markAsPristine();
     } catch (error) {
       console.error('Fehler beim Speichern:', error);
-      this.saveMessage = 'Fehler beim Speichern!';
+      this.alerts.error('Fehler beim Speichern!', error);
     }
   }
 

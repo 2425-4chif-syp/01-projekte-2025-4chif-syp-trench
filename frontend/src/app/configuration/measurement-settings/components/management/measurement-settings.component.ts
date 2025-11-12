@@ -9,6 +9,7 @@ import { ProbeTypesService } from '../../../probe-type/services/probe-types.serv
 import { ProbePositionService } from '../../../probe-position/services/probe-position.service';
 import { Coil } from '../../../coil/interfaces/coil';
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
+import { AlertService } from '../../../../services/alert.service';
 
 
 @Component({
@@ -65,7 +66,7 @@ export class MeasurementSettingsComponent implements OnInit {
     }
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private probePositionService: ProbePositionService, private router: Router){
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private probePositionService: ProbePositionService, private router: Router, private alerts: AlertService){
     this.coilsService.isCoilSelector = false;
     this.probeTypesService.isMeasurementSettingsSelector = false;
   }
@@ -87,7 +88,7 @@ export class MeasurementSettingsComponent implements OnInit {
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-      this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+      this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
     }
 
@@ -101,10 +102,7 @@ export class MeasurementSettingsComponent implements OnInit {
       this.onSettingSelectionChange(this.selectedSettingId!);
 
       this.createEmptyProbePositions();
-      this.saveMessage = "Änderungen gespeichert!";
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
+      this.alerts.success('Änderungen gespeichert!');
 
       this.saveError = false;
 
@@ -112,7 +110,7 @@ export class MeasurementSettingsComponent implements OnInit {
       this.measurementSettingsService.selectElement(this.selectedMeasurementSetting.id!);
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
-      this.saveMessage = "Fehler beim Speichern!";
+      this.alerts.error('Fehler beim Speichern!', error);
     }
   }
 
@@ -206,10 +204,11 @@ export class MeasurementSettingsComponent implements OnInit {
     
     try{
       await this.measurementSettingsService.deleteElement(this.selectedMeasurementSetting.id);
+      this.alerts.success('Messeinstellung gelöscht');
     }
     catch(err){
       console.error("Fehler beim Löschen der Einstellung:", err);
-      this.saveMessage = "Fehler beim Löschen der Einstellung!";
+      this.alerts.error('Fehler beim Löschen der Einstellung!', err);
       return;
     }
 
