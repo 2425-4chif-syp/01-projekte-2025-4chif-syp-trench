@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TrenchAPI.Persistence;
+using TrenchAPI.WebAPI.Services;
+using TrenchAPI.WebAPI.Swagger;
 
 namespace TrenchAPI
 {
@@ -40,9 +42,11 @@ namespace TrenchAPI
                         new List<string>()
                     }
                 });
+                c.OperationFilter<FileUploadOperationFilter>();
             });
 
             builder.Services.AddDbContext<WebDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DevConnection")));
+            builder.Services.AddScoped<DataPackageService>();
 
             var app = builder.Build();
 
