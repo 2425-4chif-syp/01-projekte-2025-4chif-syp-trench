@@ -3,9 +3,6 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using SharpCompress.Archives.SevenZip;
-using SharpCompress.Common;
-using SharpCompress.Writers;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
 
@@ -38,7 +35,7 @@ public class DataPackageService
         var csvContents = normalizedExtension switch
         {
             ".zip" => ExtractCsvFromZip(archivePath),
-            ".7z" => ExtractCsvFromSevenZip(archivePath),
+            ".7z" => throw new InvalidOperationException("Import von 7z-Dateien wird aktuell nicht unterstützt. Bitte ein ZIP-Archiv hochladen."),
             _ => throw new InvalidOperationException($"Das Format '{archiveExtension}' wird nicht unterstützt.")
         };
 
@@ -91,7 +88,7 @@ public class DataPackageService
         return normalizedFormat switch
         {
             "zip" => BuildZipArchive(csvFiles),
-            "7z" => BuildSevenZipArchive(csvFiles),
+            "7z" => throw new InvalidOperationException("Export im 7z-Format wird aktuell nicht unterstützt. Bitte ZIP verwenden."),
             _ => throw new InvalidOperationException($"Das Exportformat '{format}' wird nicht unterstützt.")
         };
     }
@@ -116,27 +113,6 @@ public class DataPackageService
 
             using var stream = entry.Open();
             using var reader = new StreamReader(stream, Encoding.UTF8);
-            result[fileName] = reader.ReadToEnd();
-        }
-
-        return result;
-    }
-
-    private static Dictionary<string, string> ExtractCsvFromSevenZip(string archivePath)
-    {
-        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-        using var archive = SevenZipArchive.Open(archivePath);
-        foreach (var entry in archive.Entries.Where(e => !e.IsDirectory))
-        {
-            var fileName = Path.GetFileName(entry.Key);
-            if (!fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            using var entryStream = entry.OpenEntryStream();
-            using var reader = new StreamReader(entryStream, Encoding.UTF8);
             result[fileName] = reader.ReadToEnd();
         }
 
@@ -524,19 +500,7 @@ public class DataPackageService
         return memoryStream.ToArray();
     }
 
-    private static byte[] BuildSevenZipArchive(Dictionary<string, string> csvFiles)
-    {
-        using var memoryStream = new MemoryStream();
-        using (var writer = WriterFactory.Open(memoryStream, ArchiveType.SevenZip, new WriterOptions(CompressionType.LZMA)))
-        {
-            foreach (var (fileName, content) in csvFiles)
-            {
-                var data = Encoding.UTF8.GetBytes(content);
-                writer.Write($"data/{fileName}", new MemoryStream(data), DateTime.UtcNow);
-            }
-        }
-
-        return memoryStream.ToArray();
-    }
+    private static byte[] BuildSevenZipArchive(Dictionary<string, string> csvFiles) =>
+        throw new InvalidOperationException("Export im 7z-Format wird aktuell nicht unterstützt. Bitte ZIP verwenden.");
 }
 
