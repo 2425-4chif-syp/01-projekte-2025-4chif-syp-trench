@@ -36,7 +36,7 @@ public class DataPackageController : ControllerBase
         var extension = Path.GetExtension(dataPackage.FileName);
         if (string.IsNullOrWhiteSpace(extension) || !AllowedExtensions.Contains(extension))
         {
-            return BadRequest("Nur ZIP- oder 7z-Dateien werden unterstützt.");
+            return BadRequest("Nur ZIP-Dateien werden unterstützt.");
         }
 
         var tempFilePath = Path.Combine(Path.GetTempPath(), $"trench-upload-{Guid.NewGuid()}{extension}");
