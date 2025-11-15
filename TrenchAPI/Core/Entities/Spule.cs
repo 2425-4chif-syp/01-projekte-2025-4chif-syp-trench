@@ -22,8 +22,8 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "decimal")]
         public decimal Bemessungsfrequenz { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Einheit { get; set; }
+        [Column(TypeName = "varchar")]
+        public string Einheit { get; set; } = "";
 
         [Column(TypeName = "varchar")]
         public string Notiz { get; set; } = "";
