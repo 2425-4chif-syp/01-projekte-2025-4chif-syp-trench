@@ -16,6 +16,9 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "int")]
         public int Windungszahl { get; set; }
 
+        [Column(TypeName = "decimal")]
+        public decimal Alpha { get; set; }
+
         [Column(TypeName = "varchar")]
         public string Notiz { get; set; } = "";
     }

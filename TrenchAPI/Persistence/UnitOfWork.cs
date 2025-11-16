@@ -133,7 +133,7 @@ namespace TrenchAPI.Persistence
                 Bandbreite = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
                 Schichthoehe = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
                 Durchmesser = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-                Toleranzbereich = Convert.ToInt32(line[6]),
+                Toleranzbereich = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
                 Notiz = line[7]
             }).ToList();
 
@@ -153,8 +153,8 @@ namespace TrenchAPI.Persistence
                 AuftragsPosNr = line[3],
                 Bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
                 Bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-                Einheit = Convert.ToInt32(line[6]),
-                Notiz = line[7]
+                Einheit = line[6],
+                Notiz = line.Length > 7 ? line[7] : string.Empty
             }).ToList();
 
             await SpuleRepository.AddRangeAsync(spulen.ToArray());
@@ -172,7 +172,8 @@ namespace TrenchAPI.Persistence
                 Breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
                 Hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
                 Windungszahl = Convert.ToInt32(line[4]),
-                Notiz = line.Length > 5 ? line[5] : ""
+                Alpha = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+                Notiz = line.Length > 6 ? line[6] : string.Empty
             }).ToList();
 
             await SondenTypRepository.AddRangeAsync(sondenTypen.ToArray());

@@ -154,7 +154,7 @@ public class DataPackageService
             Bandbreite = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
             Schichthoehe = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
             Durchmesser = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-            Toleranzbereich = Convert.ToInt32(line[6], CultureInfo.InvariantCulture),
+            Toleranzbereich = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
             Notiz = line.Length > 7 ? line[7] : string.Empty
         }).ToList();
 
@@ -172,7 +172,7 @@ public class DataPackageService
             AuftragsPosNr = line[3],
             Bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
             Bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-            Einheit = Convert.ToInt32(line[6], CultureInfo.InvariantCulture),
+            Einheit = line[6],
             Notiz = line.Length > 7 ? line[7] : string.Empty
         }).ToList();
 
@@ -189,7 +189,8 @@ public class DataPackageService
             Breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
             Hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
             Windungszahl = Convert.ToInt32(line[4], CultureInfo.InvariantCulture),
-            Notiz = line.Length > 5 ? line[5] : string.Empty
+            Alpha = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+            Notiz = line.Length > 6 ? line[6] : string.Empty
         }).ToList();
 
         await _context.SondenTyp.AddRangeAsync(entities, cancellationToken);
@@ -309,7 +310,7 @@ public class DataPackageService
                 .Append(EscapeCsvField(entity.AuftragsPosNr)).Append(',')
                 .Append(entity.Bemessungsspannung.ToString(CultureInfo.InvariantCulture)).Append(',')
                 .Append(entity.Bemessungsfrequenz.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Einheit.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(EscapeCsvField(entity.Einheit)).Append(',')
                 .AppendLine(EscapeCsvField(entity.Notiz));
         }
 
@@ -320,7 +321,7 @@ public class DataPackageService
     {
         var entities = await _context.SondenTyp.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
         var builder = new StringBuilder();
-        builder.AppendLine("id,name,breite,hoehe,windungszahl,notiz");
+        builder.AppendLine("id,name,breite,hoehe,windungszahl,alpha,notiz");
 
         foreach (var entity in entities)
         {
@@ -330,6 +331,7 @@ public class DataPackageService
                 .Append(entity.Breite.ToString(CultureInfo.InvariantCulture)).Append(',')
                 .Append(entity.Hoehe.ToString(CultureInfo.InvariantCulture)).Append(',')
                 .Append(entity.Windungszahl.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.Alpha.ToString(CultureInfo.InvariantCulture)).Append(',')
                 .AppendLine(EscapeCsvField(entity.Notiz));
         }
 

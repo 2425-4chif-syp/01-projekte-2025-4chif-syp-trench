@@ -20,8 +20,8 @@ namespace TrenchAPI.Core.Entities
         [Column(TypeName = "decimal")]
         public decimal Durchmesser { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Toleranzbereich { get; set; }
+        [Column(TypeName = "decimal")]
+        public decimal Toleranzbereich { get; set; }
 
         [Column(TypeName = "text")]
         public string Notiz { get; set; } = "";
