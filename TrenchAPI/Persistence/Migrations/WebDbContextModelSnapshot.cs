@@ -277,10 +277,6 @@ namespace Persistence.Migrations
                     b.Property<decimal>("Toleranzbereich")
                         .HasColumnType("decimal");
 
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasColumnType("varchar");
-
                     b.HasKey("ID");
 
                     b.ToTable("SpuleTyp");

@@ -12,7 +12,7 @@ using TrenchAPI.Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(WebDbContext))]
-    [Migration("20251116153307_InitialMigrate")]
+    [Migration("20251116154233_InitialMigrate")]
     partial class InitialMigrate
     {
         /// <inheritdoc />
@@ -279,10 +279,6 @@ namespace Persistence.Migrations
 
                     b.Property<decimal>("Toleranzbereich")
                         .HasColumnType("decimal");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasColumnType("varchar");
 
                     b.HasKey("ID");
 

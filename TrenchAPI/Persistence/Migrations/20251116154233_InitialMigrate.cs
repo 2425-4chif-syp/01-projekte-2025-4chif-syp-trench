@@ -42,8 +42,7 @@ namespace Persistence.Migrations
                     Schichthoehe = table.Column<decimal>(type: "decimal", nullable: false),
                     Durchmesser = table.Column<decimal>(type: "decimal", nullable: false),
                     Toleranzbereich = table.Column<decimal>(type: "decimal", nullable: false),
-                    Notiz = table.Column<string>(type: "text", nullable: false),
-                    Version = table.Column<string>(type: "varchar", nullable: false)
+                    Notiz = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
