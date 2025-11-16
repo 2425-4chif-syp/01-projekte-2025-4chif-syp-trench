@@ -60,6 +60,39 @@ namespace TrenchAPI
                     
                     Console.WriteLine("Initialisiere Datenbank...");
                     
+                    // Retry-Mechanismus: Warte auf Datenbank-Verfügbarkeit
+                    int maxRetries = 10;
+                    int retryDelaySeconds = 3;
+                    bool dbReady = false;
+                    
+                    for (int attempt = 1; attempt <= maxRetries; attempt++)
+                    {
+                        try
+                        {
+                            Console.WriteLine($"Versuche Datenbankverbindung (Versuch {attempt}/{maxRetries})...");
+                            dbReady = context.Database.CanConnect();
+                            if (dbReady)
+                            {
+                                Console.WriteLine("Datenbankverbindung erfolgreich!");
+                                break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Datenbank noch nicht bereit: {ex.Message}");
+                            if (attempt < maxRetries)
+                            {
+                                Console.WriteLine($"Warte {retryDelaySeconds} Sekunden vor dem nächsten Versuch...");
+                                Thread.Sleep(retryDelaySeconds * 1000);
+                            }
+                        }
+                    }
+                    
+                    if (!dbReady)
+                    {
+                        throw new Exception("Datenbank konnte nach mehreren Versuchen nicht erreicht werden!");
+                    }
+                    
                     // Check if there are any pending migrations
                     var pendingMigrations = context.Database.GetPendingMigrations().ToList();
                     var appliedMigrations = context.Database.GetAppliedMigrations().ToList();
@@ -92,24 +125,6 @@ namespace TrenchAPI
                     {
                         Console.WriteLine($"- {table}");
                     }
-                    
-                    // SQL Debug Ausgabe
-                    Console.WriteLine("\nSQL Debug - Alle Tabellen in der Datenbank:");
-                    context.Database.ExecuteSqlRaw(@"
-                        DO
-                        $$
-                        DECLARE
-                            _table record;
-                        BEGIN
-                            FOR _table IN 
-                                SELECT schemaname, tablename 
-                                FROM pg_tables 
-                                WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
-                            LOOP
-                                RAISE NOTICE 'Schema: %, Table: %', _table.schemaname, _table.tablename;
-                            END LOOP;
-                        END
-                        $$;");
                     
                     Console.WriteLine("Datenbank-Initialisierung abgeschlossen!");
                 }
