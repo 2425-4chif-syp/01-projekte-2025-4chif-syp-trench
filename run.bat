@@ -1,7 +1,5 @@
 docker volume prune -f
 docker compose down -v
-cd ./TrenchAPI/WebAPI
-del ..\Migrations /q
-dotnet ef migrations add InitialCreate
-cd ../..
+REM Migrations werden jetzt automatisch beim Start der Anwendung ausgeführt
+REM Sie müssen nicht mehr manuell erstellt werden
 docker compose up --build
