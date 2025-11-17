@@ -22,7 +22,7 @@ entity spule {
   auftragsposnr : integer
   bemessungsspannung : decimal
   bemessungsfrequenz : decimal
-  einheit : integer
+  einheit : varchar
   notiz : varchar
 }
 
@@ -33,6 +33,7 @@ entity sondentyp {
   breite : decimal
   hoehe : decimal
   windungszahl : integer
+  alpha : decimal
   notiz : varchar
 }
 
