@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using TrenchAPI.Core.Entities;
+using System;
 
 namespace TrenchAPI.Persistence
 {
@@ -13,7 +14,8 @@ namespace TrenchAPI.Persistence
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
             _configuration = builder.Build();
         }
 

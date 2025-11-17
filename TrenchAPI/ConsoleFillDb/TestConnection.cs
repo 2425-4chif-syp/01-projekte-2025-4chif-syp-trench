@@ -1,6 +1,7 @@
 using Npgsql;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ConsoleFillDb
 {
@@ -8,7 +9,16 @@ namespace ConsoleFillDb
     {
         public static async Task TestDatabaseConnectionAsync()
         {
-            var connectionString = "Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=TRENCH123;";
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            var configuration = builder.Build();
+            
+            var connectionString = configuration.GetConnectionString("DevConnection") 
+                ?? "Host=localhost; Port=5432; Database=postgres; Username=postgres; Password=TRENCH123;";
+            
+            Console.WriteLine($"Using connection string: {connectionString.Replace("Password=TRENCH123", "Password=***")}");
             
             try
             {

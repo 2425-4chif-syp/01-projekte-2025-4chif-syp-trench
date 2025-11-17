@@ -13,7 +13,7 @@ namespace ConsoleFillDb
             {
                 // Test database connection first
                 Console.WriteLine("Testing database connection...");
-                await TestConnection.TestDatabaseConnectionAsync();
+
                 Console.WriteLine();
 
                 using (UnitOfWork unitOfWork = new UnitOfWork())
