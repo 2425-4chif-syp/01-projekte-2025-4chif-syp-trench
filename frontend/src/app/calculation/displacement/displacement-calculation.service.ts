@@ -25,7 +25,6 @@ export class DisplacementCalculationService {
   private static readonly alternativeThreeAngleLookup:boolean = false;
 
   private readonly Ur = 21000 / Math.sqrt(3);
-  // Fallback-Winkel zwischen zwei Sonden, falls Alpha im Sondentyp noch nicht gepflegt ist
   private readonly delta_ang = 15.5;
 
   public static getAngleLookup(yokeCount: number): number[] {
@@ -89,54 +88,32 @@ export class DisplacementCalculationService {
         (sensor / FF_area))
     }));
 
-    // Winkel der Normale auf die Messfläche ergibt sich aus Anzahl der Sonden und Sondentyp
-    const sensorCountPerYoke = measurementSetting.sondenProSchenkel!;
-    const delta_ang = (probeType.alpha ?? this.delta_ang);
-
-    if (!Number.isFinite(sensorCountPerYoke) || sensorCountPerYoke <= 0) {
-      throw new Error('Invalid number of sensors per yoke (must be > 0): ' + measurementSetting.sondenProSchenkel);
-    }
-    if (!Number.isFinite(delta_ang) || delta_ang <= 0) {
-      throw new Error('Invalid probe type alpha / delta_ang: ' + delta_ang);
+    // Winkel der Normale auf die Messfläche ergibt sich aus Anzahl der Sonden und Gerätetype
+    if (measurementSetting.sondenProSchenkel! < 4 || measurementSetting.sondenProSchenkel! % 2 != 0) {
+      throw new Error('Invalid number of sensors per yoke (must be >=4 and even): ' + measurementSetting.sondenProSchenkel);
     }
     const angleLookup = DisplacementCalculationService.getAngleLookup(yokes.length);
     const angle: { sensors: number[] }[] = [];
     for (let i = 0; i < yokes.length; i++) {
-      const count = yokes[i].sensors.length;
-      const sensors: number[] = new Array(count);
+      let sensors: number[] = new Array(yokes[i].sensors.length);
 
-      const center = Math.floor(count / 2);
+      const center = Math.floor(yokes[i].sensors.length / 2);
 
-      if (count % 2 === 1) {
-        // Ungerade Anzahl: eine Sonde genau am Jochwinkel
-        sensors[center] = angleLookup[i];
+      // Sonden in der Mitte
+      sensors[center - 1] = angleLookup[i] - this.delta_ang / 2;
+      sensors[center] = angleLookup[i] + this.delta_ang / 2;
 
-        // Linke Seite
-        for (let ii = center - 1; ii >= 0; ii--) {
-          sensors[ii] = sensors[ii + 1] - delta_ang;
-        }
-
-        // Rechte Seite
-        for (let ii = center + 1; ii < count; ii++) {
-          sensors[ii] = sensors[ii - 1] + delta_ang;
-        }
-      } else {
-        // Gerade Anzahl: zwei Sonden symmetrisch um den Jochwinkel (± Alpha/2)
-        sensors[center - 1] = angleLookup[i] - delta_ang / 2;
-        sensors[center] = angleLookup[i] + delta_ang / 2;
-
-        // Erste Hälfte der Sonden (z.B. bei 6: Index 2 -> 0)
-        for (let ii = center - 2; ii >= 0; ii--) {
-          sensors[ii] = sensors[ii + 1] - delta_ang;
-        }
-
-        // Zweite Hälfte der Sonden (z.B. bei 6: Index 5 -> 3)
-        for (let ii = center + 1; ii < count; ii++) {
-          sensors[ii] = sensors[ii - 1] + delta_ang;
-        }
+      // Erste Hälfte der Sonden (bei 6 ist das Index 2->0)
+      for (let ii = center - 2; ii >= 0; ii--) {
+        sensors[ii] = sensors[ii + 1] - this.delta_ang;
       }
 
-      angle.push({ sensors });
+      // Zweite Hälfte der Sonden (bei 6 ist das Index 5->3)
+      for (let ii = center + 1; ii < yokes[i].sensors.length; ii++) {
+        sensors[ii] = sensors[ii - 1] + this.delta_ang;
+      }
+
+      angle.push({ sensors: sensors });
     }
 
     // Kraftkomponenten in x und y
