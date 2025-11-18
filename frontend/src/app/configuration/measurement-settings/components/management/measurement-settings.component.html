@@ -132,7 +132,6 @@
                   class="form-select"
                   id="sonden-pro-schenkel"
                   [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
-                  (ngModelChange)="createEmptyProbePositions()"
                   name="sondenProSchenkel"
                   [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')"
                 >

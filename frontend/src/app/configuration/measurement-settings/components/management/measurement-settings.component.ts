@@ -62,14 +62,19 @@ export class MeasurementSettingsComponent implements OnInit {
     return this.probeTypesService.elements.find(type => type.id === this.selectedMeasurementSetting?.probeTypeId) ?? null;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.selectedMeasurementSetting) {
       this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
       this.updateSondenProSchenkelOptions();
+      
+      // Load existing probe positions only if measurement setting already exists
+      if (this.selectedMeasurementSetting.id) {
+        await this.probePositionService.reloadElements();
+      }
     }
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private probePositionService: ProbePositionService, private router: Router, private alerts: AlertService){
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, public probePositionService: ProbePositionService, private router: Router, private alerts: AlertService){
     this.coilsService.isCoilSelector = false;
     this.probeTypesService.isMeasurementSettingsSelector = false;
   }
@@ -116,16 +121,26 @@ export class MeasurementSettingsComponent implements OnInit {
       this.selectedMeasurementSetting.probeTypeId        = Number(this.selectedMeasurementSetting.probeTypeId);
       this.selectedMeasurementSetting.sondenProSchenkel  = Number(this.selectedMeasurementSetting.sondenProSchenkel);
 
+      // Save measurement setting first
       await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting);
-      this.onSettingSelectionChange(this.selectedSettingId!);
+      
+      // Reload the saved measurement setting to get the ID
+      await this.measurementSettingsService.selectElement(this.selectedMeasurementSetting.id!);
 
-      this.createEmptyProbePositions();
+      // Now save all probe positions using the backend service - only if measurement setting has an ID
+      if (this.selectedMeasurementSetting.id) {
+        await this.probePositionService.createEmptyPositions(
+          this.measurementSettingsService.selectedElementCopy?.coil?.coiltype?.schenkel ?? 0,
+          this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel ?? 0,
+          this.measurementSettingsService.selectedElementCopy!
+        );
+      }
+
       this.alerts.success('Änderungen gespeichert!');
 
       this.saveError = false;
 
       this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
-      this.measurementSettingsService.selectElement(this.selectedMeasurementSetting.id!);
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
       this.alerts.error('Fehler beim Speichern!', error);
@@ -136,18 +151,8 @@ export class MeasurementSettingsComponent implements OnInit {
     const settingIdNumber: number = Number(SettingId);
 
     await this.measurementSettingsService.selectElement(settingIdNumber);
-    // Reload probe positions for the selected setting
-    this.createEmptyProbePositions();
-  }
-
-  createEmptyProbePositions() {
-    console.log("Creating empty probe positions for measurement setting:", this.measurementSettingsService.selectedElementCopy);
-    this.updateSondenProSchenkelOptions();
-    this.probePositionService.createEmptyPositions(
-      this.measurementSettingsService.selectedElementCopy?.coil?.coiltype?.schenkel ?? 0,
-      this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel ?? 0,
-      this.measurementSettingsService.selectedElementCopy!
-    );
+    // Load existing probe positions from backend for the selected setting
+    await this.probePositionService.reloadElements();
   }
 
   private updateSondenProSchenkelOptions(): void {

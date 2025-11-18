@@ -113,7 +113,19 @@ export class ProbePositionService implements ListService<ProbePosition> {
   ): Promise<void> {
     console.log('setting:', einstellung);
 
-    const current = await this.backend.getPositionsForMeasurementSettings(einstellung.id!);
+    // Get current positions from backend, handle 404 for new measurement settings
+    let current: ProbePosition[] = [];
+    try {
+      current = await this.backend.getPositionsForMeasurementSettings(einstellung.id!);
+    } catch (error: any) {
+      // If 404, this is a new measurement setting with no positions yet
+      if (error?.status === 404) {
+        console.log('No existing positions found, creating new ones');
+        current = [];
+      } else {
+        throw error;
+      }
+    }
 
     const desiredKeys = new Set<string>();
     for (let schenkel = 1; schenkel <= schenkelzahl; schenkel++) {
@@ -127,27 +139,57 @@ export class ProbePositionService implements ListService<ProbePosition> {
       currentMap.set(`${p.schenkel}:${p.position}`, p);
     }
 
+    // Find positions to delete (those that exist in backend but not in desired set)
     const toDelete = current.filter(p => !desiredKeys.has(`${p.schenkel}:${p.position}`));
     await Promise.all(toDelete.map(del => this.backend.deleteProbePosition(del)));
 
+    // Find positions to add (those in desired set but not in backend)
     const toAdd: ProbePosition[] = [];
+    const toUpdate: ProbePosition[] = [];
+    
     for (const key of desiredKeys) {
-      if (!currentMap.has(key)) {
+      const existingInBackend = currentMap.get(key);
+      
+      if (!existingInBackend) {
+        // Check if we have a local version with a probe assignment
+        const localVersion = this.elements.find(
+          p => p.schenkel === Number(key.split(':')[0]) && 
+               p.position === Number(key.split(':')[1])
+        );
+        
         const [s, pos] = key.split(':').map(x => Number(x));
         toAdd.push({
           id: null,
           measurementSettingsId: einstellung.id,
           measurementSetting: einstellung,
-          measurementProbeId: null,
-          measurementProbe: null,
+          measurementProbeId: localVersion?.measurementProbeId ?? null,
+          measurementProbe: localVersion?.measurementProbe ?? null,
           schenkel: s,
           position: pos
         });
+      } else {
+        // Check if local version has different probe assignment
+        const localVersion = this.elements.find(
+          p => p.schenkel === existingInBackend.schenkel && 
+               p.position === existingInBackend.position
+        );
+        
+        if (localVersion && localVersion.measurementProbeId !== existingInBackend.measurementProbeId) {
+          toUpdate.push({
+            ...existingInBackend,
+            measurementProbeId: localVersion.measurementProbeId,
+            measurementProbe: localVersion.measurementProbe
+          });
+        }
       }
     }
 
+    // Add new positions
     const added = await Promise.all(toAdd.map(p => this.backend.addProbePosition(p)));
     added.forEach(p => p.measurementSetting = einstellung);
+
+    // Update existing positions with new probe assignments
+    await Promise.all(toUpdate.map(p => this.backend.updateProbePosition(p)));
 
     this.elements = await this.backend.getPositionsForMeasurementSettings(einstellung.id!);
     this.loadGroupedProbePositions();

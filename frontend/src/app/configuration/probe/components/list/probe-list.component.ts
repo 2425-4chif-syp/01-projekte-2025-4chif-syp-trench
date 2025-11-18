@@ -59,14 +59,31 @@ export class ProbeListComponent {
       return;
     }
 
-    const probePositions = await this.probePositionsBackendService.getPositionsForMeasurementSettings(
-      this.measurementSettingsService.selectedElementCopy?.id!
-    );
+    const currentSetting = this.probePositionService.selectedElementCopy?.measurementSetting;
+    if (!currentSetting || !currentSetting.id) {
+      this.elementIdsToIgnore = [];
+      this.hasLoadedElementIdsToIgnore = true;
+      return;
+    }
 
-    this.elementIdsToIgnore = probePositions 
-      .filter(pp => pp.measurementProbeId != null)
-      .map(pp => pp.measurementProbe!.id)
-      .filter((value, index, self) => self.indexOf(value) === index); // distinct ids
+    try {
+      // Get all probe positions for the current measurement setting
+      const probePositions = await this.probePositionsBackendService.getPositionsForMeasurementSettings(currentSetting.id);
+      
+      // Get the currently selected position to exclude it from the filter
+      const currentPositionId = this.probePositionService.selectedElementCopy?.id;
+      
+      // Filter out probes already assigned to other positions in this measurement setting
+      // But allow re-selecting the same probe for the current position (when editing)
+      this.elementIdsToIgnore = probePositions 
+        .filter(pp => pp.measurementProbeId != null && pp.id !== currentPositionId)
+        .map(pp => pp.measurementProbe!.id)
+        .filter((value, index, self) => self.indexOf(value) === index); // distinct ids
+        
+    } catch (error) {
+      console.error('Error loading assigned probes:', error);
+      this.elementIdsToIgnore = [];
+    }
 
     this.hasLoadedElementIdsToIgnore = true;
 
@@ -88,6 +105,7 @@ export class ProbeListComponent {
       pos.measurementProbeId  = probe.id;
       pos.measurementProbe    = probe;
 
+      // Save the probe position assignment immediately
       this.probePositionService.updateOrCreateElement(pos).then(() => {
         this.probesService.isProbeSelector = false;
         this.router.navigate(['/measurement-settings-list']);
