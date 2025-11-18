@@ -7,7 +7,6 @@ import { DisplacementVisualizationComponent } from "../../visualization/displace
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
-import { MeasurementSettingsBackendService } from '../measurement-settings/services/measurement-settings-backend.service';
 import { CoilsBackendService } from '../coil/services/coils-backend.service';
 import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
@@ -15,6 +14,7 @@ import { MeasurementsBackendService } from '../measurement-history/services/meas
 import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 import { MessungService } from '../messung/services/messung.service';
 import { AlertService } from '../../services/alert.service';
+import { Router } from '@angular/router';
 
 registerLocaleData(localeDe);
 
@@ -35,6 +35,10 @@ export class StartMeasurementComponent implements OnDestroy {
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
   note: string = '';
+  tauchkernstellung: number | null = null;
+  pruefspannung: number | null = null;
+  tauchkernstellungInput: string = '';
+  pruefspannungInput: string = '';
   showIdError: boolean = false;
   isLoading: boolean = true;
   error: string | null = null;
@@ -53,7 +57,8 @@ export class StartMeasurementComponent implements OnDestroy {
     private coilsBackendService: CoilsBackendService,
     private probeTypesBackendService: ProbeTypesBackendService,
     public messungService: MessungService,
-    private alerts: AlertService
+    private alerts: AlertService,
+    private router: Router
   ) {
     this.loadMeasurementSettings();
     // Überprüfe, ob bereits eine Messung läuft
@@ -85,6 +90,13 @@ export class StartMeasurementComponent implements OnDestroy {
     this.error = null;
 
     await this.measurementSettingsService.reloadElements();
+
+    // Vorbelegte Messeinstellung aus der Messung übernehmen (falls vorhanden)
+    const preselectedId = this.messungService.selectedElementCopy?.messeinstellungId;
+    if (!this.messungService.isCurrentlyMeasuring() && preselectedId) {
+      this.measurementSettingId = preselectedId;
+    }
+
     this.isLoading = false;
   }
 
@@ -128,7 +140,9 @@ export class StartMeasurementComponent implements OnDestroy {
       const config = {
         type: 'config',
         measurementSettingId: this.measurementSettingId,
-        note: this.note
+        note: this.note,
+        tauchkernstellung: this.tauchkernstellung ?? 0,
+        pruefspannung: this.pruefspannung ?? 0
       };
       console.log('Sende Konfiguration:', config);
       this.webSocketService.sendMessage(JSON.stringify(config));
@@ -293,8 +307,8 @@ export class StartMeasurementComponent implements OnDestroy {
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
             name: "",
-            tauchkernstellung: 0,
-            pruefspannung: 0,
+            tauchkernstellung: this.tauchkernstellung ?? 0,
+            pruefspannung: this.pruefspannung ?? 0,
             notiz: this.note || "",
             messsonden: this.createMesssondenData().map(sonde => ({
               schenkel: sonde.schenkel,
@@ -354,5 +368,24 @@ export class StartMeasurementComponent implements OnDestroy {
 
   backToListing(): void {
     this.messungService.selectedElementCopy = null;
+  }
+
+  openMeasurementSettingsSelect(): void {
+    this.measurementSettingsService.isMeasurementSelector = true;
+    this.measurementSettingsService.selectedElementCopy = null;
+    this.router.navigate(['/measurement-settings-list']);
+  }
+
+  onDecimalInputChange(value: string, field: 'tauchkernstellung' | 'pruefspannung'): void {
+    const normalized = value.replace(',', '.').replace(/[^0-9.\-]/g, '');
+    const parsed = normalized === '' || normalized === '-' || normalized === '.' ? NaN : Number(normalized);
+
+    if (field === 'tauchkernstellung') {
+      this.tauchkernstellungInput = value;
+      this.tauchkernstellung = Number.isNaN(parsed) ? null : parsed;
+    } else {
+      this.pruefspannungInput = value;
+      this.pruefspannung = Number.isNaN(parsed) ? null : parsed;
+    }
   }
 }
