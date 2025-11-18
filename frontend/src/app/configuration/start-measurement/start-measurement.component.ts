@@ -75,6 +75,11 @@ export class StartMeasurementComponent implements OnDestroy {
       
       this.connectToWebSocket();
     }
+
+    // Entwurfsdaten einer neuen Messung wiederherstellen (falls vorhanden)
+    if (!this.messungService.isCurrentlyMeasuring()) {
+      this.restoreDraftFromMessung();
+    }
   }
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
@@ -322,6 +327,9 @@ export class StartMeasurementComponent implements OnDestroy {
           await this.measurementsBackendService.saveMeasurement(measurementData);
           console.log('Messung erfolgreich gespeichert');
           this.alerts.success('Messung erfolgreich gespeichert');
+          // Entwurf nach erfolgreichem Speichern zurücksetzen
+          this.messungService.clearDraftFromStorage();
+          this.messungService.selectedElementCopy = null;
         }
       } catch (error) {
         console.error('Fehler beim Speichern der Messung:', error);
@@ -371,9 +379,14 @@ export class StartMeasurementComponent implements OnDestroy {
   }
 
   openMeasurementSettingsSelect(): void {
+    // Aktuelle Eingaben vor dem Verlassen sichern
+    this.syncDraftToMessung();
+
     this.measurementSettingsService.isMeasurementSelector = true;
     this.measurementSettingsService.selectedElementCopy = null;
-    this.router.navigate(['/measurement-settings-list']);
+    this.router.navigate(['/measurement-settings-list'], {
+      queryParams: { selector: 'messung' }
+    });
   }
 
   onDecimalInputChange(value: string, field: 'tauchkernstellung' | 'pruefspannung'): void {
@@ -386,6 +399,50 @@ export class StartMeasurementComponent implements OnDestroy {
     } else {
       this.pruefspannungInput = value;
       this.pruefspannung = Number.isNaN(parsed) ? null : parsed;
+    }
+
+    this.syncDraftToMessung();
+  }
+
+  onNoteChange(value: string): void {
+    this.note = value;
+    this.syncDraftToMessung();
+  }
+
+  private syncDraftToMessung(): void {
+    if (!this.messungService.selectedElementCopy) {
+      this.messungService.selectedElementCopy = this.messungService.newElement;
+    }
+
+    const m = this.messungService.selectedElementCopy!;
+    m.notiz            = this.note || null;
+    m.tauchkernstellung = this.tauchkernstellung;
+    m.pruefspannung     = this.pruefspannung;
+    m.messeinstellungId = this.measurementSettingId;
+
+    this.messungService.saveDraftToStorage();
+  }
+
+  private restoreDraftFromMessung(): void {
+    // Nur dann aus dem Draft laden, wenn wir noch keinen Messungs-Kontext im Service haben.
+    if (!this.messungService.selectedElementCopy) {
+      this.messungService.loadDraftFromStorage();
+    }
+
+    const m = this.messungService.selectedElementCopy;
+    if (!m) return;
+
+    this.note             = m.notiz ?? '';
+    this.tauchkernstellung = m.tauchkernstellung;
+    this.pruefspannung     = m.pruefspannung;
+
+    this.tauchkernstellungInput =
+      m.tauchkernstellung != null ? String(m.tauchkernstellung).replace('.', ',') : '';
+    this.pruefspannungInput =
+      m.pruefspannung != null ? String(m.pruefspannung).replace('.', ',') : '';
+
+    if (m.messeinstellungId && !this.measurementSettingId) {
+      this.measurementSettingId = m.messeinstellungId;
     }
   }
 }
