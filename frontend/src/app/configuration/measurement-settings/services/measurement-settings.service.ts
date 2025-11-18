@@ -13,6 +13,7 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   public selectedElementCopy: MeasurementSetting | null = null;
   public selectedElementIsNew: boolean = false;
   public isCoilSelector: boolean = false;
+  public isMeasurementSelector: boolean = false;
 
   constructor(private measurementSettingsBackendService: MeasurementSettingsBackendService, private coilBackendService: CoilsBackendService, private probeTypeBackendService: ProbeTypesBackendService) {}
 
@@ -112,4 +113,3 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
     }
   }
 }
-
