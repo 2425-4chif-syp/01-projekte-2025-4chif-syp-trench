@@ -74,7 +74,6 @@ obj/
 # Data folders
 data/
 **/data/
-backend/TrenchAPI/ConsoleFillDb/data/
 
 # Processed files
 *.vsidx
