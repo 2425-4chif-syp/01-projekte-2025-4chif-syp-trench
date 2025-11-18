@@ -62,7 +62,7 @@ export class CoilManagementComponent {
       const nonEmpty = (
         (s.auftragsnummer?.trim()?.length ?? 0) > 0 ||
         (s.auftragsPosNr?.trim()?.length ?? 0) > 0 ||
-        (s.einheit ?? 0) > 0 ||
+        (s.einheit?.trim()?.length ?? 0) > 0 ||
         (s.bemessungsspannung ?? 0) > 0 ||
         (s.bemessungsfrequenz ?? 0) > 0 ||
         (s.coiltypeId ?? null) !== null
@@ -77,7 +77,14 @@ export class CoilManagementComponent {
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return false;
     let value = this.selectedCoil[field as keyof Coil];
-    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+    if (value === null || value === undefined) return true;
+    if (typeof value === 'number') {
+      return value <= 0 || Number.isNaN(value);
+    }
+    if (typeof value === 'string') {
+      return value.trim().length === 0;
+    }
+    return false;
   }
 
 
