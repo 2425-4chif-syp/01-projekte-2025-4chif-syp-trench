@@ -27,6 +27,11 @@ export class ProbeManagementComponent {
   originalProbe: Probe | null = null;
 
   ngOnInit() {
+    if (!this.selectedProbe) {
+      // Entwurf nach Reload wiederherstellen (falls vorhanden)
+      this.probesService.loadDraftFromStorage();
+    }
+
     this.syncOriginalProbeSnapshot();
   }
 
@@ -52,7 +57,19 @@ export class ProbeManagementComponent {
   }
 
   hasChanges(): boolean {
-    if (!this.originalProbe || !this.selectedProbe) return false;
+    if (!this.selectedProbe) return false;
+
+    // For new probes, treat any non-empty field as a change
+    if (this.probesService.selectedElementIsNew || this.selectedProbe.id == null || this.selectedProbe.id === 0) {
+      const p = this.selectedProbe;
+      const hasName = (p.name?.trim()?.length ?? 0) > 0;
+      const hasCalibration = p.kalibrierungsfaktor != null && !Number.isNaN(p.kalibrierungsfaktor);
+      const hasProbeType = (p.probeTypeId ?? 0) > 0 || p.probeType != null;
+
+      return hasName || hasCalibration || hasProbeType;
+    }
+
+    if (!this.originalProbe) return false;
     return JSON.stringify(this.originalProbe) !== JSON.stringify(this.selectedProbe);
  }
 
@@ -77,10 +94,20 @@ export class ProbeManagementComponent {
 
 
   openProbetypeSelect() {
+    // Aktuellen Sondenentwurf sichern, bevor in die Sondentyp-Auswahl gewechselt wird
+    this.probesService.saveDraftToStorage();
+
     this.probeTypesService.selectedElementCopy = null;
     this.probeTypesService.isProbeSelector = true;
 
-    this.router.navigate(['/probe-type-management']);
+    const probeId = this.selectedProbeId ?? 0;
+
+    this.router.navigate(['/probe-type-management'], {
+      queryParams: {
+        selector: 'probe',
+        probeId:  probeId || undefined
+      }
+    });
   }
 
   async saveChanges() {
@@ -103,6 +130,7 @@ export class ProbeManagementComponent {
         this.alerts.success('Änderungen gespeichert!');
 
         this.saveError = false;
+        this.probesService.clearDraftFromStorage();
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
         this.alerts.error('Fehler beim Speichern!', error);
@@ -138,11 +166,13 @@ export class ProbeManagementComponent {
     }
 
     await this.probesService.deleteElement(this.probesService.selectedElementCopy.id!);
+    this.probesService.clearDraftFromStorage();
   }
 
   backToListing(): void {
     this.probesService.selectedElementCopy = null;
     this.originalProbe = null;
+    this.probesService.clearDraftFromStorage();
   }
 
   showProbetypeDropdown: boolean = false;
@@ -188,5 +218,9 @@ export class ProbeManagementComponent {
       // Fallback to current values if original data is unavailable
       this.originalProbe = { ...selected };
     }
+  }
+
+  onFieldChange(): void {
+    this.probesService.saveDraftToStorage();
   }
 }
