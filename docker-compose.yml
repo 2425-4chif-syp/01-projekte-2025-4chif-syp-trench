@@ -11,6 +11,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - internalnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   pgadmin:
     image: dpage/pgadmin4
@@ -51,7 +57,8 @@ services:
     volumes:
       - ./TrenchAPI:/src 
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - internalnet
 
@@ -63,7 +70,8 @@ services:
     environment:
       - ConnectionStrings__DevConnection=Host=postgres;Port=5432;Database=postgres;Username=postgres;Password=TRENCH123;
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - internalnet
     profiles:

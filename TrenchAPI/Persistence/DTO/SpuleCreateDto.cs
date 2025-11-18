@@ -10,6 +10,6 @@ namespace TrenchAPI.Persistence.DTO
         public string AuftragsPosNr { get; set; } = "";
         public decimal Bemessungsspannung { get; set; }
         public decimal Bemessungsfrequenz { get; set; }
-        public int Einheit { get; set; }
+        public string Einheit { get; set; } = "";
     }
 }

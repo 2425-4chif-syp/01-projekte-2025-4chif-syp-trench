@@ -6,6 +6,7 @@ import { ProbeTypeFormComponent } from '../form/probe-type-form.component';
 import { ProbeTypeVisualizationComponent } from '../visualization/probe-type-visualization.component';
 import { ModeService } from '../../../../services/mode.service';
 import { Subscription } from 'rxjs';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-probe-type-management',
@@ -24,7 +25,8 @@ export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
 
   constructor(
     public measurementProbeTypesService: ProbeTypesService,
-    public modeService: ModeService
+    public modeService: ModeService,
+    private alerts: AlertService
   ) {}
 
   ngOnInit() {
@@ -66,12 +68,12 @@ export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
     if (!this.readOnly && this.selectedProbeType) {
       try {
         await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
-        this.saveMessage = 'Messsondentyp erfolgreich gespeichert';
+        this.alerts.success('Messsondentyp erfolgreich gespeichert');
         this.originalProbeType = { ...this.selectedProbeType };
         this.saveError = false;
       } catch (error) {
         this.saveError = true;
-        this.saveMessage = 'Fehler beim Speichern';
+        this.alerts.error('Fehler beim Speichern', error);
       }
     }
   }
@@ -90,11 +92,11 @@ export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
       try {
         await this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id);
         this.showDeleteModal = false;
-        this.saveMessage = 'Messsondentyp gelöscht';
+        this.alerts.success('Messsondentyp gelöscht');
         this.measurementProbeTypesService.selectedElementCopy = null;
       } catch (error) {
         this.saveError = true;
-        this.saveMessage = 'Fehler beim Löschen';
+        this.alerts.error('Fehler beim Löschen', error);
       }
     }
   }

@@ -37,9 +37,10 @@ docs/slides/revealjs
 .idea/
 
 # Backend specific 
-**/Migrations/
-**/*.Designer.cs
-**/*ModelSnapshot.cs
+# Migrations werden jetzt ins Repository committet, damit sie automatisch ausgeführt werden können
+# **/Migrations/
+# **/*.Designer.cs
+# **/*ModelSnapshot.cs
 
 # Build results
 bin/

@@ -10,7 +10,7 @@ entity spulentyp {
   bandbreite : decimal
   schichthoehe : decimal
   durchmesser : decimal
-  toleranzbereich : integer
+  toleranzbereich : decimal
   notiz : varchar
 }
 
@@ -19,10 +19,10 @@ entity spule {
   --
   spuletyp_id : integer
   auftragsnr : varchar
-  auftragsposnr : integer
+  auftragsposnr : varchar
   bemessungsspannung : decimal
   bemessungsfrequenz : decimal
-  einheit : integer
+  einheit : varchar
   notiz : varchar
 }
 
@@ -34,6 +34,7 @@ entity sondentyp {
   hoehe : decimal
   windungszahl : integer
   notiz : varchar
+  alpha : decimal
 }
 
 entity messeinstellung {
