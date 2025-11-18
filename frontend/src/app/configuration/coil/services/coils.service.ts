@@ -13,6 +13,8 @@ export class CoilsService implements ListService<Coil> {
   
   public isCoilSelector: boolean = false;
 
+  private readonly draftStorageKey = 'coil-draft';
+
   constructor(private coilsBackendService:CoilsBackendService) { }
 
   public get newElement(): Coil {
@@ -105,5 +107,46 @@ export class CoilsService implements ListService<Coil> {
     this.selectedElementCopy = this.getCopyElement(coilIdNumber);
     console.log('selectedCoilCopy nach Laden:', this.selectedElementCopy);
   }
-  
+
+  public saveDraftToStorage(): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+      if (!this.selectedElementCopy) {
+        window.localStorage.removeItem(this.draftStorageKey);
+        return;
+      }
+
+      const payload: Coil = { ...this.selectedElementCopy };
+      window.localStorage.setItem(this.draftStorageKey, JSON.stringify(payload));
+    } catch (err) {
+      console.error('Fehler beim Speichern des Spulen-Entwurfs:', err);
+    }
+  }
+
+  public loadDraftFromStorage(): Coil | null {
+    if (typeof window === 'undefined') return null;
+
+    try {
+      const raw = window.localStorage.getItem(this.draftStorageKey);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw) as Coil;
+      this.selectedElementCopy  = parsed;
+      this.selectedElementIsNew = !parsed.id || parsed.id === 0;
+      return parsed;
+    } catch (err) {
+      console.error('Fehler beim Laden des Spulen-Entwurfs:', err);
+      return null;
+    }
+  }
+
+  public clearDraftFromStorage(): void {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.removeItem(this.draftStorageKey);
+    } catch (err) {
+      console.error('Fehler beim Löschen des Spulen-Entwurfs:', err);
+    }
+  }
 }

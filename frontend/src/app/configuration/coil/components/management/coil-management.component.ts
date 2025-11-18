@@ -89,10 +89,20 @@ export class CoilManagementComponent {
 
 
   openCoiltypeSelect() {
+    // Aktuellen Spulenentwurf sichern, bevor in die Spulentyp-Auswahl gewechselt wird
+    this.coilsService.saveDraftToStorage();
+
     this.coiltypesService.selectedElementCopy = null;
     this.coiltypesService.isCoilSelector = true;
 
-    this.router.navigate(['/coiltype-management']);
+    const coilId = this.selectedCoilId ?? 0;
+
+    this.router.navigate(['/coiltype-management'], {
+      queryParams: {
+        selector: 'coil',
+        coilId:   coilId || undefined
+      }
+    });
   }
 
   async saveChanges() {
@@ -152,11 +162,13 @@ export class CoilManagementComponent {
     }
 
     await this.coilsService.deleteElement(this.coilsService.selectedElementCopy.id!);
+    this.coilsService.clearDraftFromStorage();
   }
 
   backToListing(): void {
     this.coilsService.selectedElementCopy = null;
     this.originalCoil = null;
+    this.coilsService.clearDraftFromStorage();
   }
 
   showCoiltypeDropdown: boolean = false;
