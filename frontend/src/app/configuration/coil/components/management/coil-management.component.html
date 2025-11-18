@@ -159,13 +159,12 @@
                 <label for="einheit" class="form-label">Einheit</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('einheit')">
                   <input
-                    type="number"
+                    type="text"
                     class="form-control"
                     id="einheit"
                     placeholder="Einheit"
                     [(ngModel)]="selectedCoil!.einheit"
                     name="einheit"
-                    min="0"
                   />
                 </div>
                 <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('einheit')">
@@ -176,7 +175,11 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges()" (click)="saveChanges()">
+            <button
+              type="button"
+              class="btn btn-primary btn-modern"
+              [disabled]="!canSave()"
+              (click)="saveChanges()">
               Speichern
             </button>
             <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">

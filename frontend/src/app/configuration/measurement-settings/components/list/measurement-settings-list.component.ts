@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LIST_SERVICE_TOKEN } from '../../../../generic-list/services/list-service';
 import { MeasurementSettingsService } from '../../services/measurement-settings.service';
 import { GenericListComponent } from '../../../../generic-list/components/generic-list.component';
@@ -21,6 +21,12 @@ import {Coil} from "../../../coil/interfaces/coil";
 })
 export class MeasurementSettingsListComponent {
 
+  @Input() public isSelector: boolean = false;
+  @Input() public showButton: boolean = true;
+
+  @Output() selectSetting = new EventEmitter<MeasurementSetting>();
+   @Output() cancelSelection = new EventEmitter<void>();
+
   public constructor(private measurementSettingsService: MeasurementSettingsService){}
 
   public readonly keysAsColumns: { [key: string]: string } = {
@@ -36,7 +42,16 @@ export class MeasurementSettingsListComponent {
   }
 
   openSetting(setting: MeasurementSetting) {
+    if (this.isSelector) {
+      this.selectSetting.emit(setting);
+      return;
+    }
+
     const settingId = setting.id!;
     this.measurementSettingsService.selectElement(settingId);
+  }
+
+  onCancelSelection(): void {
+    this.cancelSelection.emit();
   }
 }

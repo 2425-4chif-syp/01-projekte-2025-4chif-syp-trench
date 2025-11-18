@@ -116,6 +116,34 @@
                 </div>
               }
             </div>
+
+            <div class="form-field metric-field">
+              <label for="alpha" class="form-label">Alpha (°)</label>
+              <div
+                class="input-shell"
+                [class.invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
+              >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="alpha"
+                  name="alpha"
+                  min="0.01"
+                  step="0.01"
+                  required
+                  placeholder="Sondendifferenzwinkel in °"
+                  [(ngModel)]="selectedProbeType!.alpha"
+                  #alphaElement="ngModel"
+                  [class.is-invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
+                  [readonly]="readOnly"
+                />
+              </div>
+              @if ((saveError || alphaElement.touched) && isFieldInvalid('alpha')) {
+                <div class="invalid-feedback">
+                  Bitte geben Sie ein gültiges Alpha in Grad ein.
+                </div>
+              }
+            </div>
           </div>
         </div>
       </div>

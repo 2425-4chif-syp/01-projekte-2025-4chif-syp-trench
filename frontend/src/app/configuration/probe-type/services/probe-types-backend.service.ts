@@ -16,6 +16,7 @@ export class ProbeTypesBackendService {
       breite: probeType.breite,
       hoehe: probeType.hoehe,
       windungszahl: probeType.windungszahl,
+      alpha: probeType.alpha,
       notiz: probeType.notiz
     };
   }
@@ -26,6 +27,7 @@ export class ProbeTypesBackendService {
       breite: probeType.breite,
       hoehe: probeType.hoehe,
       windungszahl: probeType.windungszahl,
+      alpha: probeType.alpha,
       notiz: probeType.notiz
     };
   }
