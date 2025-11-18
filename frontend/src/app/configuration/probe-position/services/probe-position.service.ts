@@ -71,8 +71,10 @@ export class ProbePositionService implements ListService<ProbePosition> {
     } else {                                          
       await this.backend.updateProbePosition(p);
 
+      // Reload the updated element from backend to get full object with relationships
+      const updated = await this.backend.getMeasurementProbePosition(p.id);
       const idx = this.elements.findIndex(e => e.id === p.id);
-      if (idx !== -1) this.elements[idx] = { ...p };  
+      if (idx !== -1) this.elements[idx] = updated;  
     }
 
     this.loadGroupedProbePositions();               

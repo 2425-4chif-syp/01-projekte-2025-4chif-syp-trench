@@ -44,12 +44,14 @@ export class ProbesService implements ListService<Probe> {
 
   if (this.isProbeSelector) {
     const currentSetting = this.probePositionService.selectedElementCopy?.measurementSetting;
-    if (currentSetting) {
+    if (currentSetting && currentSetting.probeTypeId) {
       this.elements = allProbes.filter(
         probe => probe.probeTypeId === currentSetting.probeTypeId
       );
       return;
     }
+    // If no measurement setting or no probeTypeId, show all probes
+    // This prevents the list from being empty
   }
 
   this.elements = allProbes;

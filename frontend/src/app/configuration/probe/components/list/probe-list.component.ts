@@ -88,10 +88,10 @@ export class ProbeListComponent {
       pos.measurementProbeId  = probe.id;
       pos.measurementProbe    = probe;
 
-      this.probePositionService.updateOrCreateElement(pos);
-
-      this.probesService.isProbeSelector = false;
-      this.router.navigate(['/measurement-settings-list']);
+      this.probePositionService.updateOrCreateElement(pos).then(() => {
+        this.probesService.isProbeSelector = false;
+        this.router.navigate(['/measurement-settings-list']);
+      });
       return;
     }
 
