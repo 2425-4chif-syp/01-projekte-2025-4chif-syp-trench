@@ -20,7 +20,9 @@ import { AlertService } from '../../../../services/alert.service';
   styleUrl: './measurement-settings.component.scss'
 })
 export class MeasurementSettingsComponent implements OnInit {
+  // Optionen für "Sonden pro Schenkel" – werden dynamisch anhand Alpha und Jochanzahl berechnet
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8]);
+  private lastOptionContext: { coiltypeId: number | null; alpha: number | null } = { coiltypeId: null, alpha: null };
   saveMessage: string | null = null
   saveError: boolean = false;
   showDeleteModal = false;
@@ -63,6 +65,7 @@ export class MeasurementSettingsComponent implements OnInit {
   ngOnInit() {
     if (this.selectedMeasurementSetting) {
       this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
+      this.updateSondenProSchenkelOptions();
     }
   }
 
@@ -90,6 +93,21 @@ export class MeasurementSettingsComponent implements OnInit {
     if (invalidFields.length > 0) {
       this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
+    }
+
+    // Plausibilitätsprüfung: Max. Sonden pro Schenkel nach Formel 360 / Joche / Alpha
+    const coil = this.selectedCoil;
+    const probeType = this.selectedProbeType;
+    const sondenProSchenkel = Number(this.selectedMeasurementSetting.sondenProSchenkel);
+    const joche = coil?.coiltype?.schenkel ?? 0;
+    const alpha = probeType?.alpha ?? 0;
+
+    if (joche > 0 && alpha > 0) {
+      const maxSondenProJoch = Math.floor(360 / (joche * alpha));
+      if (sondenProSchenkel > maxSondenProJoch) {
+        this.alerts.error(`Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: ${maxSondenProJoch}.`);
+        return;
+      }
     }
 
     try {
@@ -124,11 +142,52 @@ export class MeasurementSettingsComponent implements OnInit {
 
   createEmptyProbePositions() {
     console.log("Creating empty probe positions for measurement setting:", this.measurementSettingsService.selectedElementCopy);
+    this.updateSondenProSchenkelOptions();
     this.probePositionService.createEmptyPositions(
       this.measurementSettingsService.selectedElementCopy?.coil?.coiltype?.schenkel ?? 0,
       this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel ?? 0,
       this.measurementSettingsService.selectedElementCopy!
     );
+  }
+
+  private updateSondenProSchenkelOptions(): void {
+    const coil = this.selectedCoil;
+    const probeType = this.selectedProbeType;
+    const coiltypeId = coil?.coiltype?.id ?? null;
+    const alpha = probeType?.alpha ?? null;
+
+    // Verhindere unnötige Reberechnungen, wenn sich Kontext nicht geändert hat
+    if (this.lastOptionContext.coiltypeId === coiltypeId && this.lastOptionContext.alpha === alpha) {
+      return;
+    }
+    this.lastOptionContext = { coiltypeId, alpha };
+
+    if (!coil?.coiltype?.schenkel || !alpha || alpha <= 0) {
+      // Fallback: Standardoptionen, falls noch keine vollständigen Daten vorhanden sind
+      this.schenkelAnzahl.set([1, 2, 3, 4, 5, 6, 7, 8]);
+      return;
+    }
+
+    const joche = coil.coiltype.schenkel;
+    const maxRaw = 360 / (joche * alpha);
+    const max = Math.floor(maxRaw);
+
+    if (!Number.isFinite(max) || max < 1) {
+      this.schenkelAnzahl.set([1]);
+      if (this.selectedMeasurementSetting) {
+        this.selectedMeasurementSetting.sondenProSchenkel = 1;
+      }
+      return;
+    }
+
+    const options = Array.from({ length: max }, (_, i) => i + 1);
+    this.schenkelAnzahl.set(options);
+
+    if (this.selectedMeasurementSetting && this.selectedMeasurementSetting.sondenProSchenkel != null) {
+      if (this.selectedMeasurementSetting.sondenProSchenkel > max) {
+        this.selectedMeasurementSetting.sondenProSchenkel = max;
+      }
+    }
   }
 
   isFieldInvalid(field: keyof MeasurementSetting): boolean {
