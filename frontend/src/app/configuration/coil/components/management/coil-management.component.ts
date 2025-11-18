@@ -74,6 +74,34 @@ export class CoilManagementComponent {
     return JSON.stringify(this.originalCoil) !== JSON.stringify(this.selectedCoil);
  }
 
+  isFormValid(): boolean {
+    if (!this.selectedCoil) return false;
+
+    const requiredFields = ['einheit', 'auftragsPosNr', 'bemessungsfrequenz', 'bemessungsspannung'] as const;
+    if (requiredFields.some(field => this.isFieldInvalid(field))) {
+      return false;
+    }
+
+    const coiltypeId = this.selectedCoil.coiltypeId ?? 0;
+    if (coiltypeId <= 0 && !this.selectedCoil.coiltype) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canSave(): boolean {
+    if (!this.selectedCoil) return false;
+
+    // Beim Erstellen: speichern nur, wenn alles gültig ausgefüllt ist
+    if (this.coilsService.selectedElementIsNew || this.selectedCoil.id == null || this.selectedCoil.id === 0) {
+      return this.isFormValid();
+    }
+
+    // Beim Bearbeiten: speichern nur, wenn etwas geändert wurde und das Formular gültig ist
+    return this.isFormValid() && this.hasChanges();
+  }
+
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return false;
     let value = this.selectedCoil[field as keyof Coil];

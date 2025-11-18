@@ -73,6 +73,34 @@ export class ProbeManagementComponent {
     return JSON.stringify(this.originalProbe) !== JSON.stringify(this.selectedProbe);
  }
 
+  isFormValid(): boolean {
+    if (!this.selectedProbe) return false;
+
+    const requiredFields: (keyof Probe)[] = ['name', 'kalibrierungsfaktor'];
+    if (requiredFields.some(field => this.isFieldInvalid(field))) {
+      return false;
+    }
+
+    const probeTypeId = this.selectedProbe.probeTypeId ?? 0;
+    if (probeTypeId <= 0 && !this.selectedProbe.probeType) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canSave(): boolean {
+    if (!this.selectedProbe) return false;
+
+    // Beim Erstellen: speichern nur, wenn alles gültig ausgefüllt ist
+    if (this.probesService.selectedElementIsNew || this.selectedProbe.id == null || this.selectedProbe.id === 0) {
+      return this.isFormValid();
+    }
+
+    // Beim Bearbeiten: speichern nur, wenn etwas geändert wurde und das Formular gültig ist
+    return this.isFormValid() && this.hasChanges();
+  }
+
   isFieldInvalid(field: keyof Probe): boolean {
     if (!this.selectedProbe) return false;
     const value = this.selectedProbe[field];
