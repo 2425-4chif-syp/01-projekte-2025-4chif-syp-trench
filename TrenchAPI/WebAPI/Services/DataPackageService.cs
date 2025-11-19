@@ -57,6 +57,10 @@ public class DataPackageService
             await ImportMesswerteAsync(csvContents["messwert.csv"], cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
+            
+            // Synchronisiere alle Sequenzen nach dem Import, um Duplikatfehler zu vermeiden
+            await SynchronizeSequencesAsync(cancellationToken);
+            
             await transaction.CommitAsync(cancellationToken);
         }
         catch
@@ -504,5 +508,41 @@ public class DataPackageService
 
     private static byte[] BuildSevenZipArchive(Dictionary<string, string> csvFiles) =>
         throw new InvalidOperationException("Export im 7z-Format wird aktuell nicht unterstützt. Bitte ZIP verwenden.");
+
+    private async Task SynchronizeSequencesAsync(CancellationToken cancellationToken = default)
+    {
+        // Reset all auto-increment sequences to prevent duplicate key errors
+        var tables = new[]
+        {
+            ("Messung", "ID"),
+            ("Messwert", "ID"),
+            ("Messeinstellung", "ID"),
+            ("SondenPosition", "ID"),
+            ("Sonde", "ID"),
+            ("SondenTyp", "ID"),
+            ("Spule", "ID"),
+            ("SpuleTyp", "ID")
+        };
+
+        foreach (var (tableName, columnName) in tables)
+        {
+            try
+            {
+                // Use pg_get_serial_sequence to find the sequence and reset it
+                // The 'false' parameter means the next value will be maxId + 1
+                var sql = $@"SELECT setval(
+                    pg_get_serial_sequence('""{tableName}""', '{columnName}'), 
+                    COALESCE((SELECT MAX(""{columnName}"") FROM ""{tableName}""), 0) + 1, 
+                    false)";
+                
+                await _context.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+            }
+            catch
+            {
+                // Ignore errors for sequences that don't exist or can't be reset
+                // This is not critical for the import process
+            }
+        }
+    }
 }
 
