@@ -25,13 +25,12 @@ export class MessungDetailComponent {
   }
 
   private async loadMesswerte(): Promise<void> {
-    const allMesswerte: Messwert[] = await this.messwertService.getAllMesswerte();
-    const filteredMesswerte: Messwert[] = [];
-    allMesswerte.forEach(mw => {
-      if (mw.messungID == this.curMessung!.id) {
-        filteredMesswerte.push(mw);
-      }
-    });
-    this.recentMesswerte.set(filteredMesswerte);
+    if (!this.curMessung || !this.curMessung.id) {
+      this.recentMesswerte.set([]);
+      return;
+    }
+    
+    const messwerte: Messwert[] = await this.messwertService.getMesswerteByMessungId(this.curMessung.id);
+    this.recentMesswerte.set(messwerte);
   }
 }
