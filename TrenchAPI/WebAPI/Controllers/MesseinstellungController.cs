@@ -137,9 +137,16 @@ namespace TrenchAPI.Controllers
                 return BadRequest($"Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: {maxSondenProSchenkel}.");
             }
 
+            // If ID is set and already exists, reset to 0 to let database auto-generate
+            int messeinstellungId = messeinstellungDto.ID;
+            if (messeinstellungId > 0 && await MesseinstellungExists(messeinstellungId))
+            {
+                messeinstellungId = 0;
+            }
+            
             var messeinstellung = new Messeinstellung
             {
-                ID = messeinstellungDto.ID,
+                ID = messeinstellungId,
                 SpuleID = messeinstellungDto.SpuleID,
                 SondenTypID = messeinstellungDto.SondenTypID,
                 SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
@@ -171,9 +178,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool MesseinstellungExists(int id)
+        private async Task<bool> MesseinstellungExists(int id)
         {
-            return _context.Messeinstellung.Any(e => e.ID == id);
+            return await _context.Messeinstellung.AnyAsync(e => e.ID == id);
         }
     }
 }

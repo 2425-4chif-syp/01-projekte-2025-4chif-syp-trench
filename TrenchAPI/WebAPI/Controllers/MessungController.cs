@@ -241,7 +241,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MessungExists(id))
+                if (!await MessungExists(id))
                 {
                     return NotFound();
                 }
@@ -421,9 +421,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool MessungExists(int id)
+        private async Task<bool> MessungExists(int id)
         {
-            return _context.Messung.Any(e => e.ID == id);
+            return await _context.Messung.AnyAsync(e => e.ID == id);
         }
 
         private async Task SynchronizeMessungSequenceAsync()

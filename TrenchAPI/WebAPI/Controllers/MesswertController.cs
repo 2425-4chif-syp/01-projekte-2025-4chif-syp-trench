@@ -82,7 +82,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MesswertExists(id))
+                if (!await MesswertExists(id))
                 {
                     return NotFound();
                 }
@@ -115,9 +115,16 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene Messeinstellung existiert nicht.");
             }
 
+            // If ID is set and already exists, reset to 0 to let database auto-generate
+            int messwertId = messwertDto.ID;
+            if (messwertId > 0 && await MesswertExists(messwertId))
+            {
+                messwertId = 0;
+            }
+            
             var messwert = new Messwert
             {
-                ID = messwertDto.ID,
+                ID = messwertId,
                 MessungID = messwertDto.MessungID,
                 SondenPositionID = messwertDto.SondenPositionID,
                 Wert = messwertDto.Wert,
@@ -159,9 +166,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool MesswertExists(int id)
+        private async Task<bool> MesswertExists(int id)
         {
-            return _context.Messwert.Any(e => e.ID == id);
+            return await _context.Messwert.AnyAsync(e => e.ID == id);
         }
     }
 }

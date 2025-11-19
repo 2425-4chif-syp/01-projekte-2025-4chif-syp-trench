@@ -61,7 +61,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SpuleExists(id))
+                if (!await SpuleExists(id))
                 {
                     return NotFound();
                 }
@@ -89,9 +89,16 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");
             }
 
+            // If ID is set and already exists, reset to 0 to let database auto-generate
+            int spuleId = spuleDto.ID;
+            if (spuleId > 0 && await SpuleExists(spuleId))
+            {
+                spuleId = 0;
+            }
+            
             var spule = new Spule
             {
-                ID = spuleDto.ID,
+                ID = spuleId,
                 SpuleTypID = spuleDto.SpuleTypID,
                 Bemessungsspannung = spuleDto.Bemessungsspannung,
                 Bemessungsfrequenz = spuleDto.Bemessungsfrequenz,
@@ -149,9 +156,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool SpuleExists(int id)
+        private async Task<bool> SpuleExists(int id)
         {
-            return _context.Spule.Any(e => e.ID == id);
+            return await _context.Spule.AnyAsync(e => e.ID == id);
         }
     }
 }
