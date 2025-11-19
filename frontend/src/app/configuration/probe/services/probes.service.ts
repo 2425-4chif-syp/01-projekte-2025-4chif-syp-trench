@@ -13,8 +13,6 @@ export class ProbesService implements ListService<Probe> {
 
   public isProbeSelector:boolean = false;
 
-  private readonly draftStorageKey = 'probe-draft';
-
   constructor(private probeBackendService:ProbesBackendService, private probePositionService:ProbePositionService) {
     this.reloadElements();
   }
@@ -46,14 +44,12 @@ export class ProbesService implements ListService<Probe> {
 
   if (this.isProbeSelector) {
     const currentSetting = this.probePositionService.selectedElementCopy?.measurementSetting;
-    if (currentSetting && currentSetting.probeTypeId) {
+    if (currentSetting) {
       this.elements = allProbes.filter(
         probe => probe.probeTypeId === currentSetting.probeTypeId
       );
       return;
     }
-    // If no measurement setting or no probeTypeId, show all probes
-    // This prevents the list from being empty
   }
 
   this.elements = allProbes;
@@ -121,47 +117,5 @@ export class ProbesService implements ListService<Probe> {
 
   returnSelectedProbe(probe: Probe): Probe {
     return probe;
-  }
-
-  public saveDraftToStorage(): void {
-    if (typeof window === 'undefined') return;
-
-    try {
-      if (!this.selectedElementCopy) {
-        window.localStorage.removeItem(this.draftStorageKey);
-        return;
-      }
-
-      const payload: Probe = { ...this.selectedElementCopy };
-      window.localStorage.setItem(this.draftStorageKey, JSON.stringify(payload));
-    } catch (err) {
-      console.error('Fehler beim Speichern des Sonden-Entwurfs:', err);
-    }
-  }
-
-  public loadDraftFromStorage(): Probe | null {
-    if (typeof window === 'undefined') return null;
-
-    try {
-      const raw = window.localStorage.getItem(this.draftStorageKey);
-      if (!raw) return null;
-
-      const parsed = JSON.parse(raw) as Probe;
-      this.selectedElementCopy  = parsed;
-      this.selectedElementIsNew = !parsed.id || parsed.id === 0;
-      return parsed;
-    } catch (err) {
-      console.error('Fehler beim Laden des Sonden-Entwurfs:', err);
-      return null;
-    }
-  }
-
-  public clearDraftFromStorage(): void {
-    if (typeof window === 'undefined') return;
-    try {
-      window.localStorage.removeItem(this.draftStorageKey);
-    } catch (err) {
-      console.error('Fehler beim Löschen des Sonden-Entwurfs:', err);
-    }
   }
 }

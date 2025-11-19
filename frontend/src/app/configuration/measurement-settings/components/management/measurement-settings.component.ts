@@ -20,9 +20,7 @@ import { AlertService } from '../../../../services/alert.service';
   styleUrl: './measurement-settings.component.scss'
 })
 export class MeasurementSettingsComponent implements OnInit {
-  // Optionen für "Sonden pro Schenkel" – werden dynamisch anhand Alpha und Jochanzahl berechnet
   schenkelAnzahl = signal<number[]>([1, 2, 3, 4, 5, 6, 7, 8]);
-  private lastOptionContext: { coiltypeId: number | null; alpha: number | null } = { coiltypeId: null, alpha: null };
   saveMessage: string | null = null
   saveError: boolean = false;
   showDeleteModal = false;
@@ -62,44 +60,15 @@ export class MeasurementSettingsComponent implements OnInit {
     return this.probeTypesService.elements.find(type => type.id === this.selectedMeasurementSetting?.probeTypeId) ?? null;
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     if (this.selectedMeasurementSetting) {
-      this.syncOriginalMeasurementSettingSnapshot();
-      this.updateSondenProSchenkelOptions();
-      
-      // Load existing probe positions only if measurement setting already exists
-      if (this.selectedMeasurementSetting.id) {
-        await this.probePositionService.reloadElements();
-      }
+      this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
     }
   }
 
-  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, public probePositionService: ProbePositionService, private router: Router, private alerts: AlertService){
+  constructor(public measurementSettingsService: MeasurementSettingsService, public coilsService: CoilsService, public probeTypesService: ProbeTypesService, private probePositionService: ProbePositionService, private router: Router, private alerts: AlertService){
     this.coilsService.isCoilSelector = false;
     this.probeTypesService.isMeasurementSettingsSelector = false;
-  }
-
-  private syncOriginalMeasurementSettingSnapshot(): void {
-    const selected = this.selectedMeasurementSetting;
-
-    if (!selected) {
-      this.originalMeasurementSetting = null;
-      return;
-    }
-
-    // For new settings, use a blank template as the "original" state
-    if (this.measurementSettingsService.selectedElementIsNew || selected.id == null || selected.id === 0) {
-      const blank = this.measurementSettingsService.newElement;
-      this.originalMeasurementSetting = { ...blank };
-      return;
-    }
-
-    // For existing settings, use the unmodified version from the service cache
-    try {
-      this.originalMeasurementSetting = this.measurementSettingsService.getCopyElement(selected.id!);
-    } catch {
-      this.originalMeasurementSetting = { ...selected };
-    }
   }
   
   async saveChanges() {
@@ -110,24 +79,17 @@ export class MeasurementSettingsComponent implements OnInit {
 
     this.selectedMeasurementSetting.name = (this.selectedMeasurementSetting.name || '').trim();
 
-    if (!this.isFormValid()) {
+    const requiredFields: (keyof MeasurementSetting)[] = [
+      'name',
+      'coilId',
+      'probeTypeId',
+      'sondenProSchenkel',
+    ];
+    const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
+
+    if (invalidFields.length > 0) {
       this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
       return;
-    }
-
-    // Plausibilitätsprüfung: Max. Sonden pro Schenkel nach Formel 360 / Joche / Alpha
-    const coil = this.selectedCoil;
-    const probeType = this.selectedProbeType;
-    const sondenProSchenkel = Number(this.selectedMeasurementSetting.sondenProSchenkel);
-    const joche = coil?.coiltype?.schenkel ?? 0;
-    const alpha = probeType?.alpha ?? 0;
-
-    if (joche > 0 && alpha > 0) {
-      const maxSondenProJoch = Math.floor(360 / (joche * alpha));
-      if (sondenProSchenkel > maxSondenProJoch) {
-        this.alerts.error(`Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: ${maxSondenProJoch}.`);
-        return;
-      }
     }
 
     try {
@@ -136,26 +98,16 @@ export class MeasurementSettingsComponent implements OnInit {
       this.selectedMeasurementSetting.probeTypeId        = Number(this.selectedMeasurementSetting.probeTypeId);
       this.selectedMeasurementSetting.sondenProSchenkel  = Number(this.selectedMeasurementSetting.sondenProSchenkel);
 
-      // Save measurement setting first
       await this.measurementSettingsService.updateOrCreateElement(this.selectedMeasurementSetting);
-      
-      // Reload the saved measurement setting to get the ID
-      await this.measurementSettingsService.selectElement(this.selectedMeasurementSetting.id!);
+      this.onSettingSelectionChange(this.selectedSettingId!);
 
-      // Now save all probe positions using the backend service - only if measurement setting has an ID
-      if (this.selectedMeasurementSetting.id) {
-        await this.probePositionService.createEmptyPositions(
-          this.measurementSettingsService.selectedElementCopy?.coil?.coiltype?.schenkel ?? 0,
-          this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel ?? 0,
-          this.measurementSettingsService.selectedElementCopy!
-        );
-      }
-
+      this.createEmptyProbePositions();
       this.alerts.success('Änderungen gespeichert!');
 
       this.saveError = false;
 
       this.originalMeasurementSetting = { ...this.selectedMeasurementSetting };
+      this.measurementSettingsService.selectElement(this.selectedMeasurementSetting.id!);
     } catch (error) {
       console.error("Fehler beim Speichern:", error);
       this.alerts.error('Fehler beim Speichern!', error);
@@ -166,48 +118,17 @@ export class MeasurementSettingsComponent implements OnInit {
     const settingIdNumber: number = Number(SettingId);
 
     await this.measurementSettingsService.selectElement(settingIdNumber);
-    // Load existing probe positions from backend for the selected setting
-    await this.probePositionService.reloadElements();
+    // Reload probe positions for the selected setting
+    this.createEmptyProbePositions();
   }
 
-  private updateSondenProSchenkelOptions(): void {
-    const coil = this.selectedCoil;
-    const probeType = this.selectedProbeType;
-    const coiltypeId = coil?.coiltype?.id ?? null;
-    const alpha = probeType?.alpha ?? null;
-
-    // Verhindere unnötige Reberechnungen, wenn sich Kontext nicht geändert hat
-    if (this.lastOptionContext.coiltypeId === coiltypeId && this.lastOptionContext.alpha === alpha) {
-      return;
-    }
-    this.lastOptionContext = { coiltypeId, alpha };
-
-    if (!coil?.coiltype?.schenkel || !alpha || alpha <= 0) {
-      // Fallback: Standardoptionen, falls noch keine vollständigen Daten vorhanden sind
-      this.schenkelAnzahl.set([1, 2, 3, 4, 5, 6, 7, 8]);
-      return;
-    }
-
-    const joche = coil.coiltype.schenkel;
-    const maxRaw = 360 / (joche * alpha);
-    const max = Math.floor(maxRaw);
-
-    if (!Number.isFinite(max) || max < 1) {
-      this.schenkelAnzahl.set([1]);
-      if (this.selectedMeasurementSetting) {
-        this.selectedMeasurementSetting.sondenProSchenkel = 1;
-      }
-      return;
-    }
-
-    const options = Array.from({ length: max }, (_, i) => i + 1);
-    this.schenkelAnzahl.set(options);
-
-    if (this.selectedMeasurementSetting && this.selectedMeasurementSetting.sondenProSchenkel != null) {
-      if (this.selectedMeasurementSetting.sondenProSchenkel > max) {
-        this.selectedMeasurementSetting.sondenProSchenkel = max;
-      }
-    }
+  createEmptyProbePositions() {
+    console.log("Creating empty probe positions for measurement setting:", this.measurementSettingsService.selectedElementCopy);
+    this.probePositionService.createEmptyPositions(
+      this.measurementSettingsService.selectedElementCopy?.coil?.coiltype?.schenkel ?? 0,
+      this.measurementSettingsService.selectedElementCopy?.sondenProSchenkel ?? 0,
+      this.measurementSettingsService.selectedElementCopy!
+    );
   }
 
   isFieldInvalid(field: keyof MeasurementSetting): boolean {
@@ -227,19 +148,6 @@ export class MeasurementSettingsComponent implements OnInit {
     }
 
     return false;
-  }
-
-  isFormValid(): boolean {
-    if (!this.selectedMeasurementSetting) return false;
-
-    const requiredFields: (keyof MeasurementSetting)[] = [
-      'name',
-      'coilId',
-      'probeTypeId',
-      'sondenProSchenkel'
-    ];
-
-    return requiredFields.every(field => !this.isFieldInvalid(field));
   }
 
   coilOrProbeChanged(): boolean {
@@ -267,38 +175,18 @@ export class MeasurementSettingsComponent implements OnInit {
 
   openCoilSelect()
   {
-    // Aktuellen Entwurf sichern, bevor wir in die Spulenauswahl wechseln
-    this.measurementSettingsService.saveDraftToStorage();
-
     this.coilsService.selectedElementCopy = null;
     this.coilsService.isCoilSelector = true;
 
-    const msId = this.selectedMeasurementSetting?.id ?? null;
-
-    this.router.navigate(['/coil-management'], {
-      queryParams: {
-        selector: 'measurement-settings',
-        measurementSettingsId: msId ?? undefined
-      }
-    });
+    this.router.navigate(['/coil-management']);
   }
 
   openProbeSelect()
   {
-    // Aktuellen Entwurf sichern, bevor wir in die Sondentyp-Auswahl wechseln
-    this.measurementSettingsService.saveDraftToStorage();
-
     this.probeTypesService.selectedElementCopy = null;
     this.probeTypesService.isMeasurementSettingsSelector = true;  
 
-    const msId = this.selectedMeasurementSetting?.id ?? null;
-
-    this.router.navigate(['/probe-type-management'], {
-      queryParams: {
-        selector:             'measurement-settings',
-        measurementSettingsId: msId ?? undefined
-      }
-    });
+    this.router.navigate(['/probe-type-management']);
   }
 
   backToListing(){

@@ -123,9 +123,7 @@
                 <label for="bemessungsspannung" class="form-label">Bemessungsspannung (V)</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsspannung')">
                   <input
-                    type="text"
-                    inputmode="decimal"
-                    appDecimalComma
+                    type="number"
                     class="form-control"
                     id="bemessungsspannung"
                     placeholder="Bemessungsspannung in V"
@@ -143,9 +141,7 @@
                 <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz (Hz)</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
                   <input
-                    type="text"
-                    inputmode="decimal"
-                    appDecimalComma
+                    type="number"
                     class="form-control"
                     id="bemessungsfrequenz"
                     placeholder="Bemessungsfrequenz in Hz"
@@ -163,12 +159,13 @@
                 <label for="einheit" class="form-label">Einheit</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('einheit')">
                   <input
-                    type="text"
+                    type="number"
                     class="form-control"
                     id="einheit"
                     placeholder="Einheit"
                     [(ngModel)]="selectedCoil!.einheit"
                     name="einheit"
+                    min="0"
                   />
                 </div>
                 <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('einheit')">
@@ -179,11 +176,7 @@
           </div>
 
           <div class="form-actions">
-            <button
-              type="button"
-              class="btn btn-primary btn-modern"
-              [disabled]="!canSave()"
-              (click)="saveChanges()">
+            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges()" (click)="saveChanges()">
               Speichern
             </button>
             <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">

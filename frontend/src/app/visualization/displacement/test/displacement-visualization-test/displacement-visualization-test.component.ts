@@ -46,7 +46,6 @@ export class DisplacementVisualizationTestComponent {
     breite: 145,
     hoehe: 45,
     windungszahl: 14,
-    alpha: 15.5,
     notiz: ""
   };
 
@@ -65,7 +64,7 @@ export class DisplacementVisualizationTestComponent {
     id: 0,
     coiltype: this.coiltype,
     coiltypeId: 0,
-    einheit: 'kV',
+    einheit: 123457890,
     auftragsnummer: 'Instanz',
     auftragsPosNr: '',
     bemessungsspannung: 900,

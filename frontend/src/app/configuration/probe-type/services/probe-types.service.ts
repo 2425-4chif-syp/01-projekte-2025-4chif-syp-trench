@@ -24,7 +24,6 @@ export class ProbeTypesService implements ListService<ProbeType> {
       breite: null,
       hoehe: null,
       windungszahl: null,
-      alpha: null,
       notiz: ''
     };
   }

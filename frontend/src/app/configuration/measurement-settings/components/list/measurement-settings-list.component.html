@@ -3,11 +3,8 @@
     Messeinstellungen
   </h2>
   <app-generic-list 
-    [keysAsColumns]="keysAsColumns"
-    [elementValueToStringMethods]="elementValueToStringMethods"
-    [newElementButtonLabel]="'Neue Messeinstellung'"
-    [isSelector]="isSelector"
-    [showButton]="showButton"
-    (onElementClick)="openSetting($event)"
-    (cancelSelection)="onCancelSelection()" />
+  [keysAsColumns]="keysAsColumns"
+  [elementValueToStringMethods]="elementValueToStringMethods"
+  [newElementButtonLabel]="'Neue Messeinstellung'"
+  (onElementClick)="openSetting($event)" />
 </div>

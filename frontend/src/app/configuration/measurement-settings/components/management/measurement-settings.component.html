@@ -92,9 +92,6 @@
                 <span class="selection-chip" *ngIf="selectedProbeType.windungszahl != null">
                   Windungen: {{ selectedProbeType.windungszahl }}
                 </span>
-                <span class="selection-chip" *ngIf="selectedProbeType.alpha != null">
-                  α: {{ selectedProbeType.alpha | number: '1.0-2' }}°
-                </span>
               </div>
               <p class="selection-card__note" *ngIf="selectedProbeType?.notiz?.trim()">
                 {{ selectedProbeType?.notiz }}
@@ -132,6 +129,7 @@
                   class="form-select"
                   id="sonden-pro-schenkel"
                   [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
+                  (ngModelChange)="createEmptyProbePositions()"
                   name="sondenProSchenkel"
                   [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')"
                 >
@@ -147,11 +145,7 @@
           </section>
 
           <div class="form-actions">
-            <button
-              type="button"
-              class="btn btn-primary btn-modern"
-              [disabled]="!isFormValid() || !(hasChanges() || coilOrProbeChanged())"
-              (click)="saveChanges()">
+            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges() && !coilOrProbeChanged()" (click)="saveChanges()">
               Speichern
             </button>
             <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">

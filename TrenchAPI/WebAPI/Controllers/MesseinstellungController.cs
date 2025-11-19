@@ -63,28 +63,10 @@ namespace TrenchAPI.Controllers
 
             if (messeinstellung == null) return NotFound();
 
-            var spule = await _context.Spule
-                                      .Include(s => s.SpuleTyp)
-                                      .FirstOrDefaultAsync(s => s.ID == dto.SpuleID);
-            if (spule == null)
+            if (!_context.Spule.Any(s => s.ID == dto.SpuleID))
                 return BadRequest("Die angegebene Spule existiert nicht.");
-
-            var sondenTyp = await _context.SondenTyp.FirstOrDefaultAsync(st => st.ID == dto.SondenTypID);
-            if (sondenTyp == null)
+            if (!_context.SondenTyp.Any(st => st.ID == dto.SondenTypID))
                 return BadRequest("Der angegebene Sondentyp existiert nicht.");
-
-            // Plausibilitätsprüfung: Max. Sonden pro Schenkel = floor(360 / (Joche * Alpha))
-            var joche = spule.SpuleTyp?.Schenkelzahl ?? 0;
-            if (joche <= 0)
-                return BadRequest("Der zugehörige Spulentyp hat keine gültige Schenkelzahl.");
-
-            if (sondenTyp.Alpha <= 0)
-                return BadRequest("Der gewählte Sondentyp hat kein gültiges Alpha.");
-
-            var maxSondenProSchenkelDecimal = 360m / (joche * sondenTyp.Alpha);
-            var maxSondenProSchenkel = (int)Math.Floor(maxSondenProSchenkelDecimal);
-            if (dto.SondenProSchenkel > maxSondenProSchenkel)
-                return BadRequest($"Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: {maxSondenProSchenkel}.");
 
             messeinstellung.SpuleID            = dto.SpuleID;
             messeinstellung.SondenTypID        = dto.SondenTypID;
@@ -104,37 +86,14 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var spule = await _context.Spule
-                                      .Include(s => s.SpuleTyp)
-                                      .FirstOrDefaultAsync(s => s.ID == messeinstellungDto.SpuleID);
-            if (spule == null)
+            if (!_context.Spule.Any(s => s.ID == messeinstellungDto.SpuleID))
             {
                 return BadRequest("Die angegebene Spule existiert nicht.");
             }
 
-            var sondenTyp = await _context.SondenTyp.FirstOrDefaultAsync(m => m.ID == messeinstellungDto.SondenTypID);
-            if (sondenTyp == null)
+            if (!_context.SondenTyp.Any(m => m.ID == messeinstellungDto.SondenTypID))
             {
                 return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
-            }
-
-            // Plausibilitätsprüfung: Max. Sonden pro Schenkel = floor(360 / (Joche * Alpha))
-            var joche = spule.SpuleTyp?.Schenkelzahl ?? 0;
-            if (joche <= 0)
-            {
-                return BadRequest("Der zugehörige Spulentyp hat keine gültige Schenkelzahl.");
-            }
-
-            if (sondenTyp.Alpha <= 0)
-            {
-                return BadRequest("Der gewählte Sondentyp hat kein gültiges Alpha.");
-            }
-
-            var maxSondenProSchenkelDecimal = 360m / (joche * sondenTyp.Alpha);
-            var maxSondenProSchenkel = (int)Math.Floor(maxSondenProSchenkelDecimal);
-            if (messeinstellungDto.SondenProSchenkel > maxSondenProSchenkel)
-            {
-                return BadRequest($"Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: {maxSondenProSchenkel}.");
             }
 
             var messeinstellung = new Messeinstellung
@@ -146,8 +105,8 @@ namespace TrenchAPI.Controllers
                 Name = messeinstellungDto.Name,
             };
 
-            messeinstellung.Spule = spule;
-            messeinstellung.SondenTyp = sondenTyp;
+            messeinstellung.Spule = await _context.Spule.Include(s => s.SpuleTyp).FirstOrDefaultAsync(m => m.ID == messeinstellung.SpuleID);
+            messeinstellung.SondenTyp = await _context.SondenTyp.FindAsync(messeinstellung.SondenTypID);
 
             _context.Messeinstellung.Add(messeinstellung);
             await _context.SaveChangesAsync();

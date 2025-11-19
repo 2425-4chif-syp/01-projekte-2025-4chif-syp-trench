@@ -7,12 +7,11 @@ import { CoiltypesService } from '../../../coiltype/services/coiltypes.service';
 import { Coil } from '../../interfaces/coil';
 import { Coiltype } from '../../../coiltype/interfaces/coiltype';
 import { AlertService } from '../../../../services/alert.service';
-import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
 
 @Component({
   selector: 'app-coil-management',
   standalone: true,
-  imports: [FormsModule, CommonModule, DecimalCommaDirective],
+  imports: [FormsModule, CommonModule],
   templateUrl: './coil-management.component.html',
   styleUrl: './coil-management.component.scss'
 })
@@ -63,7 +62,7 @@ export class CoilManagementComponent {
       const nonEmpty = (
         (s.auftragsnummer?.trim()?.length ?? 0) > 0 ||
         (s.auftragsPosNr?.trim()?.length ?? 0) > 0 ||
-        (s.einheit?.trim()?.length ?? 0) > 0 ||
+        (s.einheit ?? 0) > 0 ||
         (s.bemessungsspannung ?? 0) > 0 ||
         (s.bemessungsfrequenz ?? 0) > 0 ||
         (s.coiltypeId ?? null) !== null
@@ -75,63 +74,18 @@ export class CoilManagementComponent {
     return JSON.stringify(this.originalCoil) !== JSON.stringify(this.selectedCoil);
  }
 
-  isFormValid(): boolean {
-    if (!this.selectedCoil) return false;
-
-    const requiredFields = ['einheit', 'auftragsPosNr', 'bemessungsfrequenz', 'bemessungsspannung'] as const;
-    if (requiredFields.some(field => this.isFieldInvalid(field))) {
-      return false;
-    }
-
-    const coiltypeId = this.selectedCoil.coiltypeId ?? 0;
-    if (coiltypeId <= 0 && !this.selectedCoil.coiltype) {
-      return false;
-    }
-
-    return true;
-  }
-
-  canSave(): boolean {
-    if (!this.selectedCoil) return false;
-
-    // Beim Erstellen: speichern nur, wenn alles gültig ausgefüllt ist
-    if (this.coilsService.selectedElementIsNew || this.selectedCoil.id == null || this.selectedCoil.id === 0) {
-      return this.isFormValid();
-    }
-
-    // Beim Bearbeiten: speichern nur, wenn etwas geändert wurde und das Formular gültig ist
-    return this.isFormValid() && this.hasChanges();
-  }
-
   isFieldInvalid(field: string): boolean {
     if (!this.selectedCoil) return false;
     let value = this.selectedCoil[field as keyof Coil];
-    if (value === null || value === undefined) return true;
-    if (typeof value === 'number') {
-      return value <= 0 || Number.isNaN(value);
-    }
-    if (typeof value === 'string') {
-      return value.trim().length === 0;
-    }
-    return false;
+    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
   }
 
 
   openCoiltypeSelect() {
-    // Aktuellen Spulenentwurf sichern, bevor in die Spulentyp-Auswahl gewechselt wird
-    this.coilsService.saveDraftToStorage();
-
     this.coiltypesService.selectedElementCopy = null;
     this.coiltypesService.isCoilSelector = true;
 
-    const coilId = this.selectedCoilId ?? 0;
-
-    this.router.navigate(['/coiltype-management'], {
-      queryParams: {
-        selector: 'coil',
-        coilId:   coilId || undefined
-      }
-    });
+    this.router.navigate(['/coiltype-management']);
   }
 
   async saveChanges() {
@@ -191,13 +145,11 @@ export class CoilManagementComponent {
     }
 
     await this.coilsService.deleteElement(this.coilsService.selectedElementCopy.id!);
-    this.coilsService.clearDraftFromStorage();
   }
 
   backToListing(): void {
     this.coilsService.selectedElementCopy = null;
     this.originalCoil = null;
-    this.coilsService.clearDraftFromStorage();
   }
 
   showCoiltypeDropdown: boolean = false;

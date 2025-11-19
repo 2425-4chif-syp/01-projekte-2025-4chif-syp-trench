@@ -1,27 +1,17 @@
-@if (measurementSettingsService.isMeasurementSelector) {
-  <app-measurement-settings-list
-    [isSelector]="true"
-    [showButton]="false"
-    (selectSetting)="onSelectForMeasurement($event)"
-    (cancelSelection)="onCancelMeasurementSelection()"
-  />
+@if (measurementSettingsService.selectedElementCopy === null){
+  <app-measurement-settings-list />
 }
 @else {
-  @if (measurementSettingsService.selectedElementCopy === null){
-    <app-measurement-settings-list />
-  }
-  @else {
-    <!--<app-measurement-settings />-->
-    <!--<app-probe-position-management />-->
+  <!--<app-measurement-settings />-->
+  <!--<app-probe-position-management />-->
 
-    <div class="row">
-      <div class="col-6">
-        <app-measurement-settings></app-measurement-settings>
-      </div>
-
-      <div class="col-6">
-        <app-probe-position-management></app-probe-position-management>
-      </div>
+  <div class="row">
+    <div class="col-6">
+      <app-measurement-settings></app-measurement-settings>
     </div>
-  }
+
+    <div class="col-6">
+      <app-probe-position-management></app-probe-position-management>
+    </div>
+  </div>
 }

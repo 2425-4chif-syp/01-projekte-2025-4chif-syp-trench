@@ -7,12 +7,11 @@ import { Probe } from '../../interfaces/probe';
 import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 import { AlertService } from '../../../../services/alert.service';
-import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
 
 @Component({
   selector: 'app-probe-management',
   standalone: true,
-  imports: [FormsModule, CommonModule, DecimalCommaDirective],
+  imports: [FormsModule, CommonModule],
   templateUrl: './probe-management.component.html',
   styleUrl: './probe-management.component.scss'
 })
@@ -28,11 +27,6 @@ export class ProbeManagementComponent {
   originalProbe: Probe | null = null;
 
   ngOnInit() {
-    if (!this.selectedProbe) {
-      // Entwurf nach Reload wiederherstellen (falls vorhanden)
-      this.probesService.loadDraftFromStorage();
-    }
-
     this.syncOriginalProbeSnapshot();
   }
 
@@ -58,49 +52,9 @@ export class ProbeManagementComponent {
   }
 
   hasChanges(): boolean {
-    if (!this.selectedProbe) return false;
-
-    // For new probes, treat any non-empty field as a change
-    if (this.probesService.selectedElementIsNew || this.selectedProbe.id == null || this.selectedProbe.id === 0) {
-      const p = this.selectedProbe;
-      const hasName = (p.name?.trim()?.length ?? 0) > 0;
-      const hasCalibration = p.kalibrierungsfaktor != null && !Number.isNaN(p.kalibrierungsfaktor);
-      const hasProbeType = (p.probeTypeId ?? 0) > 0 || p.probeType != null;
-
-      return hasName || hasCalibration || hasProbeType;
-    }
-
-    if (!this.originalProbe) return false;
+    if (!this.originalProbe || !this.selectedProbe) return false;
     return JSON.stringify(this.originalProbe) !== JSON.stringify(this.selectedProbe);
  }
-
-  isFormValid(): boolean {
-    if (!this.selectedProbe) return false;
-
-    const requiredFields: (keyof Probe)[] = ['name', 'kalibrierungsfaktor'];
-    if (requiredFields.some(field => this.isFieldInvalid(field))) {
-      return false;
-    }
-
-    const probeTypeId = this.selectedProbe.probeTypeId ?? 0;
-    if (probeTypeId <= 0 && !this.selectedProbe.probeType) {
-      return false;
-    }
-
-    return true;
-  }
-
-  canSave(): boolean {
-    if (!this.selectedProbe) return false;
-
-    // Beim Erstellen: speichern nur, wenn alles gültig ausgefüllt ist
-    if (this.probesService.selectedElementIsNew || this.selectedProbe.id == null || this.selectedProbe.id === 0) {
-      return this.isFormValid();
-    }
-
-    // Beim Bearbeiten: speichern nur, wenn etwas geändert wurde und das Formular gültig ist
-    return this.isFormValid() && this.hasChanges();
-  }
 
   isFieldInvalid(field: keyof Probe): boolean {
     if (!this.selectedProbe) return false;
@@ -123,20 +77,10 @@ export class ProbeManagementComponent {
 
 
   openProbetypeSelect() {
-    // Aktuellen Sondenentwurf sichern, bevor in die Sondentyp-Auswahl gewechselt wird
-    this.probesService.saveDraftToStorage();
-
     this.probeTypesService.selectedElementCopy = null;
     this.probeTypesService.isProbeSelector = true;
 
-    const probeId = this.selectedProbeId ?? 0;
-
-    this.router.navigate(['/probe-type-management'], {
-      queryParams: {
-        selector: 'probe',
-        probeId:  probeId || undefined
-      }
-    });
+    this.router.navigate(['/probe-type-management']);
   }
 
   async saveChanges() {
@@ -159,7 +103,6 @@ export class ProbeManagementComponent {
         this.alerts.success('Änderungen gespeichert!');
 
         this.saveError = false;
-        this.probesService.clearDraftFromStorage();
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
         this.alerts.error('Fehler beim Speichern!', error);
@@ -195,13 +138,11 @@ export class ProbeManagementComponent {
     }
 
     await this.probesService.deleteElement(this.probesService.selectedElementCopy.id!);
-    this.probesService.clearDraftFromStorage();
   }
 
   backToListing(): void {
     this.probesService.selectedElementCopy = null;
     this.originalProbe = null;
-    this.probesService.clearDraftFromStorage();
   }
 
   showProbetypeDropdown: boolean = false;
@@ -247,9 +188,5 @@ export class ProbeManagementComponent {
       // Fallback to current values if original data is unavailable
       this.originalProbe = { ...selected };
     }
-  }
-
-  onFieldChange(): void {
-    this.probesService.saveDraftToStorage();
   }
 }

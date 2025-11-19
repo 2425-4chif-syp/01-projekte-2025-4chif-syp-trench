@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MeasurementSettingsService } from '../services/measurement-settings.service';
-import { MeasurementSettingsListComponent } from './list/measurement-settings-list.component';
-import { MeasurementSettingsComponent } from './management/measurement-settings.component';
+import { Component } from '@angular/core';
+import {MeasurementSettingsService} from "../services/measurement-settings.service";
+import {MeasurementSettingsListComponent} from "./list/measurement-settings-list.component";
+import {CommonModule} from "@angular/common";
+import {MeasurementSettingsComponent} from "./management/measurement-settings.component";
 import { ProbePositionManagementComponent } from "../../probe-position/components/probe-position-management.component";
-import { MessungService } from '../../messung/services/messung.service';
-import { MeasurementSetting } from '../interfaces/measurement-settings';
 
 @Component({
   selector: 'app-measurement-settings-parent',
@@ -15,49 +12,8 @@ import { MeasurementSetting } from '../interfaces/measurement-settings';
   templateUrl: './measurement-settings-parent.component.html',
   styleUrl: './measurement-settings-parent.component.scss'
 })
-export class MeasurementSettingsParentComponent implements OnInit {
+export class MeasurementSettingsParentComponent {
 
-  constructor(
-    public measurementSettingsService: MeasurementSettingsService,
-    private messungService: MessungService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-  }
-
-  ngOnInit(): void {
-    const selector = this.route.snapshot.queryParamMap.get('selector');
-    if (selector === 'messung') {
-      this.measurementSettingsService.isMeasurementSelector = true;
-
-      // Sicherstellen, dass es einen Messungs-Kontext gibt, auch nach Reload
-      if (!this.messungService.selectedElementCopy) {
-        // 1) Versuch: Entwurf aus LocalStorage laden
-        const draft = this.messungService.loadDraftFromStorage();
-        if (!draft) {
-          // 2) Fallback: komplett neue Messung
-          this.messungService.selectedElementCopy = this.messungService.newElement;
-          this.messungService.selectedElementIsNew = true;
-        }
-      }
-    }
-  }
-
-  onSelectForMeasurement(setting: MeasurementSetting): void {
-    if (this.messungService.selectedElementCopy) {
-      this.messungService.selectedElementCopy.messeinstellungId = setting.id ?? null;
-      this.messungService.selectedElementCopy.messeinstellung = setting;
-
-      // Aktualisierten Messungs-Entwurf (inkl. gewählter Messeinstellung) speichern
-      this.messungService.saveDraftToStorage();
-    }
-
-    this.measurementSettingsService.isMeasurementSelector = false;
-    this.router.navigate(['/measurement-management']);
-  }
-
-  onCancelMeasurementSelection(): void {
-    this.measurementSettingsService.isMeasurementSelector = false;
-    this.router.navigate(['/measurement-management']);
+  constructor(public measurementSettingsService: MeasurementSettingsService) {
   }
 }

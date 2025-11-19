@@ -1,235 +1,100 @@
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-xl-10 col-lg-11">
-      <div class="card shadow-sm modern-card">
-        <div class="form-header">
-          <div class="form-header__titles">
-            <h3>Messung</h3>
-            <p>Wählen Sie eine Messeinstellung und konfigurieren Sie die Messung.</p>
-          </div>
-          <span class="form-tag" [ngClass]="isConnected ? 'tag-edit' : 'tag-new'">
-            {{ isConnected ? 'Laufende Messung' : 'Konfiguration' }}
-          </span>
+<div class="container py-4">
+  <h2 class="mt-1 mb-5 text-center">
+    Messung
+  </h2>
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <button class="btn btn-success" (click)="startMeasurement()" [disabled]="isConnected || !isValid()">
+      🧪 Messung starten
+    </button>
+    <button class="btn btn-danger" (click)="stopMeasurement()" [disabled]="!isConnected">
+      ⛔ Messung beenden
+    </button>
+    <button class="btn btn-secondary" (click)="backToListing()">Zurück</button>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Messung konfigurieren</h5>
+      <div class="mb-3">
+        <label for="measurementSettingId" class="form-label">Messeinstellung: <span class="text-danger">*</span></label>
+        <select class="form-select" id="measurementSettingId" 
+                [(ngModel)]="measurementSettingId" 
+                [class.is-invalid]="showIdError"
+                [disabled]="isConnected">
+          <option [ngValue]="null">Bitte wählen Sie eine Messeinstellung</option>
+          <option *ngFor="let setting of measurementSettingsService.elements" [value]="setting.id">
+            Messeinstellung-ID: {{ setting.id }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="showIdError">
+          Bitte wählen Sie eine gültige Messeinstellung aus.
         </div>
-
-        <div class="form-actions form-actions--top">
-          <button
-            class="btn btn-success btn-modern"
-            type="button"
-            (click)="startMeasurement()"
-            [disabled]="isConnected || !isValid()"
-          >
-            🧪 Messung starten
-          </button>
-          <button
-            class="btn btn-danger btn-modern"
-            type="button"
-            (click)="stopMeasurement()"
-            [disabled]="!isConnected"
-          >
-            ⛔ Messung beenden
-          </button>
-          <button
-            class="btn btn-outline-secondary btn-modern"
-            type="button"
-            (click)="backToListing()"
-          >
-            Zurück
-          </button>
+        <div *ngIf="isLoading" class="text-muted mt-2">
+          <small>Lade Messeinstellungen...</small>
         </div>
-
-        <div class="selection-row">
-          <div
-            class="selection-card"
-            [class.is-empty]="!selectedMeasurementSetting"
-            [class.has-error]="showIdError"
-          >
-            <span class="selection-card__eyebrow">Messeinstellung</span>
-            <h4 class="selection-card__title">
-              @if (selectedMeasurementSetting) {
-                #{{ selectedMeasurementSetting.id }} –
-                {{ selectedMeasurementSetting.name || 'Ohne Namen' }}
-              } @else {
-                Keine Messeinstellung ausgewählt
-              }
-            </h4>
-            <p class="selection-card__subtitle" *ngIf="selectedMeasurementSetting">
-              Spule:
-              {{ selectedMeasurementSetting.coil?.coiltype?.name || 'Unbekannte Spule' }}
-            </p>
-            <p class="selection-card__subtitle" *ngIf="selectedMeasurementSetting?.coil as coil">
-              Auftrag:
-              {{ coil.auftragsnummer || '–' }}
-              · Pos:
-              {{ coil.auftragsPosNr || '–' }}
-            </p>
-
-            <div class="selection-card__chips" *ngIf="selectedMeasurementSetting">
-              <span class="selection-chip" *ngIf="selectedMeasurementSetting.coil?.coiltype?.schenkel != null">
-                Schenkel: {{ selectedMeasurementSetting.coil?.coiltype?.schenkel }}
-              </span>
-              <span class="selection-chip" *ngIf="selectedMeasurementSetting.sondenProSchenkel != null">
-                Sonden/Schenkel: {{ selectedMeasurementSetting.sondenProSchenkel }}
-              </span>
-              <span
-                class="selection-chip"
-                *ngIf="selectedMeasurementSetting.coil?.coiltype?.toleranzbereich != null"
-              >
-                Toleranz: {{ selectedMeasurementSetting.coil?.coiltype?.toleranzbereich | number: '1.1-1' }} kg
-              </span>
-            </div>
-
-            <p class="selection-card__empty" *ngIf="!selectedMeasurementSetting">
-              Wählen Sie eine Messeinstellung über die Schaltfläche unten.
-            </p>
-
-            <div class="selection-card__note" *ngIf="error">
-              {{ error }}
-            </div>
-
-            <button
-              type="button"
-              class="selection-card__action"
-              (click)="openMeasurementSettingsSelect()"
-              [disabled]="isConnected"
-            >
-              <span>
-                {{ selectedMeasurementSetting ? 'Messeinstellung ändern' : 'Messeinstellung wählen' }}
-              </span>
-              <span class="selection-card__action-icon" aria-hidden="true">→</span>
-            </button>
-          </div>
-
-          <div class="form-section">
-            <div class="form-field">
-              <label for="tauchkernstellung" class="form-label">
-                Tauchkernstellung (A)
-              </label>
-              <div class="input-shell">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="tauchkernstellung"
-                  [ngModel]="tauchkernstellungInput"
-                  (ngModelChange)="onDecimalInputChange($event, 'tauchkernstellung')"
-                  [disabled]="isConnected"
-                  placeholder="Tauchkernstellung in Ampere"
-                />
-              </div>
-            </div>
-
-            <div class="form-field">
-              <label for="pruefspannung" class="form-label">
-                Prüfspannung (V)
-              </label>
-              <div class="input-shell">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="pruefspannung"
-                  [ngModel]="pruefspannungInput"
-                  (ngModelChange)="onDecimalInputChange($event, 'pruefspannung')"
-                  [disabled]="isConnected"
-                  placeholder="Prüfspannung in Volt"
-                />
-              </div>
-            </div>
-
-            <div class="form-field">
-              <label for="note" class="form-label">Notiz (optional)</label>
-              <div class="input-shell">
-                <textarea
-                  class="form-control"
-                  id="note"
-                  [(ngModel)]="note"
-                  (ngModelChange)="onNoteChange($event)"
-                  [disabled]="isConnected"
-                  placeholder="Geben Sie eine optionale Notiz ein"
-                  rows="4"
-                ></textarea>
-              </div>
-            </div>
-
-            <div class="form-field" *ngIf="isLoading">
-              <small class="text-muted">Lade Messeinstellungen...</small>
-            </div>
-          </div>
+        <div *ngIf="error" class="text-danger mt-2">
+          <small>{{ error }}</small>
         </div>
       </div>
+      <div class="mb-3">
+        <label for="note" class="form-label">Notiz (optional):</label>
+        <textarea class="form-control" id="note" 
+                  [(ngModel)]="note" 
+                  [disabled]="isConnected"
+                  placeholder="Geben Sie eine optionale Notiz ein"
+                  rows="2"></textarea>
+      </div>
+    </div>
+  </div>
 
-      @if (isConnected && selectedMeasurementSetting) {
-        <div class="card shadow-sm modern-card mt-4">
-          <div class="form-header">
-            <div class="form-header__titles">
-              <h3>Messdaten</h3>
-              <p>Live-Auswertung der aktuellen Messung.</p>
-            </div>
-          </div>
+  @if (isConnected) {
+    <div class="m-4">
+      <app-displacement-visualization [size]="512" 
+      [yokeData]="yokeData"
+      [m_tot]="m_tot"
+      [probeType]="selectedMeasurementSetting!.probeType!"
+      [probes]="[]"
+      [coiltype]="selectedMeasurementSetting!.coil!.coiltype!"
+      [coil]="selectedMeasurementSetting!.coil!"
+      [measurementSetting]="selectedMeasurementSetting!"
+      />
+    </div>
 
-          <div class="visualization-wrapper">
-            <app-displacement-visualization
-              [size]="512"
-              [yokeData]="yokeData"
-              [m_tot]="m_tot"
-              [probeType]="selectedMeasurementSetting.probeType!"
-              [probes]="[]"
-              [coiltype]="selectedMeasurementSetting.coil!.coiltype!"
-              [coil]="selectedMeasurementSetting.coil!"
-              [measurementSetting]="selectedMeasurementSetting"
-            />
-          </div>
+    <div class="mt-4">
+      <ul>
+        <li>
+          <strong>Absolutwert der Summenkraft</strong>: {{ m_tot | number: '1.2-2' }}kg
+        </li>
+        <li>
+          <strong>Toleranzbereich</strong>: {{ selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich! | number: '1.2-2' }}kg
+        </li>
+        <li>
+          <strong>In der Toleranz</strong>: <span [ngClass]="{ 'text-success': isWithinTolerance, 'text-danger': !isWithinTolerance }">{{ isWithinTolerance ? 'Ja' : 'Nein' }}</span>
+        </li>
+      </ul>
+    </div>
 
-          <div class="measurement-summary mt-3">
-            <div class="summary-item">
-              <span class="summary-label">Absolutwert der Summenkraft</span>
-              <span class="summary-value">
-                {{ m_tot | number: '1.2-2' }} kg
-              </span>
-            </div>
-            <div class="summary-item">
-              <span class="summary-label">Toleranzbereich</span>
-              <span class="summary-value">
-                {{ selectedMeasurementSetting.coil!.coiltype!.toleranzbereich! | number: '1.2-2' }} kg
-              </span>
-            </div>
-            <div class="summary-item">
-              <span class="summary-label">In der Toleranz</span>
-              <span
-                class="summary-value"
-                [ngClass]="{ 'text-success': isWithinTolerance, 'text-danger': !isWithinTolerance }"
-              >
-                {{ isWithinTolerance ? 'Ja' : 'Nein' }}
-              </span>
-            </div>
-          </div>
-
-          @for (yoke of yokes(); track $index) {
-            <div class="yoke-section">
-              <h4 class="yoke-title">Schenkel #{{ $index + 1 }}</h4>
-              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-                @for (sensor of yoke.sensors; track $index) {
-                  <div class="col">
-                    <div class="card text-center h-100 border border-primary shadow-sm">
-                      <div class="card-body">
-                        <h6 class="card-title text-muted small">Sensor #{{ $index + 1 }}</h6>
-                        <p class="card-text fs-4 fw-bold">
-                          {{ sensor | number: '1.2-2' }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                }
+    @for (yoke of yokes(); track $index) {
+      <div class="mb-5">
+        <h4 class="mb-3 text-primary border-bottom pb-1">Schenkel #{{ $index+1 }}</h4>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+          @for (sensor of yoke.sensors; track $index) {
+            <div class="col">
+              <div class="card text-center h-100 border border-primary shadow-sm">
+                <div class="card-body">
+                  <h6 class="card-title text-muted small">Sensor #{{ $index+1 }}</h6>
+                  <p class="card-text fs-4 fw-bold">{{ sensor | number:'1.2-2' }}</p>
+                </div>
               </div>
             </div>
           }
         </div>
-      }
-
-      @if (!isConnected) {
-        <div class="text-center mt-4">
-          <p class="text-danger fs-5">🔴 Messung gestoppt</p>
-        </div>
-      }
+      </div>
+    }
+  }
+  @else {
+    <div class="text-center mt-5">
+      <p class="text-danger fs-4">🔴 Messung gestoppt</p>
     </div>
-  </div>
+  }
 </div>
