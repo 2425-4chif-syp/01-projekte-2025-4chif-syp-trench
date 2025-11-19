@@ -279,7 +279,14 @@ export class StartMeasurementComponent implements OnDestroy {
       this.measurementData = {};
 
       // Starte die Messung im Backend - Backend speichert automatisch MQTT-Werte
-      await this.measurementsBackendService.startMeasuring(this.measurementSettingId!, this.note);
+      const measurementName = `Messung_${this.startTime.toISOString().replace(/[:.]/g, '-').substring(0, 19)}`;
+      await this.measurementsBackendService.startMeasuring(
+        this.measurementSettingId!, 
+        this.note,
+        measurementName,
+        this.tauchkernstellung ?? 0,
+        this.pruefspannung ?? 0
+      );
       this.currentMeasurement = true;
       this.messungService.startGlobalMeasurement(this.measurementSettingId!);
       

@@ -92,6 +92,8 @@ namespace TrenchAPI.Persistence
 
         public async Task FillDbAsync()
         {
+            Console.WriteLine("DEBUG: FillDbAsync started - VERSION 2.0");
+            
             // Instead of deleting the database, drop all tables and recreate them
             Console.WriteLine("Dropping all tables...");
             await _dbContext.Database.ExecuteSqlRawAsync(@"
@@ -117,7 +119,28 @@ namespace TrenchAPI.Persistence
             await ImportMessungenAsync();
             await ImportMesswerteAsync();
 
+            Console.WriteLine("Saving changes to database...");
             await SaveChangesAsync();
+            Console.WriteLine("Changes saved successfully!");
+
+            // Reset all sequences to the max ID + 1 to prevent duplicate key errors  
+            Console.WriteLine();
+            Console.WriteLine("===========================================");
+            Console.WriteLine("RESETTING POSTGRES SEQUENCES...");
+            Console.WriteLine("===========================================");
+            
+            try
+            {
+                await ResetSequencesAsync();
+                Console.WriteLine("===========================================");
+                Console.WriteLine("SEQUENCES RESET COMPLETE!");
+                Console.WriteLine("===========================================");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR resetting sequences: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
         }
 
         private async Task ImportSpuleTypenAsync()
@@ -293,6 +316,39 @@ namespace TrenchAPI.Persistence
             }).ToList();
 
             await MesswertRepository.AddRangeAsync(messwerte.ToArray());
+        }
+
+        private async Task ResetSequencesAsync()
+        {
+            // Reset all auto-increment sequences to prevent duplicate key errors
+            var tables = new[]
+            {
+                ("Messung", "ID"),
+                ("Messwert", "ID"),
+                ("Messeinstellung", "ID"),
+                ("SondenPosition", "ID"),
+                ("Sonde", "ID"),
+                ("SondenTyp", "ID"),
+                ("Spule", "ID"),
+                ("SpuleTyp", "ID")
+            };
+
+            foreach (var (tableName, columnName) in tables)
+            {
+                try
+                {
+                    // Use pg_get_serial_sequence to find the sequence and reset it
+                    // The 'false' parameter means the next value will be maxId + 1
+                    var sql = $"SELECT setval(pg_get_serial_sequence('\"{tableName}\"', '{columnName}'), COALESCE((SELECT MAX(\"{columnName}\") FROM \"{tableName}\"), 0) + 1, false)";
+                    
+                    await _dbContext.Database.ExecuteSqlRawAsync(sql);
+                    Console.WriteLine($"✓ Reset sequence for {tableName}.{columnName}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"✗ Warning: Could not reset sequence for {tableName}: {ex.Message}");
+                }
+            }
         }
     }
 }

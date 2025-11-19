@@ -98,6 +98,9 @@ namespace TrenchAPI.Controllers
                 MesseinstellungID = dto.MesseinstellungID,
                 Anfangszeitpunkt = DateTime.UtcNow,
                 Endzeitpunkt = DateTime.MinValue,
+                Name = dto.Name ?? $"Messung_{DateTime.UtcNow:yyyyMMdd_HHmmss}",
+                Tauchkernstellung = dto.Tauchkernstellung,
+                Pruefspannung = dto.Pruefspannung,
                 Notiz = dto.Notiz ?? ""
             };
 
@@ -246,7 +249,7 @@ namespace TrenchAPI.Controllers
 
             var messung = new Messung
             {
-                ID = messungDto.ID,
+                // Don't set ID - let database auto-generate it
                 MesseinstellungID = messungDto.MesseinstellungID,
                 Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
                 Endzeitpunkt = messungDto.Endzeitpunkt,

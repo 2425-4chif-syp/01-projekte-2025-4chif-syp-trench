@@ -64,9 +64,12 @@ export class MeasurementsBackendService {
     return this.backendService.httpPostRequest('Messung/Complete', measurementData);
   }
 
-  public async startMeasuring(measurementSettingId: number, note: string): Promise<number> {
+  public async startMeasuring(measurementSettingId: number, note: string, name?: string, tauchkernstellung?: number, pruefspannung?: number): Promise<number> {
     const response: any = await this.backendService.httpPostRequest('Messung/startMeasuring', {
       MesseinstellungID: measurementSettingId,
+      Name: name,
+      Tauchkernstellung: tauchkernstellung ?? 0,
+      Pruefspannung: pruefspannung ?? 0,
       Notiz: note
     });
     return response;
