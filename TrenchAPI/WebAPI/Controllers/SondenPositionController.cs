@@ -30,9 +30,6 @@ namespace TrenchAPI.Controllers
                 .Include(sp => sp.Sonde)
                     .ThenInclude(s => s.SondenTyp)
                 .Include(sp => sp.Messeinstellung)
-                    .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
-                .Include(sp => sp.Messeinstellung)
-                    .ThenInclude(me => me.SondenTyp)
                 .ToListAsync();
         }
 
@@ -44,9 +41,6 @@ namespace TrenchAPI.Controllers
                 .Include(sp => sp.Sonde)
                     .ThenInclude(s => s.SondenTyp)
                 .Include(sp => sp.Messeinstellung)
-                    .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
-                .Include(sp => sp.Messeinstellung)
-                    .ThenInclude(me => me.SondenTyp)
                 .FirstOrDefaultAsync(sp => sp.ID == id);
 
             if (sondenPosition == null)
@@ -64,9 +58,6 @@ namespace TrenchAPI.Controllers
                 .Include(sp => sp.Sonde)
                     .ThenInclude(s => s.SondenTyp)
                 .Include(sp => sp.Messeinstellung)
-                    .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
-                .Include(sp => sp.Messeinstellung)
-                    .ThenInclude(me => me.SondenTyp)
                 .Where(sp => sp.MesseinstellungID == messeinstellungId)
                 .ToListAsync();
 

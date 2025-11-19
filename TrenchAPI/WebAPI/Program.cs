@@ -47,6 +47,10 @@ namespace TrenchAPI
 
             builder.Services.AddDbContext<WebDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DevConnection")));
             builder.Services.AddScoped<DataPackageService>();
+            
+            // Register MQTT Measurement Service as Singleton
+            builder.Services.AddSingleton<MqttMeasurementService>();
+            builder.Services.AddHostedService(provider => provider.GetRequiredService<MqttMeasurementService>());
 
             var app = builder.Build();
 

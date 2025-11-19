@@ -8,6 +8,7 @@ using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
 using TrenchAPI.Persistence.DTO;
 using System.Text.Json;
+using TrenchAPI.WebAPI.Services;
 
 namespace TrenchAPI.Controllers
 {
@@ -16,11 +17,14 @@ namespace TrenchAPI.Controllers
     public class MessungController : ControllerBase
     {
         private readonly WebDbContext _context;
+        private readonly MqttMeasurementService _mqttService;
         private static bool _isMeasuring = false;
+        private static int? _currentMessungID = null;
 
-        public MessungController(WebDbContext context)
+        public MessungController(WebDbContext context, MqttMeasurementService mqttService)
         {
             _context = context;
+            _mqttService = mqttService;
         }
 
         // GET: api/Messung
@@ -29,9 +33,6 @@ namespace TrenchAPI.Controllers
         {
                 return await _context.Messung
                     .Include(m => m.Messeinstellung)
-                        .ThenInclude(me => me.Spule)!.ThenInclude(s => s.SpuleTyp)
-                    .Include(m => m.Messeinstellung)
-                        .ThenInclude(me => me.SondenTyp)
                     .ToListAsync();       
         }
 
@@ -79,16 +80,90 @@ namespace TrenchAPI.Controllers
         }
 
         [HttpPost("startMeasuring")]
-        public ActionResult StartMeasuring()
+        public async Task<ActionResult<int>> StartMeasuring([FromBody] MessungStartDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!_context.Messeinstellung.Any(me => me.ID == dto.MesseinstellungID))
+            {
+                return BadRequest("Die angegebene Messeinstellung existiert nicht.");
+            }
+
+            // Erstelle neue Messung
+            var messung = new Messung
+            {
+                MesseinstellungID = dto.MesseinstellungID,
+                Anfangszeitpunkt = DateTime.UtcNow,
+                Endzeitpunkt = DateTime.MinValue,
+                Notiz = dto.Notiz ?? ""
+            };
+
+            _context.Messung.Add(messung);
+            await _context.SaveChangesAsync();
+
             _isMeasuring = true;
-            return Ok();
+            _currentMessungID = messung.ID;
+
+            // Start MQTT measurement service
+            await _mqttService.StartMeasurement(messung.ID, dto.MesseinstellungID);
+
+            return Ok(messung.ID);
         }
 
         [HttpPost("stopMeasuring")]
-        public ActionResult StopMeasuring()
+        public async Task<ActionResult> StopMeasuring()
         {
+            if (!_isMeasuring || _currentMessungID == null)
+            {
+                return BadRequest("Keine aktive Messung gefunden.");
+            }
+
+            var messung = await _context.Messung.FindAsync(_currentMessungID.Value);
+            if (messung == null)
+            {
+                return NotFound("Messung nicht gefunden.");
+            }
+
+            messung.Endzeitpunkt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
             _isMeasuring = false;
+            _currentMessungID = null;
+
+            // Stop MQTT measurement service
+            _mqttService.StopMeasurement();
+
+            return Ok();
+        }
+
+        // POST: api/Messung/AddLiveMesswert
+        [HttpPost("AddLiveMesswert")]
+        public async Task<ActionResult> AddLiveMesswert([FromBody] LiveMesswertDto dto)
+        {
+            if (!_isMeasuring || _currentMessungID == null)
+            {
+                return BadRequest("Keine aktive Messung.");
+            }
+
+            if (!_context.SondenPosition.Any(sp => sp.ID == dto.SondenPositionID))
+            {
+                return BadRequest("Die angegebene SondenPosition existiert nicht.");
+            }
+
+            var messwert = new Messwert
+            {
+                MessungID = _currentMessungID.Value,
+                SondenPositionID = dto.SondenPositionID,
+                Wert = dto.Wert,
+                Zeitpunkt = DateTime.UtcNow
+            };
+
+            _context.Messwert.Add(messwert);
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
 
@@ -198,8 +273,13 @@ namespace TrenchAPI.Controllers
         [HttpPost("Complete")]
         public async Task<ActionResult<Messung>> PostCompleteMessung(CompleteMessungDto messungDto)
         {
+            Console.WriteLine($"=== PostCompleteMessung aufgerufen ===");
+            Console.WriteLine($"MesseinstellungID: {messungDto.MesseinstellungID}");
+            Console.WriteLine($"Anzahl Messsonden: {messungDto.Messsonden?.Count ?? 0}");
+            
             if (!ModelState.IsValid)
             {
+                Console.WriteLine("ModelState ist ungültig!");
                 return BadRequest(ModelState);
             }
 
@@ -214,71 +294,73 @@ namespace TrenchAPI.Controllers
 
             _context.Messung.Add(messung);
             await _context.SaveChangesAsync();
+            Console.WriteLine($"Messung erstellt mit ID: {messung.ID}");
 
-            // Hole die Messeinstellung mit den zugehörigen Sonden
-            var messeinstellung = await _context.Messeinstellung
-                .Include(me => me.Spule)
-                .Include(me => me.SondenTyp)
-                .FirstOrDefaultAsync(me => me.ID == messungDto.MesseinstellungID);
-
-            if (messeinstellung == null)
-            {
-                return BadRequest("Messeinstellung nicht gefunden");
-            }
-
-            // Hole die zugehörigen Sonden für den Sondentyp
-            var sonden = await _context.Sonde
-                .Where(s => s.SondenTypID == messeinstellung.SondenTypID)
+            // Hole die existierenden SondenPositionen für diese Messeinstellung
+            var sondenPositionen = await _context.SondenPosition
+                .Where(sp => sp.MesseinstellungID == messungDto.MesseinstellungID)
                 .ToListAsync();
 
-            if (!sonden.Any())
+            Console.WriteLine($"Gefundene SondenPositionen: {sondenPositionen.Count}");
+            foreach (var sp in sondenPositionen)
             {
-                return BadRequest("Keine Sonden für den Sondentyp gefunden");
+                Console.WriteLine($"  - ID: {sp.ID}, Schenkel: {sp.Schenkel}, Position: {sp.Position}");
             }
 
-            // Erstelle die SondenPositionen
-            var sondenPositionen = new Dictionary<(int schenkel, int position), SondenPosition>();
-            foreach (var messsonde in messungDto.Messsonden)
+            if (!sondenPositionen.Any())
             {
-                // Nehme die erste verfügbare Sonde für diesen Sondentyp
-                var sonde = sonden.FirstOrDefault();
-                if (sonde == null)
-                {
-                    return BadRequest("Keine Sonde verfügbar");
-                }
-
-                var sondenPosition = new SondenPosition
-                {
-                    MesseinstellungID = messungDto.MesseinstellungID,
-                    SondeID = sonde.ID,
-                    Schenkel = messsonde.Schenkel,
-                    Position = messsonde.Position
-                };
-
-                _context.SondenPosition.Add(sondenPosition);
-                sondenPositionen[(messsonde.Schenkel, messsonde.Position)] = sondenPosition;
+                Console.WriteLine("FEHLER: Keine Sondenpositionen gefunden!");
+                return BadRequest("Keine Sondenpositionen für diese Messeinstellung gefunden. Bitte konfigurieren Sie zuerst die Sondenpositionen.");
             }
 
-            await _context.SaveChangesAsync();
+            if (messungDto.Messsonden == null || !messungDto.Messsonden.Any())
+            {
+                Console.WriteLine("WARNUNG: Keine Messsonden-Daten vorhanden");
+                return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);
+            }
+
+            int totalMesswerte = 0;
             // Speichere die Messwerte
             foreach (var messsonde in messungDto.Messsonden)
             {
-                var sondenPosition = sondenPositionen[(messsonde.Schenkel, messsonde.Position)];
-                foreach (var wert in messsonde.Messwerte)
-                {
-                    var messwert = new Messwert
-                    {
-                        MessungID = messung.ID,
-                        SondenPositionID = sondenPosition.ID,
-                        Wert = (decimal)wert,
-                        Zeitpunkt = messung.Anfangszeitpunkt.AddSeconds(messsonde.Messwerte.IndexOf(wert))
-                    };
+                Console.WriteLine($"Verarbeite Messsonde: Schenkel {messsonde.Schenkel}, Position {messsonde.Position}, Messwerte: {messsonde.Messwerte?.Count ?? 0}");
+                
+                // Finde die passende SondenPosition für diesen Schenkel und Position
+                var sondenPosition = sondenPositionen.FirstOrDefault(sp => 
+                    sp.Schenkel == messsonde.Schenkel && 
+                    sp.Position == messsonde.Position);
 
-                    _context.Messwert.Add(messwert);
+                if (sondenPosition == null)
+                {
+                    Console.WriteLine($"WARNUNG: Keine SondenPosition gefunden für Schenkel {messsonde.Schenkel}, Position {messsonde.Position}");
+                    continue;
+                }
+
+                Console.WriteLine($"SondenPosition gefunden: ID {sondenPosition.ID}");
+
+                // Speichere alle Messwerte für diese Position
+                if (messsonde.Messwerte != null)
+                {
+                    for (int i = 0; i < messsonde.Messwerte.Count; i++)
+                    {
+                        var wert = messsonde.Messwerte[i];
+                        var messwert = new Messwert
+                        {
+                            MessungID = messung.ID,
+                            SondenPositionID = sondenPosition.ID,
+                            Wert = (decimal)wert,
+                            Zeitpunkt = messung.Anfangszeitpunkt.AddSeconds(i)
+                        };
+
+                        _context.Messwert.Add(messwert);
+                        totalMesswerte++;
+                    }
                 }
             }
 
+            Console.WriteLine($"Speichere {totalMesswerte} Messwerte...");
             await _context.SaveChangesAsync();
+            Console.WriteLine($"Messung erfolgreich gespeichert mit {totalMesswerte} Messwerten!");
 
             return CreatedAtAction("GetMessung", new { id = messung.ID }, messung);
         }

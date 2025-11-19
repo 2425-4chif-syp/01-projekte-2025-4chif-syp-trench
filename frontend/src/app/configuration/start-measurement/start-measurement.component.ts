@@ -185,11 +185,13 @@ export class StartMeasurementComponent implements OnDestroy {
           this.yokeData.set(result.F);
           this.m_tot = result.m_tot;
 
-          // Speichere die Daten im Service
+          // Speichere die Daten im Service (für UI-State)
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;
           this.messungService.addMeasurementData(key, sensorValue);
           this.messungService.updateYokeData(result.F);
           this.messungService.updateMTot(result.m_tot);
+
+          // Backend speichert die Messwerte automatisch via MQTT
         },
         error: (err: any) => {
           console.error('Fehler beim Laden der Messeinstellungen:', err);
@@ -220,11 +222,6 @@ export class StartMeasurementComponent implements OnDestroy {
         this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
         throw new Error('Keine Messeinstellung ausgewählt');
       }
-
-      // Starte die Messung im Backend
-      await this.measurementsBackendService.startMeasuring();
-      this.currentMeasurement = true;
-      this.messungService.startGlobalMeasurement(this.measurementSettingId!);
 
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
@@ -280,6 +277,11 @@ export class StartMeasurementComponent implements OnDestroy {
       
       this.startTime = new Date();
       this.measurementData = {};
+
+      // Starte die Messung im Backend - Backend speichert automatisch MQTT-Werte
+      await this.measurementsBackendService.startMeasuring(this.measurementSettingId!, this.note);
+      this.currentMeasurement = true;
+      this.messungService.startGlobalMeasurement(this.measurementSettingId!);
       
       await this.connectToWebSocket();
       this.showIdError = false;
@@ -298,7 +300,7 @@ export class StartMeasurementComponent implements OnDestroy {
       this.isConnected = false;
       
       try {
-        // Stoppe die Messung im Backend
+        // Stoppe die Messung im Backend (setzt Endzeitpunkt)
         await this.measurementsBackendService.stopMeasuring();
         this.currentMeasurement = false;
         this.messungService.stopGlobalMeasurement();
@@ -332,9 +334,9 @@ export class StartMeasurementComponent implements OnDestroy {
           this.messungService.selectedElementCopy = null;
         }
       } catch (error) {
-        console.error('Fehler beim Speichern der Messung:', error);
-        this.error = 'Fehler beim Speichern der Messung';
-        this.alerts.error('Fehler beim Speichern der Messung', error);
+        console.error('Fehler beim Beenden der Messung:', error);
+        this.error = 'Fehler beim Beenden der Messung';
+        this.alerts.error('Fehler beim Beenden der Messung', error);
       } finally {
         this.isSaving = false;
         this.yokes.set([]); 

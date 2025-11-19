@@ -9,8 +9,6 @@ namespace ConsoleFillDb
         {
             Console.WriteLine("Löschen und migrieren der Datenbank, Import der Daten aus den CSV-Dateien.....");
 
-            try
-            {
                 // Test database connection first
                 Console.WriteLine("Testing database connection...");
                 await TestConnection.TestDatabaseConnectionAsync();
@@ -42,12 +40,6 @@ namespace ConsoleFillDb
                     
                     Console.WriteLine("\nDaten erfolgreich importiert!");
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Fehler beim Import: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-            }
 
             Console.Write("Beenden mit Eingabetaste ...");
             Console.ReadLine();
