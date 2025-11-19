@@ -9,6 +9,7 @@ using TrenchAPI.Persistence;
 using TrenchAPI.Persistence.DTO;
 using System.Text.Json;
 using TrenchAPI.WebAPI.Services;
+using Npgsql;
 
 namespace TrenchAPI.Controllers
 {
@@ -105,7 +106,23 @@ namespace TrenchAPI.Controllers
             };
 
             _context.Messung.Add(messung);
-            await _context.SaveChangesAsync();
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+            {
+                // Duplicate key error - synchronize sequence and retry
+                await SynchronizeMessungSequenceAsync();
+                
+                // Remove the entity from the context and re-add it to ensure clean state
+                _context.Entry(messung).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+                _context.Messung.Add(messung);
+                
+                // Retry once
+                await _context.SaveChangesAsync();
+            }
 
             _isMeasuring = true;
             _currentMessungID = messung.ID;
@@ -124,12 +141,16 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Keine aktive Messung gefunden.");
             }
 
-            var messung = await _context.Messung.FindAsync(_currentMessungID.Value);
+            var messung = await _context.Messung
+                .Include(m => m.Messeinstellung)
+                .FirstOrDefaultAsync(m => m.ID == _currentMessungID.Value);
+            
             if (messung == null)
             {
                 return NotFound("Messung nicht gefunden.");
             }
 
+            // Aktualisiere nur den Endzeitpunkt - alle anderen Felder wurden bereits beim Starten gesetzt
             messung.Endzeitpunkt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
@@ -139,7 +160,7 @@ namespace TrenchAPI.Controllers
             // Stop MQTT measurement service
             _mqttService.StopMeasurement();
 
-            return Ok();
+            return Ok(messung);
         }
 
         // POST: api/Messung/AddLiveMesswert
@@ -403,6 +424,24 @@ namespace TrenchAPI.Controllers
         private bool MessungExists(int id)
         {
             return _context.Messung.Any(e => e.ID == id);
+        }
+
+        private async Task SynchronizeMessungSequenceAsync()
+        {
+            try
+            {
+                // Synchronize the Messung sequence to the current max ID + 1
+                var sql = @"SELECT setval(
+                    pg_get_serial_sequence('""Messung""', 'ID'), 
+                    COALESCE((SELECT MAX(""ID"") FROM ""Messung""), 0) + 1, 
+                    false)";
+                
+                await _context.Database.ExecuteSqlRawAsync(sql);
+            }
+            catch
+            {
+                // Ignore errors - sequence might not exist or already be correct
+            }
         }
     }
 }

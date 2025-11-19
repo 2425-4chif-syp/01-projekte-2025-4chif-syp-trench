@@ -55,6 +55,10 @@ namespace TrenchAPI.Controllers
 
             var messwerte = await _context.Messwert
                 .Where(m => m.MessungID == messungId)
+                .Include(m => m.SondenPosition)
+                    .ThenInclude(sp => sp.Sonde)
+                        .ThenInclude(s => s.SondenTyp)
+                .OrderBy(m => m.Zeitpunkt)
                 .ToListAsync();
 
             return Ok(messwerte);
