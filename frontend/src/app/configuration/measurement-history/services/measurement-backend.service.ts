@@ -64,12 +64,23 @@ export class MeasurementsBackendService {
     return this.backendService.httpPostRequest('Messung/Complete', measurementData);
   }
 
-  public async startMeasuring(): Promise<void> {
-    await this.backendService.httpPostRequest('Messung/startMeasuring', {});
+  public async startMeasuring(measurementSettingId: number, note: string): Promise<number> {
+    const response: any = await this.backendService.httpPostRequest('Messung/startMeasuring', {
+      MesseinstellungID: measurementSettingId,
+      Notiz: note
+    });
+    return response;
   }
 
   public async stopMeasuring(): Promise<void> {
     await this.backendService.httpPostRequest('Messung/stopMeasuring', {});
+  }
+
+  public async addLiveMesswert(sondenPositionId: number, wert: number): Promise<void> {
+    await this.backendService.httpPostRequest('Messung/AddLiveMesswert', {
+      sondenPositionID: sondenPositionId,
+      wert: wert
+    });
   }
 
   public async getCurrentMessungValues(): Promise<any[]> {

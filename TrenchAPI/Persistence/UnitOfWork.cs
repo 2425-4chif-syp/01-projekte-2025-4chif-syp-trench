@@ -165,16 +165,45 @@ namespace TrenchAPI.Persistence
             Console.WriteLine("Importing SondenTypen...");
             string[][] csvData = MyFile.ReadStringMatrixFromCsv("sondentyp.csv", true);
             
-            List<SondenTyp> sondenTypen = csvData.Select(line => new SondenTyp
+            Console.WriteLine($"Total rows read: {csvData.Length}");
+            for (int i = 0; i < csvData.Length; i++)
             {
-                ID = Convert.ToInt32(line[0]),
-                Name = line[1],
-                Breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
-                Hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-                Windungszahl = Convert.ToInt32(line[4]),
-                Alpha = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-                Notiz = line.Length > 6 ? line[6] : string.Empty
-            }).ToList();
+                Console.WriteLine($"Row {i}: {csvData[i].Length} columns - [{string.Join(", ", csvData[i])}]");
+            }
+            
+            List<SondenTyp> sondenTypen = new List<SondenTyp>();
+            
+            foreach (var line in csvData)
+            {
+                if (line == null || line.Length < 5)
+                {
+                    Console.WriteLine($"Skipping invalid line with {line?.Length ?? 0} columns");
+                    continue;
+                }
+                
+                try
+                {
+                    var sondenTyp = new SondenTyp
+                    {
+                        ID = Convert.ToInt32(line[0]),
+                        Name = line[1],
+                        Breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
+                        Hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+                        Windungszahl = Convert.ToInt32(line[4]),
+                        Alpha = line.Length > 5 && !string.IsNullOrWhiteSpace(line[5]) 
+                            ? Convert.ToDecimal(line[5], CultureInfo.InvariantCulture) 
+                            : 0,
+                        Notiz = line.Length > 6 && !string.IsNullOrWhiteSpace(line[6]) ? line[6] : string.Empty
+                    };
+                    sondenTypen.Add(sondenTyp);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error parsing line: {string.Join(", ", line)}");
+                    Console.WriteLine($"Error: {ex.Message}");
+                    throw;
+                }
+            }
 
             await SondenTypRepository.AddRangeAsync(sondenTypen.ToArray());
         }
