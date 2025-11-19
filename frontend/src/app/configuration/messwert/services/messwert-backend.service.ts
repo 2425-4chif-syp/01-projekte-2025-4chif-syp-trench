@@ -35,6 +35,14 @@ export class MesswertBackendService {
     const response: any = await this.backendService.httpGetRequest('Messwert');
     return response.map((wert: any) => this.messwertBackendToFrontend(wert));
   }
+
+  public async getMesswerteByMessungId(messungId: number): Promise<Messwert[]> {
+    const response: any = await this.backendService.httpGetRequest(`Messwert/messung/${messungId}`);
+    if (!Array.isArray(response)) {
+      return [];
+    }
+    return response.map((wert: any) => this.messwertBackendToFrontend(wert));
+  }
   
   public async getMesswert(id: number): Promise<Messwert> {
     const response: any = await this.backendService.httpGetRequest('Messwert/' + id);
