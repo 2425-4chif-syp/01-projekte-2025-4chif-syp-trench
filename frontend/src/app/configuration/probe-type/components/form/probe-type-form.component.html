@@ -43,7 +43,9 @@
               <label for="hoehe" class="form-label">Höhe (mm)</label>
               <div class="input-shell" [class.invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
+                  appDecimalComma
                   class="form-control"
                   id="hoehe"
                   name="hoehe"
@@ -68,7 +70,9 @@
               <label for="breite" class="form-label">Breite (mm)</label>
               <div class="input-shell" [class.invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
+                  appDecimalComma
                   class="form-control"
                   id="breite"
                   name="breite"
@@ -113,6 +117,36 @@
               @if ((saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')) {
                 <div class="invalid-feedback">
                   Bitte geben Sie eine gültige Windungszahl ein.
+                </div>
+              }
+            </div>
+
+            <div class="form-field metric-field">
+              <label for="alpha" class="form-label">Alpha (°)</label>
+              <div
+                class="input-shell"
+                [class.invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
+              >
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  appDecimalComma
+                  class="form-control"
+                  id="alpha"
+                  name="alpha"
+                  min="0.01"
+                  step="0.01"
+                  required
+                  placeholder="Sondendifferenzwinkel in °"
+                  [(ngModel)]="selectedProbeType!.alpha"
+                  #alphaElement="ngModel"
+                  [class.is-invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
+                  [readonly]="readOnly"
+                />
+              </div>
+              @if ((saveError || alphaElement.touched) && isFieldInvalid('alpha')) {
+                <div class="invalid-feedback">
+                  Bitte geben Sie ein gültiges Alpha in Grad ein.
                 </div>
               }
             </div>
