@@ -84,6 +84,7 @@
                     id="name"
                     placeholder="Messsonden-Name"
                     [(ngModel)]="selectedProbe!.name"
+                    (ngModelChange)="onFieldChange()"
                     name="name"
                     [class.is-invalid]="saveError && isFieldInvalid('name')"
                   />
@@ -97,11 +98,14 @@
                 <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')">
                   <input
-                    type="number"
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
                     class="form-control"
                     id="kalibrierungsfaktor"
-                    placeholder="Kalibrierungsfaktor in %"
+                    placeholder="Kalibrierungsfaktor (Multiplikator, z. B. 1.00)"
                     [(ngModel)]="selectedProbe!.kalibrierungsfaktor"
+                    (ngModelChange)="onFieldChange()"
                     name="kalibrierungsfaktor"
                     min="0"
                     step="0.01"
@@ -116,7 +120,11 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn btn-primary btn-modern" [disabled]="!hasChanges()" (click)="saveChanges()">
+            <button
+              type="button"
+              class="btn btn-primary btn-modern"
+              [disabled]="!canSave()"
+              (click)="saveChanges()">
               Speichern
             </button>
             <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">

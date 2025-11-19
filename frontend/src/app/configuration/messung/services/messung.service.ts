@@ -25,6 +25,8 @@ export class MessungService implements ListService<Messung> {
   private currentYokeData: { x: number; y: number }[][] = [];
   private currentMTot: number = 0;
 
+  private readonly draftStorageKey = 'messung-draft';
+
   constructor(private messungBackendService:MessungBackendService) { }
 
   // Methoden für die laufende Messung
@@ -198,6 +200,48 @@ export class MessungService implements ListService<Messung> {
     } catch (error) {
       console.error('Fehler beim Laden der aktuellen Messung:', error);
       this.isMeasuringSubject.next(false);
+    }
+  }
+
+  public saveDraftToStorage(): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+      if (!this.selectedElementCopy) {
+        window.localStorage.removeItem(this.draftStorageKey);
+        return;
+      }
+
+      const payload: Messung = { ...this.selectedElementCopy };
+      window.localStorage.setItem(this.draftStorageKey, JSON.stringify(payload));
+    } catch (err) {
+      console.error('Fehler beim Speichern des Messungs-Entwurfs:', err);
+    }
+  }
+
+  public loadDraftFromStorage(): Messung | null {
+    if (typeof window === 'undefined') return null;
+
+    try {
+      const raw = window.localStorage.getItem(this.draftStorageKey);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw) as Messung;
+      this.selectedElementCopy  = parsed;
+      this.selectedElementIsNew = !parsed.id || parsed.id === 0;
+      return parsed;
+    } catch (err) {
+      console.error('Fehler beim Laden des Messungs-Entwurfs:', err);
+      return null;
+    }
+  }
+
+  public clearDraftFromStorage(): void {
+    if (typeof window === 'undefined') return;
+    try {
+      window.localStorage.removeItem(this.draftStorageKey);
+    } catch (err) {
+      console.error('Fehler beim Löschen des Messungs-Entwurfs:', err);
     }
   }
 }

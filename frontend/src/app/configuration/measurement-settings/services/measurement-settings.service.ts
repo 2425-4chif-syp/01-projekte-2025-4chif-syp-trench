@@ -13,6 +13,9 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
   public selectedElementCopy: MeasurementSetting | null = null;
   public selectedElementIsNew: boolean = false;
   public isCoilSelector: boolean = false;
+  public isMeasurementSelector: boolean = false;
+
+  private readonly draftStorageKey = 'measurement-settings-draft';
 
   constructor(private measurementSettingsBackendService: MeasurementSettingsBackendService, private coilBackendService: CoilsBackendService, private probeTypeBackendService: ProbeTypesBackendService) {}
 
@@ -111,5 +114,37 @@ export class MeasurementSettingsService implements ListService<MeasurementSettin
       this.selectedElementCopy.probeType = await this.probeTypeBackendService.getProbeType(this.selectedElementCopy.probeTypeId);
     }
   }
-}
 
+  public saveDraftToStorage(): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+      if (!this.selectedElementCopy) {
+        window.localStorage.removeItem(this.draftStorageKey);
+        return;
+      }
+
+      const payload: MeasurementSetting = { ...this.selectedElementCopy };
+      window.localStorage.setItem(this.draftStorageKey, JSON.stringify(payload));
+    } catch (err) {
+      console.error('Fehler beim Speichern des Messeinstellungs-Entwurfs:', err);
+    }
+  }
+
+  public loadDraftFromStorage(): MeasurementSetting | null {
+    if (typeof window === 'undefined') return null;
+
+    try {
+      const raw = window.localStorage.getItem(this.draftStorageKey);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw) as MeasurementSetting;
+      this.selectedElementCopy   = parsed;
+      this.selectedElementIsNew  = !parsed.id || parsed.id === 0;
+      return parsed;
+    } catch (err) {
+      console.error('Fehler beim Laden des Messeinstellungs-Entwurfs:', err);
+      return null;
+    }
+  }
+}

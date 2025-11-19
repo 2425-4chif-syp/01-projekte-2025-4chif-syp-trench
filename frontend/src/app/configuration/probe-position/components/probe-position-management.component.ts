@@ -20,9 +20,9 @@ export class ProbePositionManagementComponent {
 
   constructor(
     private measurementSettingsService: MeasurementSettingsService,
-    private probeService:              ProbesService,
-    public probePositionService:      ProbePositionService,
-    private router:                    Router
+    private probeService:               ProbesService,
+    public  probePositionService:       ProbePositionService,
+    private router:                     Router
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -47,7 +47,16 @@ export class ProbePositionManagementComponent {
   openProbeSelector(position: ProbePosition): void {
     this.probeService.isProbeSelector = true;
     this.probePositionService.selectedElementCopy = position;
-    this.router.navigate(['/probe-management']);
+    const measurementSettingsId =
+      position.measurementSettingsId ?? this.measurementSettingsService.selectedElementCopy?.id ?? null;
+
+    this.router.navigate(['/probe-management'], {
+      queryParams: {
+        selector:             'probe-position',
+        measurementSettingsId: measurementSettingsId ?? undefined,
+        probePositionId:       position.id ?? undefined
+      }
+    });
   }
 
   deleteProbePosition(position: ProbePosition): void {

@@ -4,11 +4,12 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ProbeType } from '../../interfaces/probe-type';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { AlertService } from '../../../../services/alert.service';
+import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
 
 @Component({
   selector: 'app-probe-type-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DecimalCommaDirective],
   templateUrl: './probe-type-form.component.html',
   styleUrl: './probe-type-form.component.scss'
 })
@@ -62,7 +63,7 @@ export class ProbeTypeFormComponent implements OnInit, DoCheck {
     this.saveError = true;
     form.form.markAllAsTouched();
 
-    const requiredFields: Array<keyof ProbeType> = ['name', 'hoehe', 'breite', 'windungszahl'];
+    const requiredFields: Array<keyof ProbeType> = ['name', 'hoehe', 'breite', 'windungszahl', 'alpha'];
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (form.invalid || invalidFields.length > 0) {
@@ -109,6 +110,16 @@ export class ProbeTypeFormComponent implements OnInit, DoCheck {
       case 'breite':
       case 'hoehe':
       case 'windungszahl': {
+        if (value === null || value === undefined) {
+          return true;
+        }
+        const numericValue = Number(value);
+        if (!Number.isFinite(numericValue)) {
+          return true;
+        }
+        return numericValue <= 0;
+      }
+      case 'alpha': {
         if (value === null || value === undefined) {
           return true;
         }
