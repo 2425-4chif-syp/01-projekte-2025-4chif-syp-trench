@@ -17,6 +17,7 @@ import { ProbeTypeParentComponent } from './configuration/probe-type/components/
 import { ProbeParentComponent } from './configuration/probe/components/probe-parent.component';
 import { MessungParentComponent } from './configuration/messung/messung-parent.component';
 import { MessungDetailComponent } from './configuration/messung/detail/messung-detail.component';
+import { CsvImportExportComponent } from './configuration/csv-import-export/csv-import-export.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -33,5 +34,6 @@ export const routes: Routes = [
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history-homescreen', component: MeasurementManagementParentComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-detail', component: MessungDetailComponent, canActivate: [AuthGuard]}
+    {path: 'measurement-detail', component: MessungDetailComponent, canActivate: [AuthGuard]},
+    {path: 'csv-import-export', component: CsvImportExportComponent, canActivate: [AuthGuard]}
 ];

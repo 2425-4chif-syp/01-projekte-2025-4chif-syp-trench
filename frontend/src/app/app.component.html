@@ -84,6 +84,17 @@
                             </a>
                         </div>
                     </li>
+                    
+                    <!-- CSV Import/Export -->
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/csv-import-export" routerLinkActive="active">
+                            CSV Import/Export
+                            @if (modeService.isAdminMode()) {
+                            <div class="nav-mode-indicator admin-mode">
+                            </div>
+                            }
+                        </a>
+                    </li>
                 </ul>
             </div>
         }
