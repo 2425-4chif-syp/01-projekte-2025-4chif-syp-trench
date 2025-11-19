@@ -7,11 +7,12 @@ import { Probe } from '../../interfaces/probe';
 import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 import { AlertService } from '../../../../services/alert.service';
+import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
 
 @Component({
   selector: 'app-probe-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, DecimalCommaDirective],
   templateUrl: './probe-management.component.html',
   styleUrl: './probe-management.component.scss'
 })

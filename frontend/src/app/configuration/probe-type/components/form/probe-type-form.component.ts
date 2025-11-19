@@ -4,11 +4,12 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ProbeType } from '../../interfaces/probe-type';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { AlertService } from '../../../../services/alert.service';
+import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
 
 @Component({
   selector: 'app-probe-type-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DecimalCommaDirective],
   templateUrl: './probe-type-form.component.html',
   styleUrl: './probe-type-form.component.scss'
 })

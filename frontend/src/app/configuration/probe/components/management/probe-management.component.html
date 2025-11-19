@@ -98,7 +98,9 @@
                 <label for="kalibrierungsfaktor" class="form-label">Kalibrierungsfaktor</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('kalibrierungsfaktor')">
                   <input
-                    type="number"
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
                     class="form-control"
                     id="kalibrierungsfaktor"
                     placeholder="Kalibrierungsfaktor (Multiplikator, z. B. 1.00)"

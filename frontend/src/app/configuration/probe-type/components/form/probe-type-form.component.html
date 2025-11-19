@@ -43,7 +43,9 @@
               <label for="hoehe" class="form-label">Höhe (mm)</label>
               <div class="input-shell" [class.invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
+                  appDecimalComma
                   class="form-control"
                   id="hoehe"
                   name="hoehe"
@@ -68,7 +70,9 @@
               <label for="breite" class="form-label">Breite (mm)</label>
               <div class="input-shell" [class.invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
+                  appDecimalComma
                   class="form-control"
                   id="breite"
                   name="breite"
@@ -124,7 +128,9 @@
                 [class.invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
               >
                 <input
-                  type="number"
+                  type="text"
+                  inputmode="decimal"
+                  appDecimalComma
                   class="form-control"
                   id="alpha"
                   name="alpha"

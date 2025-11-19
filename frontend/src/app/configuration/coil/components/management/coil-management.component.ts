@@ -7,11 +7,12 @@ import { CoiltypesService } from '../../../coiltype/services/coiltypes.service';
 import { Coil } from '../../interfaces/coil';
 import { Coiltype } from '../../../coiltype/interfaces/coiltype';
 import { AlertService } from '../../../../services/alert.service';
+import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
 
 @Component({
   selector: 'app-coil-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, DecimalCommaDirective],
   templateUrl: './coil-management.component.html',
   styleUrl: './coil-management.component.scss'
 })
