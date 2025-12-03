@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TrenchAPI.Persistence;
 using TrenchAPI.Core.Entities;
 using System.Globalization;
+using Npgsql;
 
 namespace TrenchAPI.WebAPI.Services
 {
@@ -104,9 +105,10 @@ namespace TrenchAPI.WebAPI.Services
 
                 // Save to database
                 using var scope = _serviceProvider.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
+                WebDbContext context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
 
-                var messwert = new Messwert
+                // Create a new Messwert entity
+                Messwert messwert = new Messwert
                 {
                     MessungID = _currentMessungId.Value,
                     SondenPositionID = sondenPositionId,
@@ -115,13 +117,38 @@ namespace TrenchAPI.WebAPI.Services
                 };
 
                 context.Messwert.Add(messwert);
-                await context.SaveChangesAsync();
-
-                _logger.LogDebug($"Saved Messwert: {sensorKey} = {value}");
+                
+                try
+                {
+                    await context.SaveChangesAsync();
+                    _logger.LogDebug($"Saved Messwert: {sensorKey} = {value}");
+                }
+                catch (Microsoft.EntityFrameworkCore.DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+                {
+                    // Duplicate key error - synchronize sequence and retry
+                    _logger.LogWarning($"Duplicate key error for Messwert, synchronizing sequence...");
+                    await SynchronizeMesswertSequenceAsync(context);
+                    
+                    // Clear the context and create a new entity
+                    context.ChangeTracker.Clear();
+                    var retryMesswert = new Messwert
+                    {
+                        MessungID = _currentMessungId.Value,
+                        SondenPositionID = sondenPositionId,
+                        Wert = (decimal)value,
+                        Zeitpunkt = DateTime.UtcNow
+                    };
+                    
+                    context.Messwert.Add(retryMesswert);
+                    
+                    // Retry once
+                    await context.SaveChangesAsync();
+                    _logger.LogDebug($"Saved Messwert after sequence sync: {sensorKey} = {value}");
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error handling MQTT message");
+                _logger.LogError(ex, $"Error handling MQTT message for topic: {args.ApplicationMessage.Topic}");
             }
         }
 
@@ -135,6 +162,9 @@ namespace TrenchAPI.WebAPI.Services
             // Load SondenPositionen for this Messeinstellung
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
+
+            // Synchronize Messwert sequence at the start to prevent duplicate key errors
+            await SynchronizeMesswertSequenceAsync(context);
 
             var sondenPositionen = await context.SondenPosition
                 .Where(sp => sp.MesseinstellungID == messeinstellungId)
@@ -167,6 +197,24 @@ namespace TrenchAPI.WebAPI.Services
         }
 
         public bool IsMeasuring => _currentMessungId.HasValue;
+
+        private async Task SynchronizeMesswertSequenceAsync(WebDbContext context)
+        {
+            try
+            {
+                // Synchronize the Messwert sequence to the current max ID + 1
+                var sql = @"SELECT setval(
+                    pg_get_serial_sequence('""Messwert""', 'ID'), 
+                    COALESCE((SELECT MAX(""ID"") FROM ""Messwert""), 0) + 1, 
+                    false)";
+                
+                await context.Database.ExecuteSqlRawAsync(sql);
+            }
+            catch
+            {
+                // Ignore errors - sequence might not exist or already be correct
+            }
+        }
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {

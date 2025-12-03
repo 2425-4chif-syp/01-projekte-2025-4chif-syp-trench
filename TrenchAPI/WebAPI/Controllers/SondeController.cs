@@ -79,9 +79,16 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene Sondentyp existiert nicht. (DEBUG: 1)");
             }
 
+            // If ID is set and already exists, reset to 0 to let database auto-generate
+            int sondeId = sondeDto.ID;
+            if (sondeId > 0 && await SondeExists(sondeId))
+            {
+                sondeId = 0;
+            }
+            
             var sonde = new Sonde
             {
-                ID = sondeDto.ID,
+                ID = sondeId,
                 SondenTypID = sondeDto.SondenTypID,
                 Name = sondeDto.Name,
                 Kalibrierungsfaktor = sondeDto.Kalibrierungsfaktor,
@@ -117,9 +124,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool SondeExists(int id)
+        private async Task<bool> SondeExists(int id)
         {
-            return _context.Sonde.Any(e => e.ID == id);
+            return await _context.Sonde.AnyAsync(e => e.ID == id);
         }
     }
 }

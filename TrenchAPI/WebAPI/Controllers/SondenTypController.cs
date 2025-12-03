@@ -61,7 +61,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SondenTypExists(id))
+                if (!await SondenTypExists(id))
                 {
                     return NotFound();
                 }
@@ -80,6 +80,12 @@ namespace TrenchAPI.Controllers
         [ApiKeyAuth]
         public async Task<ActionResult<SondenTyp>> PostSondenTyp(SondenTyp SondenTyp)
         {
+            // If ID is set and already exists, reset to 0 to let database auto-generate
+            if (SondenTyp.ID > 0 && await SondenTypExists(SondenTyp.ID))
+            {
+                SondenTyp.ID = 0;
+            }
+            
             _context.SondenTyp.Add(SondenTyp);
             await _context.SaveChangesAsync();
 
@@ -102,9 +108,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool SondenTypExists(int id)
+        private async Task<bool> SondenTypExists(int id)
         {
-            return _context.SondenTyp.Any(e => e.ID == id);
+            return await _context.SondenTyp.AnyAsync(e => e.ID == id);
         }
     }
 }

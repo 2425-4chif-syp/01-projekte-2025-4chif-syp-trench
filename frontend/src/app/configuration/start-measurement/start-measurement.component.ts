@@ -308,38 +308,17 @@ export class StartMeasurementComponent implements OnDestroy {
       
       try {
         // Stoppe die Messung im Backend (setzt Endzeitpunkt)
+        // Die Messung wurde bereits beim Starten erstellt und die Messwerte wurden während der Messung über MQTT gespeichert
         await this.measurementsBackendService.stopMeasuring();
         this.currentMeasurement = false;
         this.messungService.stopGlobalMeasurement();
-
-        if (this.startTime && this.measurementSettingId) {
-          const endTime = new Date();
-          
-          const measurementData = {
-            id: 0,
-            messeinstellungID: this.measurementSettingId,
-            anfangszeitpunkt: this.startTime.toISOString(),
-            endzeitpunkt: endTime.toISOString(),
-            name: "",
-            tauchkernstellung: this.tauchkernstellung ?? 0,
-            pruefspannung: this.pruefspannung ?? 0,
-            notiz: this.note || "",
-            messsonden: this.createMesssondenData().map(sonde => ({
-              schenkel: sonde.schenkel,
-              position: sonde.position,
-              messwerte: sonde.messwerte,
-              durchschnittswert: sonde.durchschnittswert
-            }))
-          };
-          
-          console.log('Speichere Messung:', measurementData);
-          await this.measurementsBackendService.saveMeasurement(measurementData);
-          console.log('Messung erfolgreich gespeichert');
-          this.alerts.success('Messung erfolgreich gespeichert');
-          // Entwurf nach erfolgreichem Speichern zurücksetzen
-          this.messungService.clearDraftFromStorage();
-          this.messungService.selectedElementCopy = null;
-        }
+        
+        console.log('Messung erfolgreich beendet');
+        this.alerts.success('Messung erfolgreich beendet');
+        
+        // Entwurf nach erfolgreichem Beenden zurücksetzen
+        this.messungService.clearDraftFromStorage();
+        this.messungService.selectedElementCopy = null;
       } catch (error) {
         console.error('Fehler beim Beenden der Messung:', error);
         this.error = 'Fehler beim Beenden der Messung';

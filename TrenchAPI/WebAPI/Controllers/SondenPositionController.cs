@@ -121,8 +121,16 @@ public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPositio
             return BadRequest("Die angegebene Sonde existiert nicht.");
     }
 
+    // If ID is set and already exists, reset to 0 to let database auto-generate
+    int sondenPositionId = dto.ID;
+    if (sondenPositionId > 0 && await SondenPositionExists(sondenPositionId))
+    {
+        sondenPositionId = 0;
+    }
+    
     var sondenPosition = new SondenPosition
     {
+        ID = sondenPositionId,
         SondeID = dto.SondeID,                // kann null sein
         Sonde   = existingSonde,              // null oder Entity
         MesseinstellungID = dto.MesseinstellungID,
@@ -155,9 +163,9 @@ public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPositio
             return NoContent();
         }
 
-        private bool SondenPositionExists(int id)
+        private async Task<bool> SondenPositionExists(int id)
         {
-            return _context.SondenPosition.Any(e => e.ID == id);
+            return await _context.SondenPosition.AnyAsync(e => e.ID == id);
         }
     }
 }

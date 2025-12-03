@@ -61,7 +61,7 @@ namespace TrenchAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SpuleTypExists(id))
+                if (!await SpuleTypExists(id))
                 {
                     return NotFound();
                 }
@@ -80,6 +80,12 @@ namespace TrenchAPI.Controllers
         [ApiKeyAuth]
         public async Task<ActionResult<SpuleTyp>> PostSpuleTyp(SpuleTyp spuleTyp)
         {
+            // If ID is set and already exists, reset to 0 to let database auto-generate
+            if (spuleTyp.ID > 0 && await SpuleTypExists(spuleTyp.ID))
+            {
+                spuleTyp.ID = 0;
+            }
+            
             _context.SpuleTyp.Add(spuleTyp);
             await _context.SaveChangesAsync();
 
@@ -135,9 +141,9 @@ namespace TrenchAPI.Controllers
             return NoContent();
         }
 
-        private bool SpuleTypExists(int id)
+        private async Task<bool> SpuleTypExists(int id)
         {
-            return _context.SpuleTyp.Any(e => e.ID == id);
+            return await _context.SpuleTyp.AnyAsync(e => e.ID == id);
         }
     }
 }
