@@ -1,29 +1,116 @@
-.card {
-    border-radius: 8px;
+.probe-position-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(250px, 1fr));
+  gap: 1rem;
+  height: 100%;
+  max-height: calc(100vh - 150px);
+  overflow: hidden;
+}
+
+.position-card {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
+  .card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
-    min-height: 40vh;
-  
-    .card-header {
-      background-color: #f8f9fa;
-      font-weight: bold;
-    }   
-  
-    table {
-      th,
-      td {
-        vertical-align: middle;
-        cursor: pointer;
-      }
+    min-height: 0;
+  }
+}
+
+.table-wrapper {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+table {
+  width: 100%;
+  margin: 0;
+
+  th,
+  td {
+    vertical-align: middle;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  }
+
+  thead th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-bottom: 2px solid rgba(15, 23, 42, 0.12);
+  }
+
+  tbody tr {
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: rgba(13, 110, 253, 0.04);
+    }
+
+    &:last-child td {
+      border-bottom: none;
     }
   }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: rgba(31, 39, 77, 0.6);
+  border: 1px dashed rgba(15, 23, 42, 0.12);
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.02);
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .probe-position-container {
+    grid-template-columns: 1fr;
+  }
+}
 
 .icon {
   width: 16px;
   height: 16px;
   display: inline-block;
-  vertical-align: -0.125em; 
-  pointer-events: none;    
-}  
+  vertical-align: -0.125em;
+  pointer-events: none;
+}
 
 .btn-primary .icon,
 .btn-danger .icon {
