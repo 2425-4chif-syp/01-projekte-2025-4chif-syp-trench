@@ -1,0 +1,60 @@
+/* Two-column layout for measurement settings management */
+.measurement-settings-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.management-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0;
+  flex: 1;
+  min-height: 0;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  min-width: 0;
+  overflow: visible;
+}
+
+.divider-section {
+  display: flex;
+  align-items: stretch;
+  padding: 1rem 0;
+}
+
+.vertical-divider {
+  width: 2px;
+  background-color: #e2e2e2;
+}
+
+.tables-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .management-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .divider-section {
+    display: none;
+  }
+
+  .form-section,
+  .tables-section {
+    height: auto;
+    min-height: 400px;
+  }
+}

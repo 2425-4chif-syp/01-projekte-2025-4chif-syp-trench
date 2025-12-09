@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MeasurementSettingsService } from '../services/measurement-settings.service';
+import { ProbePositionService } from '../../probe-position/services/probe-position.service';
 import { MeasurementSettingsListComponent } from './list/measurement-settings-list.component';
 import { MeasurementSettingsComponent } from './management/measurement-settings.component';
 import { ProbePositionManagementComponent } from "../../probe-position/components/probe-position-management.component";
@@ -15,13 +16,14 @@ import { MeasurementSetting } from '../interfaces/measurement-settings';
   templateUrl: './measurement-settings-parent.component.html',
   styleUrl: './measurement-settings-parent.component.scss'
 })
-export class MeasurementSettingsParentComponent implements OnInit {
+export class MeasurementSettingsParentComponent implements OnInit, AfterViewInit {
 
   constructor(
     public measurementSettingsService: MeasurementSettingsService,
     private messungService: MessungService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private probePositionService: ProbePositionService
   ) {
   }
 
@@ -41,6 +43,21 @@ export class MeasurementSettingsParentComponent implements OnInit {
         }
       }
     }
+  }
+
+  // Ensure probe position tables are loaded when a measurement setting is already selected
+  async ngAfterViewInit(): Promise<void> {
+    // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(async () => {
+      if (this.measurementSettingsService.selectedElementCopy?.id) {
+        try {
+          await this.probePositionService.reloadElements();
+        } catch (e) {
+          // swallow - component will render an empty state if backend fails
+          console.warn('Could not load probe positions in parent after view init', e);
+        }
+      }
+    }, 0);
   }
 
   onSelectForMeasurement(setting: MeasurementSetting): void {
