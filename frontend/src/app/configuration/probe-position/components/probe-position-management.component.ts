@@ -26,22 +26,22 @@ export class ProbePositionManagementComponent {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    await this.probePositionService.reloadElements();
-
-    /*const einstellung        = this.measurementSettingsService.selectedElementCopy!;
-    const sondenProSchenkel  = einstellung.sondenProSchenkel ?? 0;
-
-    this.probePositionService.elements =
-      this.probePositionService.elements
-        .filter(p => p.measurementSettingsId === einstellung.id);
-
-    this.probePositionService.createEmptyPositions(
-      this.measurementSettingsService.selectedElementCopy!.coil?.coiltype?.schenkel ?? 0,
-      sondenProSchenkel,
-      einstellung
-    );*/
-
-    this.probePositionService.loadGroupedProbePositions();
+    // Only try to load if we have a valid measurement setting ID
+    if (this.measurementSettingsService.selectedElementCopy?.id) {
+      try {
+        await this.probePositionService.reloadElements();
+        this.probePositionService.loadGroupedProbePositions();
+      } catch (e) {
+        console.warn('Could not load probe positions:', e);
+        // Reset to empty array on error
+        this.probePositionService.elements = [];
+        this.probePositionService.groupedProbePositions = [];
+      }
+    } else {
+      // No measurement setting selected, clear any existing data
+      this.probePositionService.elements = [];
+      this.probePositionService.groupedProbePositions = [];
+    }
   }
 
   openProbeSelector(position: ProbePosition): void {
