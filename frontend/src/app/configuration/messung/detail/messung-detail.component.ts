@@ -5,11 +5,12 @@ import { Messung } from '../interfaces/messung';
 import { MesswertBackendService } from '../../messwert/services/messwert-backend.service';
 import { Messwert } from '../../messwert/interfaces/messwert.model';
 import { Router } from '@angular/router';
+import { ConfirmDeleteModalComponent } from '../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ConfirmDeleteModalComponent],
   templateUrl: './messung-detail.component.html',
   styleUrl: './messung-detail.component.scss'
 })
