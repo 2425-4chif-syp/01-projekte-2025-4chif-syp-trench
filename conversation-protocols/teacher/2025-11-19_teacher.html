@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Besprechungsprotokoll 11.12.2024 (1)</title>
+<title>Besprechungsprotokoll 19.11.2025</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -437,7 +437,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Besprechungsprotokoll 11.12.2024 (1)</h1>
+<h1>Besprechungsprotokoll 19.11.2025</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -450,10 +450,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 11.12.2024 (1)</strong></p>
+<p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 19.11.2025</strong></p>
 </div>
 <div class="paragraph">
-<p>Emil Silber</p>
+<p>-</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Teilnehmer</caption>
@@ -473,7 +473,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Aberger</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Palitsch-Infanger</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -487,15 +491,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Ort</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Raum 147</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTL Leonding</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mi. 11.12.2024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Di. 19.11.2025</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20 Minuten</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 </tbody>
 </table>
@@ -507,13 +511,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Messungen</p>
+<p>Frontend-Updates und neue Features</p>
 </li>
 <li>
-<p>Technologien</p>
+<p>CSV Import/Export</p>
 </li>
 <li>
-<p>Schnittstellen</p>
+<p>Kontakt mit Dr. Koeck</p>
+</li>
+<li>
+<p>Messdaten (Fake vs. Echtdaten)</p>
+</li>
+<li>
+<p>Deployment-Strategie</p>
 </li>
 </ul>
 </div>
@@ -536,103 +546,268 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Stütz</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
-<ul>
-<li>
-<p>Nach einem Anruf mit Dr. Köck hat sich folgendes ergeben:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Er wird keine USB-Schnittstelle geben, deswegen werden wir MQTT verwenden.</p>
-</li>
-<li>
-<p>Das Backend soll in C# geschrieben werden</p>
-</li>
-<li>
-<p>Die Messung wird periodisch sein, der Intervall ist mit 5-10 Sekunden zu erwarten</p>
-</li>
-<li>
-<p>Die Messungen werden folgend stattfinden:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha">
-<li>
-<p>Der Tauchkern wird ganz oben gemessen</p>
-</li>
-<li>
-<p>Der Tauchkern wird ganz unten gemessen</p>
-</li>
-<li>
-<p>Der Tauchkern wird in der Mitte gemessen</p>
-</li>
-<li>
-<p>Abweichungen möglich</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Folgende relevante Informationen wurden gegeben:</p>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Positionen der Sensoren werden in der Konfigurationsphase festgestellt.</p>
-</li>
-<li>
-<p>Sensoren werden 0-3 Volt machen.</p>
-</li>
-<li>
-<p>Sensoren werden mit einem ESP32 verbunden. Entweder werden alle eine individuell bekommen oder sie werden alle an eine ESP32 gebunden.</p>
-</li>
-<li>
-<p>Die Daten, die gesendet werden müssen, wir noch genauer ausmachen mit Prof. Stütz, möglicher Format:</p>
-<div class="olist loweralpha">
-<ol class="loweralpha">
-<li>
-<p>Sensor: 1</p>
-</li>
-<li>
-<p>Value (Entfernung): 23 mm</p>
-</li>
-<li>
-<p>Time:</p>
-</li>
-<li>
-<p>Description:</p>
-</li>
-</ol>
-</div>
-</li>
-</ol>
-</div>
-</li>
-</ul>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="protocol-images/2024-12-11_diagram.png" alt="x">
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="/01-projekte-2025-4chif-syp-trench/conversation-protocols/protocol-images/2024-12-11_diagram.png" alt="x">
-</div>
-</div>
-<div class="paragraph">
-<p>Erklärung:</p>
-</div>
-<div class="paragraph">
-<p>Das WLAN-Box in der ESP32, schickt die Daten an MQTT, welches dann mithilfe eines MQTT-Brokers es an das C# Backend weiterleitet. Das Backend verarbeitet die Daten und speichert sie in der Datenbank und schickt es, mit NGINX, an das Frontend, dies wird dann von Angular im Browser dargestellt.</p>
-</div>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prof. Aberger &amp; Prof. Palitsch-Infanger &amp; Trench-Team</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="sect1">
+<h2 id="_1_frontend_updates_präsentiert_von_a"><a class="anchor" href="#_1_frontend_updates_präsentiert_von_a"></a>1. 1. Frontend-Updates (präsentiert von A)</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Stütz wird uns das C# Backend von Aitenbichler gebenden. Wir sollen die benutzten Libraries und Methoden analysieren, dann selbst schreiben.</p>
+<p><strong>Neue Features:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Kommazeichen bei Eingabe: Unterstützung für sowohl <code>,</code> als auch <code>.</code> als Dezimaltrennzeichen</p>
+</li>
+<li>
+<p>Messondentyp Alpha: Neuer Sondentyp wurde hinzugefügt</p>
+</li>
+<li>
+<p>Sonden pro Schenkel: Plausibilitätsprüfung implementiert - System berechnet automatisch wie viele Sonden sich ausgehen</p>
+</li>
+<li>
+<p>Performance: Allgemeine Verbesserung der Geschwindigkeit wurde positiv aufgenommen</p>
 </li>
 </ul>
+</div>
+</li>
+<li>
+<p><strong>Behobene Probleme:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Sondentabelle in Messeinstellung: Funktionierte nicht und warf 500-Fehler</p>
+</li>
+<li>
+<p>A hat das Problem während des Meetings behoben</p>
+</li>
+<li>
+<p>Prof. Palitsch-Infanger fand die Tabelle sauber</p>
+</li>
+<li>
+<p>Keine Sonden geladen: Problem wurde identifiziert - es waren keine Sonden vom ausgewählten Sondentyp erstellt worden</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_kontakt_mit_dr_koeck_und_mqtt"><a class="anchor" href="#_2_kontakt_mit_dr_koeck_und_mqtt"></a>2. 2. Kontakt mit Dr. Koeck und MQTT</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Prof. Palitsch-Infanger:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Fragte nach dem Zeitplan für das Ausprobieren mit Dr. Koeck</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>X berichtete über MQTT-Implementierung:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Wird erst bis zum nächsten Sprintmeeting fertig sein</p>
+</li>
+<li>
+<p>Erklärte den MQTT-Plan von Trench</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3_csv_importexport_präsentiert_von_simon"><a class="anchor" href="#_3_csv_importexport_präsentiert_von_simon"></a>3. 3. CSV Import/Export (präsentiert von Simon)</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Anforderungen und Diskussion:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Simon präsentierte CSV Import/Export Feature</p>
+</li>
+<li>
+<p>Prof. Aberger: Trench hat wahrscheinlich viele verschiedene File-Formate</p>
+</li>
+<li>
+<p>Import/Export ist nicht primär für Trench gedacht</p>
+</li>
+<li>
+<p>Excel-Format ist für uns manuell und kurzfristig gedacht</p>
+</li>
+<li>
+<p>Wir müssen das Trench-Format nicht einhalten</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Vorschläge:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Beispiel-ZIP mit CSV-Dateien an Trench geben und fragen ob sie Daten in diesem Format liefern könnten</p>
+</li>
+<li>
+<p>Wichtig für Dr. Koeck: Möglichkeit zum Download um Konfigurationen auf anderen Geräten wiederverwenden zu können</p>
+</li>
+<li>
+<p>Simon&#8217;s Dokumentation für CSV Import/Export wurde positiv bewertet</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Excel-Export (Wunsch von Prof. Aberger):</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Excel-File mit Tabs, alles in einer Datei</p>
+</li>
+<li>
+<p>Formatiert mit Titel etc.</p>
+</li>
+<li>
+<p>Eventuell zusätzlich zu CSV</p>
+</li>
+<li>
+<p>Umsetzung mit Apache POI (.NET-Äquivalent)</p>
+</li>
+<li>
+<p>Ist nur ein Wunsch, keine zwingende Anforderung</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_4_messdaten"><a class="anchor" href="#_4_messdaten"></a>4. 4. Messdaten</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Prof. Palitsch-Infanger:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>"Fake it till you make it" Ansatz für Messdaten</p>
+</li>
+<li>
+<p>X arbeitet an der Implementierung</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Wichtige Anforderungen:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Gutes Faken der Daten ermöglichen</p>
+</li>
+<li>
+<p>Switchen zwischen echten und Fake-Daten ermöglichen</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_deployment"><a class="anchor" href="#_5_deployment"></a>5. 5. Deployment</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Prof. Aberger:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Localhost ist nicht ideal</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Trench:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Möchte die Anwendung auf localhost haben</p>
+</li>
+<li>
+<p>CSV Import/Export ist eine gute Lösung dafür</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Vorschlag:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Selbstextrahierendes Archiv (z.B. .exe), wie ein ZIP das sich auspackt und läuft</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_6_fazit"><a class="anchor" href="#_6_fazit"></a>6. 6. Fazit</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Prof. Palitsch-Infanger:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Was der Kunde wünscht ist im Prinzip umgesetzt</p>
+</li>
+<li>
+<p>Gutes, mehr oder weniger fertiges Projekt</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_7_offene_punkte_todos"><a class="anchor" href="#_7_offene_punkte_todos"></a>7. 7. Offene Punkte / Todos</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Hinweis implementieren wenn es keine Sonden vom ausgewählten Sondentyp gibt (Vorschlag Prof. Aberger)</p>
+</li>
+<li>
+<p>Excel Import/Export eventuell implementieren (optional)</p>
+</li>
+</ul>
+</div>
+</div>
 </div></div></td>
 </tr>
 </tbody>
