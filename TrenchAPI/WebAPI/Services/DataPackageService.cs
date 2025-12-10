@@ -37,6 +37,7 @@ public class DataPackageService
         var csvContents = normalizedExtension switch
         {
             ".zip" => ExtractCsvFromZip(archivePath),
+            ".xlsx" => ExtractCsvFromExcel(archivePath),
             ".7z" => throw new InvalidOperationException("Import von 7z-Dateien wird aktuell nicht unterstützt. Bitte ein ZIP-Archiv hochladen."),
             _ => throw new InvalidOperationException($"Das Format '{archiveExtension}' wird nicht unterstützt.")
         };
@@ -124,6 +125,119 @@ public class DataPackageService
         }
 
         return result;
+    }
+
+    private static Dictionary<string, string> ExtractCsvFromExcel(string filePath)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        using var package = new ExcelPackage(new FileInfo(filePath));
+        var sheets = package.Workbook.Worksheets;
+
+        // Mapping from expected CSV filename to worksheet name and CSV headers
+        var mappings = new Dictionary<string, (string SheetName, string[] Headers)>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["spuletyp.csv"] = ("SpuleTyp", new[] { "id","name","schenkelzahl","bandbreite","schichthoehe","durchmesser","toleranzbereich","notiz" }),
+            ["spule.csv"] = ("Spule", new[] { "id","spulentyp_id","auftragsnr","auftragsposnr","bemessungsspannung","bemessungsfrequenz","einheit","notiz" }),
+            ["sondentyp.csv"] = ("SondenTyp", new[] { "id","name","breite","hoehe","windungszahl","alpha","notiz" }),
+            ["sonde.csv"] = ("Sonde", new[] { "id","sondentyp_id","name","kalibrierungsfaktor" }),
+            ["messeinstellung.csv"] = ("Messeinstellung", new[] { "id","spule_id","sondentyp_id","name","sonden_pro_schenkel" }),
+            ["sondenposition.csv"] = ("SondenPosition", new[] { "id","sonde_id","messeinstellung_id","schenkel","position" }),
+            ["messung.csv"] = ("Messung", new[] { "id","messeinstellung_id","anfangszeitpunkt","endzeitpunkt","name","tauchkernstellung","pruefspannung","notiz" }),
+            ["messwert.csv"] = ("Messwert", new[] { "id","messung_id","sondenposition_id","wert","zeitpunkt" })
+        };
+
+        foreach (var kv in mappings)
+        {
+            var fileName = kv.Key;
+            var sheetName = kv.Value.SheetName;
+            var headers = kv.Value.Headers;
+
+            var sheet = sheets.FirstOrDefault(ws => ws.Name.Equals(sheetName, StringComparison.OrdinalIgnoreCase));
+            if (sheet == null)
+            {
+                throw new InvalidDataException($"Das Arbeitsblatt '{sheetName}' fehlt in der Excel-Datei.");
+            }
+
+            var sb = new StringBuilder();
+            // write header (lowercase csv header names expected)
+            sb.AppendLine(string.Join(',', headers));
+
+            // Skip if sheet is empty or has no data
+            if (sheet.Dimension == null || sheet.Dimension.End.Row < 4)
+            {
+                result[fileName] = sb.ToString();
+                continue;
+            }
+
+            // We expect data to start on row 4 (export uses row 1=title, 3=headers, data from 4)
+            var startRow = 4;
+            for (int r = startRow; r <= sheet.Dimension.End.Row; r++)
+            {
+                bool allEmpty = true;
+                var values = new List<string>();
+                for (int c = 1; c <= headers.Length; c++)
+                {
+                    var cell = sheet.Cells[r, c];
+                    var cellValue = cell?.Value;
+                    
+                    if (cellValue == null || string.IsNullOrWhiteSpace(cell.Text))
+                    {
+                        values.Add(string.Empty);
+                        continue;
+                    }
+
+                    allEmpty = false;
+
+                    if (cellValue is DateTime dt)
+                    {
+                        // Ensure DateTime is UTC for PostgreSQL compatibility
+                        var utcDt = DateTime.SpecifyKind(dt, DateTimeKind.Utc);
+                        values.Add(utcDt.ToString("o", CultureInfo.InvariantCulture));
+                    }
+                    else if (cellValue is double dbl && IsDateColumn(headers[c - 1]))
+                    {
+                        // Excel stores dates as double (OLE Automation date)
+                        // Convert to DateTime then format as UTC
+                        try
+                        {
+                            var dateTime = DateTime.FromOADate(dbl);
+                            var utcDt = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+                            values.Add(utcDt.ToString("o", CultureInfo.InvariantCulture));
+                        }
+                        catch
+                        {
+                            values.Add(cell.Text);
+                        }
+                    }
+                    else
+                    {
+                        // Use the cell's formatted text value
+                        values.Add(cell.Text);
+                    }
+                }
+
+                if (allEmpty)
+                {
+                    continue;
+                }
+
+                // Don't escape twice - values are already formatted
+                sb.AppendLine(string.Join(',', values));
+            }
+
+            result[fileName] = sb.ToString();
+        }
+
+        return result;
+    }
+
+    private static bool IsDateColumn(string columnName)
+    {
+        var lowerName = columnName.ToLowerInvariant();
+        return lowerName.Contains("zeitpunkt") || lowerName.Contains("anfangs") || lowerName.Contains("end");
     }
 
     private static void EnsureRequiredFiles(IEnumerable<string> fileNames)
@@ -804,7 +918,9 @@ public class DataPackageService
             worksheet.Cells[row, 1].Value = entity.ID;
             worksheet.Cells[row, 2].Value = entity.MesseinstellungID;
             worksheet.Cells[row, 3].Value = entity.Anfangszeitpunkt;
+            worksheet.Cells[row, 3].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss";
             worksheet.Cells[row, 4].Value = entity.Endzeitpunkt;
+            worksheet.Cells[row, 4].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss";
             worksheet.Cells[row, 5].Value = entity.Name;
             worksheet.Cells[row, 6].Value = entity.Tauchkernstellung;
             worksheet.Cells[row, 7].Value = entity.Pruefspannung;
@@ -846,6 +962,7 @@ public class DataPackageService
             worksheet.Cells[row, 3].Value = entity.SondenPositionID;
             worksheet.Cells[row, 4].Value = entity.Wert;
             worksheet.Cells[row, 5].Value = entity.Zeitpunkt;
+            worksheet.Cells[row, 5].Style.Numberformat.Format = "yyyy-MM-dd HH:mm:ss";
             row++;
         }
         

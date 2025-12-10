@@ -12,7 +12,8 @@ public class DataPackageController : ControllerBase
     private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
         ".zip",
-        ".7z"
+        ".7z",
+        ".xlsx"
     };
 
     private readonly DataPackageService _dataPackageService;
@@ -36,7 +37,7 @@ public class DataPackageController : ControllerBase
         var extension = Path.GetExtension(dataPackage.FileName);
         if (string.IsNullOrWhiteSpace(extension) || !AllowedExtensions.Contains(extension))
         {
-            return BadRequest("Nur ZIP-Dateien werden unterstützt.");
+            return BadRequest("Nur ZIP- oder Excel-Dateien werden unterstützt.");
         }
 
         var tempFilePath = Path.Combine(Path.GetTempPath(), $"trench-upload-{Guid.NewGuid()}{extension}");

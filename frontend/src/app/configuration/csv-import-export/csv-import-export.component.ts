@@ -89,9 +89,10 @@ export class CsvImportExportComponent implements OnInit, OnDestroy {
 
   private handleFile(file: File, input?: HTMLInputElement): void {
     const extension = file.name.toLowerCase().split('.').pop();
-    
-    if (extension !== 'zip') {
-      this.uploadError = 'Nur ZIP-Dateien werden unterstützt.';
+
+    // Allow ZIP archives and Excel files (.xlsx)
+    if (extension !== 'zip' && extension !== 'xlsx') {
+      this.uploadError = 'Nur ZIP- oder Excel-Dateien werden unterstützt.';
       this.uploadMessage = '';
       this.selectedFile = null;
       if (input) {
