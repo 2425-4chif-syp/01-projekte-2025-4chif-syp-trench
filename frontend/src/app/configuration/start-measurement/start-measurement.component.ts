@@ -176,7 +176,8 @@ export class StartMeasurementComponent implements OnDestroy {
             [],
             this.selectedMeasurementSetting!.coil!.coiltype!,
             this.selectedMeasurementSetting!.coil!,
-            this.selectedMeasurementSetting!
+            this.selectedMeasurementSetting!,
+            this.pruefspannung!
           );
 
           this.yokeData.set(result.F);

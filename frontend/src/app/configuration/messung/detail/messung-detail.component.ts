@@ -226,7 +226,7 @@ export class MessungDetailComponent {
       const coil = measurement.messeinstellung.coil!;
       const coiltypeObj = coil.coiltype!;
       const measurementSetting = measurement.messeinstellung!;
-      const calc = this.displacementCalculation.calculateYokeData(yokesArr, probeType, [], coiltypeObj, coil, measurementSetting);
+      const calc = this.displacementCalculation.calculateYokeData(yokesArr, probeType, [], coiltypeObj, coil, measurementSetting, measurement.pruefspannung!);
       this.yokeData.set(calc.F);
       this.m_tot.set(calc.m_tot);
     } catch (err) {
