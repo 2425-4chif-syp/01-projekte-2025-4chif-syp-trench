@@ -151,13 +151,13 @@ namespace TrenchAPI.Persistence
             List<SpuleTyp> spuleTypen = csvData.Select(line => new SpuleTyp
             {
                 ID = Convert.ToInt32(line[0]),
-                Name = line[1],
-                Schenkelzahl = Convert.ToInt32(line[2]),
-                Bandbreite = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-                Schichthoehe = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
-                Durchmesser = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-                Toleranzbereich = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
-                Notiz = line[7]
+                name = line[1],
+                schenkelzahl = Convert.ToInt32(line[2]),
+                bandbreite = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+                schichthoehe = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
+                durchmesser = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+                toleranzbereich = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
+                notiz = line[7]
             }).ToList();
 
             await SpuleTypRepository.AddRangeAsync(spuleTypen.ToArray());
@@ -171,13 +171,13 @@ namespace TrenchAPI.Persistence
             List<Spule> spulen = csvData.Select(line => new Spule
             {
                 ID = Convert.ToInt32(line[0]),
-                SpuleTypID = Convert.ToInt32(line[1]),
-                Auftragsnr = line[2],
-                AuftragsPosNr = line[3],
-                Bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
-                Bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-                Einheit = line[6],
-                Notiz = line.Length > 7 ? line[7] : string.Empty
+                spuletyp_id = Convert.ToInt32(line[1]),
+                auftragsnr = line[2],
+                auftragsposnr = Convert.ToInt32(line[3]),
+                bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
+                bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+                einheit = line[6],
+                notiz = line.Length > 7 ? line[7] : string.Empty
             }).ToList();
 
             await SpuleRepository.AddRangeAsync(spulen.ToArray());
@@ -209,14 +209,12 @@ namespace TrenchAPI.Persistence
                     var sondenTyp = new SondenTyp
                     {
                         ID = Convert.ToInt32(line[0]),
-                        Name = line[1],
-                        Breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
-                        Hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-                        Windungszahl = Convert.ToInt32(line[4]),
-                        Alpha = line.Length > 5 && !string.IsNullOrWhiteSpace(line[5]) 
-                            ? Convert.ToDecimal(line[5], CultureInfo.InvariantCulture) 
-                            : 0,
-                        Notiz = line.Length > 6 && !string.IsNullOrWhiteSpace(line[6]) ? line[6] : string.Empty
+                        name = line[1],
+                        breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
+                        hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+                        windungszahl = Convert.ToInt32(line[4]),
+                        alpha = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+                        notiz = line.Length > 6 && !string.IsNullOrWhiteSpace(line[6]) ? line[6] : string.Empty
                     };
                     sondenTypen.Add(sondenTyp);
                 }
@@ -239,9 +237,9 @@ namespace TrenchAPI.Persistence
             List<Sonde> sonden = csvData.Select(line => new Sonde
             {
                 ID = Convert.ToInt32(line[0]),
-                SondenTypID = Convert.ToInt32(line[1]),
-                Name = line[2],
-                Kalibrierungsfaktor = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture)
+                sondentyp_id = Convert.ToInt32(line[1]),
+                name = line[2],
+                kalibrierungsfaktor = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture)
             }).ToList();
 
             await SondeRepository.AddRangeAsync(sonden.ToArray());
@@ -255,10 +253,10 @@ namespace TrenchAPI.Persistence
             List<Messeinstellung> messeinstellungen = csvData.Select(line => new Messeinstellung
             {
                 ID = Convert.ToInt32(line[0]),
-                SpuleID = Convert.ToInt32(line[1]),
-                SondenTypID = Convert.ToInt32(line[2]),
-                Name = line[3],
-                SondenProSchenkel = Convert.ToInt32(line[4])
+                spule_id = Convert.ToInt32(line[1]),
+                sondentyp_id = Convert.ToInt32(line[2]),
+                name = line[3],
+                sonden_pro_schenkel = Convert.ToInt32(line[4])
             }).ToList();
 
             await MesseinstellungRepository.AddRangeAsync(messeinstellungen.ToArray());
@@ -272,10 +270,10 @@ namespace TrenchAPI.Persistence
             List<SondenPosition> sondenPositionen = csvData.Select(line => new SondenPosition
             {
                 ID = Convert.ToInt32(line[0]),
-                SondeID = string.IsNullOrEmpty(line[1]) ? null : Convert.ToInt32(line[1]),
-                MesseinstellungID = Convert.ToInt32(line[2]),
-                Schenkel = Convert.ToInt32(line[3]),
-                Position = Convert.ToInt32(line[4])
+                sonde_id = string.IsNullOrEmpty(line[1]) ? 0 : Convert.ToInt32(line[1]),
+                messeinstellung_id = Convert.ToInt32(line[2]),
+                schenkel = Convert.ToInt32(line[3]),
+                position = Convert.ToInt32(line[4])
             }).ToList();
 
             await SondenPositionRepository.AddRangeAsync(sondenPositionen.ToArray());
@@ -289,13 +287,13 @@ namespace TrenchAPI.Persistence
             List<Messung> messungen = csvData.Select(line => new Messung
             {
                 ID = Convert.ToInt32(line[0]),
-                MesseinstellungID = Convert.ToInt32(line[1]),
-                Anfangszeitpunkt = DateTime.Parse(line[2], null, DateTimeStyles.RoundtripKind),
-                Endzeitpunkt = DateTime.Parse(line[3], null, DateTimeStyles.RoundtripKind),
-                Name = line[4],
-                Tauchkernstellung = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-                Pruefspannung = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
-                Notiz = line[7]
+                messeinstellung_id = Convert.ToInt32(line[1]),
+                anfangszeitpunkt = DateTime.Parse(line[2], null, DateTimeStyles.RoundtripKind),
+                endzeitpunkt = DateTime.Parse(line[3], null, DateTimeStyles.RoundtripKind),
+                name = line[4],
+                tauchkernstellung = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+                pruefspannung = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
+                notiz = line[7]
             }).ToList();
 
             await MessungRepository.AddRangeAsync(messungen.ToArray());
@@ -309,10 +307,10 @@ namespace TrenchAPI.Persistence
             List<Messwert> messwerte = csvData.Select(line => new Messwert
             {
                 ID = Convert.ToInt32(line[0]),
-                MessungID = Convert.ToInt32(line[1]),
-                SondenPositionID = Convert.ToInt32(line[2]),
-                Wert = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-                Zeitpunkt = DateTime.Parse(line[4], null, DateTimeStyles.RoundtripKind)
+                messung_id = Convert.ToInt32(line[1]),
+                sondenposition_id = Convert.ToInt32(line[2]),
+                wert = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+                zeitpunkt = DateTime.Parse(line[4], null, DateTimeStyles.RoundtripKind)
             }).ToList();
 
             await MesswertRepository.AddRangeAsync(messwerte.ToArray());

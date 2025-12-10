@@ -2,7 +2,7 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class LiveMesswertDto
     {
-        public int SondenPositionID { get; set; }
-        public decimal Wert { get; set; }
+        public int sondenposition_id { get; set; }
+        public decimal wert { get; set; }
     }
 }

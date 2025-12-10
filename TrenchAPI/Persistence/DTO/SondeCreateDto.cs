@@ -5,8 +5,8 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class SondeCreateDto : EntityObject
     {
-        public int SondenTypID { get; set; }
-        public string Name { get; set; } = "";
-        public decimal Kalibrierungsfaktor { get; set; }
+        public int sondentyp_id { get; set; }
+        public string name { get; set; } = "";
+        public decimal kalibrierungsfaktor { get; set; }
     }
 }

@@ -3,29 +3,31 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
+    [Table("spule")]
     public class Spule : EntityObject
     {
-        [ForeignKey(nameof(SpuleTypID))]
+        [ForeignKey(nameof(spuletyp_id))]
         public SpuleTyp? SpuleTyp { get; set; }
 
-        public int SpuleTypID { get; set; }
+        [Column("spuletyp_id", TypeName = "integer")]
+        public int spuletyp_id { get; set; }
 
-        [Column(TypeName = "varchar")]
-        public string Auftragsnr { get; set; } = "";
+        [Column("auftragsnr", TypeName = "varchar")]
+        public string auftragsnr { get; set; } = "";
 
-        [Column(TypeName = "varchar")]
-        public string AuftragsPosNr { get; set; } = "";
+        [Column("auftragsposnr", TypeName = "integer")]
+        public int auftragsposnr { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Bemessungsspannung { get; set; }
+        [Column("bemessungsspannung", TypeName = "decimal")]
+        public decimal bemessungsspannung { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Bemessungsfrequenz { get; set; }
+        [Column("bemessungsfrequenz", TypeName = "decimal")]
+        public decimal bemessungsfrequenz { get; set; }
 
-        [Column(TypeName = "varchar")]
-        public string Einheit { get; set; } = "";
+        [Column("einheit", TypeName = "varchar")]
+        public string einheit { get; set; } = "";
 
-        [Column(TypeName = "varchar")]
-        public string Notiz { get; set; } = "";
+        [Column("notiz", TypeName = "varchar")]
+        public string notiz { get; set; } = "";
     }
 }

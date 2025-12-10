@@ -6,9 +6,9 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class MesseinstellungCreateDto : EntityObject
     {
-        public string Name { get; set; } = string.Empty; 
-        public int SpuleID { get; set; }
-        public int SondenTypID { get; set; }
-        public int SondenProSchenkel { get; set; }
+        public string name { get; set; } = string.Empty; 
+        public int spule_id { get; set; }
+        public int sondentyp_id { get; set; }
+        public int sonden_pro_schenkel { get; set; }
     }
 }

@@ -6,12 +6,12 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class SondeUpdateDto
 {
-    public int ID { get; set; }
+    public int id { get; set; }
 
-    public int SondenTypID { get; set; }
+    public int sondentyp_id { get; set; }
 
-    public string Name { get; set; } = "";
+    public string name { get; set; } = "";
 
-    public decimal Kalibrierungsfaktor { get; set; }
+    public decimal kalibrierungsfaktor { get; set; }
 }
 }

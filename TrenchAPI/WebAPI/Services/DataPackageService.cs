@@ -149,13 +149,13 @@ public class DataPackageService
         var entities = rows.Select(line => new SpuleTyp
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            Name = line[1],
-            Schenkelzahl = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
-            Bandbreite = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-            Schichthoehe = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
-            Durchmesser = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-            Toleranzbereich = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
-            Notiz = line.Length > 7 ? line[7] : string.Empty
+            name = line[1],
+            schenkelzahl = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
+            bandbreite = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+            schichthoehe = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
+            durchmesser = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+            toleranzbereich = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
+            notiz = line.Length > 7 ? line[7] : string.Empty
         }).ToList();
 
         await _context.SpuleTyp.AddRangeAsync(entities, cancellationToken);
@@ -167,13 +167,13 @@ public class DataPackageService
         var entities = rows.Select(line => new Spule
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            SpuleTypID = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
-            Auftragsnr = line[2],
-            AuftragsPosNr = line[3],
-            Bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
-            Bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-            Einheit = line[6],
-            Notiz = line.Length > 7 ? line[7] : string.Empty
+            spuletyp_id = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
+            auftragsnr = line[2],
+            auftragsposnr = Convert.ToInt32(line[3], CultureInfo.InvariantCulture),
+            bemessungsspannung = Convert.ToDecimal(line[4], CultureInfo.InvariantCulture),
+            bemessungsfrequenz = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+            einheit = line[6],
+            notiz = line.Length > 7 ? line[7] : string.Empty
         }).ToList();
 
         await _context.Spule.AddRangeAsync(entities, cancellationToken);
@@ -185,12 +185,12 @@ public class DataPackageService
         var entities = rows.Select(line => new SondenTyp
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            Name = line[1],
-            Breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
-            Hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-            Windungszahl = Convert.ToInt32(line[4], CultureInfo.InvariantCulture),
-            Alpha = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-            Notiz = line.Length > 6 ? line[6] : string.Empty
+            name = line[1],
+            breite = Convert.ToDecimal(line[2], CultureInfo.InvariantCulture),
+            hoehe = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+            windungszahl = Convert.ToInt32(line[4], CultureInfo.InvariantCulture),
+            alpha = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+            notiz = line.Length > 6 ? line[6] : string.Empty
         }).ToList();
 
         await _context.SondenTyp.AddRangeAsync(entities, cancellationToken);
@@ -202,9 +202,9 @@ public class DataPackageService
         var entities = rows.Select(line => new Sonde
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            SondenTypID = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
-            Name = line[2],
-            Kalibrierungsfaktor = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture)
+            sondentyp_id = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
+            name = line[2],
+            kalibrierungsfaktor = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture)
         }).ToList();
 
         await _context.Sonde.AddRangeAsync(entities, cancellationToken);
@@ -216,10 +216,10 @@ public class DataPackageService
         var entities = rows.Select(line => new Messeinstellung
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            SpuleID = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
-            SondenTypID = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
-            Name = line[3],
-            SondenProSchenkel = Convert.ToInt32(line[4], CultureInfo.InvariantCulture)
+            spule_id = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
+            sondentyp_id = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
+            name = line[3],
+            sonden_pro_schenkel = Convert.ToInt32(line[4], CultureInfo.InvariantCulture)
         }).ToList();
 
         await _context.Messeinstellung.AddRangeAsync(entities, cancellationToken);
@@ -231,10 +231,10 @@ public class DataPackageService
         var entities = rows.Select(line => new SondenPosition
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            SondeID = string.IsNullOrWhiteSpace(line[1]) ? null : Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
-            MesseinstellungID = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
-            Schenkel = Convert.ToInt32(line[3], CultureInfo.InvariantCulture),
-            Position = Convert.ToInt32(line[4], CultureInfo.InvariantCulture)
+            sonde_id = string.IsNullOrWhiteSpace(line[1]) ? 0 : Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
+            messeinstellung_id = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
+            schenkel = Convert.ToInt32(line[3], CultureInfo.InvariantCulture),
+            position = Convert.ToInt32(line[4], CultureInfo.InvariantCulture)
         }).ToList();
 
         await _context.SondenPosition.AddRangeAsync(entities, cancellationToken);
@@ -246,13 +246,13 @@ public class DataPackageService
         var entities = rows.Select(line => new Messung
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            MesseinstellungID = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
-            Anfangszeitpunkt = DateTime.Parse(line[2], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
-            Endzeitpunkt = DateTime.Parse(line[3], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
-            Name = line[4],
-            Tauchkernstellung = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
-            Pruefspannung = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
-            Notiz = line.Length > 7 ? line[7] : string.Empty
+            messeinstellung_id = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
+            anfangszeitpunkt = DateTime.Parse(line[2], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+            endzeitpunkt = DateTime.Parse(line[3], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+            name = line[4],
+            tauchkernstellung = Convert.ToDecimal(line[5], CultureInfo.InvariantCulture),
+            pruefspannung = Convert.ToDecimal(line[6], CultureInfo.InvariantCulture),
+            notiz = line.Length > 7 ? line[7] : string.Empty
         }).ToList();
 
         await _context.Messung.AddRangeAsync(entities, cancellationToken);
@@ -264,10 +264,10 @@ public class DataPackageService
         var entities = rows.Select(line => new Messwert
         {
             ID = Convert.ToInt32(line[0], CultureInfo.InvariantCulture),
-            MessungID = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
-            SondenPositionID = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
-            Wert = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
-            Zeitpunkt = DateTime.Parse(line[4], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
+            messung_id = Convert.ToInt32(line[1], CultureInfo.InvariantCulture),
+            sondenposition_id = Convert.ToInt32(line[2], CultureInfo.InvariantCulture),
+            wert = Convert.ToDecimal(line[3], CultureInfo.InvariantCulture),
+            zeitpunkt = DateTime.Parse(line[4], CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind)
         }).ToList();
 
         await _context.Messwert.AddRangeAsync(entities, cancellationToken);
@@ -283,13 +283,13 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(EscapeCsvField(entity.Name)).Append(',')
-                .Append(entity.Schenkelzahl.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Bandbreite.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Schichthoehe.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Durchmesser.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Toleranzbereich.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .AppendLine(EscapeCsvField(entity.Notiz));
+                .Append(EscapeCsvField(entity.name)).Append(',')
+                .Append(entity.schenkelzahl.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.bandbreite.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.schichthoehe.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.durchmesser.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.toleranzbereich.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .AppendLine(EscapeCsvField(entity.notiz));
         }
 
         return builder.ToString();
@@ -305,13 +305,13 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(entity.SpuleTypID).Append(',')
-                .Append(EscapeCsvField(entity.Auftragsnr)).Append(',')
-                .Append(EscapeCsvField(entity.AuftragsPosNr)).Append(',')
-                .Append(entity.Bemessungsspannung.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Bemessungsfrequenz.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(EscapeCsvField(entity.Einheit)).Append(',')
-                .AppendLine(EscapeCsvField(entity.Notiz));
+                .Append(entity.spuletyp_id).Append(',')
+                .Append(EscapeCsvField(entity.auftragsnr)).Append(',')
+                .Append(entity.auftragsposnr.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.bemessungsspannung.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.bemessungsfrequenz.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.einheit.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .AppendLine(EscapeCsvField(entity.notiz));
         }
 
         return builder.ToString();
@@ -327,12 +327,12 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(EscapeCsvField(entity.Name)).Append(',')
-                .Append(entity.Breite.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Hoehe.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Windungszahl.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Alpha.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .AppendLine(EscapeCsvField(entity.Notiz));
+                .Append(EscapeCsvField(entity.name)).Append(',')
+                .Append(entity.breite.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.hoehe.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.windungszahl.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.alpha.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .AppendLine(EscapeCsvField(entity.notiz));
         }
 
         return builder.ToString();
@@ -348,9 +348,9 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(entity.SondenTypID).Append(',')
-                .Append(EscapeCsvField(entity.Name)).Append(',')
-                .AppendLine(entity.Kalibrierungsfaktor.ToString(CultureInfo.InvariantCulture));
+                .Append(entity.sondentyp_id).Append(',')
+                .Append(EscapeCsvField(entity.name)).Append(',')
+                .AppendLine(entity.kalibrierungsfaktor.ToString(CultureInfo.InvariantCulture));
         }
 
         return builder.ToString();
@@ -366,10 +366,10 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(entity.SpuleID).Append(',')
-                .Append(entity.SondenTypID).Append(',')
-                .Append(EscapeCsvField(entity.Name)).Append(',')
-                .AppendLine(entity.SondenProSchenkel.ToString(CultureInfo.InvariantCulture));
+                .Append(entity.spule_id).Append(',')
+                .Append(entity.sondentyp_id).Append(',')
+                .Append(EscapeCsvField(entity.name)).Append(',')
+                .AppendLine(entity.sonden_pro_schenkel.ToString(CultureInfo.InvariantCulture));
         }
 
         return builder.ToString();
@@ -385,10 +385,10 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(entity.SondeID?.ToString(CultureInfo.InvariantCulture) ?? string.Empty).Append(',')
-                .Append(entity.MesseinstellungID).Append(',')
-                .Append(entity.Schenkel.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .AppendLine(entity.Position.ToString(CultureInfo.InvariantCulture));
+                .Append(entity.sonde_id.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.messeinstellung_id).Append(',')
+                .Append(entity.schenkel.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .AppendLine(entity.position.ToString(CultureInfo.InvariantCulture));
         }
 
         return builder.ToString();
@@ -404,13 +404,13 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(entity.MesseinstellungID).Append(',')
-                .Append(entity.Anfangszeitpunkt.ToString("o", CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Endzeitpunkt.ToString("o", CultureInfo.InvariantCulture)).Append(',')
-                .Append(EscapeCsvField(entity.Name)).Append(',')
-                .Append(entity.Tauchkernstellung.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(entity.Pruefspannung.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .AppendLine(EscapeCsvField(entity.Notiz));
+                .Append(entity.messeinstellung_id).Append(',')
+                .Append(entity.anfangszeitpunkt.ToString("o", CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.endzeitpunkt.ToString("o", CultureInfo.InvariantCulture)).Append(',')
+                .Append(EscapeCsvField(entity.name)).Append(',')
+                .Append(entity.tauchkernstellung.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(entity.pruefspannung.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .AppendLine(EscapeCsvField(entity.notiz));
         }
 
         return builder.ToString();
@@ -426,10 +426,10 @@ public class DataPackageService
         {
             builder
                 .Append(entity.ID).Append(',')
-                .Append(entity.MessungID).Append(',')
-                .Append(entity.SondenPositionID).Append(',')
-                .Append(entity.Wert.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .AppendLine(entity.Zeitpunkt.ToString("o", CultureInfo.InvariantCulture));
+                .Append(entity.messung_id).Append(',')
+                .Append(entity.sondenposition_id).Append(',')
+                .Append(entity.wert.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .AppendLine(entity.zeitpunkt.ToString("o", CultureInfo.InvariantCulture));
         }
 
         return builder.ToString();

@@ -84,7 +84,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.SpuleTyp.Any(st => st.ID == spuleDto.SpuleTypID))
+            if (!_context.SpuleTyp.Any(st => st.ID == spuleDto.spuletyp_id))
             {
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");
             }
@@ -92,15 +92,15 @@ namespace TrenchAPI.Controllers
             var spule = new Spule
             {
                 ID = spuleDto.ID,
-                SpuleTypID = spuleDto.SpuleTypID,
-                Bemessungsspannung = spuleDto.Bemessungsspannung,
-                Bemessungsfrequenz = spuleDto.Bemessungsfrequenz,
-                Auftragsnr = spuleDto.Auftragsnr,
-                AuftragsPosNr = spuleDto.AuftragsPosNr,
-                Einheit = spuleDto.Einheit,
+                spuletyp_id = spuleDto.spuletyp_id,
+                bemessungsspannung = spuleDto.bemessungsspannung,
+                bemessungsfrequenz = spuleDto.bemessungsfrequenz,
+                auftragsnr = spuleDto.auftragsnr,
+                auftragsposnr = spuleDto.auftragsposnr,
+                einheit = spuleDto.einheit,
             };
 
-            var existingSpuleTyp = _context.SpuleTyp.Find(spule.SpuleTypID);
+            var existingSpuleTyp = _context.SpuleTyp.Find(spule.spuletyp_id);
             if (existingSpuleTyp == null)
             {
                 return BadRequest("Der angegebene SpuleTyp existiert nicht.");

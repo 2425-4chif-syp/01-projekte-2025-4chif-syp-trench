@@ -5,12 +5,12 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class MessungCreateDto : EntityObject
     {
-        public int MesseinstellungID { get; set; }
-        public DateTime Anfangszeitpunkt { get; set; }
-        public DateTime Endzeitpunkt { get; set; }
-        public string Name { get; set; } = "";
-        public decimal Tauchkernstellung { get; set; }
-        public decimal Pruefspannung { get; set; }
-        public string Notiz { get; set; } = "";
+        public int messeinstellung_id { get; set; }
+        public DateTime anfangszeitpunkt { get; set; }
+        public DateTime endzeitpunkt { get; set; }
+        public string name { get; set; } = "";
+        public decimal tauchkernstellung { get; set; }
+        public decimal pruefspannung { get; set; }
+        public string notiz { get; set; } = "";
     }
 }

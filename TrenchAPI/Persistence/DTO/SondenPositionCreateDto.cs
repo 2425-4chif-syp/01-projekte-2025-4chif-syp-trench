@@ -5,9 +5,9 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class SondenPositionCreateDto : EntityObject
     {
-        public int MesseinstellungID { get; set; }
-        public int? SondeID { get; set; }
-        public int Schenkel { get; set; }
-        public int Position { get; set; }
+        public int sonde_id { get; set; }
+        public int messeinstellung_id { get; set; }
+        public int schenkel { get; set; }
+        public int position { get; set; }
     }
 }

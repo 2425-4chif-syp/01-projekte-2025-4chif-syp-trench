@@ -5,17 +5,17 @@ namespace TrenchAPI.Persistence.DTO
 {
     public class CompleteMessungDto
     {
-        public int MesseinstellungID { get; set; }
-        public DateTime Anfangszeitpunkt { get; set; }
-        public DateTime Endzeitpunkt { get; set; }
-        public string Notiz { get; set; } = "";
+        public int messeinstellung_id { get; set; }
+        public DateTime anfangszeitpunkt { get; set; }
+        public DateTime endzeitpunkt { get; set; }
+        public string notiz { get; set; } = "";
         public List<MesssondeDto> Messsonden { get; set; } = new List<MesssondeDto>();
     }
 
     public class MesssondeDto
     {
-        public int Schenkel { get; set; }
-        public int Position { get; set; }
+        public int schenkel { get; set; }
+        public int position { get; set; }
         public List<double> Messwerte { get; set; } = new List<double>();
         public double Durchschnittswert { get; set; }
     }

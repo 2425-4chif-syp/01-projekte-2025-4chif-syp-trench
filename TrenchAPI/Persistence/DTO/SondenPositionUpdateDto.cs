@@ -2,10 +2,10 @@ namespace TrenchAPI.Persistence.DTO
 { 
     public class SondenPositionUpdateDto 
     { 
-        public int ID { get; set; } 
-        public int? SondeID { get; set; } 
-        public int MesseinstellungID { get; set; } 
-        public int Position { get; set; } 
-        public int Schenkel { get; set; } 
+        public int id { get; set; } 
+        public int sonde_id { get; set; } 
+        public int messeinstellung_id { get; set; } 
+        public int position { get; set; } 
+        public int schenkel { get; set; } 
     } 
 }

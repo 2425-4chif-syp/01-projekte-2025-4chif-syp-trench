@@ -65,14 +65,14 @@ namespace TrenchAPI.Controllers
             }
 
             var messwerte = await _context.Messwert
-                .Where(m => m.MessungID == id)
-                .OrderBy(m => m.Zeitpunkt)
+                .Where(m => m.messung_id == id)
+                .OrderBy(m => m.zeitpunkt)
                 .Select(m => new {
                     m.ID,
-                    m.MessungID,
-                    m.SondenPositionID,
-                    m.Wert,
-                    m.Zeitpunkt
+                    m.messung_id,
+                    m.sondenposition_id,
+                    m.wert,
+                    m.zeitpunkt
                 })
                 .ToListAsync();
 
@@ -87,7 +87,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.Messeinstellung.Any(me => me.ID == dto.MesseinstellungID))
+            if (!_context.Messeinstellung.Any(me => me.ID == dto.messeinstellung_id))
             {
                 return BadRequest("Die angegebene Messeinstellung existiert nicht.");
             }
@@ -95,13 +95,13 @@ namespace TrenchAPI.Controllers
             // Erstelle neue Messung
             var messung = new Messung
             {
-                MesseinstellungID = dto.MesseinstellungID,
-                Anfangszeitpunkt = DateTime.UtcNow,
-                Endzeitpunkt = DateTime.MinValue,
-                Name = dto.Name ?? $"Messung_{DateTime.UtcNow:yyyyMMdd_HHmmss}",
-                Tauchkernstellung = dto.Tauchkernstellung,
-                Pruefspannung = dto.Pruefspannung,
-                Notiz = dto.Notiz ?? ""
+                messeinstellung_id = dto.messeinstellung_id,
+                anfangszeitpunkt = DateTime.UtcNow,
+                endzeitpunkt = DateTime.MinValue,
+                name = dto.name ?? $"Messung_{DateTime.UtcNow:yyyyMMdd_HHmmss}",
+                tauchkernstellung = dto.tauchkernstellung,
+                pruefspannung = dto.pruefspannung,
+                notiz = dto.notiz ?? ""
             };
 
             _context.Messung.Add(messung);
@@ -111,7 +111,7 @@ namespace TrenchAPI.Controllers
             _currentMessungID = messung.ID;
 
             // Start MQTT measurement service
-            await _mqttService.StartMeasurement(messung.ID, dto.MesseinstellungID);
+            await _mqttService.StartMeasurement(messung.ID, dto.messeinstellung_id);
 
             return Ok(messung.ID);
         }
@@ -130,7 +130,7 @@ namespace TrenchAPI.Controllers
                 return NotFound("Messung nicht gefunden.");
             }
 
-            messung.Endzeitpunkt = DateTime.UtcNow;
+            messung.endzeitpunkt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             _isMeasuring = false;
@@ -151,17 +151,17 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Keine aktive Messung.");
             }
 
-            if (!_context.SondenPosition.Any(sp => sp.ID == dto.SondenPositionID))
+            if (!_context.SondenPosition.Any(sp => sp.ID == dto.sondenposition_id))
             {
                 return BadRequest("Die angegebene SondenPosition existiert nicht.");
             }
 
             var messwert = new Messwert
             {
-                MessungID = _currentMessungID.Value,
-                SondenPositionID = dto.SondenPositionID,
-                Wert = dto.Wert,
-                Zeitpunkt = DateTime.UtcNow
+                messung_id = _currentMessungID.Value,
+                sondenposition_id = dto.sondenposition_id,
+                wert = dto.wert,
+                zeitpunkt = DateTime.UtcNow
             };
 
             _context.Messwert.Add(messwert);
@@ -180,7 +180,7 @@ namespace TrenchAPI.Controllers
             }
 
             var currentMessung = await _context.Messung
-                .OrderByDescending(m => m.Anfangszeitpunkt)
+                .OrderByDescending(m => m.anfangszeitpunkt)
                 .FirstOrDefaultAsync();
 
             if (currentMessung == null)
@@ -189,14 +189,14 @@ namespace TrenchAPI.Controllers
             }
 
             var messwerte = await _context.Messwert
-                .Where(m => m.MessungID == currentMessung.ID)
-                .OrderBy(m => m.Zeitpunkt)
+                .Where(m => m.messung_id == currentMessung.ID)
+                .OrderBy(m => m.zeitpunkt)
                 .Select(m => new {
                     m.ID,
-                    m.MessungID,
-                    m.SondenPositionID,
-                    m.Wert,
-                    m.Zeitpunkt
+                    m.messung_id,
+                    m.sondenposition_id,
+                    m.wert,
+                    m.zeitpunkt
                 })
                 .ToListAsync();
 
@@ -242,7 +242,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.Messeinstellung.Any(st => st.ID == messungDto.MesseinstellungID))
+            if (!_context.Messeinstellung.Any(st => st.ID == messungDto.messeinstellung_id))
             {
                 return BadRequest("Der angegebene Messeinstellung existiert nicht for some reason?. (DEBUG: 1)");
             }
@@ -250,16 +250,16 @@ namespace TrenchAPI.Controllers
             var messung = new Messung
             {
                 // Don't set ID - let database auto-generate it
-                MesseinstellungID = messungDto.MesseinstellungID,
-                Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
-                Endzeitpunkt = messungDto.Endzeitpunkt,
-                Name = messungDto.Name,
-                Tauchkernstellung = messungDto.Tauchkernstellung,
-                Pruefspannung = messungDto.Pruefspannung,
-                Notiz = messungDto.Notiz
+                messeinstellung_id = messungDto.messeinstellung_id,
+                anfangszeitpunkt = messungDto.anfangszeitpunkt,
+                endzeitpunkt = messungDto.endzeitpunkt,
+                name = messungDto.name,
+                tauchkernstellung = messungDto.tauchkernstellung,
+                pruefspannung = messungDto.pruefspannung,
+                notiz = messungDto.notiz
             };
 
-            var existingMesseinstellung = _context.Messeinstellung.Find(messung.MesseinstellungID);
+            var existingMesseinstellung = _context.Messeinstellung.Find(messung.messeinstellung_id);
 
             if (existingMesseinstellung == null)
             {
@@ -277,7 +277,7 @@ namespace TrenchAPI.Controllers
         public async Task<ActionResult<Messung>> PostCompleteMessung(CompleteMessungDto messungDto)
         {
             Console.WriteLine($"=== PostCompleteMessung aufgerufen ===");
-            Console.WriteLine($"MesseinstellungID: {messungDto.MesseinstellungID}");
+            Console.WriteLine($"MesseinstellungID: {messungDto.messeinstellung_id}");
             Console.WriteLine($"Anzahl Messsonden: {messungDto.Messsonden?.Count ?? 0}");
             
             if (!ModelState.IsValid)
@@ -289,10 +289,10 @@ namespace TrenchAPI.Controllers
             // Erstelle die Messung
             var messung = new Messung
             {
-                MesseinstellungID = messungDto.MesseinstellungID,
-                Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
-                Endzeitpunkt = messungDto.Endzeitpunkt,
-                Notiz = messungDto.Notiz
+                messeinstellung_id = messungDto.messeinstellung_id,
+                anfangszeitpunkt = messungDto.anfangszeitpunkt,
+                endzeitpunkt = messungDto.endzeitpunkt,
+                notiz = messungDto.notiz
             };
 
             _context.Messung.Add(messung);
@@ -301,13 +301,13 @@ namespace TrenchAPI.Controllers
 
             // Hole die existierenden SondenPositionen für diese Messeinstellung
             var sondenPositionen = await _context.SondenPosition
-                .Where(sp => sp.MesseinstellungID == messungDto.MesseinstellungID)
+                .Where(sp => sp.messeinstellung_id == messungDto.messeinstellung_id)
                 .ToListAsync();
 
             Console.WriteLine($"Gefundene SondenPositionen: {sondenPositionen.Count}");
             foreach (var sp in sondenPositionen)
             {
-                Console.WriteLine($"  - ID: {sp.ID}, Schenkel: {sp.Schenkel}, Position: {sp.Position}");
+                Console.WriteLine($"  - ID: {sp.ID}, Schenkel: {sp.schenkel}, Position: {sp.position}");
             }
 
             if (!sondenPositionen.Any())
@@ -326,16 +326,16 @@ namespace TrenchAPI.Controllers
             // Speichere die Messwerte
             foreach (var messsonde in messungDto.Messsonden)
             {
-                Console.WriteLine($"Verarbeite Messsonde: Schenkel {messsonde.Schenkel}, Position {messsonde.Position}, Messwerte: {messsonde.Messwerte?.Count ?? 0}");
+                Console.WriteLine($"Verarbeite Messsonde: Schenkel {messsonde.schenkel}, Position {messsonde.position}, Messwerte: {messsonde.Messwerte?.Count ?? 0}");
                 
                 // Finde die passende SondenPosition für diesen Schenkel und Position
                 var sondenPosition = sondenPositionen.FirstOrDefault(sp => 
-                    sp.Schenkel == messsonde.Schenkel && 
-                    sp.Position == messsonde.Position);
+                    sp.schenkel == messsonde.schenkel && 
+                    sp.position == messsonde.position);
 
                 if (sondenPosition == null)
                 {
-                    Console.WriteLine($"WARNUNG: Keine SondenPosition gefunden für Schenkel {messsonde.Schenkel}, Position {messsonde.Position}");
+                    Console.WriteLine($"WARNUNG: Keine SondenPosition gefunden für Schenkel {messsonde.schenkel}, Position {messsonde.position}");
                     continue;
                 }
 
@@ -349,10 +349,10 @@ namespace TrenchAPI.Controllers
                         var wert = messsonde.Messwerte[i];
                         var messwert = new Messwert
                         {
-                            MessungID = messung.ID,
-                            SondenPositionID = sondenPosition.ID,
-                            Wert = (decimal)wert,
-                            Zeitpunkt = messung.Anfangszeitpunkt.AddSeconds(i)
+                            messung_id = messung.ID,
+                            sondenposition_id = sondenPosition.ID,
+                            wert = (decimal)wert,
+                            zeitpunkt = messung.anfangszeitpunkt.AddSeconds(i)
                         };
 
                         _context.Messwert.Add(messwert);

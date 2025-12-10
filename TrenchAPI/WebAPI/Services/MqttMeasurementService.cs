@@ -108,10 +108,10 @@ namespace TrenchAPI.WebAPI.Services
 
                 var messwert = new Messwert
                 {
-                    MessungID = _currentMessungId.Value,
-                    SondenPositionID = sondenPositionId,
-                    Wert = (decimal)value,
-                    Zeitpunkt = DateTime.UtcNow
+                    messung_id = _currentMessungId.Value,
+                    sondenposition_id = sondenPositionId,
+                    wert = (decimal)value,
+                    zeitpunkt = DateTime.UtcNow
                 };
 
                 context.Messwert.Add(messwert);
@@ -137,7 +137,7 @@ namespace TrenchAPI.WebAPI.Services
             var context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
 
             var sondenPositionen = await context.SondenPosition
-                .Where(sp => sp.MesseinstellungID == messeinstellungId)
+                .Where(sp => sp.messeinstellung_id == messeinstellungId)
                 .ToListAsync();
 
             _logger.LogInformation($"Found {sondenPositionen.Count} SondenPositionen for MesseinstellungID {messeinstellungId}");
@@ -150,7 +150,7 @@ namespace TrenchAPI.WebAPI.Services
             _sondenPositionMap.Clear();
             foreach (var sp in sondenPositionen)
             {
-                var key = $"S{sp.Schenkel}S{sp.Position}";
+                var key = $"S{sp.schenkel}S{sp.position}";
                 _sondenPositionMap[key] = sp.ID;
                 _logger.LogInformation($"Mapped {key} -> SondenPositionID: {sp.ID}");
             }

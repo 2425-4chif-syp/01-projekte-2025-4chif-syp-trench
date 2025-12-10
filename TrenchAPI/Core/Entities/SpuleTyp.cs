@@ -3,27 +3,28 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
+    [Table("spulentyp")]
     public class SpuleTyp : EntityObject
     {
-        [Column(TypeName = "text")]
-        public string Name { get; set; } = "";
+        [Column("name", TypeName = "varchar")]
+        public string name { get; set; } = "";
 
-        [Column(TypeName = "int")]
-        public int Schenkelzahl { get; set; }
+        [Column("schenkelzahl", TypeName = "integer")]
+        public int schenkelzahl { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Bandbreite { get; set; }
+        [Column("bandbreite", TypeName = "decimal")]
+        public decimal bandbreite { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Schichthoehe { get; set; }
+        [Column("schichthoehe", TypeName = "decimal")]
+        public decimal schichthoehe { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Durchmesser { get; set; }
+        [Column("durchmesser", TypeName = "decimal")]
+        public decimal durchmesser { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Toleranzbereich { get; set; }
+        [Column("toleranzbereich", TypeName = "decimal")]
+        public decimal toleranzbereich { get; set; }
 
-        [Column(TypeName = "text")]
-        public string Notiz { get; set; } = "";
+        [Column("notiz", TypeName = "varchar")]
+        public string notiz { get; set; } = "";
     }
 }

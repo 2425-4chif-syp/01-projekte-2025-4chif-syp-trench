@@ -4,30 +4,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
+    [Table("messung")]
     public class Messung : EntityObject
     {
         [Required]
-        public int MesseinstellungID { get; set; }
+        [Column("messeinstellung_id", TypeName = "integer")]
+        public int messeinstellung_id { get; set; }
 
-        [ForeignKey(nameof(MesseinstellungID))]
+        [ForeignKey(nameof(messeinstellung_id))]
         public virtual Messeinstellung? Messeinstellung { get; set; }
 
-        [Column(TypeName = "timestamp with time zone")]
-        public DateTime Anfangszeitpunkt { get; set; }
+        [Column("anfangszeitpunkt", TypeName = "timestamp")]
+        public DateTime anfangszeitpunkt { get; set; }
 
-        [Column(TypeName = "timestamp with time zone")]
-        public DateTime Endzeitpunkt { get; set; }
+        [Column("endzeitpunkt", TypeName = "timestamp")]
+        public DateTime endzeitpunkt { get; set; }
 
-        [Column(TypeName = "varchar")]
-        public string Name { get; set; } = "";
+        [Column("name", TypeName = "varchar")]
+        public string name { get; set; } = "";
 
-        [Column(TypeName = "decimal")]
-        public decimal Tauchkernstellung { get; set; }
+        [Column("tauchkernstellung", TypeName = "decimal")]
+        public decimal tauchkernstellung { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Pruefspannung { get; set; }
+        [Column("pruefspannung", TypeName = "decimal")]
+        public decimal pruefspannung { get; set; }
 
-        [Column(TypeName = "varchar")]
-        public string Notiz { get; set; } = "";
+        [Column("notiz", TypeName = "varchar")]
+        public string notiz { get; set; } = "";
     }
 }

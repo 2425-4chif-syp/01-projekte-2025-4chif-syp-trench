@@ -47,17 +47,17 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSonde(int id, SondeUpdateDto dto)
         {
-            if (id != dto.ID) return BadRequest("ID in Route stimmt nicht mit DTO überein.");
+            if (id != dto.id) return BadRequest("ID in Route stimmt nicht mit DTO überein.");
 
             var sonde = await _context.Sonde.FirstOrDefaultAsync(s => s.ID == id);
             if (sonde == null) return NotFound();
 
-            if (!_context.SondenTyp.Any(st => st.ID == dto.SondenTypID))
+            if (!_context.SondenTyp.Any(st => st.ID == dto.sondentyp_id))
                 return BadRequest("Der angegebene Sondentyp existiert nicht.");
 
-            sonde.SondenTypID        = dto.SondenTypID;
-            sonde.Name               = dto.Name;
-            sonde.Kalibrierungsfaktor= dto.Kalibrierungsfaktor;
+            sonde.sondentyp_id        = dto.sondentyp_id;
+            sonde.name               = dto.name;
+            sonde.kalibrierungsfaktor= dto.kalibrierungsfaktor;
 
             await _context.SaveChangesAsync();
             return NoContent();
@@ -74,7 +74,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_context.SondenTyp.Any(st => st.ID == sondeDto.SondenTypID))
+            if (!_context.SondenTyp.Any(st => st.ID == sondeDto.sondentyp_id))
             {
                 return BadRequest("Der angegebene Sondentyp existiert nicht. (DEBUG: 1)");
             }
@@ -82,12 +82,12 @@ namespace TrenchAPI.Controllers
             var sonde = new Sonde
             {
                 ID = sondeDto.ID,
-                SondenTypID = sondeDto.SondenTypID,
-                Name = sondeDto.Name,
-                Kalibrierungsfaktor = sondeDto.Kalibrierungsfaktor,
+                sondentyp_id = sondeDto.sondentyp_id,
+                name = sondeDto.name,
+                kalibrierungsfaktor = sondeDto.kalibrierungsfaktor,
             };
 
-            var existingSondenTyp = _context.SondenTyp.Find(sonde.SondenTypID);
+            var existingSondenTyp = _context.SondenTyp.Find(sonde.sondentyp_id);
             if (existingSondenTyp == null)
             {
                 return BadRequest("Der angegebene Sondentyp existiert nicht. (DEBUG: 2)");

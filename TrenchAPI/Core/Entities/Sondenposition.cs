@@ -3,24 +3,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
+    [Table("sondenposition")]
     public class SondenPosition : EntityObject
     {
         [Required]
-        public int MesseinstellungID { get; set; }
+        [Column("sonde_id", TypeName = "integer")]
+        public int sonde_id { get; set; }
 
-        [ForeignKey(nameof(MesseinstellungID))]
-        public virtual Messeinstellung? Messeinstellung { get; set; }
-
-        //[Required]
-        public int? SondeID { get; set; }
-
-        [ForeignKey(nameof(SondeID))]
+        [ForeignKey(nameof(sonde_id))]
         public virtual Sonde? Sonde { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Schenkel { get; set; }
+        [Required]
+        [Column("messeinstellung_id", TypeName = "integer")]
+        public int messeinstellung_id { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Position { get; set; }
+        [ForeignKey(nameof(messeinstellung_id))]
+        public virtual Messeinstellung? Messeinstellung { get; set; }
+
+        [Column("schenkel", TypeName = "integer")]
+        public int schenkel { get; set; }
+
+        [Column("position", TypeName = "integer")]
+        public int position { get; set; }
     }
 }

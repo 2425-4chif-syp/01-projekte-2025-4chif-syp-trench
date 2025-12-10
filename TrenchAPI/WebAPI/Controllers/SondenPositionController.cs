@@ -58,7 +58,7 @@ namespace TrenchAPI.Controllers
                 .Include(sp => sp.Sonde)
                     .ThenInclude(s => s.SondenTyp)
                 .Include(sp => sp.Messeinstellung)
-                .Where(sp => sp.MesseinstellungID == messeinstellungId)
+                .Where(sp => sp.messeinstellung_id == messeinstellungId)
                 .ToListAsync();
 
             if (sondenPosition.Count == 0)
@@ -73,7 +73,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
 public async Task<IActionResult> PutSondenPosition(int id, SondenPositionUpdateDto dto)
 {
-    if (id != dto.ID) return BadRequest("ID passt nicht.");
+    if (id != dto.id) return BadRequest("ID passt nicht.");
     if (!ModelState.IsValid) return BadRequest(ModelState);
 
     var sondenPosition = await _context.SondenPosition
@@ -81,19 +81,19 @@ public async Task<IActionResult> PutSondenPosition(int id, SondenPositionUpdateD
     if (sondenPosition is null) return NotFound();
 
     // Messeinstellung prüfen
-    if (!_context.Messeinstellung.Any(me => me.ID == dto.MesseinstellungID))
+    if (!_context.Messeinstellung.Any(me => me.ID == dto.messeinstellung_id))
         return BadRequest("Die angegebene Messeinstellung existiert nicht.");
 
     // Sonde nur prüfen, wenn sie angegeben wurde
-    if (dto.SondeID.HasValue &&
-        !_context.Sonde.Any(s => s.ID == dto.SondeID.Value))
+    if (dto.sonde_id > 0 &&
+        !_context.Sonde.Any(s => s.ID == dto.sonde_id))
         return BadRequest("Die angegebene Sonde existiert nicht.");
 
     // Werte übernehmen
-    sondenPosition.SondeID = dto.SondeID;            // null oder Wert
-    sondenPosition.MesseinstellungID = dto.MesseinstellungID;
-    sondenPosition.Position = dto.Position;
-    sondenPosition.Schenkel = dto.Schenkel;
+    sondenPosition.sonde_id = dto.sonde_id;            // null oder Wert
+    sondenPosition.messeinstellung_id = dto.messeinstellung_id;
+    sondenPosition.position = dto.position;
+    sondenPosition.schenkel = dto.schenkel;
 
     await _context.SaveChangesAsync();
     return NoContent();
@@ -109,25 +109,25 @@ public async Task<ActionResult<SondenPosition>> PostSondenPosition(SondenPositio
     if (!ModelState.IsValid) return BadRequest(ModelState);
 
     // Messeinstellung MUSS existieren
-    if (!_context.Messeinstellung.Any(me => me.ID == dto.MesseinstellungID))
+    if (!_context.Messeinstellung.Any(me => me.ID == dto.messeinstellung_id))
         return BadRequest("Die angegebene Messeinstellung existiert nicht.");
 
     // Sonde nur prüfen, wenn sie angegeben wurde
     Sonde? existingSonde = null;
-    if (dto.SondeID.HasValue)
+    if (dto.sonde_id > 0)
     {
-        existingSonde = await _context.Sonde.FindAsync(dto.SondeID.Value);
+        existingSonde = await _context.Sonde.FindAsync(dto.sonde_id);
         if (existingSonde is null)
             return BadRequest("Die angegebene Sonde existiert nicht.");
     }
 
     var sondenPosition = new SondenPosition
     {
-        SondeID = dto.SondeID,                // kann null sein
+        sonde_id = dto.sonde_id,                // kann null sein
         Sonde   = existingSonde,              // null oder Entity
-        MesseinstellungID = dto.MesseinstellungID,
-        Position = dto.Position,
-        Schenkel = dto.Schenkel
+        messeinstellung_id = dto.messeinstellung_id,
+        position = dto.position,
+        schenkel = dto.schenkel
     };
 
     _context.SondenPosition.Add(sondenPosition);

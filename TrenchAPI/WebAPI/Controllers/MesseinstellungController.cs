@@ -65,31 +65,18 @@ namespace TrenchAPI.Controllers
 
             var spule = await _context.Spule
                                       .Include(s => s.SpuleTyp)
-                                      .FirstOrDefaultAsync(s => s.ID == dto.SpuleID);
+                                      .FirstOrDefaultAsync(s => s.ID == dto.spule_id);
             if (spule == null)
                 return BadRequest("Die angegebene Spule existiert nicht.");
 
-            var sondenTyp = await _context.SondenTyp.FirstOrDefaultAsync(st => st.ID == dto.SondenTypID);
+            var sondenTyp = await _context.SondenTyp.FirstOrDefaultAsync(st => st.ID == dto.sondentyp_id);
             if (sondenTyp == null)
                 return BadRequest("Der angegebene Sondentyp existiert nicht.");
 
-            // Plausibilitätsprüfung: Max. Sonden pro Schenkel = floor(360 / (Joche * Alpha))
-            var joche = spule.SpuleTyp?.Schenkelzahl ?? 0;
-            if (joche <= 0)
-                return BadRequest("Der zugehörige Spulentyp hat keine gültige Schenkelzahl.");
-
-            if (sondenTyp.Alpha <= 0)
-                return BadRequest("Der gewählte Sondentyp hat kein gültiges Alpha.");
-
-            var maxSondenProSchenkelDecimal = 360m / (joche * sondenTyp.Alpha);
-            var maxSondenProSchenkel = (int)Math.Floor(maxSondenProSchenkelDecimal);
-            if (dto.SondenProSchenkel > maxSondenProSchenkel)
-                return BadRequest($"Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: {maxSondenProSchenkel}.");
-
-            messeinstellung.SpuleID            = dto.SpuleID;
-            messeinstellung.SondenTypID        = dto.SondenTypID;
-            messeinstellung.SondenProSchenkel  = dto.SondenProSchenkel;
-            messeinstellung.Name               = dto.Name;
+            messeinstellung.spule_id            = dto.spule_id;
+            messeinstellung.sondentyp_id        = dto.sondentyp_id;
+            messeinstellung.sonden_pro_schenkel  = dto.sonden_pro_schenkel;
+            messeinstellung.name               = dto.name;
 
             await _context.SaveChangesAsync();
             return NoContent();
@@ -106,44 +93,25 @@ namespace TrenchAPI.Controllers
 
             var spule = await _context.Spule
                                       .Include(s => s.SpuleTyp)
-                                      .FirstOrDefaultAsync(s => s.ID == messeinstellungDto.SpuleID);
+                                      .FirstOrDefaultAsync(s => s.ID == messeinstellungDto.spule_id);
             if (spule == null)
             {
                 return BadRequest("Die angegebene Spule existiert nicht.");
             }
 
-            var sondenTyp = await _context.SondenTyp.FirstOrDefaultAsync(m => m.ID == messeinstellungDto.SondenTypID);
+            var sondenTyp = await _context.SondenTyp.FirstOrDefaultAsync(m => m.ID == messeinstellungDto.sondentyp_id);
             if (sondenTyp == null)
             {
                 return BadRequest("Der angegebene MesssondenTyp existiert nicht.");
             }
 
-            // Plausibilitätsprüfung: Max. Sonden pro Schenkel = floor(360 / (Joche * Alpha))
-            var joche = spule.SpuleTyp?.Schenkelzahl ?? 0;
-            if (joche <= 0)
-            {
-                return BadRequest("Der zugehörige Spulentyp hat keine gültige Schenkelzahl.");
-            }
-
-            if (sondenTyp.Alpha <= 0)
-            {
-                return BadRequest("Der gewählte Sondentyp hat kein gültiges Alpha.");
-            }
-
-            var maxSondenProSchenkelDecimal = 360m / (joche * sondenTyp.Alpha);
-            var maxSondenProSchenkel = (int)Math.Floor(maxSondenProSchenkelDecimal);
-            if (messeinstellungDto.SondenProSchenkel > maxSondenProSchenkel)
-            {
-                return BadRequest($"Die Anzahl der Sonden pro Schenkel ist nicht plausibel. Maximal zulässig: {maxSondenProSchenkel}.");
-            }
-
             var messeinstellung = new Messeinstellung
             {
                 ID = messeinstellungDto.ID,
-                SpuleID = messeinstellungDto.SpuleID,
-                SondenTypID = messeinstellungDto.SondenTypID,
-                SondenProSchenkel = messeinstellungDto.SondenProSchenkel,
-                Name = messeinstellungDto.Name,
+                spule_id = messeinstellungDto.spule_id,
+                sondentyp_id = messeinstellungDto.sondentyp_id,
+                sonden_pro_schenkel = messeinstellungDto.sonden_pro_schenkel,
+                name = messeinstellungDto.name,
             };
 
             messeinstellung.Spule = spule;

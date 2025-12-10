@@ -3,18 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrenchAPI.Core.Entities
 {
+    [Table("sonde")]
     public class Sonde : EntityObject
     {
         [Required]
-        public int SondenTypID { get; set; }
+        [Column("sondentyp_id", TypeName = "integer")]
+        public int sondentyp_id { get; set; }
 
-        [ForeignKey(nameof(SondenTypID))]
+        [ForeignKey(nameof(sondentyp_id))]
         public virtual SondenTyp? SondenTyp { get; set; }
 
-        [Column(TypeName = "varchar")]
-        public string Name { get; set; } = "";
+        [Column("name", TypeName = "varchar")]
+        public string name { get; set; } = "";
 
-        [Column(TypeName = "decimal")]
-        public decimal Kalibrierungsfaktor { get; set; }
+        [Column("kalibrierungsfaktor", TypeName = "decimal")]
+        public decimal kalibrierungsfaktor { get; set; }
     }
 }

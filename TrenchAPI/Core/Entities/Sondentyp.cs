@@ -2,24 +2,25 @@
 
 namespace TrenchAPI.Core.Entities
 {
+    [Table("sondentyp")]
     public class SondenTyp : EntityObject
     {
-        [Column(TypeName = "varchar")]
-        public string Name { get; set; } = "";
+        [Column("name", TypeName = "varchar")]
+        public string name { get; set; } = "";
 
-        [Column(TypeName = "decimal")]
-        public decimal Breite { get; set; }
+        [Column("breite", TypeName = "decimal")]
+        public decimal breite { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Hoehe { get; set; }
+        [Column("hoehe", TypeName = "decimal")]
+        public decimal hoehe { get; set; }
 
-        [Column(TypeName = "int")]
-        public int Windungszahl { get; set; }
+        [Column("windungszahl", TypeName = "integer")]
+        public int windungszahl { get; set; }
 
-        [Column(TypeName = "decimal")]
-        public decimal Alpha { get; set; }
+        [Column("alpha", TypeName = "decimal")]
+        public decimal alpha { get; set; }
 
-        [Column(TypeName = "varchar")]
-        public string Notiz { get; set; } = "";
+        [Column("notiz", TypeName = "varchar")]
+        public string notiz { get; set; } = "";
     }
 }
