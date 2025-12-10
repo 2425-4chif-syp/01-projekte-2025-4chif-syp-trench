@@ -1,0 +1,134 @@
+.global-alerts {
+  position: fixed;
+  top: 0; /* dynamic from component */
+  right: 16px;
+  z-index: 2000; /* above content, below modals */
+  pointer-events: none; /* allow clicks through gaps */
+}
+
+.global-alerts__stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* right align items */
+  gap: 8px;
+  max-width: 92vw;
+}
+
+.global-alerts__item {
+  pointer-events: auto; /* clickable close button */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  min-width: 280px;
+  max-width: 420px;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* reserve space for the progress bar when present */
+  padding-bottom: 6px;
+}
+
+.alert-text-content {
+  max-height: var(--global-alert-max-h, 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+.global-alerts__item.is-expanded .alert-text-content {
+  max-height: 600px; /* Larger max height when expanded */
+}
+
+/* Fading overlay to indicate more content when collapsed */
+/* Remove gradient overlay, use explicit indicator instead */
+
+.alert-message {
+  display: flex;
+  gap: 6px;
+}
+
+.alert-details {
+  margin-top: 4px;
+}
+
+.alert-more-indicator {
+  margin-top: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Progress bar */
+@keyframes progressShrink {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+.alert-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  border-radius: 0 0 2px 2px;
+  opacity: 0.9;
+  animation-name: progressShrink;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+/* Scrollbar styling for alert text content */
+.alert-text-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.alert-text-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.alert-text-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.alert-text-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.alert-more-indicator {
+  margin-top: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Color mapping to Bootstrap alert variants */
+.alert-success .alert-progress { background-color: #198754; }
+.alert-danger  .alert-progress { background-color: #dc3545; }
+.alert-warning .alert-progress { background-color: #ffc107; }
+.alert-info    .alert-progress { background-color: #0dcaf0; }
+

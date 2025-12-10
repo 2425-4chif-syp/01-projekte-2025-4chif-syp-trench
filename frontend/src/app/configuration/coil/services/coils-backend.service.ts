@@ -15,7 +15,7 @@ export class CoilsBackendService {
         id: coil.id,
         coiltype: this.coilTypeBackendService.coiltypeBackendToFrontend(coil.spuleTyp),
         coiltypeId: coil.spuleTypID,
-        einheit: coil.einheit,
+        einheit: coil.einheit ? coil.einheit.toString() : null,
         auftragsnummer: coil.auftragsnr,
         auftragsPosNr: coil.auftragsPosNr,
         bemessungsfrequenz: coil.bemessungsfrequenz,
@@ -32,7 +32,7 @@ export class CoilsBackendService {
         spuleTypID: coil.coiltypeId,
         bemessungsfrequenz: coil.bemessungsfrequenz,
         bemessungsspannung: coil.bemessungsspannung,
-        einheit: coil.einheit,
+        einheit: coil.einheit?.toString() ?? "",
         auftragsnr: coil.auftragsnummer,
         auftragsPosNr: coil.auftragsPosNr,
         notiz: coil.notiz

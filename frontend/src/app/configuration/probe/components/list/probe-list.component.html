@@ -4,6 +4,13 @@
     </h2>
 
     @if (hasLoadedElementIdsToIgnore) {
+        @if (noProbesMessage) {
+            <div class="alert alert-warning mt-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                {{ noProbesMessage }}
+            </div>
+        }
+        
         <app-generic-list 
         [keysAsColumns]="keysAsColumns"
         [elementValueToStringMethods]="elementValueToStringMethods"

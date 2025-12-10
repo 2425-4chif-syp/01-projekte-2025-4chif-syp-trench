@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth/auth.service';
+import { ModeService, UserMode } from '../services/mode.service';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +13,13 @@ import { AuthService } from '../auth/auth.service';
 })
 export class HomeComponent {
   isLoginPage = false;
+  showAdminWarning = false;
 
-    constructor(public authService: AuthService, private router: Router) {
+    constructor(
+      public authService: AuthService, 
+      public modeService: ModeService,
+      private router: Router
+    ) {
       this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd) {
           this.isLoginPage = event.url.split('?')[0] === '/login';
@@ -45,9 +51,26 @@ export class HomeComponent {
     this.router.navigate(['/measurement-management']);
   }
 
+  navigateToCsvImportExport() {
+    this.router.navigate(['/csv-import-export']);
+  }
+
   logout(event: Event): void {
     event.preventDefault();
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleMode(): void {
+    this.modeService.toggleMode();
+  }
+
+  dismissAdminWarning(): void {
+    this.showAdminWarning = false;
+  }
+
+  // Methode, um die Warnung anzuzeigen (wird von anderen Komponenten aufgerufen)
+  showAdminAccessWarning(): void {
+    this.showAdminWarning = true;
   }
 }

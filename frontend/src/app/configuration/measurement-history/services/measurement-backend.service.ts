@@ -13,8 +13,8 @@ export class MeasurementsBackendService {
   private measurementBackendToFrontend(measurement: any): Measurement {
     return {
       id: measurement.id,
-      measurementSettings: measurement.messeinstellung,
-      measurementSettingsId: measurement.messeinstellungID,
+      messeinstellung: measurement.messeinstellung,
+      messeinstellungId: measurement.messeinstellungID,
       anfangszeitpunkt: measurement.anfangszeitpunkt,
       endzeitpunkt: measurement.endzeitpunkt,
       name: measurement.name,
@@ -27,7 +27,7 @@ export class MeasurementsBackendService {
   private measurementFrontendToBackend(measurement: Measurement): any {
     return {
       id: measurement.id,
-      messeinstellungID: measurement.measurementSettingsId,
+      messeinstellungID: measurement.messeinstellungId,
       anfangszeitpunkt: measurement.anfangszeitpunkt,
       endzeitpunkt: measurement.endzeitpunkt,
       name: measurement.name,
@@ -64,12 +64,26 @@ export class MeasurementsBackendService {
     return this.backendService.httpPostRequest('Messung/Complete', measurementData);
   }
 
-  public async startMeasuring(): Promise<void> {
-    await this.backendService.httpPostRequest('Messung/startMeasuring', {});
+  public async startMeasuring(measurementSettingId: number, note: string, name?: string, tauchkernstellung?: number, pruefspannung?: number): Promise<number> {
+    const response: any = await this.backendService.httpPostRequest('Messung/startMeasuring', {
+      MesseinstellungID: measurementSettingId,
+      Name: name,
+      Tauchkernstellung: tauchkernstellung ?? 0,
+      Pruefspannung: pruefspannung ?? 0,
+      Notiz: note
+    });
+    return response;
   }
 
   public async stopMeasuring(): Promise<void> {
     await this.backendService.httpPostRequest('Messung/stopMeasuring', {});
+  }
+
+  public async addLiveMesswert(sondenPositionId: number, wert: number): Promise<void> {
+    await this.backendService.httpPostRequest('Messung/AddLiveMesswert', {
+      sondenPositionID: sondenPositionId,
+      wert: wert
+    });
   }
 
   public async getCurrentMessungValues(): Promise<any[]> {

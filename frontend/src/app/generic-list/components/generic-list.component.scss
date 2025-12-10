@@ -35,6 +35,18 @@
     align-self: center; 
 }
 
+.new-coil-button {
+    font-size: 1rem;
+    padding: 0.9rem 1.8rem;
+}
+
+.disabled-button {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
 table {
     width: 100%;
     border-collapse: separate;
@@ -64,5 +76,14 @@ table {
 
     tr:hover {
         background-color: #f1f1f1;
+    }
+}
+
+// Selection mode buttons styling
+.d-flex.justify-content-center.gap-2 {
+    .btn {
+        min-width: 120px;
+        max-width: 160px;
+        padding: 0.75rem 1.5rem;
     }
 }

@@ -15,8 +15,8 @@ export class MeasurementHistoryService implements ListService<Measurement> {
   public get newElement(): Measurement {
     return {
       id: null,
-      measurementSettings: null,
-      measurementSettingsId: null,
+      messeinstellung: null,
+      messeinstellungId: null,
       anfangszeitpunkt: null,
       endzeitpunkt: null,
       name: '',
@@ -41,8 +41,8 @@ export class MeasurementHistoryService implements ListService<Measurement> {
 
   public async reloadElements(): Promise<void> {
     this.elements = await this.measurementBackendService.getAllMeasurements();
-    if (this.selectedElementCopy?.measurementSettingsId != null) {
-      this.selectedElementCopy!.measurementSettings = await this.measurementSettingsBackendService.getMeasurementSettings(this.selectedElementCopy?.measurementSettingsId);
+    if (this.selectedElementCopy?.messeinstellungId != null) {
+      this.selectedElementCopy!.messeinstellung = await this.measurementSettingsBackendService.getMeasurementSettings(this.selectedElementCopy?.messeinstellungId);
     }
   }
 

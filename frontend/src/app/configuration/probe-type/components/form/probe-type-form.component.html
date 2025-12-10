@@ -1,0 +1,220 @@
+@if (selectedProbeType) {
+  <div class="card shadow-sm modern-card">
+    <div class="form-header">
+      <div class="form-header__titles">
+        <h3>{{ selectedProbeType.name?.trim() || 'Messsondentyp konfigurieren' }}</h3>
+      </div>
+      <span class="form-tag" [ngClass]="isNew ? 'tag-new' : 'tag-edit'">
+        {{ isNew ? 'Neu' : 'Bearbeiten' }}
+      </span>
+    </div>
+
+    <form #probeTypeForm="ngForm" (ngSubmit)="onSubmit(probeTypeForm)" class="modern-form">
+      <div class="form-content">
+        <div class="form-layout">
+          <div class="form-column form-column--main">
+            <div class="form-field">
+              <label for="name" class="form-label">Messsondentyp-Name</label>
+              <div class="input-shell" [class.invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  minlength="2"
+                  required
+                  placeholder="Name eingeben"
+                  [(ngModel)]="selectedProbeType!.name"
+                  #nameElement="ngModel"
+                  [class.is-invalid]="(saveError || nameElement.touched) && isFieldInvalid('name')"
+                  [readonly]="readOnly"
+                />
+              </div>
+              @if ((saveError || nameElement.touched) && isFieldInvalid('name')) {
+                <div class="invalid-feedback">
+                  Bitte geben Sie einen gültigen Namen ein.
+                </div>
+              }
+            </div>
+
+            <div class="metric-grid">
+              <div class="form-field metric-field">
+                <label for="hoehe" class="form-label">Höhe (mm)</label>
+                <div class="input-shell" [class.invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="hoehe"
+                    name="hoehe"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    placeholder="Höhe in mm"
+                    [(ngModel)]="selectedProbeType!.hoehe"
+                    #hoeheElement="ngModel"
+                    [class.is-invalid]="(saveError || hoeheElement.touched) && isFieldInvalid('hoehe')"
+                    [readonly]="readOnly"
+                  />
+                </div>
+                @if ((saveError || hoeheElement.touched) && isFieldInvalid('hoehe')) {
+                  <div class="invalid-feedback">
+                    Bitte geben Sie eine gültige Höhe ein.
+                  </div>
+                }
+              </div>
+
+              <div class="form-field metric-field">
+                <label for="breite" class="form-label">Breite (mm)</label>
+                <div class="input-shell" [class.invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="breite"
+                    name="breite"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    placeholder="Breite in mm"
+                    [(ngModel)]="selectedProbeType!.breite"
+                    #breiteElement="ngModel"
+                    [class.is-invalid]="(saveError || breiteElement.touched) && isFieldInvalid('breite')"
+                    [readonly]="readOnly"
+                  />
+                </div>
+                @if ((saveError || breiteElement.touched) && isFieldInvalid('breite')) {
+                  <div class="invalid-feedback">
+                    Bitte geben Sie eine gültige Breite ein.
+                  </div>
+                }
+              </div>
+
+              <div class="form-field metric-field">
+                <label for="windungszahl" class="form-label">Windungszahl</label>
+                <div
+                  class="input-shell"
+                  [class.invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="windungszahl"
+                    name="windungszahl"
+                    min="1"
+                    step="1"
+                    required
+                    placeholder="Windungszahl"
+                    [(ngModel)]="selectedProbeType!.windungszahl"
+                    #windungszahlElement="ngModel"
+                    [class.is-invalid]="(saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')"
+                    [readonly]="readOnly"
+                  />
+                </div>
+                @if ((saveError || windungszahlElement.touched) && isFieldInvalid('windungszahl')) {
+                  <div class="invalid-feedback">
+                    Bitte geben Sie eine gültige Windungszahl ein.
+                  </div>
+                }
+              </div>
+
+              <div class="form-field metric-field">
+                <label for="alpha" class="form-label">Alpha (°)</label>
+                <div
+                  class="input-shell"
+                  [class.invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
+                >
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="alpha"
+                    name="alpha"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    placeholder="Sondendifferenzwinkel in °"
+                    [(ngModel)]="selectedProbeType!.alpha"
+                    #alphaElement="ngModel"
+                    [class.is-invalid]="(saveError || alphaElement.touched) && isFieldInvalid('alpha')"
+                    [readonly]="readOnly"
+                  />
+                </div>
+                @if ((saveError || alphaElement.touched) && isFieldInvalid('alpha')) {
+                  <div class="invalid-feedback">
+                    Bitte geben Sie ein gültiges Alpha in Grad ein.
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-field form-field--wide note-field">
+          <label for="notiz" class="form-label">Notiz</label>
+          <div class="input-shell">
+            <textarea
+              id="notiz"
+              class="form-control"
+              name="notiz"
+              rows="3"
+              placeholder="Notiz hinzufügen..."
+              [(ngModel)]="selectedProbeType!.notiz"
+              [readonly]="readOnly"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        @if (!readOnly) {
+          <button type="submit" class="btn btn-primary btn-modern" [disabled]="probeTypeForm.invalid || !hasChanges()">
+            Speichern
+          </button>
+        } @else {
+          <button type="button" class="btn btn-secondary btn-modern" [disabled]="true" title="Im Monteur-Modus nicht verfügbar">
+            Speichern
+          </button>
+        }
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
+          Zurück
+        </button>
+        @if (!isNew) {
+          @if (!readOnly) {
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-modern"
+              (click)="openDeleteModal()"
+            >
+              Löschen
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-modern"
+              [disabled]="true"
+              title="Im Monteur-Modus nicht verfügbar"
+            >
+              Löschen
+            </button>
+          }
+        }
+      </div>
+
+      <!-- global alerts used instead of inline save messages -->
+    </form>
+  </div>
+} @else {
+  <p class="text-danger text-center mt-3">Bitte wählen Sie einen Messsondentyp aus.</p>
+}
+
+<app-confirm-delete-modal
+  [show]="showDeleteModal"
+  title="Messsondentyp löschen?"
+  message="Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie den Messsondentyp endgültig löschen?"
+  (cancel)="showDeleteModal = false"
+  (confirm)="confirmDeleteProbeType()"
+></app-confirm-delete-modal>

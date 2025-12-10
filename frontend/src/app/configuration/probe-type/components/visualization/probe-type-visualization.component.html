@@ -1,0 +1,94 @@
+<div class="visualization-column">
+  <div *ngIf="!isNew && elements.length > 0" class="select-wrapper">
+    <div class="select-shell">
+      <!--<select
+        class="form-select select-control"
+        id="probeTypeSelect"
+        name="probeTypeSelect"
+        [ngModel]="selectedProbeTypeId"
+        (ngModelChange)="onSelectionChange($event)"
+      >
+        <option *ngFor="let probeType of elements" [ngValue]="probeType.id">
+          Messsondentyp #{{ probeType.id }} ({{ probeType.name || 'Ohne Namen' }})
+        </option>
+      </select>-->
+    </div>
+  </div>
+
+  <div class="visualization-shell">
+    <div class="visualization-inner" *ngIf="selectedProbeType; else visualizationPlaceholder">
+      <svg
+        [attr.width]="scaledWidth + 80"
+        [attr.height]="scaledHeight + 80"
+        class="probe-visualization"
+      >
+        <rect
+          x="40"
+          y="40"
+          [attr.width]="scaledWidth"
+          [attr.height]="scaledHeight"
+          stroke="currentColor"
+          fill="none"
+          stroke-width="2"
+        ></rect>
+
+        <line
+          [attr.x1]="40"
+          [attr.y1]="scaledHeight + 60"
+          [attr.x2]="40 + scaledWidth"
+          [attr.y2]="scaledHeight + 60"
+          stroke="currentColor"
+          stroke-width="2"
+        ></line>
+        <polygon
+          [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)"
+          fill="currentColor"
+        ></polygon>
+        <polygon
+          [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
+          fill="currentColor"
+        ></polygon>
+        <text
+          [attr.x]="40 + scaledWidth / 2"
+          [attr.y]="scaledHeight + 75"
+          font-size="14"
+          text-anchor="middle"
+        >
+          {{ selectedProbeType.breite ?? 0 }} mm
+        </text>
+
+        <line
+          [attr.x1]="scaledWidth + 60"
+          [attr.y1]="40"
+          [attr.x2]="scaledWidth + 60"
+          [attr.y2]="40 + scaledHeight"
+          stroke="currentColor"
+          stroke-width="2"
+        ></line>
+        <polygon
+          [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
+          fill="currentColor"
+        ></polygon>
+        <polygon
+          [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)"
+          fill="currentColor"
+        ></polygon>
+        <text
+          [attr.x]="scaledWidth + 55"
+          [attr.y]="20 + scaledHeight / 2"
+          font-size="14"
+          text-anchor="middle"
+          [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'"
+        >
+          {{ selectedProbeType.hoehe ?? 0 }} mm
+        </text>
+      </svg>
+    </div>
+
+    <ng-template #visualizationPlaceholder>
+      <p class="visualization-placeholder text-center">
+        Wählen Sie einen Messsondentyp, um die Visualisierung zu sehen.
+      </p>
+    </ng-template>
+  </div>
+</div>

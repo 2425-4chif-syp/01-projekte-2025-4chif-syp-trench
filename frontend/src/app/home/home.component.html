@@ -2,50 +2,141 @@
   <div class="mb-5 mt-5">
     <img src="/assets/logo-black.png" alt="Trench Logo" class="img-fluid mb-4" style="max-width: 400px;">
     <h1 class="mb-4">Trench ASC Sensor Visualization</h1>
+    
+    <!-- Active Mode Display and CSV Import/Export Button -->
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-3">
+      <div class="active-mode-display clickable-mode-display" 
+           [class.admin-mode]="modeService.isAdminMode()" 
+           [class.monteur-mode]="modeService.isMonteurMode()"
+           (click)="toggleMode()">
+        <div class="mode-icon">
+          <i class="fas" [class.fa-user-shield]="modeService.isAdminMode()" [class.fa-user-cog]="modeService.isMonteurMode()"></i>
+        </div>
+        <div class="mode-info">
+          <div class="mode-title">{{ modeService.isAdminMode() ? 'Admin-Modus' : 'Monteur-Modus' }} aktiv</div>
+          <div class="mode-description">
+            {{ modeService.isAdminMode() ? 'Vollzugriff auf alle Bereiche inklusive Spulentypen und Sondentypen' : 'Zugriff auf alle Bereiche außer Spulentypen und Sondentypen' }}
+          </div>
+          <div class="mode-click-hint">Klicken zum Wechseln</div>
+        </div>
+      </div>
+      
+      <button 
+        class="csv-button"
+        (click)="navigateToCsvImportExport()"
+        title="CSV Import/Export">
+        <img src="/assets/svg/upload-download.svg" alt="CSV Import/Export" class="csv-icon-image">
+      </button>
+    </div>
+    
+    <!-- Admin Access Warning -->
+    @if (showAdminWarning) {
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>Admin-Bereich!</strong> Sie müssen im Admin-Modus sein, um Spulentypen und Sondentypen zu bearbeiten.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="dismissAdminWarning()"></button>
+    </div>
+    }
   </div>
    
   <div class="card-container">
-    <!-- Card 1 -->
-    <div class="card hover-card">
+    <!-- Card 1 - Spule -->
+    <div class="card hover-card" 
+         [class.monteur-disabled]="modeService.isMonteurMode()"
+         [class.admin-enabled]="modeService.isAdminMode()"
+         [class.monteur-enabled]="modeService.isMonteurMode()"
+         (click)="modeService.isMonteurMode() ? navigateToCoilManagement() : null">
       <div class="card-img-container">
         <img src="/assets/home/spule.png" class="card-img" alt="Spulentypen">
       </div>
-      <div class="card-action-top" (click)="navigateToCoilTypeManagement()">
-        <span class="action-label">Spulentypenverwaltung</span>
+      
+      <!-- Admin-Modus: Beide Bereiche -->
+      @if (modeService.isAdminMode()) {
+      <div>
+        <div class="card-action-top" (click)="navigateToCoilTypeManagement()" 
+             [title]="'Spulentypen bearbeiten'">
+          <span class="action-label">
+            <i class="fas fa-cog me-2"></i>
+            Spulentypenverwaltung
+          </span>
+        </div>
+        <div class="card-action-bottom" (click)="navigateToCoilManagement()">
+          <span class="action-label">
+            <i class="fas fa-list me-2"></i>
+            Spulenverwaltung
+          </span>
+        </div>
       </div>
-      <div class="card-action-bottom" (click)="navigateToCoilManagement()">
-        <span class="action-label">Spulenverwaltung</span>
+      }
+      
+      <!-- Monteur-Modus: Nur Spulenverwaltung -->
+      @if (modeService.isMonteurMode()) {
+      <div class="monteur-card-title">
+        <div class="card-title">Spulenverwaltung</div>
       </div>
+      }
     </div>
   
-    <!-- Card 2 -->
-    <div class="card hover-card">
+    <!-- Card 2 - Sonde -->
+    <div class="card hover-card"
+         [class.monteur-disabled]="modeService.isMonteurMode()"
+         [class.admin-enabled]="modeService.isAdminMode()"
+         [class.monteur-enabled]="modeService.isMonteurMode()"
+         (click)="modeService.isMonteurMode() ? navigateToProbeManagement() : null">
       <div class="card-img-container">
         <img src="/assets/home/sonde.png" class="card-img" alt="Sondentypen">
       </div>
-      <div class="card-action-top" (click)="navigateToProbeTypeManagement()">
-        <span class="action-label">Sondentypenverwaltung</span>
+      
+      <!-- Admin-Modus: Beide Bereiche -->
+      @if (modeService.isAdminMode()) {
+      <div>
+        <div class="card-action-top" (click)="navigateToProbeTypeManagement()" 
+             [title]="'Sondentypen bearbeiten'">
+          <span class="action-label">
+            <i class="fas fa-cog me-2"></i>
+            Sondentypenverwaltung
+          </span>
+        </div>
+        <div class="card-action-bottom" (click)="navigateToProbeManagement()">
+          <span class="action-label">
+            <i class="fas fa-list me-2"></i>
+            Sondenverwaltung
+          </span>
+        </div>
       </div>
-      <div class="card-action-bottom" (click)="navigateToProbeManagement()">
-        <span class="action-label">Sondenverwaltung</span>
+      }
+      
+      <!-- Monteur-Modus: Nur Sondenverwaltung -->
+      @if (modeService.isMonteurMode()) {
+      <div class="monteur-card-title">
+        <div class="card-title">Sondenverwaltung</div>
       </div>
+      }
     </div>
   
-    <!-- Card 3 -->
+    <!-- Card 3 - Messung -->
     <div class="card hover-card">
       <div class="card-img-container">
         <img src="/assets/home/messung.png" class="card-img" alt="Messeinstellungen">
       </div>
       <div class="card-action-top" (click)="navigateToMeasurementSettings()">
-        <span class="action-label">Messeinstellungen</span>
+        <span class="action-label">
+          <i class="fas fa-cog me-2"></i>
+          Messeinstellungen
+        </span>
       </div>
       <div class="card-action-bottom" (click)="navigateToMeasurementManagement()">
-        <span class="action-label">Messungen</span>
+        <span class="action-label">
+          <i class="fas fa-list me-2"></i>
+          Messungen
+        </span>
       </div>
     </div>
   </div>
 
-  <button *ngIf="!isLoginPage" (click)="logout($event)" class="btn btn-danger position-fixed bottom-0 start-0 m-3 shadow">
+  @if (!isLoginPage) {
+  <button (click)="logout($event)" class="btn btn-danger position-fixed bottom-0 start-0 m-3 shadow">
     Logout
   </button>
+  }
 </div>

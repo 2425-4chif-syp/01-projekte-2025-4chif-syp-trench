@@ -1,101 +1,109 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { ProbeType } from '../../interfaces/probe-type';
+import { ProbeTypeFormComponent } from '../form/probe-type-form.component';
+import { ProbeTypeVisualizationComponent } from '../visualization/probe-type-visualization.component';
+import { ModeService } from '../../../../services/mode.service';
+import { Subscription } from 'rxjs';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-probe-type-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ProbeTypeFormComponent, ProbeTypeVisualizationComponent],
   templateUrl: './probe-type-management.component.html',
   styleUrl: './probe-type-management.component.scss'
 })
-export class ProbeTypeManagementComponent implements OnInit {
+export class ProbeTypeManagementComponent implements OnInit, OnDestroy {
+  @Input() readOnly: boolean = false;
+  private modeSubscription?: Subscription;
   saveMessage: string | null = null;
   saveError: boolean = false;
   originalProbeType: ProbeType | null = null;
   showDeleteModal = false;
 
-  constructor(private measurementProbeTypesService: ProbeTypesService) {}
+  constructor(
+    public measurementProbeTypesService: ProbeTypesService,
+    public modeService: ModeService,
+    private alerts: AlertService
+  ) {}
 
   ngOnInit() {
     if (this.selectedProbeType) {
       this.originalProbeType = { ...this.selectedProbeType };
     }
+    
+    // Subscribe to mode changes
+    this.modeSubscription = this.modeService.currentMode$.subscribe(mode => {
+      this.readOnly = this.modeService.isMonteurMode();
+    });
   }
 
-  public get selectedProbeType(): ProbeType | null {
+  ngOnDestroy() {
+    if (this.modeSubscription) {
+      this.modeSubscription.unsubscribe();
+    }
+  }
+
+  get selectedProbeType(): ProbeType | null {
     return this.measurementProbeTypesService.selectedElementCopy;
   }
 
+  get selectedProbeTypeId(): number | undefined {
+    return this.measurementProbeTypesService.selectedElementCopy?.id ?? undefined;
+  }
+
+  async onProbeTypeSelectionChange(probeTypeId: number): Promise<void> {
+    const numericId = Number(probeTypeId);
+    await this.measurementProbeTypesService.selectElement(numericId);
+  }
+
   hasChanges(): boolean {
-    if (!this.originalProbeType || !this.selectedProbeType) return false;
-    return JSON.stringify(this.originalProbeType) !== JSON.stringify(this.selectedProbeType);
+    if (!this.selectedProbeType || !this.originalProbeType) return false;
+    return JSON.stringify(this.selectedProbeType) !== JSON.stringify(this.originalProbeType);
   }
 
   async saveChanges() {
-    if (!this.selectedProbeType) return;
-
-    this.saveError = true;
-
-    const requiredFields = ['hoehe', 'breite', 'windungszahl'];
-    const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
-
-    if (invalidFields.length > 0) {
-      this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
-      return;
-    }
-
-    try {
-      if(this.selectedProbeType.notiz === null) this.selectedProbeType.notiz = "";
-      await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
-      this.saveMessage = "Änderungen gespeichert!";
-      setTimeout(() => {
-        this.saveMessage = null;
-      }, 3000);
-
-      this.saveError = false;
-      this.originalProbeType = { ...this.selectedProbeType };
-    } catch (error) {
-      console.error("Fehler beim Speichern:", error);
-      this.saveMessage = "Fehler beim Speichern!";
+    if (!this.readOnly && this.selectedProbeType) {
+      try {
+        await this.measurementProbeTypesService.updateOrCreateElement(this.selectedProbeType);
+        this.alerts.success('Messsondentyp erfolgreich gespeichert');
+        this.originalProbeType = { ...this.selectedProbeType };
+        this.saveError = false;
+      } catch (error) {
+        this.saveError = true;
+        this.alerts.error('Fehler beim Speichern', error);
+      }
     }
   }
 
-  isFieldInvalid(field: string): boolean {
-    if (!this.selectedProbeType) return false;
-    let value = this.selectedProbeType[field as keyof ProbeType];
-    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+  backToListing() {
+    this.measurementProbeTypesService.selectedElementCopy = null;
+    this.originalProbeType = null;
   }
 
-  openDeleteModal(): void {
+  openDeleteModal() {
     this.showDeleteModal = true;
   }
-  
-  async confirmDeleteProbeType(): Promise<void> {
-    this.showDeleteModal = false;
-  
-    if (this.selectedProbeType === null) return;
-  
-    await this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id!);
-    this.backToListing();
-  }
-  
 
-  backToListing(): void {
-    this.measurementProbeTypesService.selectedElementCopy = null;
-  }
-
-  get scale(): number {
-    return 2; // Factor for scaling the drawing
+  async deleteProbeType() {
+    if (!this.readOnly && this.selectedProbeType && this.selectedProbeType.id) {
+      try {
+        await this.measurementProbeTypesService.deleteElement(this.selectedProbeType.id);
+        this.showDeleteModal = false;
+        this.alerts.success('Messsondentyp gelöscht');
+        this.measurementProbeTypesService.selectedElementCopy = null;
+      } catch (error) {
+        this.saveError = true;
+        this.alerts.error('Fehler beim Löschen', error);
+      }
+    }
   }
 
-  get scaledWidth(): number {
-    return (this.selectedProbeType?.breite ?? 0) * this.scale;
-  }
-
-  get scaledHeight(): number {
-    return (this.selectedProbeType?.hoehe ?? 0) * this.scale;
+  isFieldInvalid(field: keyof ProbeType): boolean {
+    if (!this.selectedProbeType) return false;
+    const value = this.selectedProbeType[field];
+    return value === null || value === undefined || value === '';
   }
 }

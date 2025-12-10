@@ -27,24 +27,36 @@
 </div>
 <div class="mt-5 ">
     @if(isSelector){
-        <div class="text-center">
+        <div class="d-flex justify-content-center gap-2">
             <button type="button"
-            class="btn btn-secondary"
-            id="back-button"
-            (click)="onCancelSelection()">
-            Zurück
+                    class="btn btn-outline-secondary btn-modern"
+                    id="back-button"
+                    (click)="onCancelSelection()">
+              Zurück
             </button>
+            @if (showButton) {
+              <button class="btn btn-primary btn-modern"
+                      id="new-element-button"
+                      [disabled]="isButtonDisabled()"
+                      [class.disabled-button]="isButtonDisabled()"
+                      (click)="addNewElement()">Erstellen</button>
+            }
         </div>
     }
 
     @if (!isSelector && showButton) {
         <div class="text-center">
             <div class="text-center">
-                <button class="btn btn-primary new-coil-button" id="new-element-button" (click)="addNewElement()">{{newElementButtonLabel}}</button>
+                <button class="btn btn-modern new-coil-button" 
+                        id="new-element-button" 
+                        [disabled]="isButtonDisabled()"
+                        [class.btn-secondary]="isButtonDisabled()"
+                        [class.btn-primary]="!isButtonDisabled()"
+                        [class.disabled-button]="isButtonDisabled()"
+                        (click)="addNewElement()">{{newElementButtonLabel}}</button>
             </div>
         </div>
     }
 </div>
-
 
 

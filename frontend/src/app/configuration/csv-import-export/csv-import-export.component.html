@@ -1,0 +1,229 @@
+<div class="container-fluid px-3 pb-2 d-flex align-items-center justify-content-center" style="height: calc(100vh - 80px); overflow: hidden;">
+  <div class="row justify-content-center w-100">
+    <div class="col-lg-11 col-xl-10 col-xxl-9">
+      <div class="card shadow-sm modern-card">
+        <div class="form-header">
+          <div class="form-header__titles">
+            <h3>CSV-Import / Export</h3>
+            <p>Datenpakete importieren und exportieren</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Upload Section -->
+          <div class="upload-section mb-3">
+            <h5 class="mb-2 d-flex align-items-center">
+              <i class="fas fa-upload me-2"></i>
+              Datenpaket importieren
+              <button 
+                type="button"
+                class="info-button ms-2" 
+                (click)="openInfoModal()"
+                title="Informationen zum CSV-Format">
+                i
+              </button>
+            </h5>
+            <p class="text-muted small mb-2">
+              ZIP-Datei mit CSV-Dateien hochladen. <strong>Wichtig:</strong> Alle vorhandenen Daten werden gelöscht.
+            </p>
+            
+            @if (!isAdminMode()) {
+              <div class="alert alert-warning py-2 mb-2">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <small>Nur im Admin-Modus können Daten importiert werden.</small>
+              </div>
+            }
+
+            <div 
+              class="upload-area"
+              [class.drag-over]="dragOver"
+              [class.disabled]="!isAdminMode() || isUploading"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="!isAdminMode() || isUploading ? null : fileInput.click()">
+              <input 
+                type="file" 
+                #fileInput
+                id="fileInput"
+                class="file-input-hidden" 
+                accept=".zip"
+                (change)="onFileSelected($event)"
+                [disabled]="!isAdminMode() || isUploading">
+              
+              <div class="upload-icon-container">
+                <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                <p class="upload-text">
+                  @if (selectedFile) {
+                    {{ selectedFile.name }}
+                  } @else {
+                    Datei hier ablegen oder klicken zum Auswählen
+                  }
+                </p>
+                <p class="upload-hint">Nur ZIP-Dateien werden unterstützt</p>
+              </div>
+            </div>
+
+            @if (uploadMessage && !uploadError) {
+              <div class="alert alert-success py-2 mt-2 mb-2">
+                <i class="fas fa-check-circle me-2"></i>
+                <small>{{ uploadMessage }}</small>
+              </div>
+            }
+            
+            @if (uploadError) {
+              <div class="alert alert-danger py-2 mt-2 mb-2">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <small>{{ uploadError }}</small>
+              </div>
+            }
+
+            <div class="upload-button-container mt-2">
+              <button 
+                class="btn btn-primary btn-sm"
+                (click)="uploadFile()"
+                [disabled]="!selectedFile || !isAdminMode() || isUploading">
+                @if (isUploading) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Importiere...
+                } @else {
+                  <i class="fas fa-upload me-2"></i>
+                  Datei hochladen
+                }
+              </button>
+            </div>
+          </div>
+
+          <hr class="my-2">
+
+          <!-- Download Section -->
+          <div class="download-section">
+            <h5 class="mb-2">
+              <i class="fas fa-download me-2"></i>
+              Datenpaket exportieren
+            </h5>
+            <p class="text-muted small mb-2">
+              Als ZIP-Datei (CSV) oder Excel-Datei (formatiert) herunterladen.
+            </p>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <button 
+                class="btn btn-success btn-sm"
+                (click)="downloadFile('zip')"
+                [disabled]="isDownloading">
+                @if (downloadingFormat === 'zip') {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Exportiere...
+                } @else {
+                  <i class="fas fa-file-archive me-2"></i>
+                  Als ZIP (CSV) herunterladen
+                }
+              </button>
+
+              <button 
+                class="btn btn-primary btn-sm"
+                (click)="downloadFile('excel')"
+                [disabled]="isDownloading">
+                @if (downloadingFormat === 'excel') {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Exportiere...
+                } @else {
+                  <i class="fas fa-file-excel me-2"></i>
+                  Als Excel herunterladen
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Info Modal -->
+@if (showInfoModal) {
+  <div class="modal-backdrop" (click)="closeInfoModal()"></div>
+  <div class="modal show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fas fa-info-circle me-2"></i>
+            CSV-Format Informationen
+          </h5>
+          <button type="button" class="btn-close" (click)="closeInfoModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-section mb-4">
+            <h6 class="fw-bold mb-3">Allgemeine Anforderungen</h6>
+            <ul class="mb-3">
+              <li>Das Datenpaket muss eine <strong>ZIP-Datei</strong> sein</li>
+              <li>Die ZIP-Datei muss alle erforderlichen CSV-Dateien enthalten</li>
+              <li>CSV-Dateien verwenden <strong>Komma (,) als Trennzeichen</strong></li>
+              <li>Die erste Zeile jeder CSV-Datei ist die <strong>Header-Zeile</strong> (wird beim Import übersprungen)</li>
+              <li>Alle CSV-Dateien müssen im <strong>UTF-8 Format</strong> sein</li>
+            </ul>
+          </div>
+
+          <div class="info-section mb-4">
+            <h6 class="fw-bold mb-3">Erforderliche CSV-Dateien</h6>
+            <div class="table-responsive">
+              <table class="table table-bordered table-sm">
+                <thead>
+                  <tr>
+                    <th>Dateiname</th>
+                    <th>Spalten (in Reihenfolge)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>spuletyp.csv</code></td>
+                    <td>ID, Name, Schenkelzahl, Bandbreite, Schichthöhe, Durchmesser, Toleranzbereich, Notiz</td>
+                  </tr>
+                  <tr>
+                    <td><code>spule.csv</code></td>
+                    <td>ID, SpuleTypID, Auftragsnr, AuftragsPosNr, Bemessungsspannung, Bemessungsfrequenz, Einheit, Notiz</td>
+                  </tr>
+                  <tr>
+                    <td><code>sondentyp.csv</code></td>
+                    <td>ID, Name, Breite, Höhe, Windungszahl, Alpha, Notiz</td>
+                  </tr>
+                  <tr>
+                    <td><code>sonde.csv</code></td>
+                    <td>ID, SondenTypID, Name, Kalibrierungsfaktor</td>
+                  </tr>
+                  <tr>
+                    <td><code>messeinstellung.csv</code></td>
+                    <td>ID, SpuleID, SondenTypID, Name, SondenProSchenkel</td>
+                  </tr>
+                  <tr>
+                    <td><code>sondenposition.csv</code></td>
+                    <td>ID, SondeID, MesseinstellungID, Schenkel, Position</td>
+                  </tr>
+                  <tr>
+                    <td><code>messung.csv</code></td>
+                    <td>ID, MesseinstellungID, Anfangszeitpunkt, Endzeitpunkt, Name, Tauchkernstellung, Pruefspannung, Notiz</td>
+                  </tr>
+                  <tr>
+                    <td><code>messwert.csv</code></td>
+                    <td>ID, MessungID, SondenPositionID, Wert, Zeitpunkt</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Wichtig:</strong> Beim Import werden alle vorhandenen Daten gelöscht und durch die importierten Daten ersetzt. 
+            Stellen Sie sicher, dass alle erforderlichen Dateien im korrekten Format vorliegen.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeInfoModal()">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+

@@ -15,8 +15,23 @@
                             Spule
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" routerLink="/coiltype-management" routerLinkActive="active">Spulentypenverwaltung</a>
-                            <a class="dropdown-item" routerLink="/coil-management" routerLinkActive="active">Spulenverwaltung</a>
+                            <a class="dropdown-item" 
+                               routerLink="/coiltype-management" 
+                               routerLinkActive="active">
+                               Spulentypenverwaltung
+                               @if (modeService.isAdminMode()) {
+                               <div class="nav-mode-indicator admin-mode">
+                               </div>
+                               }
+                            </a>
+                            <a class="dropdown-item" routerLink="/coil-management" routerLinkActive="active">
+                                Spulenverwaltung
+                                <div class="nav-mode-indicator" 
+                                     [class.admin-mode]="modeService.isAdminMode()"
+                                     [class.monteur-mode]="modeService.isMonteurMode()"
+>
+                                </div>
+                            </a>
                         </div>
                     </li>
                     
@@ -26,8 +41,22 @@
                             Sonde
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" routerLink="/probe-type-management" routerLinkActive="active">Sondentypenverwaltung</a>
-                            <a class="dropdown-item" routerLink="/probe-management" routerLinkActive="active">Sondenverwaltung</a>
+                            <a class="dropdown-item" 
+                               routerLink="/probe-type-management" 
+                               routerLinkActive="active">
+                               Sondentypenverwaltung
+                               @if (modeService.isAdminMode()) {
+                               <div class="nav-mode-indicator admin-mode">
+                               </div>
+                               }
+                            </a>
+                            <a class="dropdown-item" routerLink="/probe-management" routerLinkActive="active">
+                                Sondenverwaltung
+                                <div class="nav-mode-indicator" 
+                                     [class.admin-mode]="modeService.isAdminMode()"
+                                     [class.monteur-mode]="modeService.isMonteurMode()">
+                                </div>
+                            </a>
                         </div>
                     </li>
                     
@@ -37,12 +66,27 @@
                             Messung
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" routerLink="/measurement-settings-list" routerLinkActive="active">Messeinstellungen</a>
-                            <a class="dropdown-item" routerLink="/measurement-management" routerLinkActive="active">Messungen</a>
+                            <a class="dropdown-item" routerLink="/measurement-settings-list" routerLinkActive="active">
+                                Messeinstellungen
+                                <div class="nav-mode-indicator" 
+                                     [class.admin-mode]="modeService.isAdminMode()"
+                                     [class.monteur-mode]="modeService.isMonteurMode()"
+>
+                                </div>
+                            </a>
+                            <a class="dropdown-item" routerLink="/measurement-management" routerLinkActive="active">
+                                Messungen
+                                <div class="nav-mode-indicator" 
+                                     [class.admin-mode]="modeService.isAdminMode()"
+                                     [class.monteur-mode]="modeService.isMonteurMode()"
+>
+                                </div>
+                            </a>
                         </div>
                     </li>
                 </ul>
             </div>
         }
     </nav>
+    <app-global-alerts></app-global-alerts>
 <router-outlet></router-outlet>

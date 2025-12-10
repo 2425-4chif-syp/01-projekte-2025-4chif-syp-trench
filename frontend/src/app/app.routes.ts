@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 import { LoginComponent } from './auth/login/login.component';
 import { CoilParentComponent } from './configuration/coil/components/coil-parent.component';
 import { CoiltypeParentComponent } from './configuration/coiltype/components/coiltype-parent.component';
@@ -15,6 +16,8 @@ import { DisplacementVisualizationTestComponent } from './visualization/displace
 import { ProbeTypeParentComponent } from './configuration/probe-type/components/probe-type-parent.component';
 import { ProbeParentComponent } from './configuration/probe/components/probe-parent.component';
 import { MessungParentComponent } from './configuration/messung/messung-parent.component';
+import { MessungDetailComponent } from './configuration/messung/detail/messung-detail.component';
+import { CsvImportExportComponent } from './configuration/csv-import-export/csv-import-export.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -30,5 +33,7 @@ export const routes: Routes = [
     {path: 'measurement-settings-list', component: MeasurementSettingsParentComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history-homescreen', component: MeasurementManagementParentComponent, canActivate: [AuthGuard]},
-    {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]}
+    {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-detail', component: MessungDetailComponent, canActivate: [AuthGuard]},
+    {path: 'csv-import-export', component: CsvImportExportComponent, canActivate: [AuthGuard]}
 ];

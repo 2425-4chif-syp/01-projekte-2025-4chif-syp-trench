@@ -1,157 +1,166 @@
-<div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-        <div class="col-10">
-            <h1 class="mb-4 text-center">Messeinstellungen</h1>
-            <div class="card shadow-sm p-4" >
-              <div class="row">
-                <div class="mb-3 col-6">
-                  <label class="form-label">Spule: <span class="text-danger">*</span></label>
-                  <div class="border p-2 rounded bg-light">
-                    <div *ngIf="selectedMeasurementSetting?.coil; else noCoil">
-                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.coilId}}</p>
-                      <p class="mb-0"><strong>Spulentyp:</strong> {{ selectedMeasurementSetting?.coil?.coiltype?.name }}</p>
-                    </div>
-                    <ng-template #noCoil>
-                      <p class="text-danger mb-0">Keine Spule ausgewählt</p>
-                    </ng-template>
-                  </div>
-                  <div class="text-center">
-                    <button
-                      class="btn btn-sm mt-2"
-                      [ngClass]="{
-                        'btn-outline-danger': saveError && isFieldInvalid('coilId'),
-                        'btn-outline-secondary': !(saveError && isFieldInvalid('coilId'))
-                      }"
-                      (click)="openCoilSelect()">
-                      Spule ändern...
-                    </button>
-                  </div>
-                </div>
+<ng-container *ngIf="selectedMeasurementSetting; else loadError">
+  <div class="card shadow-sm modern-card">
+    <div class="form-header">
+      <div class="form-header__titles">
+        <h3>{{ measurementSettingsService.selectedElementIsNew ? 'Neue Messeinstellung' : 'Messeinstellung bearbeiten' }}</h3>
+      </div>
+      <span class="form-tag" [ngClass]="measurementSettingsService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
+        {{ measurementSettingsService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
+      </span>
+    </div>
 
-                <div class="mb-3 col-6">
-                  <label class="form-label">Messonden-Typ: <span class="text-danger">*</span></label>
-                  <div class="border p-2 rounded bg-light">
-                    <div *ngIf="selectedMeasurementSetting?.probeType; else noProbe">
-                      <p class="mb-1"><strong>ID:</strong> {{ selectedMeasurementSetting?.probeTypeId}}</p>
-                      <p class="mb-0"><strong>Breite:</strong> {{ selectedMeasurementSetting?.probeType!.breite }}</p>
-                    </div>
-                    <ng-template #noProbe>
-                      <p class="text-danger mb-0">Kein Messsondentyp ausgewählt</p>
-                    </ng-template>
-                  </div>
-                  <div class="text-center">
-                    <button
-                      class="btn btn-sm mt-2"
-                      [ngClass]="{
-                        'btn-outline-danger': saveError && isFieldInvalid('probeTypeId'),
-                        'btn-outline-secondary': !(saveError && isFieldInvalid('probeTypeId'))
-                      }"
-                      (click)="openProbeSelect()">
-                      Messsondentyp ändern...
-                    </button>
-
-                  </div>
-                </div>
+    <div class="form-content">
+      <div class="selection-row">
+            <div
+              class="selection-card"
+              [class.is-empty]="!selectedCoil"
+              [class.has-error]="saveError && isFieldInvalid('coilId')"
+            >
+              <span class="selection-card__eyebrow">Spule</span>
+              <h4 class="selection-card__title">
+                {{ selectedCoil?.auftragsnummer?.trim() || 'Keine Spule ausgewählt' }}
+              </h4>
+              <p class="selection-card__subtitle" *ngIf="selectedCoil">
+                <span *ngIf="selectedCoil.coiltype?.name">Typ {{ selectedCoil.coiltype?.name }}</span>
+                <span *ngIf="selectedCoil.coiltype?.name && selectedCoil.id">·</span>
+                <span *ngIf="selectedCoil.id">ID {{ selectedCoil.id }}</span>
+              </p>
+              <p class="selection-card__empty" *ngIf="!selectedCoil">
+                Wählen Sie eine Spule für diese Messeinstellung.
+              </p>
+              <div class="selection-card__chips" *ngIf="selectedCoil">
+                <span class="selection-chip" *ngIf="selectedCoil.coiltype?.schenkel != null">
+                  Schenkel: {{ selectedCoil.coiltype?.schenkel }}
+                </span>
+                <span class="selection-chip" *ngIf="selectedCoil.coiltype?.bandbreite != null">
+                  Bandbreite: {{ selectedCoil.coiltype?.bandbreite | number: '1.0-1' }} mm
+                </span>
+                <span class="selection-chip" *ngIf="selectedCoil.coiltype?.durchmesser != null">
+                  Ø {{ selectedCoil.coiltype?.durchmesser | number: '1.0-1' }} mm
+                </span>
               </div>
+              <p class="selection-card__note" *ngIf="selectedCoil?.notiz?.trim()">
+                {{ selectedCoil?.notiz }}
+              </p>
+              <button type="button" class="selection-card__action" (click)="openCoilSelect()">
+                <span>{{ selectedCoil ? 'Spule ändern' : 'Spule wählen' }}</span>
+                <span class="selection-card__action-icon" aria-hidden="true">→</span>
+              </button>
+            </div>
 
-              <!--
-              <div class="mb-3">
-                <label for="bemessungs-spannung" class="form-label">Bemessungsspannung [kV]: <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" id="bemessungs-spannung"
-                       placeholder="Bemessungsspannung"
-                       [(ngModel)]="selectedMeasurementSetting!.bemessungsspannung"
-                       min="0"
-                       [class.is-invalid]="saveError && isFieldInvalid('bemessungsspannung')">
+            <div
+              class="selection-card"
+              [class.is-empty]="!selectedProbeType"
+              [class.has-error]="saveError && isFieldInvalid('probeTypeId')"
+            >
+              <span class="selection-card__eyebrow">Messsondentyp</span>
+              <h4 class="selection-card__title">
+                {{ selectedProbeType?.name?.trim() || 'Kein Messsondentyp ausgewählt' }}
+              </h4>
+              <p class="selection-card__subtitle" *ngIf="selectedProbeType">
+                ID {{ selectedProbeType.id }}
+              </p>
+              <p class="selection-card__empty" *ngIf="!selectedProbeType">
+                Wählen Sie einen Messsondentyp, um die Sonde zuzuordnen.
+              </p>
+              <div class="selection-card__chips" *ngIf="selectedProbeType">
+                <span class="selection-chip" *ngIf="selectedProbeType.breite != null">
+                  Breite: {{ selectedProbeType.breite | number: '1.0-1' }} mm
+                </span>
+                <span class="selection-chip" *ngIf="selectedProbeType.hoehe != null">
+                  Höhe: {{ selectedProbeType.hoehe | number: '1.0-1' }} mm
+                </span>
+                <span class="selection-chip" *ngIf="selectedProbeType.windungszahl != null">
+                  Windungen: {{ selectedProbeType.windungszahl }}
+                </span>
+                <span class="selection-chip" *ngIf="selectedProbeType.alpha != null">
+                  α: {{ selectedProbeType.alpha | number: '1.0-2' }}°
+                </span>
               </div>
-              -->
-              
-              <!--
-              <div class="mb-3">
-                <label for="bemessungs-frequenz" class="form-label">Bemessungsfrequenz [Hz]: <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" id="bemessungs-frequenz"
-                       placeholder="Bemessungsfrequenz"
-                       [(ngModel)]="selectedMeasurementSetting!.bemessungsfrequenz"
-                       min="0"
-                       [class.is-invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
-              </div>
-              -->
+              <p class="selection-card__note" *ngIf="selectedProbeType?.notiz?.trim()">
+                {{ selectedProbeType?.notiz }}
+              </p>
+              <button type="button" class="selection-card__action" (click)="openProbeSelect()">
+                <span>{{ selectedProbeType ? 'Messsondentyp ändern' : 'Messsondentyp wählen' }}</span>
+                <span class="selection-card__action-icon" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
 
-              <div class="mb-3">
-                <label for="name" class="form-label">Name: <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="name" [(ngModel)]="selectedMeasurementSetting!.name"
-                       placeholder="Name">
-              </div>  
-              
-              <!--
+          <section class="form-section">
+            <div class="form-field">
+              <label for="name" class="form-label">Name</label>
+              <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('name')">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Bezeichnung der Messeinstellung"
                   [(ngModel)]="selectedMeasurementSetting!.name"
-                  [class.is-invalid]="saveError && isFieldInvalid('name')">
+                  name="name"
+                  [class.is-invalid]="saveError && isFieldInvalid('name')"
+                />
+              </div>
+              <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('name')">
+                Bitte geben Sie einen Namen ein.
+              </div>
+            </div>
 
-              -->
-              
-              <div class="mb-3">
-                <label for="sonden-pro-schenkel" class="form-label">Sonden pro Schenkel: <span class="text-danger">*</span></label>
-                <select class="form-select" id="sonden-pro-schenkel"
-                        [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
-                        [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')">
+            <div class="form-field">
+              <label for="sonden-pro-schenkel" class="form-label">Sonden pro Schenkel</label>
+              <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('sondenProSchenkel')">
+                <select
+                  class="form-select"
+                  id="sonden-pro-schenkel"
+                  [(ngModel)]="selectedMeasurementSetting!.sondenProSchenkel"
+                  name="sondenProSchenkel"
+                  [class.is-invalid]="saveError && isFieldInvalid('sondenProSchenkel')"
+                >
                   @for (amount of schenkelAnzahl(); track $index) {
                     <option [ngValue]="amount">{{ amount }}</option>
                   }
                 </select>
               </div>
-
-              <!--
-              <div class="mb-3">
-                <label for="mess-stärke" class="form-label">Prüfspannung [V]: <span class="text-danger">*</span></label>
-                <input type="number" class="form-control" id="mess-stärke"
-                       placeholder="Messstärke"
-                       [(ngModel)]="selectedMeasurementSetting!.pruefspannung"
-                       min="0"
-                       [class.is-invalid]="saveError && isFieldInvalid('pruefspannung')">
-              </div>
-              -->
-
-              <div class="text-center mt-4">
-                 <div class="d-flex justify-content-between mt-4">
-                  <button [disabled]="!hasChanges() && coilOrProbeChanged()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
-                  <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-                   <button *ngIf="!measurementSettingsService.selectedElementIsNew"
-                           class="btn btn-danger w-100"
-                           (click)="openDeleteModal()">
-                     Löschen
-                   </button>
-                 </div>
-              </div>
-              <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
-                {{ saveMessage }}
+              <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('sondenProSchenkel')">
+                Bitte wählen Sie die Anzahl der Sonden pro Schenkel.
               </div>
             </div>
+          </section>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-primary btn-modern"
+              [disabled]="!isFormValid() || !(hasChanges() || coilOrProbeChanged())"
+              (click)="saveChanges()">
+              Speichern
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
+              Zurück
+            </button>
+            <button
+              *ngIf="!measurementSettingsService.selectedElementIsNew"
+              type="button"
+              class="btn btn-outline-danger btn-modern"
+              (click)="openDeleteModal()"
+            >
+              Löschen
+            </button>
+          </div>
+        </div>
+
+        <!-- global alerts used instead of inline save messages -->
     </div>
-  </div>
-</div>
+  </ng-container>
 
-<div class="modal fade" tabindex="-1" role="dialog"
-     [ngClass]="{'show': showDeleteModal}"
-     [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
+<ng-template #loadError>
+  <p class="text-danger text-center mt-3">Fehler: Messeinstellung konnte nicht geladen werden.</p>
+</ng-template>
 
-      <div class="modal-header">
-        <h5 class="modal-title">Messeinstellung löschen?</h5>
-      </div>
-
-      <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diese Messeinstellung löschen möchten?</p>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
-          Abbrechen
-        </button>
-        <button type="button" class="btn btn-danger" (click)="deleteSetting()">
-          Löschen
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
+<app-confirm-delete-modal
+  [show]="showDeleteModal"
+  title="Messeinstellung löschen?"
+  message="Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie die Messeinstellung endgültig löschen?"
+  (cancel)="showDeleteModal = false"
+  (confirm)="deleteSetting()"
+></app-confirm-delete-modal>

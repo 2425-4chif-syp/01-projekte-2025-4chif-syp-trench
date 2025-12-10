@@ -3,6 +3,7 @@ import { Component, HostListener, Inject, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { LIST_SERVICE_TOKEN, ListService } from '../services/list-service';
+import { ModeService } from '../../services/mode.service';
 
 @Component({
   selector: 'app-generic-list',
@@ -18,6 +19,7 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   @Input() public isSelector: boolean = false;
   @Input() public newElementButtonLabel: string = 'New Element';
   @Input() public showButton: boolean = true;
+  @Input() public disableButtonInMonteurMode: boolean = false;
 
   @Output() onElementClick = new EventEmitter<TElement>();
   @Output() hoveringElement = new EventEmitter<{element:TElement|null, mousePosition:{x:number, y:number}|null}>();
@@ -43,7 +45,7 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
     return value;
   }
 
-  constructor(@Inject(LIST_SERVICE_TOKEN) public elementsService:TListService, private router:Router) {
+  constructor(@Inject(LIST_SERVICE_TOKEN) public elementsService:TListService, private router:Router, public modeService:ModeService) {
   }
 
   async ngOnInit():Promise<void> {
@@ -91,7 +93,7 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   }
 
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
+  public onMouseMove(event: MouseEvent) {
     this.mousePosition = { x: event.pageX, y: event.pageY };
 
     if (this.hoveredElement !== null) {
@@ -101,5 +103,9 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
 
   public onCancelSelection(): void {
     this.cancelSelection.emit();
+  }
+
+  public isButtonDisabled(): boolean {
+    return this.disableButtonInMonteurMode && this.modeService.isMonteurMode();
   }
 }

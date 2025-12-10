@@ -1,116 +1,222 @@
-<div class="container mt-4 d-flex flex-column align-items-center">
-  <div class="coil-container text-center mb-3">
-      <h2 *ngIf="coilsService.selectedElementIsNew">Neue Spule</h2>
-      <select *ngIf="!coilsService.selectedElementIsNew && coilsService.elements.length > 0"
-          class="coil-selector form-select w-150 mx-auto" id="coilSelect"
-          [(ngModel)]="selectedCoilId" (ngModelChange)="onCoilSelectionChange($event)">
-          <option *ngFor="let coil of coilsService.elements" [value]="coil.id">Spule #{{ coil.id }}</option>
-      </select>
-  </div>
-
-  <div *ngIf="selectedCoil" class="card shadow-sm p-4 w-100" style="max-width: 850px; min-height: 600px;">
-      <div class="mb-3">
-          <label class="form-label">Spulentyp: <span class="text-danger">*</span></label>
-          <div class="border p-2 rounded bg-light">
-              <div *ngIf="selectedCoil.coiltype; else noCoiltype">
-                  <p class="mb-1"><strong>ID:</strong> {{ selectedCoiltype!.id }}</p>
-                  <p class="mb-0"><strong>Name:</strong> {{ selectedCoiltype!.name }}</p>
-              </div>
-              <ng-template #noCoiltype>
-                  <p class="text-danger mb-0">Kein Spulentyp ausgewählt</p>
-              </ng-template>
+<div class="coil-management-wrapper">
+  <ng-container *ngIf="selectedCoil; else noCoil">
+    <div class="card shadow-sm modern-card">
+          <div class="form-header">
+            <div class="form-header__titles">
+              <h3>{{ coilsService.selectedElementIsNew ? 'Neue Spule' : 'Spule bearbeiten' }}</h3>
+           
+            </div>
+            <span class="form-tag" [ngClass]="coilsService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
+              {{ coilsService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
+            </span>
           </div>
-          <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openCoiltypeSelect()">Spulentyp ändern...</button>
-      </div>
 
-      <!-- Formulareingaben -->
-      <div class="mb-3">
-          <label for="auftragsNr" class="form-label">Auftrags-Nummer: <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="auftragsNr" placeholder="Auftrags-Nummer"
-              [(ngModel)]="selectedCoil.auftragsnummer" 
-              [class.is-invalid]="saveError ">
-          <div class="invalid-feedback">Bitte geben Sie eine Auftragsnummer ein.</div>
-      </div>
+          <div class="card-intro" *ngIf="!coilsService.selectedElementIsNew && coilsService.elements.length > 0">
+            <label for="coilSelect" class="visually-hidden">Spule auswählen</label>
+            <div class="select-shell select-shell--full">
+              <!--<select
+                class="form-select select-control"
+                id="coilSelect"
+                name="coilSelect"
+                [(ngModel)]="selectedCoilId"
+                (ngModelChange)="onCoilSelectionChange($event)"
+              >
+                <option *ngFor="let coil of coilsService.elements" [value]="coil.id">
+                  Spule #{{ coil.id }}
+                </option>
+              </select>-->
+            </div>
+          </div>
 
-      <div class="mb-3">
-          <label for="auftragsPosNr" class="form-label">AuftragsPosNr <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="auftragsPosNr" placeholder="AuftragsPosNr"
-              [(ngModel)]="selectedCoil.auftragsPosNr" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('auftragsPosNr')">
-          <div class="invalid-feedback">Bitte geben Sie eine AuftragsPosNr ein.</div>
-      </div>
+          <div class="coildetail-grid">
+            <section class="coildetail-panel">
+              <div class="coiltype-summary" [class.is-empty]="!selectedCoiltype">
+                <div class="coiltype-summary__meta">
+                  <span class="coiltype-summary__eyebrow">Spulentyp</span>
+                  <h4>{{ selectedCoiltype?.name || 'Noch kein Spulentyp ausgewählt' }}</h4>
+                  <!--<p class="coiltype-summary__id" *ngIf="selectedCoiltype">ID {{ selectedCoiltype?.id }}</p>-->
+                </div>
 
-      <!---->
-      <div class="mb-3">
-          <label for="bemessungsspannung" class="form-label">Bemessungsspannung: <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="bemessungsspannung" placeholder="Bemessungsspannung"
-              [(ngModel)]="selectedCoil.bemessungsspannung" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('bemessungsspannung')">
-          <div class="invalid-feedback">Bitte geben Sie eine Bemessungsspannung ein.</div>
-      </div>
+                <ng-container *ngIf="selectedCoiltype; else coiltypeHint">
+                  <div class="coiltype-summary__content">
+                    <div class="coiltype-summary__metrics">
+                      <div class="metric-pill metric-pill">
+                        <span class="metric-pill__label">ID</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.id }}</span>
+                      </div>
+                      <div class="metric-pill metric-pill">
+                        <span class="metric-pill__label">Schenkel</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.schenkel }}</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Bandbreite</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.bandbreite | number: '1.0-1' }} mm</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Schichthöhe</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.schichthoehe | number: '1.0-1' }} mm</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Durchmesser</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.durchmesser | number: '1.0-1' }} mm</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Toleranz</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.toleranzbereich | number: '1.0-1' }} kg</span>
+                      </div>
+                    </div>
+                    <img 
+                      *ngIf="selectedCoiltype.schenkel >= 2 && selectedCoiltype.schenkel <= 4"
+                      [src]="'assets/svg/' + selectedCoiltype.schenkel + 'RJ.svg'" 
+                      [alt]="selectedCoiltype.schenkel + ' Jochs'"
+                      class="coiltype-summary__icon">
+                  </div>
+                </ng-container>
 
-      <div class="mb-3">
-        <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz <span class="text-danger">*</span></label>
-        <input type="number" class="form-control" id="bemessungsfrequenz" placeholder="Bemessungsfrequenz"
-            [(ngModel)]="selectedCoil.bemessungsfrequenz" min="0"
-            [class.is-invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
-        <div class="invalid-feedback">Bitte geben Sie eine Bemessungsfrequenz ein.</div>
-      </div>
+                <ng-template #coiltypeHint>
+                  <p class="coiltype-summary__hint">
+                    Wählen Sie einen Spulentyp
+                  </p>
+                </ng-template>
 
-      <div class="mb-3">
-          <label for="einheit" class="form-label">Einheit: <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="einheit" placeholder="Einheit"
-              [(ngModel)]="selectedCoil.einheit" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('einheit')">
-          <div class="invalid-feedback">Bitte geben Sie eine Einheit ein.</div>
-      </div>
+                <div class="coiltype-summary__footer justify-content-center">
+                  <button type="button" class="coiltype-link" (click)="openCoiltypeSelect()">
+                    <span>{{ selectedCoiltype ? 'Spulentyp ändern' : 'Spulentyp wählen' }}</span>
+                    <span aria-hidden="true" class="coiltype-link__icon">→</span>
+                  </button>
+                </div>
+              </div>
+            </section>
 
-    <!--<div class="form-group mb-4">
-      <label for="content">Notiz:</label>
-      <div class="content-editor">
-                    <textarea id="content" class="form-control form-control-lg"
-                              name="content" rows="3" [(ngModel)]="selectedCoil.notiz"
-                              placeholder="Notiz..."></textarea>
-      </div>
-    </div>-->
+            <section class="form-section">
+              <div class="form-field">
+                <label for="auftragsNr" class="form-label">Auftrags-Nummer</label>
+                <div class="input-shell" [class.invalid]="saveError && !selectedCoil.auftragsnummer">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="auftragsNr"
+                    placeholder="Auftrags-Nummer"
+                    [(ngModel)]="selectedCoil!.auftragsnummer"
+                    name="auftragsnummer"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && !selectedCoil?.auftragsnummer">
+                  Bitte geben Sie eine Auftragsnummer ein.
+                </div>
+              </div>
 
-      <!-- Buttons -->
-      <div class="d-flex justify-content-between mt-4">
-          <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
-          <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-          <button *ngIf="!coilsService.selectedElementIsNew" class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
-      </div>
+              <div class="form-field">
+                <label for="auftragsPosNr" class="form-label">Auftrags-Position</label>
+                <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('auftragsPosNr')">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="auftragsPosNr"
+                    placeholder="Auftrags-Position"
+                    [(ngModel)]="selectedCoil!.auftragsPosNr"
+                    name="auftragsPosNr"
+                    min="0"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('auftragsPosNr')">
+                  Bitte geben Sie eine Auftrags-Position ein.
+                </div>
+              </div>
 
-      <!-- Erfolgsmeldung -->
-      <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
-          {{ saveMessage }}
-      </div>
-  </div>
+              <div class="form-field">
+                <label for="bemessungsspannung" class="form-label">Bemessungsspannung (V)</label>
+                <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsspannung')">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="bemessungsspannung"
+                    placeholder="Bemessungsspannung in V"
+                    [(ngModel)]="selectedCoil!.bemessungsspannung"
+                    name="bemessungsspannung"
+                    min="0"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('bemessungsspannung')">
+                  Bitte geben Sie eine Bemessungsspannung ein.
+                </div>
+              </div>
 
-  <p class="text-danger text-center mt-3" *ngIf="!selectedCoil">Fehler: Spule konnte nicht geladen werden.</p>
+              <div class="form-field">
+                <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz (Hz)</label>
+                <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="bemessungsfrequenz"
+                    placeholder="Bemessungsfrequenz in Hz"
+                    [(ngModel)]="selectedCoil!.bemessungsfrequenz"
+                    name="bemessungsfrequenz"
+                    min="0"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('bemessungsfrequenz')">
+                  Bitte geben Sie eine Bemessungsfrequenz ein.
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="einheit" class="form-label">Einheit</label>
+                <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('einheit')">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="einheit"
+                    placeholder="Einheit"
+                    [(ngModel)]="selectedCoil!.einheit"
+                    name="einheit"
+                  />
+                </div>
+                <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('einheit')">
+                  Bitte geben Sie eine Einheit ein.
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="button"
+              class="btn btn-primary btn-modern"
+              [disabled]="!canSave()"
+              (click)="saveChanges()">
+              Speichern
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-modern" (click)="backToListing()">
+              Zurück
+            </button>
+            <button
+              *ngIf="!coilsService.selectedElementIsNew"
+              type="button"
+              class="btn btn-outline-danger btn-modern"
+              (click)="openDeleteModal()"
+            >
+              Löschen
+            </button>
+          </div>
+
+          <!-- global alerts used instead of inline save messages -->
+        </div>
+      </ng-container>
+
+      <ng-template #noCoil>
+        <p class="text-danger text-center mt-5">Fehler: Spule konnte nicht geladen werden.</p>
+      </ng-template>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Spule löschen?</h5>
-      </div>
-
-      <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diese Spule löschen möchten?</p>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">
-          Abbrechen
-        </button>
-        <button type="button" class="btn btn-danger" (click)="deleteCoil()">
-          Löschen
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+<app-confirm-delete-modal
+  [show]="showDeleteModal"
+  title="Spule löschen?"
+  message="Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie die Spule endgültig löschen?"
+  (cancel)="showDeleteModal = false"
+  (confirm)="deleteCoil()"
+></app-confirm-delete-modal>

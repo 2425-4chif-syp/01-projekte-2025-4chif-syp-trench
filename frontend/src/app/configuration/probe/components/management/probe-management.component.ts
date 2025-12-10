@@ -6,16 +6,19 @@ import { ProbesService } from '../../services/probes.service';
 import { Probe } from '../../interfaces/probe';
 import { ProbeTypesService } from '../../../probe-type/services/probe-types.service';
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
+import { AlertService } from '../../../../services/alert.service';
+import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
+import { ConfirmDeleteModalComponent } from '../../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-probe-management',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, DecimalCommaDirective, ConfirmDeleteModalComponent],
   templateUrl: './probe-management.component.html',
   styleUrl: './probe-management.component.scss'
 })
 export class ProbeManagementComponent {
-  constructor(public probesService: ProbesService, private probeTypesService: ProbeTypesService, private router:Router) {
+  constructor(public probesService: ProbesService, private probeTypesService: ProbeTypesService, private router:Router, private alerts: AlertService) {
     this.probeTypesService.isMeasurementSettingsSelector = false;
     this.probeTypesService.reloadElements();
   }
@@ -26,10 +29,13 @@ export class ProbeManagementComponent {
   originalProbe: Probe | null = null;
 
   ngOnInit() {
-    if (this.selectedProbe) {
-        this.originalProbe = { ...this.selectedProbe };
+    if (!this.selectedProbe) {
+      // Entwurf nach Reload wiederherstellen (falls vorhanden)
+      this.probesService.loadDraftFromStorage();
     }
-}
+
+    this.syncOriginalProbeSnapshot();
+  }
 
   public get selectedProbe(): Probe | null {
     return this.probesService.selectedElementCopy;
@@ -53,22 +59,85 @@ export class ProbeManagementComponent {
   }
 
   hasChanges(): boolean {
-    if (!this.originalProbe || !this.selectedProbe) return false;
+    if (!this.selectedProbe) return false;
+
+    // For new probes, treat any non-empty field as a change
+    if (this.probesService.selectedElementIsNew || this.selectedProbe.id == null || this.selectedProbe.id === 0) {
+      const p = this.selectedProbe;
+      const hasName = (p.name?.trim()?.length ?? 0) > 0;
+      const hasCalibration = p.kalibrierungsfaktor != null && !Number.isNaN(p.kalibrierungsfaktor);
+      const hasProbeType = (p.probeTypeId ?? 0) > 0 || p.probeType != null;
+
+      return hasName || hasCalibration || hasProbeType;
+    }
+
+    if (!this.originalProbe) return false;
     return JSON.stringify(this.originalProbe) !== JSON.stringify(this.selectedProbe);
  }
 
+  isFormValid(): boolean {
+    if (!this.selectedProbe) return false;
+
+    const requiredFields: (keyof Probe)[] = ['name', 'kalibrierungsfaktor'];
+    if (requiredFields.some(field => this.isFieldInvalid(field))) {
+      return false;
+    }
+
+    const probeTypeId = this.selectedProbe.probeTypeId ?? 0;
+    if (probeTypeId <= 0 && !this.selectedProbe.probeType) {
+      return false;
+    }
+
+    return true;
+  }
+
+  canSave(): boolean {
+    if (!this.selectedProbe) return false;
+
+    // Beim Erstellen: speichern nur, wenn alles gültig ausgefüllt ist
+    if (this.probesService.selectedElementIsNew || this.selectedProbe.id == null || this.selectedProbe.id === 0) {
+      return this.isFormValid();
+    }
+
+    // Beim Bearbeiten: speichern nur, wenn etwas geändert wurde und das Formular gültig ist
+    return this.isFormValid() && this.hasChanges();
+  }
+
   isFieldInvalid(field: keyof Probe): boolean {
     if (!this.selectedProbe) return false;
-    let value = this.selectedProbe[field];
-    return value === null || value === undefined || (typeof value === 'number' && value <= 0);
+    const value = this.selectedProbe[field];
+
+    if (value === null || value === undefined) {
+      return true;
+    }
+
+    if (typeof value === 'number') {
+      return value <= 0;
+    }
+
+    if (typeof value === 'string') {
+      return value.trim().length === 0;
+    }
+
+    return false;
   }
 
 
   openProbetypeSelect() {
+    // Aktuellen Sondenentwurf sichern, bevor in die Sondentyp-Auswahl gewechselt wird
+    this.probesService.saveDraftToStorage();
+
     this.probeTypesService.selectedElementCopy = null;
     this.probeTypesService.isProbeSelector = true;
 
-    this.router.navigate(['/probe-type-management']);
+    const probeId = this.selectedProbeId ?? 0;
+
+    this.router.navigate(['/probe-type-management'], {
+      queryParams: {
+        selector: 'probe',
+        probeId:  probeId || undefined
+      }
+    });
   }
 
   async saveChanges() {
@@ -80,24 +149,21 @@ export class ProbeManagementComponent {
     const invalidFields = requiredFields.filter(field => this.isFieldInvalid(field));
 
     if (invalidFields.length > 0) {
-        this.saveMessage = "Bitte füllen Sie alle Pflichtfelder aus.";
+        this.alerts.error('Bitte füllen Sie alle Pflichtfelder aus.');
         return;
     }
 
     try {
         await this.probesService.updateOrCreateElement(this.selectedProbe);
-        this.onProbeSelectionChange(this.selectedProbeId!);
+        await this.onProbeSelectionChange(this.selectedProbeId!);
 
-        this.saveMessage = "Änderungen gespeichert!";
-        setTimeout(() => {
-            this.saveMessage = null;
-        }, 3000);
+        this.alerts.success('Änderungen gespeichert!');
 
         this.saveError = false;
-        this.originalProbe = { ...this.selectedProbe };
+        this.probesService.clearDraftFromStorage();
     } catch (error) {
         console.error("Fehler beim Speichern:", error);
-        this.saveMessage = "Fehler beim Speichern!";
+        this.alerts.error('Fehler beim Speichern!', error);
     }
 }
 
@@ -112,6 +178,8 @@ export class ProbeManagementComponent {
     const probeIdNumber: number = Number(probeId);
 
     await this.probesService.selectElement(probeIdNumber);
+    this.syncOriginalProbeSnapshot();
+    this.saveError = false;
   }
 
   showDeleteModal = false;
@@ -128,10 +196,13 @@ export class ProbeManagementComponent {
     }
 
     await this.probesService.deleteElement(this.probesService.selectedElementCopy.id!);
+    this.probesService.clearDraftFromStorage();
   }
 
   backToListing(): void {
     this.probesService.selectedElementCopy = null;
+    this.originalProbe = null;
+    this.probesService.clearDraftFromStorage();
   }
 
   showProbetypeDropdown: boolean = false;
@@ -157,5 +228,29 @@ export class ProbeManagementComponent {
     const probetype = this.probeTypesService.elements.find(type => type.id === this.selectedProbe?.probeTypeId);
     return probetype ? probetype.name! : 'Sondentyp auswählen';
   }
-}
 
+  private syncOriginalProbeSnapshot(): void {
+    const selected = this.selectedProbe;
+
+    if (!selected) {
+      this.originalProbe = null;
+      return;
+    }
+
+    if (this.probesService.selectedElementIsNew || selected.id == null || selected.id === 0) {
+      this.originalProbe = { ...selected };
+      return;
+    }
+
+    try {
+      this.originalProbe = this.probesService.getCopyElement(selected.id);
+    } catch (error) {
+      // Fallback to current values if original data is unavailable
+      this.originalProbe = { ...selected };
+    }
+  }
+
+  onFieldChange(): void {
+    this.probesService.saveDraftToStorage();
+  }
+}

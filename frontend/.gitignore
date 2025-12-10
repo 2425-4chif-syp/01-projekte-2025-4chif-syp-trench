@@ -43,3 +43,7 @@ Thumbs.db
 
 .vscode
 .angular
+
+# Environment files with sensitive data
+src/environments/environment.prod.ts
+src/environments/environment.ts

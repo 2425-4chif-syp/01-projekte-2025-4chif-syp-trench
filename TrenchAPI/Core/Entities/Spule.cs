@@ -1,0 +1,31 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TrenchAPI.Core.Entities
+{
+    public class Spule : EntityObject
+    {
+        [ForeignKey(nameof(SpuleTypID))]
+        public SpuleTyp? SpuleTyp { get; set; }
+
+        public int SpuleTypID { get; set; }
+
+        [Column(TypeName = "varchar")]
+        public string Auftragsnr { get; set; } = "";
+
+        [Column(TypeName = "varchar")]
+        public string AuftragsPosNr { get; set; } = "";
+
+        [Column(TypeName = "decimal")]
+        public decimal Bemessungsspannung { get; set; }
+
+        [Column(TypeName = "decimal")]
+        public decimal Bemessungsfrequenz { get; set; }
+
+        [Column(TypeName = "varchar")]
+        public string Einheit { get; set; } = "";
+
+        [Column(TypeName = "varchar")]
+        public string Notiz { get; set; } = "";
+    }
+}

@@ -4,6 +4,7 @@ import { Coiltype } from '../../configuration/coiltype/interfaces/coiltype';
 import { MeasurementSetting } from '../../configuration/measurement-settings/interfaces/measurement-settings';
 import { Probe } from '../../configuration/probe/interfaces/probe';
 import { ProbeType } from '../../configuration/probe-type/interfaces/probe-type';
+import { Measurement } from '../../configuration/measurement-history/interfaces/measurement.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,15 +18,9 @@ import { ProbeType } from '../../configuration/probe-type/interfaces/probe-type'
 export class DisplacementCalculationService {
   constructor() {}
 
-  // false: A_JI = Bandbreite * Schichthoehe
-  // true:  A_JI = Durchmesser * Pi * Bandbreite / 3
-  private readonly alternativeBerechnungVonA_JI:boolean = false;
   // false: 0, 120, 240   (Schenkel #2 und #3 vertauscht)
   // true:  0, -120, 120  (nach Excel)
   private static readonly alternativeThreeAngleLookup:boolean = false;
-
-  private readonly Ur = 21000 / Math.sqrt(3);
-  private readonly delta_ang = 15.5;
 
   public static getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
@@ -40,7 +35,7 @@ export class DisplacementCalculationService {
   }
 
   // Function to calculate the x and y values of the vectors and the total force in kg
-  calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, probes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
+  calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, probes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting, pruefspannung:number)
     : {F: { x: number; y: number }[][], m_tot:number} {
     // Berechnete Querschnittsfläche in m^2
     const A = probeType.breite! * probeType.hoehe! / 1000.0 / 1000.0;
@@ -54,17 +49,23 @@ export class DisplacementCalculationService {
         (sensor / omega * 1000))
     }));
 
+    console.log('psi:', psi);
+
     // Fluss umgerechnet auf Induktion (in mT)
     const B_peak: { sensors: number[] }[] = psi.map(yoke => ({
       sensors: yoke.sensors.map(sensor => 
         (sensor * 0.000001 / A / probeType.windungszahl! * 1000 * Math.SQRT2))
     }));
 
+    console.log('B_peak:', B_peak);
+
     // Induktion umgerechnet auf Nennbedingungen * 115%
     const B_peak_nom: { sensors: number[] }[] = B_peak.map(yoke => ({
       sensors: yoke.sensors.map(sensor => 
-        (sensor / coil.bemessungsspannung! * this.Ur / 1000 * 1.15))
+        (sensor / pruefspannung * coil.bemessungsspannung! / 1000 * 1.15))
     }));
+
+    console.log('B_peak_nom:', B_peak_nom);
 
     // Vs/A/m
     const µ0 = 4 * Math.PI * Math.pow(10.0,-7);
@@ -75,12 +76,10 @@ export class DisplacementCalculationService {
         ((sensor * sensor) / µ0 / 2 * A))
     }));
 
-    const A_JI = this.alternativeBerechnungVonA_JI ?
-      (coiltype.durchmesser! * Math.PI * coiltype.bandbreite! / 3) / 1000.0 / 1000.0 :
-      (coiltype.bandbreite! * coiltype.schichthoehe!) / 1000.0 / 1000.0;
+    const A_IJ = (coiltype.durchmesser! * Math.PI * coiltype.bandbreite! / 3) / 1000.0 / 1000;
 
     // Füllfaktor - Gibt an, wieviel der Fläche durch die Messsonden erfasst wird um die Kraft skalieren zu können
-    const FF_area = 6 * A / A_JI;
+    const FF_area = 6 * A / A_IJ;
 
     // Skalierte Kraft aus Füllfaktor und F_testarea
     const F_skal: { sensors: number[] }[] = F_testarea.map(yoke => ({
@@ -89,8 +88,8 @@ export class DisplacementCalculationService {
     }));
 
     // Winkel der Normale auf die Messfläche ergibt sich aus Anzahl der Sonden und Gerätetype
-    if (measurementSetting.sondenProSchenkel! < 4 || measurementSetting.sondenProSchenkel! % 2 != 0) {
-      throw new Error('Invalid number of sensors per yoke (must be >=4 and even): ' + measurementSetting.sondenProSchenkel);
+    if (measurementSetting.sondenProSchenkel! < 1) {
+      throw new Error('Invalid number of sensors per yoke (must be >=1): ' + measurementSetting.sondenProSchenkel);
     }
     const angleLookup = DisplacementCalculationService.getAngleLookup(yokes.length);
     const angle: { sensors: number[] }[] = [];
@@ -98,19 +97,30 @@ export class DisplacementCalculationService {
       let sensors: number[] = new Array(yokes[i].sensors.length);
 
       const center = Math.floor(yokes[i].sensors.length / 2);
+      let centerLeft:number;
+      let centerRight:number;
 
-      // Sonden in der Mitte
-      sensors[center - 1] = angleLookup[i] - this.delta_ang / 2;
-      sensors[center] = angleLookup[i] + this.delta_ang / 2;
+      if (yokes[i].sensors.length % 2 == 0) { // even
+        // Sonden in der Mitte
+        centerLeft = center - 1;
+        centerRight = center;
+        sensors[center - 1] = angleLookup[i] - probeType.alpha! / 2;
+        sensors[center] = angleLookup[i] + probeType.alpha! / 2;
+      }
+      else { // odd
+        centerLeft = center;
+        centerRight = center;
+        sensors[center] = 0;
+      }
 
       // Erste Hälfte der Sonden (bei 6 ist das Index 2->0)
-      for (let ii = center - 2; ii >= 0; ii--) {
-        sensors[ii] = sensors[ii + 1] - this.delta_ang;
+      for (let ii = centerLeft; ii >= 0; ii--) {
+        sensors[ii] = sensors[ii + 1] - probeType.alpha!;
       }
 
       // Zweite Hälfte der Sonden (bei 6 ist das Index 5->3)
-      for (let ii = center + 1; ii < yokes[i].sensors.length; ii++) {
-        sensors[ii] = sensors[ii - 1] + this.delta_ang;
+      for (let ii = centerRight + 1; ii < yokes[i].sensors.length; ii++) {
+        sensors[ii] = sensors[ii - 1] + probeType.alpha!;
       }
 
       angle.push({ sensors: sensors });

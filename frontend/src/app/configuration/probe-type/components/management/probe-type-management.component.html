@@ -1,115 +1,43 @@
-<div class="row mt-5 justify-content-center">
-    <div class="card col-5 mt-5 d-flex flex-column">
-      <h2 class="text-center mt-5">Messsondentypen Verwaltung</h2>
-      <div class="row flex-grow-1">
-        <!-- Eingabefelder -->
-        <div class="col-md-12 mt-5">
-          <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input id="name" type="text" class="form-control" [(ngModel)]="selectedProbeType!.name"
-              [class.is-invalid]="saveError && isFieldInvalid('name')">
-            <div class="invalid-feedback">Bitte geben Sie einen Namen ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="hoehe" class="form-label">Höhe (mm)</label>
-            <input id="hoehe" type="number" class="form-control" [(ngModel)]="selectedProbeType!.hoehe" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('hoehe')">
-            <div class="invalid-feedback">Bitte geben Sie eine Höhe ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="breite" class="form-label">Breite (mm)</label>
-            <input id="breite" type="number" class="form-control" [(ngModel)]="selectedProbeType!.breite" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('breite')">
-            <div class="invalid-feedback">Bitte geben Sie eine Breite ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="windungszahl" class="form-label">Windungszahl</label>
-            <input id="windungszahl" type="number" class="form-control" [(ngModel)]="selectedProbeType!.windungszahl" min="0"
-              [class.is-invalid]="saveError && isFieldInvalid('windungszahl')">
-            <div class="invalid-feedback">Bitte geben Sie eine Windungszahl ein.</div>
-          </div>
-          <div class="mb-3">
-            <label for="notiz" class="form-label">Notiz</label>
-            <textarea id="notiz" class="form-control" [(ngModel)]="selectedProbeType!.notiz"></textarea>
-          </div>
-        </div>
-
-        <div class="mt-auto mb-4 px-3">
-          <div class="d-flex justify-content-between">
-            <button [disabled]="!hasChanges()" class="btn btn-primary w-100 me-2" (click)="saveChanges()">Speichern</button>
-            <button class="btn btn-secondary w-100 me-2" (click)="backToListing()">Zurück</button>
-            <button class="btn btn-danger w-100" (click)="openDeleteModal()">Löschen</button>
-          </div>
-
-          <div class="text-center mt-3 text-success fw-bold" *ngIf="saveMessage">
-            {{ saveMessage }}
-          </div>          
-        </div>    
+<div class="probe-type-management-container">
+  <!-- Monteur-Modus Hinweis -->
+  @if (readOnly) {
+    <div class="monteur-mode-notice">
+      <div class="notice-icon">
+        <i class="fas fa-user-cog"></i>
+      </div>
+      <div class="notice-content">
+        <div class="notice-title">Monteur-Modus</div>
+        <div class="notice-description">Felder sind schreibgeschützt</div>
       </div>
     </div>
-  
-    <div class="col-6" style="max-height: 600px;">
-      <!-- SVG-Zeichnung -->
-      <div class="d-flex justify-content-center align-items-center mt-5">
-        <svg [attr.width]="scaledWidth + 80" [attr.height]="scaledHeight + 80" class="border">
-          <!-- Rechteck der Sonde -->
-          <rect x="40" y="40" [attr.width]="scaledWidth" [attr.height]="scaledHeight" stroke="red" fill="none"
-            stroke-width="2"></rect>
-  
-          <!-- Pfeil für die Breite (horizontale Linie unterhalb der Sonde) -->
-          <line [attr.x1]="40" [attr.y1]="scaledHeight + 60" [attr.x2]="40 + scaledWidth"
-            [attr.y2]="scaledHeight + 60" stroke="black" stroke-width="2"></line>
-          <!-- Pfeilspitzen für die Breite -->
-          <polygon [attr.points]="(40 + scaledWidth) + ',' + (scaledHeight + 60) + ' ' + 
-                            (40 + scaledWidth - 10) + ',' + (scaledHeight + 55) + ' ' + 
-                            (40 + scaledWidth - 10) + ',' + (scaledHeight + 65)" fill="black"></polygon>
-          <polygon
-            [attr.points]="'40,' + (scaledHeight + 60) + ' 50,' + (scaledHeight + 55) + ' 50,' + (scaledHeight + 65)"
-            fill="black"></polygon>
-          <!-- Beschriftung für die Breite -->
-          <text [attr.x]="40 + scaledWidth / 2" [attr.y]="scaledHeight + 75" font-size="14" text-anchor="middle">
-            {{ selectedProbeType?.breite ?? 0 }} mm
-          </text>
-  
-          <!-- Pfeil für die Höhe (vertikale Linie rechts neben der Sonde) -->
-          <line [attr.x1]="scaledWidth + 60" [attr.y1]="40" [attr.x2]="scaledWidth + 60"
-            [attr.y2]="40 + scaledHeight" stroke="black" stroke-width="2"></line>
-          <!-- Pfeilspitzen für die Höhe -->
-          <polygon
-            [attr.points]="(scaledWidth + 60) + ',40 ' + (scaledWidth + 55) + ',50 ' + (scaledWidth + 65) + ',50'"
-            fill="black"></polygon>
-          <polygon [attr.points]="(scaledWidth + 60) + ',' + (40 + scaledHeight) + ' ' + 
-                            (scaledWidth + 55) + ',' + (40 + scaledHeight - 10) + ' ' + 
-                            (scaledWidth + 65) + ',' + (40 + scaledHeight - 10)" fill="black"></polygon>
-          <!-- Beschriftung für die Höhe -->
-          <text [attr.x]="scaledWidth + 55" [attr.y]="20 + scaledHeight / 2" font-size="14" text-anchor="middle"
-            [attr.transform]="'rotate(90, ' + (scaledWidth + 55) + ', ' + (30 + scaledHeight / 2) + ')'">
-            {{ selectedProbeType?.hoehe ?? 0 }} mm
-          </text>
-        </svg>
-      </div>
+  }
+
+  <div class="management-grid">
+    <!-- Messsondentyp Verwaltung -->
+    <div class="form-section">
+      <h2 class="mb-4 text-center">
+        {{ measurementProbeTypesService.selectedElementIsNew ? 'Neuer Messsondentyp' : 'Messsondentyp bearbeiten' }}
+      </h2>
+
+      <app-probe-type-form [readOnly]="readOnly"></app-probe-type-form>
+    </div>
+
+    <!-- Trennlinie -->
+    <div class="divider-section">
+      <div class="vertical-divider"></div>
+    </div>
+
+    <!-- Visualisierung -->
+    <div class="visualization-section">
+      <app-probe-type-visualization
+        [selectedProbeType]="selectedProbeType"
+        [selectedProbeTypeId]="selectedProbeTypeId"
+        [elements]="measurementProbeTypesService.elements"
+        [isNew]="measurementProbeTypesService.selectedElementIsNew"
+        (selectionChange)="onProbeTypeSelectionChange($event)"
+      ></app-probe-type-visualization>
     </div>
   </div>
 
-  <div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{'show': showDeleteModal}"
-  [ngStyle]="{'display': showDeleteModal ? 'block' : 'none'}">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title">Messsonde löschen?</h5>
-      </div>
-
-      <div class="modal-body">
-        <p>Sind Sie sicher, dass Sie diese Messsonde löschen möchten?</p>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="showDeleteModal = false">Abbrechen</button>
-        <button type="button" class="btn btn-danger" (click)="confirmDeleteProbeType()">Löschen</button>
-      </div>
-    </div>
-  </div>
+  <!-- global alerts used statt inline save messages -->
 </div>
-
-  

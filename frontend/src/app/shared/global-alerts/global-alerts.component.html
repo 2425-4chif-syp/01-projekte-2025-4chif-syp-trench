@@ -1,0 +1,33 @@
+<div class="global-alerts" [style.top.px]="offsetTopPx">
+  <div class="global-alerts__stack">
+    <ng-container *ngFor="let a of alerts">
+      <ngb-alert
+        [type]="a.type"
+        [dismissible]="true"
+        (closed)="close(a.id)"
+        class="global-alerts__item"
+        [ngClass]="{ 'is-expanded': isExpanded(a.id) }"
+      >
+        <div class="alert-content" #alertContentRef role="button" tabindex="0" title="Zum Ein-/Ausklappen klicken">
+          <div class="alert-text-content" (click)="toggle(a.id)">
+            <div class="alert-message">
+              <strong *ngIf="a.title">{{ a.title }}</strong>
+              <span>{{ a.message }}</span>
+            </div>
+            <div class="alert-details" *ngIf="a.details">
+              <small class="text-body-secondary">{{ a.details }}</small>
+            </div>
+          </div>
+          <div class="alert-more-indicator" *ngIf="!isExpanded(a.id) && hasOverflow(a.id)" (click)="toggle(a.id)">Mehr ▾</div>
+          <div
+            class="alert-progress"
+            *ngIf="a.autoClose"
+            [style.animation-duration]="(a.timeoutMs ?? 3000) + 'ms'"
+            aria-hidden="true"
+          ></div>
+        </div>
+      </ngb-alert>
+    </ng-container>
+  </div>
+  
+</div>

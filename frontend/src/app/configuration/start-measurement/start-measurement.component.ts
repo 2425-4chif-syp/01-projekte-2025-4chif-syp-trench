@@ -2,25 +2,26 @@ import { Component, LOCALE_ID, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
 import { registerLocaleData } from '@angular/common';
-import localeDe from '@angular/common/locales/de';
-import { DisplacementVisualizationComponent } from "../../visualization/displacement/components/displacement-visualization.component";
+import localeDe from '@angular/common/locales/de';  
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
-import { MeasurementSettingsBackendService } from '../measurement-settings/services/measurement-settings-backend.service';
 import { CoilsBackendService } from '../coil/services/coils-backend.service';
 import { CoiltypesBackendService } from '../coiltype/services/coiltypes-backend.service';
 import { ProbeTypesBackendService } from '../probe-type/services/probe-types-backend.service';
 import { MeasurementsBackendService } from '../measurement-history/services/measurement-backend.service';
 import { DisplacementCalculationService } from '../../calculation/displacement/displacement-calculation.service';
 import { MessungService } from '../messung/services/messung.service';
+import { AlertService } from '../../services/alert.service';
+import { Router } from '@angular/router';
+import { MessungDetailAuswertungComponent } from '../messung/detail/auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
 
 registerLocaleData(localeDe);
 
 @Component({
   selector: 'app-start-measurement',
   standalone: true,
-  imports: [CommonModule, DisplacementVisualizationComponent, FormsModule], 
+  imports: [CommonModule, MessungDetailAuswertungComponent, FormsModule], 
   providers: [WebSocketService, { provide: LOCALE_ID, useValue: 'de' }],
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
@@ -28,12 +29,16 @@ registerLocaleData(localeDe);
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
-  m_tot: number = 0;
+  m_tot = signal<number>(0);
   sensorValues: { [key: string]: number } = {}; 
 
   isConnected: boolean = false;
   measurementSettingId: number | null = null;
   note: string = '';
+  tauchkernstellung: number | null = null;
+  pruefspannung: number | null = null;
+  tauchkernstellungInput: string = '';
+  pruefspannungInput: string = '';
   showIdError: boolean = false;
   isLoading: boolean = true;
   error: string | null = null;
@@ -51,7 +56,9 @@ export class StartMeasurementComponent implements OnDestroy {
     private coiltypesBackendService: CoiltypesBackendService,
     private coilsBackendService: CoilsBackendService,
     private probeTypesBackendService: ProbeTypesBackendService,
-    public messungService: MessungService
+    public messungService: MessungService,
+    private alerts: AlertService,
+    private router: Router
   ) {
     this.loadMeasurementSettings();
     // Überprüfe, ob bereits eine Messung läuft
@@ -61,12 +68,17 @@ export class StartMeasurementComponent implements OnDestroy {
       this.startTime = this.messungService.getMeasurementStartTime();
       this.measurementData = this.messungService.getCurrentMeasurementData();
       this.yokeData.set(this.messungService.getCurrentYokeData());
-      this.m_tot = this.messungService.getCurrentMTot();
+      this.m_tot.set(this.messungService.getCurrentMTot());
       
       // Initialisiere die Yokes basierend auf den gespeicherten Messungsdaten
       this.initializeYokesFromMeasurementData();
       
       this.connectToWebSocket();
+    }
+
+    // Entwurfsdaten einer neuen Messung wiederherstellen (falls vorhanden)
+    if (!this.messungService.isCurrentlyMeasuring()) {
+      this.restoreDraftFromMessung();
     }
   }
   
@@ -74,21 +86,25 @@ export class StartMeasurementComponent implements OnDestroy {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
   }
 
-  public get isWithinTolerance(): boolean {
-    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
-  }
-
   async loadMeasurementSettings(): Promise<void> {
     this.isLoading = true;
     this.error = null;
 
     await this.measurementSettingsService.reloadElements();
+
+    // Vorbelegte Messeinstellung aus der Messung übernehmen (falls vorhanden)
+    const preselectedId = this.messungService.selectedElementCopy?.messeinstellungId;
+    if (!this.messungService.isCurrentlyMeasuring() && preselectedId) {
+      this.measurementSettingId = preselectedId;
+    }
+
     this.isLoading = false;
   }
 
   isValid(): boolean {
     return this.measurementSettingId !== null && this.measurementSettingId > 0;
   }
+
 
   private initializeYokesFromMeasurementData(): void {
     if (!this.selectedMeasurementSetting) return;
@@ -126,7 +142,9 @@ export class StartMeasurementComponent implements OnDestroy {
       const config = {
         type: 'config',
         measurementSettingId: this.measurementSettingId,
-        note: this.note
+        note: this.note,
+        tauchkernstellung: this.tauchkernstellung ?? 0,
+        pruefspannung: this.pruefspannung ?? 0
       };
       console.log('Sende Konfiguration:', config);
       this.webSocketService.sendMessage(JSON.stringify(config));
@@ -158,17 +176,20 @@ export class StartMeasurementComponent implements OnDestroy {
             [],
             this.selectedMeasurementSetting!.coil!.coiltype!,
             this.selectedMeasurementSetting!.coil!,
-            this.selectedMeasurementSetting!
+            this.selectedMeasurementSetting!,
+            this.pruefspannung!
           );
 
           this.yokeData.set(result.F);
-          this.m_tot = result.m_tot;
+          this.m_tot.set(result.m_tot);
 
-          // Speichere die Daten im Service
+          // Speichere die Daten im Service (für UI-State)
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;
           this.messungService.addMeasurementData(key, sensorValue);
           this.messungService.updateYokeData(result.F);
           this.messungService.updateMTot(result.m_tot);
+
+          // Backend speichert die Messwerte automatisch via MQTT
         },
         error: (err: any) => {
           console.error('Fehler beim Laden der Messeinstellungen:', err);
@@ -178,6 +199,7 @@ export class StartMeasurementComponent implements OnDestroy {
       });
     } catch (error) {
       console.error('Fehler beim Verbinden:', error);
+      this.alerts.error('Fehler beim Verbinden', error);
       this.isConnected = false;
       this.showIdError = true;
     }
@@ -198,11 +220,6 @@ export class StartMeasurementComponent implements OnDestroy {
         this.error = 'Die ausgewählte Messeinstellung konnte nicht gefunden werden';
         throw new Error('Keine Messeinstellung ausgewählt');
       }
-
-      // Starte die Messung im Backend
-      await this.measurementsBackendService.startMeasuring();
-      this.currentMeasurement = true;
-      this.messungService.startGlobalMeasurement(this.measurementSettingId!);
 
       // Lade zuerst die Coil-Informationen
       let coil = measurementSetting.coil;
@@ -258,11 +275,24 @@ export class StartMeasurementComponent implements OnDestroy {
       
       this.startTime = new Date();
       this.measurementData = {};
+
+      // Starte die Messung im Backend - Backend speichert automatisch MQTT-Werte
+      const measurementName = `Messung_${this.startTime.toISOString().replace(/[:.]/g, '-').substring(0, 19)}`;
+      await this.measurementsBackendService.startMeasuring(
+        this.measurementSettingId!, 
+        this.note,
+        measurementName,
+        this.tauchkernstellung ?? 0,
+        this.pruefspannung ?? 0
+      );
+      this.currentMeasurement = true;
+      this.messungService.startGlobalMeasurement(this.measurementSettingId!);
       
       await this.connectToWebSocket();
       this.showIdError = false;
     } catch (error) {
       console.error('Fehler beim Verbinden:', error);
+      this.alerts.error('Fehler beim Verbinden', error);
       this.isConnected = false;
       this.showIdError = true;
     }
@@ -275,38 +305,22 @@ export class StartMeasurementComponent implements OnDestroy {
       this.isConnected = false;
       
       try {
-        // Stoppe die Messung im Backend
+        // Stoppe die Messung im Backend (setzt Endzeitpunkt)
+        // Die Messung wurde bereits beim Starten erstellt und die Messwerte wurden während der Messung über MQTT gespeichert
         await this.measurementsBackendService.stopMeasuring();
         this.currentMeasurement = false;
         this.messungService.stopGlobalMeasurement();
-
-        if (this.startTime && this.measurementSettingId) {
-          const endTime = new Date();
-          
-          const measurementData = {
-            id: 0,
-            messeinstellungID: this.measurementSettingId,
-            anfangszeitpunkt: this.startTime.toISOString(),
-            endzeitpunkt: endTime.toISOString(),
-            name: "",
-            tauchkernstellung: 0,
-            pruefspannung: 0,
-            notiz: this.note || "",
-            messsonden: this.createMesssondenData().map(sonde => ({
-              schenkel: sonde.schenkel,
-              position: sonde.position,
-              messwerte: sonde.messwerte,
-              durchschnittswert: sonde.durchschnittswert
-            }))
-          };
-          
-          console.log('Speichere Messung:', measurementData);
-          await this.measurementsBackendService.saveMeasurement(measurementData);
-          console.log('Messung erfolgreich gespeichert');
-        }
+        
+        console.log('Messung erfolgreich beendet');
+        this.alerts.success('Messung erfolgreich beendet');
+        
+        // Entwurf nach erfolgreichem Beenden zurücksetzen
+        this.messungService.clearDraftFromStorage();
+        this.messungService.selectedElementCopy = null;
       } catch (error) {
-        console.error('Fehler beim Speichern der Messung:', error);
-        this.error = 'Fehler beim Speichern der Messung';
+        console.error('Fehler beim Beenden der Messung:', error);
+        this.error = 'Fehler beim Beenden der Messung';
+        this.alerts.error('Fehler beim Beenden der Messung', error);
       } finally {
         this.isSaving = false;
         this.yokes.set([]); 
@@ -348,5 +362,73 @@ export class StartMeasurementComponent implements OnDestroy {
 
   backToListing(): void {
     this.messungService.selectedElementCopy = null;
+  }
+
+  openMeasurementSettingsSelect(): void {
+    // Aktuelle Eingaben vor dem Verlassen sichern
+    this.syncDraftToMessung();
+
+    this.measurementSettingsService.isMeasurementSelector = true;
+    this.measurementSettingsService.selectedElementCopy = null;
+    this.router.navigate(['/measurement-settings-list'], {
+      queryParams: { selector: 'messung' }
+    });
+  }
+
+  onDecimalInputChange(value: string, field: 'tauchkernstellung' | 'pruefspannung'): void {
+    const normalized = value.replace(',', '.').replace(/[^0-9.\-]/g, '');
+    const parsed = normalized === '' || normalized === '-' || normalized === '.' ? NaN : Number(normalized);
+
+    if (field === 'tauchkernstellung') {
+      this.tauchkernstellungInput = value;
+      this.tauchkernstellung = Number.isNaN(parsed) ? null : parsed;
+    } else {
+      this.pruefspannungInput = value;
+      this.pruefspannung = Number.isNaN(parsed) ? null : parsed;
+    }
+
+    this.syncDraftToMessung();
+  }
+
+  onNoteChange(value: string): void {
+    this.note = value;
+    this.syncDraftToMessung();
+  }
+
+  private syncDraftToMessung(): void {
+    if (!this.messungService.selectedElementCopy) {
+      this.messungService.selectedElementCopy = this.messungService.newElement;
+    }
+
+    const m = this.messungService.selectedElementCopy!;
+    m.notiz            = this.note || null;
+    m.tauchkernstellung = this.tauchkernstellung;
+    m.pruefspannung     = this.pruefspannung;
+    m.messeinstellungId = this.measurementSettingId;
+
+    this.messungService.saveDraftToStorage();
+  }
+
+  private restoreDraftFromMessung(): void {
+    // Nur dann aus dem Draft laden, wenn wir noch keinen Messungs-Kontext im Service haben.
+    if (!this.messungService.selectedElementCopy) {
+      this.messungService.loadDraftFromStorage();
+    }
+
+    const m = this.messungService.selectedElementCopy;
+    if (!m) return;
+
+    this.note             = m.notiz ?? '';
+    this.tauchkernstellung = m.tauchkernstellung;
+    this.pruefspannung     = m.pruefspannung;
+
+    this.tauchkernstellungInput =
+      m.tauchkernstellung != null ? String(m.tauchkernstellung).replace('.', ',') : '';
+    this.pruefspannungInput =
+      m.pruefspannung != null ? String(m.pruefspannung).replace('.', ',') : '';
+
+    if (m.messeinstellungId && !this.measurementSettingId) {
+      this.measurementSettingId = m.messeinstellungId;
+    }
   }
 }

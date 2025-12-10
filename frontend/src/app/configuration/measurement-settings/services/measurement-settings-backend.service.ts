@@ -23,7 +23,7 @@ export class MeasurementSettingsBackendService {
 
     return {
       id:                 ms.id,
-      coil:               this.coilBackendService.coilBackendToFrontend(ms.spule),
+      coil:               ms.spule ? this.coilBackendService.coilBackendToFrontend(ms.spule) : null,
       coilId:             ms.spuleID,
       sondenProSchenkel:  ms.sondenProSchenkel,
       name:               ms.name,
@@ -34,11 +34,11 @@ export class MeasurementSettingsBackendService {
 
   public measurementSettingsFrontendToBackend(ms: MeasurementSetting): any {
     return {
-      id:                 ms.id,
-      spuleID:            Number(ms.coilId),                 
-      sondenTypID:        Number(ms.probeTypeId),            
-      sondenProSchenkel:  Number(ms.sondenProSchenkel),      
-      name:               ms.name
+      ID:                 ms.id,
+      SpuleID:            Number(ms.coilId),                 
+      SondenTypID:        Number(ms.probeTypeId),            
+      SondenProSchenkel:  Number(ms.sondenProSchenkel),      
+      Name:               ms.name
     };
   }
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CoiltypeListComponent } from './list/coiltype-list.component';
 import { CoiltypeManagementComponent } from './management/coiltype-management.component';
 import { CoiltypesService } from '../services/coiltypes.service';
+import { ModeService } from '../../../services/mode.service';
 
 @Component({
   selector: 'app-coiltype-parent',
@@ -12,5 +13,8 @@ import { CoiltypesService } from '../services/coiltypes.service';
   styleUrl: './coiltype-parent.component.scss'
 })
 export class CoiltypeParentComponent {
-  constructor(public coiltypesService:CoiltypesService) {}
+  constructor(
+    public coiltypesService: CoiltypesService,
+    public modeService: ModeService
+  ) {}
 }

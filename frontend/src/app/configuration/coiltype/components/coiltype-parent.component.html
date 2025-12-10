@@ -2,5 +2,5 @@
     <app-coiltype-list />
 }
 @else {
-    <app-coiltype-management />
+    <app-coiltype-management [readOnly]="modeService.isMonteurMode()" />
 }

@@ -1,0 +1,43 @@
+.detail-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-actions .btn-modern {
+  flex: 0 0 auto;
+  padding: 0.6rem 1.4rem;
+}
+
+.time-slider {
+  position: sticky;
+  top: 0;
+  z-index: 1050; /* place slider above visualization so it's touch/clickable */
+  background: rgba(255,255,255,0.95);
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.auswertung-area {
+  position: relative;
+  z-index: 1;
+}
+
+.time-slider .time-slider-inner {
+  align-items: center;
+}
+
+.time-label {
+  min-width: 6.5rem;
+  text-align: center;
+}
+
+.slider-flex .time-selected {
+  font-variant-numeric: tabular-nums;
+}
+
+.auswertung-area .card {
+  border-radius: 0.5rem;
+}

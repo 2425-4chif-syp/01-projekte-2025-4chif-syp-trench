@@ -4,5 +4,6 @@ export interface ProbeType {
     breite: number | null;
     hoehe: number | null;
     windungszahl: number | null;
+    alpha: number | null;
     notiz: string | null;
 }

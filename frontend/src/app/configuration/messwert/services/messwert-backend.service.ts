@@ -12,10 +12,10 @@ export class MesswertBackendService {
   private messwertBackendToFrontend(messwert: any): Messwert {
     return {
       id: messwert.id,
-      measurement_id: messwert.messung_id,
+      messungID: messwert.messungID,
       measurement: messwert.messung,
-      measurementProbePositionId: messwert.messsondenPosition_id,
-      measurementProbePosition: messwert.messsondenPosition,
+      sondenPositionID: messwert.sondenPositionID,
+      sondenPosition: messwert.sondenPosition,
       wert: messwert.wert,
       zeitpunkt: messwert.zeitpunkt
     }
@@ -24,8 +24,8 @@ export class MesswertBackendService {
   private messwertFrontendToBackend(messwert: Messwert): any {
     return {
       id: messwert.id,
-      messung_id: messwert.measurement_id,
-      messsondenPosition_id: messwert.measurementProbePositionId,
+      messungID: messwert.messungID,
+      sondenPositionID: messwert.sondenPositionID,
       wert: messwert.wert,
       zeitpunkt: messwert.zeitpunkt
     }
@@ -33,6 +33,14 @@ export class MesswertBackendService {
 
   public async getAllMesswerte(): Promise<Messwert[]> {
     const response: any = await this.backendService.httpGetRequest('Messwert');
+    return response.map((wert: any) => this.messwertBackendToFrontend(wert));
+  }
+
+  public async getMesswerteByMessungId(messungId: number): Promise<Messwert[]> {
+    const response: any = await this.backendService.httpGetRequest(`Messwert/messung/${messungId}`);
+    if (!Array.isArray(response)) {
+      return [];
+    }
     return response.map((wert: any) => this.messwertBackendToFrontend(wert));
   }
   
