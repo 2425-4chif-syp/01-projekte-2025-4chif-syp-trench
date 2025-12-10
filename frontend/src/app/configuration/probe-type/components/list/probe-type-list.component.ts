@@ -29,7 +29,8 @@ export class ProbeTypeListComponent implements OnInit {
       'name': 'Name',
       'breite': 'Breite',
       'hoehe': 'Höhe',
-      'windungszahl': 'Windungszahl'
+      'windungszahl': 'Windungszahl',
+      'alpha': 'Alpha'
     }
     public readonly elementValueToStringMethods: { [key: string]: (element:ProbeType) => string } = {
 

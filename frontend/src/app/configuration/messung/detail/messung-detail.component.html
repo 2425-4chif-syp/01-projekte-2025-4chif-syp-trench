@@ -1,6 +1,15 @@
 <div class="text-center">
     <h2>Messung #{{ curMessung!.id }}</h2>
 
+    <div class="mb-3">
+        <button class="btn btn-outline-secondary btn-modern me-2" (click)="navigateBack()">
+            Zurück zur Liste
+        </button>
+        <button class="btn btn-outline-danger btn-modern" (click)="openDeleteModal()">
+            Messung löschen
+        </button>
+    </div>
+
     @if (recentMesswerte().length < 1) {
         <p>Keine Messwerte vorhanden!</p>
     }
@@ -15,5 +24,38 @@
             <p>Postion: {{ messwert.sondenPosition!.position }}</p>
             <p></p>
         }
-    }   
+    }
+</div>
+
+<div
+    class="modal fade modern-modal"
+    tabindex="-1"
+    role="dialog"
+    [ngClass]="{ show: showDeleteModal }"
+    [ngStyle]="{ display: showDeleteModal ? 'block' : 'none' }"
+>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon danger">
+                    <span aria-hidden="true">⚠</span>
+                </div>
+                <h5 class="modal-title">Messung löschen?</h5>
+                <button type="button" class="btn-close" aria-label="Close" (click)="showDeleteModal = false"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie die Messung endgültig löschen?</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btn-modern" (click)="showDeleteModal = false">
+                    Abbrechen
+                </button>
+                <button type="button" class="btn btn-danger btn-modern" (click)="confirmDeleteCurrentMessung()">
+                    Löschen
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
