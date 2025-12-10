@@ -519,3 +519,74 @@
     right: 8px;
   }
 }
+
+/* CSV Import/Export Button */
+.csv-button {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(47, 167, 174, 0.3);
+  border-radius: 20px;
+  padding: 20px;
+  width: 136px;
+  height: 136px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(47, 167, 174, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+
+  .csv-icon-image {
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(47, 167, 174, 0.2);
+    border-color: rgba(47, 167, 174, 0.5);
+    background: rgba(255, 255, 255, 1);
+
+    .csv-icon-image {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(47, 167, 174, 0.15);
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 21, 104, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 21, 104, 0.1);
+
+    .csv-icon-image {
+      opacity: 0.5;
+    }
+
+    &:hover {
+      transform: none;
+      box-shadow: 0 2px 8px rgba(0, 21, 104, 0.1);
+    }
+  }
+}
+
+/* Responsive Design für CSV Button */
+@media (max-width: 768px) {
+  .csv-button {
+    width: 100px;
+    min-height: 70px;
+    padding: 15px;
+
+    .csv-icon-image {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
