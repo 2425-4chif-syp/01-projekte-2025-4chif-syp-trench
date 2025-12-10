@@ -3,6 +3,53 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
+/* Global button rounding to match modern style */
+.btn {
+  border-radius: 999px;
+}
+
+/* Modern buttons (used on forms and detail views) */
+.btn-modern {
+  flex: 1 1 10rem;
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 0.7rem 1.35rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 22px -18px rgba(31, 39, 77, 0.45);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+}
+
+.btn-outline-secondary.btn-modern,
+.btn-outline-danger.btn-modern {
+  border-width: 1.5px;
+}
+
+.btn-outline-secondary.btn-modern {
+  color: #3f4a75;
+  border-color: rgba(63, 74, 117, 0.32);
+
+  &:hover {
+    background: rgba(63, 74, 117, 0.12);
+  }
+}
+
+.btn-outline-danger.btn-modern {
+  color: #d94b63;
+  border-color: rgba(217, 75, 99, 0.32);
+
+  &:hover {
+    background: rgba(217, 75, 99, 0.1);
+  }
+}
+
 /* Prevent scrolling only on CSV import/export page */
 body.csv-page-no-scroll,
 html.csv-page-no-scroll {
