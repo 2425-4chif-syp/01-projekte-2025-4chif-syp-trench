@@ -24,17 +24,18 @@
                                 [value]="sliderValue()"
                                 (input)="onSliderInput($event)" />
             </div>
-
-            <app-messung-detail-auswertung 
-                [yokes]="yokes"
-                [yokeData]="yokeData"
-                [m_tot]="m_tot"
-                [probeType]="measurement?.messeinstellung?.probeType!"
-                [probes]="[]"
-                [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
-                [coil]="measurement?.messeinstellung?.coil!"
-                [measurementSetting]="measurement?.messeinstellung!"
-            />
+            <div class="auswertung-area">
+                <app-messung-detail-auswertung 
+                    [yokes]="yokes"
+                    [yokeData]="yokeData"
+                    [m_tot]="m_tot"
+                    [probeType]="measurement?.messeinstellung?.probeType!"
+                    [probes]="[]"
+                    [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
+                    [coil]="measurement?.messeinstellung?.coil!"
+                    [measurementSetting]="measurement?.messeinstellung!"
+                />
+            </div>
         </div>
     }
 </div>

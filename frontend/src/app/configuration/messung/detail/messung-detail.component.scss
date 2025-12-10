@@ -9,3 +9,13 @@
   flex: 0 0 auto;
   padding: 0.6rem 1.4rem;
 }
+
+.time-slider {
+  position: relative;
+  z-index: 1000; /* place slider above visualization so it's touch/clickable */
+}
+
+.auswertung-area {
+  position: relative;
+  z-index: 1;
+}
