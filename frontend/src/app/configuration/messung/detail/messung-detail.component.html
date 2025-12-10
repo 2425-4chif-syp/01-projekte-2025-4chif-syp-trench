@@ -1,6 +1,15 @@
 <div class="text-center">
     <h2>Messung #{{ curMessung!.id }}</h2>
 
+    <div class="detail-actions">
+        <button class="btn btn-outline-secondary btn-modern me-2" (click)="navigateBack()">
+            Zurück zur Liste
+        </button>
+        <button class="btn btn-outline-danger btn-modern" (click)="openDeleteModal()">
+            Messung löschen
+        </button>
+    </div>
+
     @if (recentMesswerte().length < 1) {
         <p>Keine Messwerte vorhanden!</p>
     }
@@ -15,5 +24,13 @@
             <p>Postion: {{ messwert.sondenPosition!.position }}</p>
             <p></p>
         }
-    }   
+    }
 </div>
+
+<app-confirm-delete-modal
+    [show]="showDeleteModal"
+    title="Messung löschen?"
+    message="Diese Aktion kann nicht rückgängig gemacht werden. Möchten Sie die Messung endgültig löschen?"
+    (cancel)="showDeleteModal = false"
+    (confirm)="confirmDeleteCurrentMessung()"
+></app-confirm-delete-modal>

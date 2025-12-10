@@ -5,11 +5,12 @@ import { ProbeType } from '../../interfaces/probe-type';
 import { ProbeTypesService } from '../../services/probe-types.service';
 import { AlertService } from '../../../../services/alert.service';
 import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
+import { ConfirmDeleteModalComponent } from '../../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-probe-type-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, DecimalCommaDirective],
+  imports: [CommonModule, FormsModule, DecimalCommaDirective, ConfirmDeleteModalComponent],
   templateUrl: './probe-type-form.component.html',
   styleUrl: './probe-type-form.component.scss'
 })
