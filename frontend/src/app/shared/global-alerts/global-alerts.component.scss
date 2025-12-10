@@ -27,12 +27,17 @@
   position: relative;
   /* reserve space for the progress bar when present */
   padding-bottom: 6px;
-  max-height: var(--global-alert-max-h, 160px);
-  overflow: hidden;
 }
 
-.global-alerts__item.is-expanded .alert-content {
-  max-height: none;
+.alert-text-content {
+  max-height: var(--global-alert-max-h, 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+.global-alerts__item.is-expanded .alert-text-content {
+  max-height: 600px; /* Larger max height when expanded */
 }
 
 /* Fading overlay to indicate more content when collapsed */
@@ -45,6 +50,24 @@
 
 .alert-details {
   margin-top: 4px;
+}
+
+.alert-more-indicator {
+  margin-top: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 1;
+  text-align: center;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
 }
 
 /* Progress bar */
@@ -66,17 +89,41 @@
   animation-fill-mode: forwards;
 }
 
+/* Scrollbar styling for alert text content */
+.alert-text-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.alert-text-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.alert-text-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.alert-text-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 .alert-more-indicator {
-  position: absolute;
-  right: 8px;
-  bottom: 10px; /* sits above progress bar */
+  margin-top: 8px;
+  padding: 4px 8px;
   font-size: 12px;
   line-height: 1;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.15);
+  text-align: center;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
   color: inherit;
-  pointer-events: none; /* click handled by container */
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  
+  &:hover {
+    background: rgba(0, 0, 0, 0.15);
+  }
 }
 
 /* Color mapping to Bootstrap alert variants */
@@ -84,3 +131,4 @@
 .alert-danger  .alert-progress { background-color: #dc3545; }
 .alert-warning .alert-progress { background-color: #ffc107; }
 .alert-info    .alert-progress { background-color: #0dcaf0; }
+
