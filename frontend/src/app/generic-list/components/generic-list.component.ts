@@ -93,7 +93,7 @@ export class GenericListComponent<TElement, TListService extends ListService<TEl
   }
 
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
+  public onMouseMove(event: MouseEvent) {
     this.mousePosition = { x: event.pageX, y: event.pageY };
 
     if (this.hoveredElement !== null) {
