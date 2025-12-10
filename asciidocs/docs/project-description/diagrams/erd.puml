@@ -33,8 +33,8 @@ entity sondentyp {
   breite : decimal
   hoehe : decimal
   windungszahl : integer
-  notiz : varchar
   alpha : decimal
+  notiz : varchar
 }
 
 entity messeinstellung {
