@@ -8,11 +8,12 @@ import { Coil } from '../../interfaces/coil';
 import { Coiltype } from '../../../coiltype/interfaces/coiltype';
 import { AlertService } from '../../../../services/alert.service';
 import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
+import { ConfirmDeleteModalComponent } from '../../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-coil-management',
   standalone: true,
-  imports: [FormsModule, CommonModule, DecimalCommaDirective],
+  imports: [FormsModule, CommonModule, DecimalCommaDirective, ConfirmDeleteModalComponent],
   templateUrl: './coil-management.component.html',
   styleUrl: './coil-management.component.scss'
 })
