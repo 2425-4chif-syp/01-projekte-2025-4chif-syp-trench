@@ -17,9 +17,6 @@ import { ProbeType } from '../../configuration/probe-type/interfaces/probe-type'
 export class DisplacementCalculationService {
   constructor() {}
 
-  // false: A_JI = Bandbreite * Schichthoehe
-  // true:  A_JI = Durchmesser * Pi * Bandbreite / 3
-  private readonly alternativeBerechnungVonA_JI:boolean = false;
   // false: 0, 120, 240   (Schenkel #2 und #3 vertauscht)
   // true:  0, -120, 120  (nach Excel)
   private static readonly alternativeThreeAngleLookup:boolean = false;
@@ -74,12 +71,10 @@ export class DisplacementCalculationService {
         ((sensor * sensor) / µ0 / 2 * A))
     }));
 
-    const A_JI = this.alternativeBerechnungVonA_JI ?
-      (coiltype.durchmesser! * Math.PI * coiltype.bandbreite! / 3) / 1000.0 / 1000.0 :
-      (coiltype.bandbreite! * coiltype.schichthoehe!) / 1000.0 / 1000.0;
+    const A_IJ = (coiltype.durchmesser! * Math.PI * coiltype.bandbreite! / 3) / 1000.0 / 1000;
 
     // Füllfaktor - Gibt an, wieviel der Fläche durch die Messsonden erfasst wird um die Kraft skalieren zu können
-    const FF_area = 6 * A / A_JI;
+    const FF_area = 6 * A / A_IJ;
 
     // Skalierte Kraft aus Füllfaktor und F_testarea
     const F_skal: { sensors: number[] }[] = F_testarea.map(yoke => ({
