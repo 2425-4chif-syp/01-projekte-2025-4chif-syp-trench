@@ -2,8 +2,7 @@ import { Component, LOCALE_ID, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
 import { registerLocaleData } from '@angular/common';
-import localeDe from '@angular/common/locales/de';
-import { DisplacementVisualizationComponent } from "../../visualization/displacement/components/displacement-visualization.component";
+import localeDe from '@angular/common/locales/de';  
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
@@ -15,13 +14,14 @@ import { DisplacementCalculationService } from '../../calculation/displacement/d
 import { MessungService } from '../messung/services/messung.service';
 import { AlertService } from '../../services/alert.service';
 import { Router } from '@angular/router';
+import { MessungDetailAuswertungComponent } from '../messung/detail/auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
 
 registerLocaleData(localeDe);
 
 @Component({
   selector: 'app-start-measurement',
   standalone: true,
-  imports: [CommonModule, DisplacementVisualizationComponent, FormsModule], 
+  imports: [CommonModule, MessungDetailAuswertungComponent, FormsModule], 
   providers: [WebSocketService, { provide: LOCALE_ID, useValue: 'de' }],
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
@@ -84,10 +84,6 @@ export class StartMeasurementComponent implements OnDestroy {
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
-  }
-
-  public get isWithinTolerance(): boolean {
-    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
   }
 
   async loadMeasurementSettings(): Promise<void> {

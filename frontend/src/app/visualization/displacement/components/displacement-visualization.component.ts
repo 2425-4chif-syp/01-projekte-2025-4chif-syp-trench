@@ -216,7 +216,7 @@ export class DisplacementVisualizationComponent {
   }
 
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
+  public onMouseMove(event: MouseEvent) {
     this.mousePosition = { x: event.pageX, y: event.pageY };
   }
 }
