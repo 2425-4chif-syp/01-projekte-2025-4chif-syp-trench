@@ -2,8 +2,7 @@ import { Component, LOCALE_ID, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from './services/websocket.service';
 import { registerLocaleData } from '@angular/common';
-import localeDe from '@angular/common/locales/de';
-import { DisplacementVisualizationComponent } from "../../visualization/displacement/components/displacement-visualization.component";
+import localeDe from '@angular/common/locales/de';  
 import { FormsModule } from '@angular/forms';
 import { MeasurementSetting } from '../measurement-settings/interfaces/measurement-settings';
 import { MeasurementSettingsService } from '../measurement-settings/services/measurement-settings.service';
@@ -15,13 +14,14 @@ import { DisplacementCalculationService } from '../../calculation/displacement/d
 import { MessungService } from '../messung/services/messung.service';
 import { AlertService } from '../../services/alert.service';
 import { Router } from '@angular/router';
+import { MessungDetailAuswertungComponent } from '../messung/detail/auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
 
 registerLocaleData(localeDe);
 
 @Component({
   selector: 'app-start-measurement',
   standalone: true,
-  imports: [CommonModule, DisplacementVisualizationComponent, FormsModule], 
+  imports: [CommonModule, MessungDetailAuswertungComponent, FormsModule], 
   providers: [WebSocketService, { provide: LOCALE_ID, useValue: 'de' }],
   templateUrl: './start-measurement.component.html',
   styleUrl: './start-measurement.component.scss'
@@ -29,7 +29,7 @@ registerLocaleData(localeDe);
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
-  m_tot: number = 0;
+  m_tot = signal<number>(0);
   sensorValues: { [key: string]: number } = {}; 
 
   isConnected: boolean = false;
@@ -68,7 +68,7 @@ export class StartMeasurementComponent implements OnDestroy {
       this.startTime = this.messungService.getMeasurementStartTime();
       this.measurementData = this.messungService.getCurrentMeasurementData();
       this.yokeData.set(this.messungService.getCurrentYokeData());
-      this.m_tot = this.messungService.getCurrentMTot();
+      this.m_tot.set(this.messungService.getCurrentMTot());
       
       // Initialisiere die Yokes basierend auf den gespeicherten Messungsdaten
       this.initializeYokesFromMeasurementData();
@@ -84,10 +84,6 @@ export class StartMeasurementComponent implements OnDestroy {
   
   public get selectedMeasurementSetting(): MeasurementSetting | null {
     return this.measurementSettingsService.elements.find(setting => setting.id == this.measurementSettingId) ?? null;
-  }
-
-  public get isWithinTolerance(): boolean {
-    return this.m_tot < this.selectedMeasurementSetting!.coil!.coiltype!.toleranzbereich!;
   }
 
   async loadMeasurementSettings(): Promise<void> {
@@ -108,6 +104,7 @@ export class StartMeasurementComponent implements OnDestroy {
   isValid(): boolean {
     return this.measurementSettingId !== null && this.measurementSettingId > 0;
   }
+
 
   private initializeYokesFromMeasurementData(): void {
     if (!this.selectedMeasurementSetting) return;
@@ -179,11 +176,12 @@ export class StartMeasurementComponent implements OnDestroy {
             [],
             this.selectedMeasurementSetting!.coil!.coiltype!,
             this.selectedMeasurementSetting!.coil!,
-            this.selectedMeasurementSetting!
+            this.selectedMeasurementSetting!,
+            this.pruefspannung!
           );
 
           this.yokeData.set(result.F);
-          this.m_tot = result.m_tot;
+          this.m_tot.set(result.m_tot);
 
           // Speichere die Daten im Service (für UI-State)
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;

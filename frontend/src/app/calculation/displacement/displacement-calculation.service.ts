@@ -4,6 +4,7 @@ import { Coiltype } from '../../configuration/coiltype/interfaces/coiltype';
 import { MeasurementSetting } from '../../configuration/measurement-settings/interfaces/measurement-settings';
 import { Probe } from '../../configuration/probe/interfaces/probe';
 import { ProbeType } from '../../configuration/probe-type/interfaces/probe-type';
+import { Measurement } from '../../configuration/measurement-history/interfaces/measurement.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,8 +22,6 @@ export class DisplacementCalculationService {
   // true:  0, -120, 120  (nach Excel)
   private static readonly alternativeThreeAngleLookup:boolean = false;
 
-  private readonly Ur = 21000 / Math.sqrt(3);
-
   public static getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
       case 2:
@@ -36,7 +35,7 @@ export class DisplacementCalculationService {
   }
 
   // Function to calculate the x and y values of the vectors and the total force in kg
-  calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, probes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting)
+  calculateYokeData(yokes: { sensors: number[] }[], probeType:ProbeType, probes:Probe[], coiltype: Coiltype, coil: Coil, measurementSetting:MeasurementSetting, pruefspannung:number)
     : {F: { x: number; y: number }[][], m_tot:number} {
     // Berechnete Querschnittsfläche in m^2
     const A = probeType.breite! * probeType.hoehe! / 1000.0 / 1000.0;
@@ -50,17 +49,23 @@ export class DisplacementCalculationService {
         (sensor / omega * 1000))
     }));
 
+    console.log('psi:', psi);
+
     // Fluss umgerechnet auf Induktion (in mT)
     const B_peak: { sensors: number[] }[] = psi.map(yoke => ({
       sensors: yoke.sensors.map(sensor => 
         (sensor * 0.000001 / A / probeType.windungszahl! * 1000 * Math.SQRT2))
     }));
 
+    console.log('B_peak:', B_peak);
+
     // Induktion umgerechnet auf Nennbedingungen * 115%
     const B_peak_nom: { sensors: number[] }[] = B_peak.map(yoke => ({
       sensors: yoke.sensors.map(sensor => 
-        (sensor / coil.bemessungsspannung! * this.Ur / 1000 * 1.15))
+        (sensor / pruefspannung * coil.bemessungsspannung! / 1000 * 1.15))
     }));
+
+    console.log('B_peak_nom:', B_peak_nom);
 
     // Vs/A/m
     const µ0 = 4 * Math.PI * Math.pow(10.0,-7);

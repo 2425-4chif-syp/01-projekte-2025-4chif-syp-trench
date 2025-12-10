@@ -1,0 +1,64 @@
+
+<div class="form-header">
+<div class="form-header__titles">
+    <h3>Messdaten</h3>
+    <p>Live-Auswertung der aktuellen Messung.</p>
+</div>
+</div>
+
+<div class="visualization-wrapper">
+<app-displacement-visualization
+    [size]="512"
+    [yokeData]="yokeData"
+    [m_tot]="m_tot"
+    [probeType]="probeType"
+    [probes]="[]"
+    [coiltype]="coiltype"
+    [coil]="coil"
+    [measurementSetting]="measurementSetting"
+/>
+</div>
+
+<div class="measurement-summary mt-3">
+<div class="summary-item">
+    <span class="summary-label">Absolutwert der Summenkraft</span>
+    <span class="summary-value">
+    {{ m_tot() | number: '1.2-2' }} kg
+    </span>
+</div>
+<div class="summary-item">
+    <span class="summary-label">Toleranzbereich</span>
+    <span class="summary-value">
+    {{ coiltype.toleranzbereich! | number: '1.2-2' }} kg
+    </span>
+</div>
+<div class="summary-item">
+    <span class="summary-label">In der Toleranz</span>
+    <span
+    class="summary-value"
+    [ngClass]="{ 'text-success': isWithinTolerance, 'text-danger': !isWithinTolerance }"
+    >
+    {{ isWithinTolerance ? 'Ja' : 'Nein' }}
+    </span>
+</div>
+</div>
+
+@for (yoke of yokes(); track $index) {
+<div class="yoke-section">
+    <h4 class="yoke-title">Schenkel #{{ $index + 1 }}</h4>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+    @for (sensor of yoke.sensors; track $index) {
+        <div class="col">
+        <div class="card text-center h-100 border border-primary shadow-sm">
+            <div class="card-body">
+            <h6 class="card-title text-muted small">Sensor #{{ $index + 1 }}</h6>
+            <p class="card-text fs-4 fw-bold">
+                {{ sensor | number: '1.2-2' }}
+            </p>
+            </div>
+        </div>
+        </div>
+    }
+    </div>
+</div>
+}

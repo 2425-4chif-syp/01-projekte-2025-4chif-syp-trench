@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ListService } from '../../../generic-list/services/list-service';
-import { Messung } from '../interfaces/messung';
 import { MessungBackendService } from './messung-backend.service';
 import { BehaviorSubject } from 'rxjs';
+import { Measurement } from '../../measurement-history/interfaces/measurement.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MessungService implements ListService<Messung> {
-  public elements: Messung[] = [];
-  public selectedElementCopy: Messung|null = null;
+export class MessungService implements ListService<Measurement> {
+  public elements: Measurement[] = [];
+  public selectedElementCopy: Measurement|null = null;
   public selectedElementIsNew: boolean = false;
-  public clickedMessung: Messung | null = null;
+  public clickedMessung: Measurement | null = null;
   
   public isMessungSelector: boolean = false;
 
@@ -87,7 +87,7 @@ export class MessungService implements ListService<Messung> {
     return this.currentMTot;
   }
 
-  public get newElement(): Messung {
+  public get newElement(): Measurement {
     return {
       id: 0,
       messeinstellung: null,
@@ -101,10 +101,10 @@ export class MessungService implements ListService<Messung> {
     };
   }
 
-  public getCopyElement(id:number):Messung {
+  public getCopyElement(id:number):Measurement {
     id = Number(id);
 
-    const original:Messung|undefined = this.elements.find(c => c.id === id);
+    const original:Measurement|undefined = this.elements.find(c => c.id === id);
     if (original === undefined) {
       throw new Error(`Messung with ID ${id} not found.`);
     }
@@ -117,10 +117,10 @@ export class MessungService implements ListService<Messung> {
     this.elements = await this.messungBackendService.getAllMessungen();
   }
   
-  public async reloadElementWithId(id:number):Promise<Messung> {
+  public async reloadElementWithId(id:number):Promise<Measurement> {
     id = Number(id);
 
-    const messung:Messung = await this.messungBackendService.getMessung(id);
+    const messung:Measurement = await this.messungBackendService.getMessung(id);
     const index:number = this.elements.findIndex(c => c.id === id);
     if (index === -1) {
       this.elements.push(messung);
@@ -131,7 +131,7 @@ export class MessungService implements ListService<Messung> {
     return messung;  
   }
   
-  public async updateOrCreateElement(messung:Messung):Promise<void> {
+  public async updateOrCreateElement(messung:Measurement):Promise<void> {
     if (this.selectedElementIsNew) {
       this.selectedElementCopy = await this.postSelectedElement();
       this.selectedElementIsNew = false;
@@ -141,12 +141,12 @@ export class MessungService implements ListService<Messung> {
     await this.messungBackendService.updateMessung(messung);
   }  
 
-  public async postSelectedElement():Promise<Messung> {
+  public async postSelectedElement():Promise<Measurement> {
     if (this.selectedElementCopy === null) {
       throw new Error('No Messung selected.');
     }
 
-    const response:Messung = await this.messungBackendService.addMessung(this.selectedElementCopy);
+    const response:Measurement = await this.messungBackendService.addMessung(this.selectedElementCopy);
 
     this.elements.push(response);
 
@@ -212,21 +212,21 @@ export class MessungService implements ListService<Messung> {
         return;
       }
 
-      const payload: Messung = { ...this.selectedElementCopy };
+      const payload: Measurement = { ...this.selectedElementCopy };
       window.localStorage.setItem(this.draftStorageKey, JSON.stringify(payload));
     } catch (err) {
       console.error('Fehler beim Speichern des Messungs-Entwurfs:', err);
     }
   }
 
-  public loadDraftFromStorage(): Messung | null {
+  public loadDraftFromStorage(): Measurement | null {
     if (typeof window === 'undefined') return null;
 
     try {
       const raw = window.localStorage.getItem(this.draftStorageKey);
       if (!raw) return null;
 
-      const parsed = JSON.parse(raw) as Messung;
+      const parsed = JSON.parse(raw) as Measurement;
       this.selectedElementCopy  = parsed;
       this.selectedElementIsNew = !parsed.id || parsed.id === 0;
       return parsed;
