@@ -10,21 +10,31 @@
         </button>
     </div>
 
-    @if (recentMesswerte().length < 1) {
+    @if (messwerte().length < 1) {
         <p>Keine Messwerte vorhanden!</p>
     }
     @else {
         <div class="container">
-        <app-messung-detail-auswertung 
-            [yokes]="yokes"
-            [yokeData]="yokeData"
-            [m_tot]="m_tot"
-            [probeType]="measurement?.messeinstellung?.probeType!"
-            [probes]="[]"
-            [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
-            [coil]="measurement?.messeinstellung?.coil!"
-            [measurementSetting]="measurement?.messeinstellung!"
-          />
+            <div class="time-slider mb-4">
+                <label class="form-label">Zeitpunkt: {{ selectedTime() ? (selectedTime() | date:'short') : '' }}</label>
+                <input type="range"
+                                class="form-range"
+                                [min]="sliderMinMs"
+                                [max]="sliderMaxMs"
+                                [value]="sliderValue()"
+                                (input)="onSliderInput($event)" />
+            </div>
+
+            <app-messung-detail-auswertung 
+                [yokes]="yokes"
+                [yokeData]="yokeData"
+                [m_tot]="m_tot"
+                [probeType]="measurement?.messeinstellung?.probeType!"
+                [probes]="[]"
+                [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
+                [coil]="measurement?.messeinstellung?.coil!"
+                [measurementSetting]="measurement?.messeinstellung!"
+            />
         </div>
     }
 </div>
