@@ -1,6 +1,6 @@
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
+<div class="container-fluid px-3 pb-2 d-flex align-items-center justify-content-center" style="height: calc(100vh - 80px); overflow: hidden;">
+  <div class="row justify-content-center w-100">
+    <div class="col-lg-11 col-xl-10 col-xxl-9">
       <div class="card shadow-sm modern-card">
         <div class="form-header">
           <div class="form-header__titles">
@@ -11,8 +11,8 @@
 
         <div class="card-body">
           <!-- Upload Section -->
-          <div class="upload-section mb-4">
-            <h4 class="mb-3 d-flex align-items-center">
+          <div class="upload-section mb-3">
+            <h5 class="mb-2 d-flex align-items-center">
               <i class="fas fa-upload me-2"></i>
               Datenpaket importieren
               <button 
@@ -22,16 +22,15 @@
                 title="Informationen zum CSV-Format">
                 i
               </button>
-            </h4>
-            <p class="text-muted mb-3">
-              Laden Sie eine ZIP-Datei hoch, die CSV-Dateien enthält. 
-              <strong>Wichtig:</strong> Alle vorhandenen Daten werden gelöscht und durch die importierten Daten ersetzt.
+            </h5>
+            <p class="text-muted small mb-2">
+              ZIP-Datei mit CSV-Dateien hochladen. <strong>Wichtig:</strong> Alle vorhandenen Daten werden gelöscht.
             </p>
             
             @if (!isAdminMode()) {
-              <div class="alert alert-warning">
+              <div class="alert alert-warning py-2 mb-2">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                Nur im Admin-Modus können Daten importiert werden.
+                <small>Nur im Admin-Modus können Daten importiert werden.</small>
               </div>
             }
 
@@ -66,22 +65,22 @@
             </div>
 
             @if (uploadMessage && !uploadError) {
-              <div class="alert alert-success mt-3">
+              <div class="alert alert-success py-2 mt-2 mb-2">
                 <i class="fas fa-check-circle me-2"></i>
-                {{ uploadMessage }}
+                <small>{{ uploadMessage }}</small>
               </div>
             }
             
             @if (uploadError) {
-              <div class="alert alert-danger mt-3">
+              <div class="alert alert-danger py-2 mt-2 mb-2">
                 <i class="fas fa-exclamation-circle me-2"></i>
-                {{ uploadError }}
+                <small>{{ uploadError }}</small>
               </div>
             }
 
-            <div class="upload-button-container mt-3">
+            <div class="upload-button-container mt-2">
               <button 
-                class="btn btn-primary"
+                class="btn btn-primary btn-sm"
                 (click)="uploadFile()"
                 [disabled]="!selectedFile || !isAdminMode() || isUploading">
                 @if (isUploading) {
@@ -95,30 +94,45 @@
             </div>
           </div>
 
-          <hr class="my-4">
+          <hr class="my-2">
 
           <!-- Download Section -->
           <div class="download-section">
-            <h4 class="mb-3">
+            <h5 class="mb-2">
               <i class="fas fa-download me-2"></i>
               Datenpaket exportieren
-            </h4>
-            <p class="text-muted mb-3">
-              Laden Sie alle Daten als ZIP-Datei herunter, die CSV-Dateien enthält.
+            </h5>
+            <p class="text-muted small mb-2">
+              Als ZIP-Datei (CSV) oder Excel-Datei (formatiert) herunterladen.
             </p>
 
-            <button 
-              class="btn btn-success"
-              (click)="downloadFile()"
-              [disabled]="isDownloading">
-              @if (isDownloading) {
-                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Exportiere...
-              } @else {
-                <i class="fas fa-download me-2"></i>
-                Datenpaket herunterladen
-              }
-            </button>
+            <div class="d-flex gap-2 flex-wrap">
+              <button 
+                class="btn btn-success btn-sm"
+                (click)="downloadFile('zip')"
+                [disabled]="isDownloading">
+                @if (downloadingFormat === 'zip') {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Exportiere...
+                } @else {
+                  <i class="fas fa-file-archive me-2"></i>
+                  Als ZIP (CSV) herunterladen
+                }
+              </button>
+
+              <button 
+                class="btn btn-primary btn-sm"
+                (click)="downloadFile('excel')"
+                [disabled]="isDownloading">
+                @if (downloadingFormat === 'excel') {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Exportiere...
+                } @else {
+                  <i class="fas fa-file-excel me-2"></i>
+                  Als Excel herunterladen
+                }
+              </button>
+            </div>
           </div>
         </div>
       </div>

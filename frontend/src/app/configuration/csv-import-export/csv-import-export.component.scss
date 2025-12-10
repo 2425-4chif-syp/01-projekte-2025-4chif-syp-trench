@@ -7,7 +7,7 @@
 .form-header {
   background: linear-gradient(90deg, rgba(0, 21, 104, 1) 0%, rgba(47, 167, 174, 1) 50%, rgba(114, 185, 0, 1) 100%);
   color: white;
-  padding: 1.5rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,34 +15,34 @@
 
 .form-header__titles h3 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 
 .form-header__titles p {
-  margin: 0.5rem 0 0 0;
+  margin: 0.25rem 0 0 0;
   opacity: 0.9;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .card-body {
-  padding: 2rem;
+  padding: 1rem 1.5rem;
 }
 
 .upload-section,
 .download-section {
-  padding: 1rem 0;
+  padding: 0.5rem 0;
 }
 
 .upload-area {
   background-color: #f8f9fa;
-  padding: 3rem 1.5rem;
+  padding: 1.5rem 1rem;
   border-radius: 8px;
   border: 2px dashed #dee2e6;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  min-height: 200px;
+  min-height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,9 +81,9 @@
 }
 
 .upload-icon {
-  font-size: 4rem;
+  font-size: 2.5rem;
   color: #6c757d;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   display: block;
 }
 
@@ -95,16 +95,16 @@
 }
 
 .upload-text {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: #495057;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
   font-weight: 500;
 }
 
 .upload-hint {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #6c757d;
-  margin: 0.5rem 0 0 0;
+  margin: 0.25rem 0 0 0;
 }
 
 .upload-button-container {
@@ -224,6 +224,11 @@
   font-weight: 500;
   border-radius: 6px;
   transition: all 0.3s ease;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
 }
 
 .btn-primary {

@@ -74,11 +74,16 @@ public class DataPackageController : ControllerBase
         try
         {
             var archiveBytes = await _dataPackageService.ExportAsync(format, cancellationToken);
-            var contentType = format.Equals("7z", StringComparison.OrdinalIgnoreCase)
-                ? "application/x-7z-compressed"
-                : "application/zip";
+            var normalizedFormat = format.ToLowerInvariant();
+            
+            var (contentType, fileExtension) = normalizedFormat switch
+            {
+                "excel" => ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx"),
+                "7z" => ("application/x-7z-compressed", "7z"),
+                _ => ("application/zip", "zip")
+            };
 
-            var fileName = $"trench-data-{DateTime.UtcNow:yyyyMMddHHmmss}.{(format.Equals("7z", StringComparison.OrdinalIgnoreCase) ? "7z" : "zip")}";
+            var fileName = $"trench-data-{DateTime.UtcNow:yyyyMMddHHmmss}.{fileExtension}";
             return File(archiveBytes, contentType, fileName);
         }
         catch (InvalidOperationException ex)

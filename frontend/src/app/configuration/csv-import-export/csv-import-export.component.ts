@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -13,10 +13,11 @@ import { AlertService } from '../../services/alert.service';
   templateUrl: './csv-import-export.component.html',
   styleUrl: './csv-import-export.component.scss'
 })
-export class CsvImportExportComponent {
+export class CsvImportExportComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null;
   isUploading = false;
   isDownloading = false;
+  downloadingFormat: 'zip' | 'excel' | null = null;
   uploadMessage: string = '';
   uploadError: string = '';
   dragOver = false;
@@ -27,6 +28,28 @@ export class CsvImportExportComponent {
     private modeService: ModeService,
     private alertService: AlertService
   ) {}
+
+  ngOnInit(): void {
+    // Prevent scrolling on body and html only for this page
+    document.body.classList.add('csv-page-no-scroll');
+    document.documentElement.classList.add('csv-page-no-scroll');
+    // Fix navbar for this page
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      (navbar as HTMLElement).classList.add('csv-page-fixed');
+    }
+  }
+
+  ngOnDestroy(): void {
+    // Re-enable scrolling when leaving the page
+    document.body.classList.remove('csv-page-no-scroll');
+    document.documentElement.classList.remove('csv-page-no-scroll');
+    // Remove navbar fix
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+      (navbar as HTMLElement).classList.remove('csv-page-fixed');
+    }
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -128,30 +151,35 @@ export class CsvImportExportComponent {
       });
   }
 
-  downloadFile(): void {
+  downloadFile(format: 'zip' | 'excel' = 'zip'): void {
     this.isDownloading = true;
+    this.downloadingFormat = format;
     this.uploadError = '';
     this.uploadMessage = '';
 
-    this.http.get(`${environment.apiUrl}data-package/download?format=zip`, {
+    this.http.get(`${environment.apiUrl}data-package/download?format=${format}`, {
       responseType: 'blob'
     }).subscribe({
       next: (blob: Blob) => {
         this.isDownloading = false;
+        this.downloadingFormat = null;
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-        link.download = `trench-data-${timestamp}.zip`;
+        const extension = format === 'excel' ? 'xlsx' : 'zip';
+        link.download = `trench-data-${timestamp}.${extension}`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
-        this.uploadMessage = 'Datenpaket wurde erfolgreich heruntergeladen.';
-        this.alertService.success('Datenpaket wurde erfolgreich heruntergeladen.');
+        const formatName = format === 'excel' ? 'Excel-Datei' : 'ZIP-Datei';
+        this.uploadMessage = `${formatName} wurde erfolgreich heruntergeladen.`;
+        this.alertService.success(`${formatName} wurde erfolgreich heruntergeladen.`);
       },
       error: (error) => {
         this.isDownloading = false;
+        this.downloadingFormat = null;
         const errorMessage = error.error?.message || 'Export fehlgeschlagen. Bitte versuchen Sie es erneut.';
         this.uploadError = errorMessage;
         this.uploadMessage = '';

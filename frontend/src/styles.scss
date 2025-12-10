@@ -3,6 +3,23 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 
+/* Prevent scrolling only on CSV import/export page */
+body.csv-page-no-scroll,
+html.csv-page-no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Fix navbar only on CSV import/export page */
+.navbar.csv-page-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
 /* Monteur-Modus Hinweis Styling - Kompakt */
 .monteur-mode-notice {
   display: flex;

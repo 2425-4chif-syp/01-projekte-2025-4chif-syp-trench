@@ -3,6 +3,8 @@ using System.Globalization;
 using System.IO.Compression;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using TrenchAPI.Core.Entities;
 using TrenchAPI.Persistence;
 
@@ -92,6 +94,7 @@ public class DataPackageService
         return normalizedFormat switch
         {
             "zip" => BuildZipArchive(csvFiles),
+            "excel" => await BuildExcelFileAsync(cancellationToken),
             "7z" => throw new InvalidOperationException("Export im 7z-Format wird aktuell nicht unterstützt. Bitte ZIP verwenden."),
             _ => throw new InvalidOperationException($"Das Exportformat '{format}' wird nicht unterstützt.")
         };
@@ -496,7 +499,7 @@ public class DataPackageService
         {
             foreach (var (fileName, content) in csvFiles)
             {
-                var entry = archive.CreateEntry($"data/{fileName}", CompressionLevel.Optimal);
+                var entry = archive.CreateEntry($"data/{fileName}", System.IO.Compression.CompressionLevel.Optimal);
                 using var entryStream = entry.Open();
                 using var writer = new StreamWriter(entryStream, Encoding.UTF8);
                 writer.Write(content);
@@ -508,6 +511,346 @@ public class DataPackageService
 
     private static byte[] BuildSevenZipArchive(Dictionary<string, string> csvFiles) =>
         throw new InvalidOperationException("Export im 7z-Format wird aktuell nicht unterstützt. Bitte ZIP verwenden.");
+
+    private async Task<byte[]> BuildExcelFileAsync(CancellationToken cancellationToken)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        
+        using var package = new ExcelPackage();
+        
+        // Erstelle Sheets für jede Entität
+        await CreateSpuleTypSheetAsync(package, cancellationToken);
+        await CreateSpuleSheetAsync(package, cancellationToken);
+        await CreateSondenTypSheetAsync(package, cancellationToken);
+        await CreateSondeSheetAsync(package, cancellationToken);
+        await CreateMesseinstellungSheetAsync(package, cancellationToken);
+        await CreateSondenPositionSheetAsync(package, cancellationToken);
+        await CreateMessungSheetAsync(package, cancellationToken);
+        await CreateMesswertSheetAsync(package, cancellationToken);
+        
+        return package.GetAsByteArray();
+    }
+
+    private async Task CreateSpuleTypSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("SpuleTyp");
+        var entities = await _context.SpuleTyp.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        // Titel
+        worksheet.Cells[1, 1].Value = "SpuleTyp";
+        worksheet.Cells[1, 1, 1, 8].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        // Überschriften
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "Name";
+        worksheet.Cells[3, 3].Value = "Schenkelzahl";
+        worksheet.Cells[3, 4].Value = "Bandbreite";
+        worksheet.Cells[3, 5].Value = "Schichthöhe";
+        worksheet.Cells[3, 6].Value = "Durchmesser";
+        worksheet.Cells[3, 7].Value = "Toleranzbereich";
+        worksheet.Cells[3, 8].Value = "Notiz";
+        
+        // Formatierung der Überschriften
+        var headerRange = worksheet.Cells[3, 1, 3, 8];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        // Daten
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.Name;
+            worksheet.Cells[row, 3].Value = entity.Schenkelzahl;
+            worksheet.Cells[row, 4].Value = entity.Bandbreite;
+            worksheet.Cells[row, 5].Value = entity.Schichthoehe;
+            worksheet.Cells[row, 6].Value = entity.Durchmesser;
+            worksheet.Cells[row, 7].Value = entity.Toleranzbereich;
+            worksheet.Cells[row, 8].Value = entity.Notiz;
+            row++;
+        }
+        
+        // Spaltenbreite anpassen
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateSpuleSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("Spule");
+        var entities = await _context.Spule.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "Spule";
+        worksheet.Cells[1, 1, 1, 8].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "SpuleTypID";
+        worksheet.Cells[3, 3].Value = "Auftragsnr";
+        worksheet.Cells[3, 4].Value = "AuftragsPosNr";
+        worksheet.Cells[3, 5].Value = "Bemessungsspannung";
+        worksheet.Cells[3, 6].Value = "Bemessungsfrequenz";
+        worksheet.Cells[3, 7].Value = "Einheit";
+        worksheet.Cells[3, 8].Value = "Notiz";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 8];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.SpuleTypID;
+            worksheet.Cells[row, 3].Value = entity.Auftragsnr;
+            worksheet.Cells[row, 4].Value = entity.AuftragsPosNr;
+            worksheet.Cells[row, 5].Value = entity.Bemessungsspannung;
+            worksheet.Cells[row, 6].Value = entity.Bemessungsfrequenz;
+            worksheet.Cells[row, 7].Value = entity.Einheit;
+            worksheet.Cells[row, 8].Value = entity.Notiz;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateSondenTypSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("SondenTyp");
+        var entities = await _context.SondenTyp.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "SondenTyp";
+        worksheet.Cells[1, 1, 1, 7].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "Name";
+        worksheet.Cells[3, 3].Value = "Breite";
+        worksheet.Cells[3, 4].Value = "Höhe";
+        worksheet.Cells[3, 5].Value = "Windungszahl";
+        worksheet.Cells[3, 6].Value = "Alpha";
+        worksheet.Cells[3, 7].Value = "Notiz";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 7];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.Name;
+            worksheet.Cells[row, 3].Value = entity.Breite;
+            worksheet.Cells[row, 4].Value = entity.Hoehe;
+            worksheet.Cells[row, 5].Value = entity.Windungszahl;
+            worksheet.Cells[row, 6].Value = entity.Alpha;
+            worksheet.Cells[row, 7].Value = entity.Notiz;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateSondeSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("Sonde");
+        var entities = await _context.Sonde.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "Sonde";
+        worksheet.Cells[1, 1, 1, 4].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "SondenTypID";
+        worksheet.Cells[3, 3].Value = "Name";
+        worksheet.Cells[3, 4].Value = "Kalibrierungsfaktor";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 4];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.SondenTypID;
+            worksheet.Cells[row, 3].Value = entity.Name;
+            worksheet.Cells[row, 4].Value = entity.Kalibrierungsfaktor;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateMesseinstellungSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("Messeinstellung");
+        var entities = await _context.Messeinstellung.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "Messeinstellung";
+        worksheet.Cells[1, 1, 1, 5].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "SpuleID";
+        worksheet.Cells[3, 3].Value = "SondenTypID";
+        worksheet.Cells[3, 4].Value = "Name";
+        worksheet.Cells[3, 5].Value = "SondenProSchenkel";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 5];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.SpuleID;
+            worksheet.Cells[row, 3].Value = entity.SondenTypID;
+            worksheet.Cells[row, 4].Value = entity.Name;
+            worksheet.Cells[row, 5].Value = entity.SondenProSchenkel;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateSondenPositionSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("SondenPosition");
+        var entities = await _context.SondenPosition.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "SondenPosition";
+        worksheet.Cells[1, 1, 1, 5].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "SondeID";
+        worksheet.Cells[3, 3].Value = "MesseinstellungID";
+        worksheet.Cells[3, 4].Value = "Schenkel";
+        worksheet.Cells[3, 5].Value = "Position";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 5];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.SondeID?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
+            worksheet.Cells[row, 3].Value = entity.MesseinstellungID;
+            worksheet.Cells[row, 4].Value = entity.Schenkel;
+            worksheet.Cells[row, 5].Value = entity.Position;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateMessungSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("Messung");
+        var entities = await _context.Messung.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "Messung";
+        worksheet.Cells[1, 1, 1, 8].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "MesseinstellungID";
+        worksheet.Cells[3, 3].Value = "Anfangszeitpunkt";
+        worksheet.Cells[3, 4].Value = "Endzeitpunkt";
+        worksheet.Cells[3, 5].Value = "Name";
+        worksheet.Cells[3, 6].Value = "Tauchkernstellung";
+        worksheet.Cells[3, 7].Value = "Prüfspannung";
+        worksheet.Cells[3, 8].Value = "Notiz";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 8];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.MesseinstellungID;
+            worksheet.Cells[row, 3].Value = entity.Anfangszeitpunkt;
+            worksheet.Cells[row, 4].Value = entity.Endzeitpunkt;
+            worksheet.Cells[row, 5].Value = entity.Name;
+            worksheet.Cells[row, 6].Value = entity.Tauchkernstellung;
+            worksheet.Cells[row, 7].Value = entity.Pruefspannung;
+            worksheet.Cells[row, 8].Value = entity.Notiz;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
+
+    private async Task CreateMesswertSheetAsync(ExcelPackage package, CancellationToken cancellationToken)
+    {
+        var worksheet = package.Workbook.Worksheets.Add("Messwert");
+        var entities = await _context.Messwert.AsNoTracking().OrderBy(e => e.ID).ToListAsync(cancellationToken);
+        
+        worksheet.Cells[1, 1].Value = "Messwert";
+        worksheet.Cells[1, 1, 1, 5].Merge = true;
+        worksheet.Cells[1, 1].Style.Font.Size = 16;
+        worksheet.Cells[1, 1].Style.Font.Bold = true;
+        worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        
+        worksheet.Cells[3, 1].Value = "ID";
+        worksheet.Cells[3, 2].Value = "MessungID";
+        worksheet.Cells[3, 3].Value = "SondenPositionID";
+        worksheet.Cells[3, 4].Value = "Wert";
+        worksheet.Cells[3, 5].Value = "Zeitpunkt";
+        
+        var headerRange = worksheet.Cells[3, 1, 3, 5];
+        headerRange.Style.Font.Bold = true;
+        headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+        headerRange.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        headerRange.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+        
+        int row = 4;
+        foreach (var entity in entities)
+        {
+            worksheet.Cells[row, 1].Value = entity.ID;
+            worksheet.Cells[row, 2].Value = entity.MessungID;
+            worksheet.Cells[row, 3].Value = entity.SondenPositionID;
+            worksheet.Cells[row, 4].Value = entity.Wert;
+            worksheet.Cells[row, 5].Value = entity.Zeitpunkt;
+            row++;
+        }
+        
+        worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+    }
 
     private async Task SynchronizeSequencesAsync(CancellationToken cancellationToken = default)
     {
