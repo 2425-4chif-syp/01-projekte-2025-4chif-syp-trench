@@ -1,5 +1,5 @@
 <div class="text-center">
-    <h2>Messung #{{ curMessung!.id }}</h2>
+    <h2>Messung #{{ measurement!.id }}</h2>
 
     <div class="detail-actions">
         <button class="btn btn-outline-secondary btn-modern me-2" (click)="navigateBack()">
@@ -14,16 +14,18 @@
         <p>Keine Messwerte vorhanden!</p>
     }
     @else {
-        @for (messwert of recentMesswerte(); track $index) {
-            <p>-------- {{ $index }} --------</p>
-            <p>ID: {{ messwert.id }}</p>
-            <p>MessungID: {{ messwert.messungID }}</p>
-            <p>Wert: {{ messwert.wert }}</p>
-            <p>Zeitpunkt: {{ messwert.zeitpunkt }}</p>
-            <p>Schenkel: {{ messwert.sondenPosition!.schenkel }}</p>
-            <p>Postion: {{ messwert.sondenPosition!.position }}</p>
-            <p></p>
-        }
+        <div class="container">
+        <app-messung-detail-auswertung 
+            [yokes]="yokes"
+            [yokeData]="yokeData"
+            [m_tot]="m_tot"
+            [probeType]="measurement?.messeinstellung?.probeType!"
+            [probes]="[]"
+            [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
+            [coil]="measurement?.messeinstellung?.coil!"
+            [measurementSetting]="measurement?.messeinstellung!"
+          />
+        </div>
     }
 </div>
 

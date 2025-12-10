@@ -8,7 +8,7 @@
 
 <div class="visualization-wrapper">
 <app-displacement-visualization
-    [size]="size"
+    [size]="512"
     [yokeData]="yokeData"
     [m_tot]="m_tot"
     [probeType]="probeType"
@@ -23,7 +23,7 @@
 <div class="summary-item">
     <span class="summary-label">Absolutwert der Summenkraft</span>
     <span class="summary-value">
-    {{ m_tot | number: '1.2-2' }} kg
+    {{ m_tot() | number: '1.2-2' }} kg
     </span>
 </div>
 <div class="summary-item">

@@ -13,8 +13,8 @@ export class MeasurementsBackendService {
   private measurementBackendToFrontend(measurement: any): Measurement {
     return {
       id: measurement.id,
-      measurementSettings: measurement.messeinstellung,
-      measurementSettingsId: measurement.messeinstellungID,
+      messeinstellung: measurement.messeinstellung,
+      messeinstellungId: measurement.messeinstellungID,
       anfangszeitpunkt: measurement.anfangszeitpunkt,
       endzeitpunkt: measurement.endzeitpunkt,
       name: measurement.name,
@@ -27,7 +27,7 @@ export class MeasurementsBackendService {
   private measurementFrontendToBackend(measurement: Measurement): any {
     return {
       id: measurement.id,
-      messeinstellungID: measurement.measurementSettingsId,
+      messeinstellungID: measurement.messeinstellungId,
       anfangszeitpunkt: measurement.anfangszeitpunkt,
       endzeitpunkt: measurement.endzeitpunkt,
       name: measurement.name,

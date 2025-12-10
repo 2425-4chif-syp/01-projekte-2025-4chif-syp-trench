@@ -15,10 +15,9 @@ import { CommonModule, DecimalPipe } from '@angular/common';
   styleUrl: './messung-detail-auswertung.component.scss'
 })
 export class MessungDetailAuswertungComponent {
-    @Input() size:number = 512; 
     @Input() yokes = signal<{ sensors: number[] }[]>([]);
     @Input() yokeData = signal<{ x: number; y: number }[][]>([]);
-    @Input() m_tot:number = 0;
+    @Input() m_tot = signal<number>(0);
     @Input() probeType:ProbeType = null!;
     @Input() probes:Probe[] = [];
     @Input() coil:Coil = null!;
@@ -26,6 +25,6 @@ export class MessungDetailAuswertungComponent {
     @Input() measurementSetting:MeasurementSetting = null!;
 
     public get isWithinTolerance(): boolean {
-      return this.m_tot < this.coiltype!.toleranzbereich!;
+      return this.m_tot() < this.coiltype!.toleranzbereich!;
     }
 }

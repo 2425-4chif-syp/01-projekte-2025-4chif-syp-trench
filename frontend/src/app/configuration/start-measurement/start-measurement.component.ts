@@ -29,7 +29,7 @@ registerLocaleData(localeDe);
 export class StartMeasurementComponent implements OnDestroy {
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
-  m_tot: number = 0;
+  m_tot = signal<number>(0);
   sensorValues: { [key: string]: number } = {}; 
 
   isConnected: boolean = false;
@@ -68,7 +68,7 @@ export class StartMeasurementComponent implements OnDestroy {
       this.startTime = this.messungService.getMeasurementStartTime();
       this.measurementData = this.messungService.getCurrentMeasurementData();
       this.yokeData.set(this.messungService.getCurrentYokeData());
-      this.m_tot = this.messungService.getCurrentMTot();
+      this.m_tot.set(this.messungService.getCurrentMTot());
       
       // Initialisiere die Yokes basierend auf den gespeicherten Messungsdaten
       this.initializeYokesFromMeasurementData();
@@ -104,6 +104,7 @@ export class StartMeasurementComponent implements OnDestroy {
   isValid(): boolean {
     return this.measurementSettingId !== null && this.measurementSettingId > 0;
   }
+
 
   private initializeYokesFromMeasurementData(): void {
     if (!this.selectedMeasurementSetting) return;
@@ -179,7 +180,7 @@ export class StartMeasurementComponent implements OnDestroy {
           );
 
           this.yokeData.set(result.F);
-          this.m_tot = result.m_tot;
+          this.m_tot.set(result.m_tot);
 
           // Speichere die Daten im Service (für UI-State)
           const key = `S${yokeIndex+1}S${sensorIndex+1}`;

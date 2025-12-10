@@ -2,8 +2,8 @@ import { MeasurementSetting } from "../../measurement-settings/interfaces/measur
 
 export interface Measurement {
     id: number | null,
-    measurementSettings: MeasurementSetting | null,
-    measurementSettingsId: number | null,
+    messeinstellung: MeasurementSetting | null,
+    messeinstellungId: number | null,
     anfangszeitpunkt: Date | null,
     endzeitpunkt: Date | null,
     name: string | null,

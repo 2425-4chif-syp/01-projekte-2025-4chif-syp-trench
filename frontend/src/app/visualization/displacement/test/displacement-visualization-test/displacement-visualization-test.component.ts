@@ -24,7 +24,7 @@ export class DisplacementVisualizationTestComponent {
     { sensors: [1015.9, 1325.5, 1667.3, 1670.4, 1351.4, 1051.0] },
     { sensors: [1161.2, 1423.0, 1744.1, 1807.6, 1472.1, 1139.1] }]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
-  m_tot:number = 0;
+  m_tot = signal<number>(0);
 
   constructor(private displacementCalculationService:DisplacementCalculationService) {
     const calcResults = this.displacementCalculationService.calculateYokeData(
@@ -36,7 +36,7 @@ export class DisplacementVisualizationTestComponent {
       this.measurementSetting
     );
 
-    this.m_tot = calcResults.m_tot;
+    this.m_tot.set(calcResults.m_tot);
     this.yokeData.set(calcResults.F);
   }
 
