@@ -16,25 +16,38 @@
     @else {
         <div class="container">
             <div class="time-slider mb-4">
-                <label class="form-label">Zeitpunkt: {{ selectedTime() ? (selectedTime() | date:'short') : '' }}</label>
-                <input type="range"
-                                class="form-range"
-                                [min]="sliderMinMs"
-                                [max]="sliderMaxMs"
-                                [value]="sliderValue()"
-                                (input)="onSliderInput($event)" />
+                <div class="time-slider-inner d-flex align-items-center">
+                    <div class="time-label start text-muted small">{{ sliderMinMs ? (sliderMinMs | date:'HH:mm:ss.SSS') : '' }}</div>
+
+                    <div class="slider-flex flex-grow-1 mx-3">
+                        <label class="form-label visually-hidden">Zeitpunkt</label>
+                        <input type="range"
+                                       class="form-range"
+                                       [min]="sliderMinMs"
+                                       [max]="sliderMaxMs"
+                                       [value]="sliderValue()"
+                                       (input)="onSliderInput($event)" />
+                        <div class="time-selected small text-muted mt-1">{{ selectedTime() ? (selectedTime() | date:'HH:mm:ss.SSS') : '' }} <span class="ms-2">({{ selectedRelativeSeconds() }})</span></div>
+                    </div>
+
+                    <div class="time-label end text-muted small">{{ sliderMaxMs ? (sliderMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
+                </div>
             </div>
             <div class="auswertung-area">
-                <app-messung-detail-auswertung 
-                    [yokes]="yokes"
-                    [yokeData]="yokeData"
-                    [m_tot]="m_tot"
-                    [probeType]="measurement?.messeinstellung?.probeType!"
-                    [probes]="[]"
-                    [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
-                    [coil]="measurement?.messeinstellung?.coil!"
-                    [measurementSetting]="measurement?.messeinstellung!"
-                />
+                <div class="card">
+                    <div class="card-body p-3">
+                        <app-messung-detail-auswertung 
+                            [yokes]="yokes"
+                            [yokeData]="yokeData"
+                            [m_tot]="m_tot"
+                            [probeType]="measurement?.messeinstellung?.probeType!"
+                            [probes]="[]"
+                            [coiltype]="measurement?.messeinstellung?.coil!.coiltype!"
+                            [coil]="measurement?.messeinstellung?.coil!"
+                            [measurementSetting]="measurement?.messeinstellung!"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     }

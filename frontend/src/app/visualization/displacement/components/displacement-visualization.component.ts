@@ -217,6 +217,7 @@ export class DisplacementVisualizationComponent {
 
   @HostListener('document:mousemove', ['$event'])
   public onMouseMove(event: MouseEvent) {
-    this.mousePosition = { x: event.pageX, y: event.pageY };
+    // Use client coordinates so tooltip positioned as fixed aligns with viewport
+    this.mousePosition = { x: event.clientX, y: event.clientY };
   }
 }

@@ -133,13 +133,22 @@ export class MessungDetailComponent {
   }
 
   public onSliderInput(ev: Event | any): void {
-    const raw = ev?.target?.value ?? ev;
-    const ms = Number(raw);
+    const raw:any = ev?.target?.value ?? ev;
+    const ms:number = Number(raw);
     if (isNaN(ms)) return;
     this.sliderValue.set(ms);
-    const dt = new Date(ms);
-    this.selectedTime.set(dt);
-    this.updateDerivedAt(dt);
+    const date: Date = new Date(ms);
+    this.selectedTime.set(date);
+    this.updateDerivedAt(date);
+  }
+
+  public selectedRelativeSeconds(): string {
+    const sel = this.selectedTime();
+    if (!sel) return '';
+    const relMs = sel.getTime() - this.sliderMinMs;
+    const sign = relMs < 0 ? '-' : '';
+    const abs = Math.abs(relMs);
+    return `${sign}${(abs / 1000).toFixed(3)}s`;
   }
 
   /**
