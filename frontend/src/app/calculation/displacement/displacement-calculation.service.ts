@@ -25,7 +25,6 @@ export class DisplacementCalculationService {
   private static readonly alternativeThreeAngleLookup:boolean = false;
 
   private readonly Ur = 21000 / Math.sqrt(3);
-  private readonly delta_ang = 15.5;
 
   public static getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
@@ -100,17 +99,17 @@ export class DisplacementCalculationService {
       const center = Math.floor(yokes[i].sensors.length / 2);
 
       // Sonden in der Mitte
-      sensors[center - 1] = angleLookup[i] - this.delta_ang / 2;
-      sensors[center] = angleLookup[i] + this.delta_ang / 2;
+      sensors[center - 1] = angleLookup[i] - probeType.alpha! / 2;
+      sensors[center] = angleLookup[i] + probeType.alpha! / 2;
 
       // Erste Hälfte der Sonden (bei 6 ist das Index 2->0)
       for (let ii = center - 2; ii >= 0; ii--) {
-        sensors[ii] = sensors[ii + 1] - this.delta_ang;
+        sensors[ii] = sensors[ii + 1] - probeType.alpha!;
       }
 
       // Zweite Hälfte der Sonden (bei 6 ist das Index 5->3)
       for (let ii = center + 1; ii < yokes[i].sensors.length; ii++) {
-        sensors[ii] = sensors[ii - 1] + this.delta_ang;
+        sensors[ii] = sensors[ii - 1] + probeType.alpha!;
       }
 
       angle.push({ sensors: sensors });
