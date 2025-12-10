@@ -24,9 +24,9 @@ export class ProbePositionsBackendService {
                     ? this.measurementSettingsBackendService.measurementSettingsBackendToFrontend(mp.messeinstellung) : null;
       return{
       id:                  mp.id,
-      measurementSettingsId: mp.messeinstellungID,
+      measurementSettingsId: mp.messeinstellung_id,
       measurementSetting:   ms,  
-      measurementProbeId:   mp.sondeID,
+      measurementProbeId:   mp.sonde_id,
       measurementProbe:     mp.sonde,
       schenkel:             mp.schenkel,
       position:             mp.position
@@ -35,12 +35,12 @@ export class ProbePositionsBackendService {
 
   private probePositionFrontendToBackend(pp: ProbePosition): any {
     const dto: any = {
-      MesseinstellungID: pp.measurementSettingsId,
-      SondeID:           pp.measurementProbeId,
-      Schenkel:          pp.schenkel,
-      Position:          pp.position
+      messeinstellung_id: pp.measurementSettingsId,
+      sonde_id:           pp.measurementProbeId,
+      schenkel:          pp.schenkel,
+      position:          pp.position
     };
-    if (pp.id != null) dto.ID = pp.id;
+    if (pp.id != null) dto.id = pp.id;
     return dto;
   }
 

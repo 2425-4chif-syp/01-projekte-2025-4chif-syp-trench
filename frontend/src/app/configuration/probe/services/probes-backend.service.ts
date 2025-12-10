@@ -13,7 +13,7 @@ export class ProbesBackendService {
     return {
       id: measurementProbe.id,
       probeType: measurementProbe.sondenTyp,
-      probeTypeId: measurementProbe.sondenTypID,
+      probeTypeId: measurementProbe.sondentyp_id,
       name: measurementProbe.name,
       kalibrierungsfaktor: measurementProbe.kalibrierungsfaktor,
     }
@@ -22,7 +22,7 @@ export class ProbesBackendService {
   private probeFrontendToBackend(measurementProbe: Probe): any {
     return {
       id: measurementProbe.id,
-      sondenTypID: measurementProbe.probeTypeId,
+      sondentyp_id: measurementProbe.probeTypeId,
       name: measurementProbe.name,
       kalibrierungsfaktor: measurementProbe.kalibrierungsfaktor,
     }

@@ -14,7 +14,7 @@ export class MessungBackendService {
         const newMessung: Messung = {
         id: messung.id,
         messeinstellung: messung.messeinstellung,
-        messeinstellungId: messung.messeinstellungId,
+        messeinstellungId: messung.messeinstellung_id,
         anfangszeitpunkt: messung.anfangszeitpunkt,
         endzeitpunkt: messung.endzeitpunkt,
         name: messung.name,
@@ -30,7 +30,7 @@ export class MessungBackendService {
         return {
             id: messung.id,
             messeinstellung: messung.messeinstellung,
-            messeinstellungId: messung.messeinstellungId,
+            messeinstellung_id: messung.messeinstellungId,
             anfangszeitpunkt: messung.anfangszeitpunkt,
             endzeitpunkt: messung.endzeitpunkt,
             name: messung.name,

@@ -14,7 +14,7 @@ export class MeasurementsBackendService {
     return {
       id: measurement.id,
       measurementSettings: measurement.messeinstellung,
-      measurementSettingsId: measurement.messeinstellungID,
+      measurementSettingsId: measurement.messeinstellung_id,
       anfangszeitpunkt: measurement.anfangszeitpunkt,
       endzeitpunkt: measurement.endzeitpunkt,
       name: measurement.name,
@@ -27,7 +27,7 @@ export class MeasurementsBackendService {
   private measurementFrontendToBackend(measurement: Measurement): any {
     return {
       id: measurement.id,
-      messeinstellungID: measurement.measurementSettingsId,
+      messeinstellung_id: measurement.measurementSettingsId,
       anfangszeitpunkt: measurement.anfangszeitpunkt,
       endzeitpunkt: measurement.endzeitpunkt,
       name: measurement.name,
@@ -66,11 +66,11 @@ export class MeasurementsBackendService {
 
   public async startMeasuring(measurementSettingId: number, note: string, name?: string, tauchkernstellung?: number, pruefspannung?: number): Promise<number> {
     const response: any = await this.backendService.httpPostRequest('Messung/startMeasuring', {
-      MesseinstellungID: measurementSettingId,
-      Name: name,
-      Tauchkernstellung: tauchkernstellung ?? 0,
-      Pruefspannung: pruefspannung ?? 0,
-      Notiz: note
+      messeinstellung_id: measurementSettingId,
+      name: name,
+      tauchkernstellung: tauchkernstellung ?? 0,
+      pruefspannung: pruefspannung ?? 0,
+      notiz: note
     });
     return response;
   }
@@ -81,7 +81,7 @@ export class MeasurementsBackendService {
 
   public async addLiveMesswert(sondenPositionId: number, wert: number): Promise<void> {
     await this.backendService.httpPostRequest('Messung/AddLiveMesswert', {
-      sondenPositionID: sondenPositionId,
+      sondenposition_id: sondenPositionId,
       wert: wert
     });
   }

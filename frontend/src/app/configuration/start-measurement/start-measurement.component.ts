@@ -317,7 +317,7 @@ export class StartMeasurementComponent implements OnDestroy {
           
           const measurementData = {
             id: 0,
-            messeinstellungID: this.measurementSettingId,
+            messeinstellung_id: this.measurementSettingId,
             anfangszeitpunkt: this.startTime.toISOString(),
             endzeitpunkt: endTime.toISOString(),
             name: "",

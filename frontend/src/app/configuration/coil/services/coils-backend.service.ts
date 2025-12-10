@@ -14,10 +14,10 @@ export class CoilsBackendService {
         const newCoil: Coil = {
         id: coil.id,
         coiltype: this.coilTypeBackendService.coiltypeBackendToFrontend(coil.spuleTyp),
-        coiltypeId: coil.spuleTypID,
+        coiltypeId: coil.spuletyp_id,
         einheit: coil.einheit ? coil.einheit.toString() : null,
         auftragsnummer: coil.auftragsnr,
-        auftragsPosNr: coil.auftragsPosNr,
+        auftragsPosNr: coil.auftragsposnr,
         bemessungsfrequenz: coil.bemessungsfrequenz,
         bemessungsspannung: coil.bemessungsspannung,
         notiz: coil.notiz
@@ -29,12 +29,12 @@ export class CoilsBackendService {
     public coilFrontendToBackend(coil: Coil): any {
         return {
         id: coil.id,
-        spuleTypID: coil.coiltypeId,
+        spuletyp_id: coil.coiltypeId,
         bemessungsfrequenz: coil.bemessungsfrequenz,
         bemessungsspannung: coil.bemessungsspannung,
         einheit: coil.einheit?.toString() ?? "",
         auftragsnr: coil.auftragsnummer,
-        auftragsPosNr: coil.auftragsPosNr,
+        auftragsposnr: coil.auftragsPosNr,
         notiz: coil.notiz
         };
     }
