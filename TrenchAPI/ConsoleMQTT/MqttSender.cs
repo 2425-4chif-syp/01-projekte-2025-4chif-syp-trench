@@ -77,7 +77,7 @@ namespace ConsoleMqtt
                 {
                     for (int j = 1; j <= 8; j++)
                     {
-                        string topic = $"trench_adc_test/S{i}S{j}";
+                        string topic = $"trench_mqtt_mock_v2/rj{i}/probe{j}";
                         double randomValue = 1000 + random.NextDouble() * 1000;
                         string payload = randomValue.ToString("F2");
 
