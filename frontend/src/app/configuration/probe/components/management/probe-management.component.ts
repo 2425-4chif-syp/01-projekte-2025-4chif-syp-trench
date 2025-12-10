@@ -8,11 +8,12 @@ import { ProbeTypesService } from '../../../probe-type/services/probe-types.serv
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 import { AlertService } from '../../../../services/alert.service';
 import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
+import { ConfirmDeleteModalComponent } from '../../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 @Component({
   selector: 'app-probe-management',
   standalone: true,
-  imports: [FormsModule, CommonModule, DecimalCommaDirective],
+  imports: [FormsModule, CommonModule, DecimalCommaDirective, ConfirmDeleteModalComponent],
   templateUrl: './probe-management.component.html',
   styleUrl: './probe-management.component.scss'
 })
