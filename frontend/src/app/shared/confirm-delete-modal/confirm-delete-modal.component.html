@@ -1,0 +1,32 @@
+<div
+  class="modal fade modern-modal"
+  tabindex="-1"
+  role="dialog"
+  [ngClass]="{ show: show }"
+  [ngStyle]="{ display: show ? 'block' : 'none' }"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon danger">
+          <span aria-hidden="true">⚠</span>
+        </div>
+        <h5 class="modal-title">{{ title }}</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="onCancel()"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>{{ message }}</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary btn-modern" (click)="onCancel()">
+          {{ cancelLabel }}
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" (click)="onConfirm()">
+          {{ confirmLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
