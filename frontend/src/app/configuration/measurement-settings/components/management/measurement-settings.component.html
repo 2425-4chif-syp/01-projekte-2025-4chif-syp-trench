@@ -1,35 +1,16 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-xl-10 col-lg-11">
-      <ng-container *ngIf="selectedMeasurementSetting; else loadError">
-        <div class="card shadow-sm modern-card">
-          <div class="form-header">
-            <div class="form-header__titles">
-              <h3>{{ measurementSettingsService.selectedElementIsNew ? 'Neue Messeinstellung' : 'Messeinstellung bearbeiten' }}</h3>
-            </div>
-            <span class="form-tag" [ngClass]="measurementSettingsService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
-              {{ measurementSettingsService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
-            </span>
-          </div>
+<ng-container *ngIf="selectedMeasurementSetting; else loadError">
+  <div class="card shadow-sm modern-card">
+    <div class="form-header">
+      <div class="form-header__titles">
+        <h3>{{ measurementSettingsService.selectedElementIsNew ? 'Neue Messeinstellung' : 'Messeinstellung bearbeiten' }}</h3>
+      </div>
+      <span class="form-tag" [ngClass]="measurementSettingsService.selectedElementIsNew ? 'tag-new' : 'tag-edit'">
+        {{ measurementSettingsService.selectedElementIsNew ? 'Neu' : 'Bearbeiten' }}
+      </span>
+    </div>
 
-          <div class="card-intro" *ngIf="!measurementSettingsService.selectedElementIsNew && measurementSettingsService.elements.length > 0">
-            <label for="measurementSettingSelect" class="visually-hidden">Messeinstellung auswählen</label>
-            <div class="select-shell select-shell--full">
-              <select
-                class="form-select select-control"
-                id="measurementSettingSelect"
-                name="measurementSettingSelect"
-                [(ngModel)]="selectedSettingId"
-                (ngModelChange)="onSettingSelectionChange($event)"
-              >
-                <option *ngFor="let setting of measurementSettingsService.elements" [value]="setting.id">
-                  Messeinstellung #{{ setting.id }} {{ setting.name ? '– ' + setting.name : '' }}
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div class="selection-row">
+    <div class="form-content">
+      <div class="selection-row">
             <div
               class="selection-card"
               [class.is-empty]="!selectedCoil"
@@ -166,13 +147,11 @@
               Löschen
             </button>
           </div>
-
-          <!-- global alerts used instead of inline save messages -->
         </div>
-      </ng-container>
+
+        <!-- global alerts used instead of inline save messages -->
     </div>
-  </div>
-</div>
+  </ng-container>
 
 <ng-template #loadError>
   <p class="text-danger text-center mt-3">Fehler: Messeinstellung konnte nicht geladen werden.</p>

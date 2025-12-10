@@ -11,16 +11,20 @@
     <app-measurement-settings-list />
   }
   @else {
-    <!--<app-measurement-settings />-->
-    <!--<app-probe-position-management />-->
+    <!-- Two-column management layout: left = input form (fills cell), right = tables -->
+    <div class="measurement-settings-container">
+      <div class="management-grid">
+        <div class="form-section">
+          <app-measurement-settings></app-measurement-settings>
+        </div>
 
-    <div class="row">
-      <div class="col-6">
-        <app-measurement-settings></app-measurement-settings>
-      </div>
+        <div class="divider-section">
+          <div class="vertical-divider" aria-hidden="true"></div>
+        </div>
 
-      <div class="col-6">
-        <app-probe-position-management></app-probe-position-management>
+        <div class="tables-section">
+          <app-probe-position-management></app-probe-position-management>
+        </div>
       </div>
     </div>
   }

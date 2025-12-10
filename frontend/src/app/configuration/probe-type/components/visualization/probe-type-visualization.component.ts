@@ -18,7 +18,7 @@ export class ProbeTypeVisualizationComponent {
 
   @Output() selectionChange = new EventEmitter<number>();
 
-  private readonly visualizationScale = 2;
+  private readonly visualizationScale = 3;
 
   onSelectionChange(probeTypeId: number | null | undefined): void {
     if (probeTypeId == null) {

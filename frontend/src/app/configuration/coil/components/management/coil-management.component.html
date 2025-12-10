@@ -1,8 +1,6 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-xl-10 col-lg-11">
-      <ng-container *ngIf="selectedCoil; else noCoil">
-        <div class="card shadow-sm modern-card">
+<div class="coil-management-wrapper">
+  <ng-container *ngIf="selectedCoil; else noCoil">
+    <div class="card shadow-sm modern-card">
           <div class="form-header">
             <div class="form-header__titles">
               <h3>{{ coilsService.selectedElementIsNew ? 'Neue Spule' : 'Spule bearbeiten' }}</h3>
@@ -40,31 +38,38 @@
                 </div>
 
                 <ng-container *ngIf="selectedCoiltype; else coiltypeHint">
-                  <div class="coiltype-summary__metrics">
-                    <div class="metric-pill metric-pill">
-                      <span class="metric-pill__label text-center">ID</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.id }}</span>
+                  <div class="coiltype-summary__content">
+                    <div class="coiltype-summary__metrics">
+                      <div class="metric-pill metric-pill">
+                        <span class="metric-pill__label">ID</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.id }}</span>
+                      </div>
+                      <div class="metric-pill metric-pill">
+                        <span class="metric-pill__label">Schenkel</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.schenkel }}</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Bandbreite</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.bandbreite | number: '1.0-1' }} mm</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Schichthöhe</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.schichthoehe | number: '1.0-1' }} mm</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Durchmesser</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.durchmesser | number: '1.0-1' }} mm</span>
+                      </div>
+                      <div class="metric-pill">
+                        <span class="metric-pill__label">Toleranz</span>
+                        <span class="metric-pill__value">{{ selectedCoiltype.toleranzbereich | number: '1.0-1' }} kg</span>
+                      </div>
                     </div>
-                    <div class="metric-pill metric-pill">
-                      <span class="metric-pill__label text-center">Schenkel</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.schenkel }}</span>
-                    </div>
-                    <div class="metric-pill">
-                      <span class="metric-pill__label text-center">Bandbreite</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.bandbreite | number: '1.0-1' }} mm</span>
-                    </div>
-                    <div class="metric-pill">
-                      <span class="metric-pill__label text-center">Schichthöhe</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.schichthoehe | number: '1.0-1' }} mm</span>
-                    </div>
-                    <div class="metric-pill">
-                      <span class="metric-pill__label text-center">Durchmesser</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.durchmesser | number: '1.0-1' }} mm</span>
-                    </div>
-                    <div class="metric-pill">
-                      <span class="metric-pill__label text-center">Toleranz</span>
-                      <span class="metric-pill__value text-center mt-2">{{ selectedCoiltype.toleranzbereich | number: '1.0-1' }} kg</span>
-                    </div>
+                    <img 
+                      *ngIf="selectedCoiltype.schenkel >= 2 && selectedCoiltype.schenkel <= 4"
+                      [src]="'assets/svg/' + selectedCoiltype.schenkel + 'RJ.svg'" 
+                      [alt]="selectedCoiltype.schenkel + ' Jochs'"
+                      class="coiltype-summary__icon">
                   </div>
                 </ng-container>
 
@@ -206,8 +211,6 @@
       <ng-template #noCoil>
         <p class="text-danger text-center mt-5">Fehler: Spule konnte nicht geladen werden.</p>
       </ng-template>
-    </div>
-  </div>
 </div>
 
 <div

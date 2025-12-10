@@ -23,7 +23,7 @@ export class MeasurementSettingsBackendService {
 
     return {
       id:                 ms.id,
-      coil:               this.coilBackendService.coilBackendToFrontend(ms.spule),
+      coil:               ms.spule ? this.coilBackendService.coilBackendToFrontend(ms.spule) : null,
       coilId:             ms.spuleID,
       sondenProSchenkel:  ms.sondenProSchenkel,
       name:               ms.name,
