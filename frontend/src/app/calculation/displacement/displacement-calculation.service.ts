@@ -88,8 +88,8 @@ export class DisplacementCalculationService {
     }));
 
     // Winkel der Normale auf die Messfläche ergibt sich aus Anzahl der Sonden und Gerätetype
-    if (measurementSetting.sondenProSchenkel! < 4 || measurementSetting.sondenProSchenkel! % 2 != 0) {
-      throw new Error('Invalid number of sensors per yoke (must be >=4 and even): ' + measurementSetting.sondenProSchenkel);
+    if (measurementSetting.sondenProSchenkel! < 1) {
+      throw new Error('Invalid number of sensors per yoke (must be >=1): ' + measurementSetting.sondenProSchenkel);
     }
     const angleLookup = DisplacementCalculationService.getAngleLookup(yokes.length);
     const angle: { sensors: number[] }[] = [];
@@ -97,18 +97,29 @@ export class DisplacementCalculationService {
       let sensors: number[] = new Array(yokes[i].sensors.length);
 
       const center = Math.floor(yokes[i].sensors.length / 2);
+      let centerLeft:number;
+      let centerRight:number;
 
-      // Sonden in der Mitte
-      sensors[center - 1] = angleLookup[i] - probeType.alpha! / 2;
-      sensors[center] = angleLookup[i] + probeType.alpha! / 2;
+      if (yokes[i].sensors.length % 2 == 0) { // even
+        // Sonden in der Mitte
+        centerLeft = center - 1;
+        centerRight = center;
+        sensors[center - 1] = angleLookup[i] - probeType.alpha! / 2;
+        sensors[center] = angleLookup[i] + probeType.alpha! / 2;
+      }
+      else { // odd
+        centerLeft = center;
+        centerRight = center;
+        sensors[center] = 0;
+      }
 
       // Erste Hälfte der Sonden (bei 6 ist das Index 2->0)
-      for (let ii = center - 2; ii >= 0; ii--) {
+      for (let ii = centerLeft; ii >= 0; ii--) {
         sensors[ii] = sensors[ii + 1] - probeType.alpha!;
       }
 
       // Zweite Hälfte der Sonden (bei 6 ist das Index 5->3)
-      for (let ii = center + 1; ii < yokes[i].sensors.length; ii++) {
+      for (let ii = centerRight + 1; ii < yokes[i].sensors.length; ii++) {
         sensors[ii] = sensors[ii - 1] + probeType.alpha!;
       }
 
