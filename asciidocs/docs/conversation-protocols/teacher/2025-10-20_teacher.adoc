@@ -2,34 +2,6 @@
 
 link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 20.10.2025*
 
-<<<<<<< Updated upstream
-Emil Silber
-
-.Teilnehmer
-|===
-|Anwesend |Relevant Für
-
-|Filip Schauer
-|Trench-Team
-
-|Axel Csomany
-|Trench-Team
-
-|Emil Silber
-|Trench-Team
-
-|Aaron Schreiegg
-|Trench-Team
-
-|Simon Pesut
-|Trench-Team
-
-|Dr. Köck
-|
-
-|Michael Palitsch
-|
-=======
 Simon Pesut
 
 .Teilnehmer
@@ -43,7 +15,6 @@ Simon Pesut
 |Axel Csomany
 |Simon Pesut
 |Aaron Schreiegg
->>>>>>> Stashed changes
 
 |===
 
@@ -54,114 +25,19 @@ Simon Pesut
 |HTL Leonding
 
 |am
-<<<<<<< Updated upstream
-|So. 20.10.2025
-|Dauer
-|nicht spezifiziert
-=======
 |Mo. 20.10.2025
 |Dauer
 |2 Stunden
->>>>>>> Stashed changes
 |===
 
 == Besprochene Themen
 
 * Trench-Notebook Setup
 * Fortschritt auf der Trench Seite
-<<<<<<< Updated upstream
-* Offene Fragen zur Implementierung
-=======
 * Sensorknoten
 * Offene Fragen zu Spulenaufbau und Sensorkonfiguration
 * Alpha-Parameter und maximale Sondenanzahl
 * Project Awards Vorbereitung
->>>>>>> Stashed changes
-
-== Vereinbarungen und Entscheidungen
-
-.Was wurde vereinbart?
-[%autowidth]
-|===
-|wer |möchte 
-
-<<<<<<< Updated upstream
-| Dr. Köck
-a| Neues SVG für eine 4-Joch Spule bereitstellen
-
-| Aaron Schreiegg
-a| Alpha im Frontend implementieren:
-- Eingabe als Dezimalzahl mit Komma und Punkt
-- Auswahlmöglichkeiten von Sonden pro Schenkel (1 bis max)
-
-| Simon Pesut
-a| Alpha im Backend für Datenbank implementieren
-
-| Filip Schauer
-a| Alpha in die Berechnungen einbauen
-
-| Emil Silber
-a| Sensorknoten in Systemarchitektur einpflegen
-
-|===
-
-== 1. Trench-Notebook Setup
-
-* **BIOS-Konfiguration:**  
-  - Virtualisierung im BIOS aktivieren, damit WSL2 mit Docker verwendet werden kann
-  - **Test:** Docker Desktop starten - sollte nicht abstürzen
-
-* **Support-Kontakt:**
-  - Simon Pesut
-  - E-Mail: s.pesut@students.htl-leonding.ac.at
-  - Telefon: 0650 7003292
-
-== 2. Fortschritt auf der Trench Seite
-
-* **Sensorknoten-Entwicklung:**
-  - Sensorknoten erfolgreich entwickelt
-  - **Konfiguration:** 1 Sensorknoten pro Joch
-  - **Kapazität:** Maximal 8 Sonden pro Joch
-
-* **Kommunikation:**
-  - Sensorknoten hängt am MQTT-Server
-  - Kabelverbindung zwischen Sonden und Sensorknoten
-  - Sensorknoten ist per WLAN mit dem MQTT verbunden
-
-* **Automatische Positionserkennung:**
-  - Der Sensorknoten sollte erkennen, welche Position die Sonden jeweils haben
-  - **Aktueller Zustand:** Position muss noch manuell in der App eingegeben werden
-
-== 3. Offene Fragen und Spezifikationen
-
-* **Auftragsnummer/Auftragspositionsnummer:**
-  - Bei Trench numerisch oder auch String möglich (wird nicht für Berechnungen verwendet)
-
-* **Joch-Nummerierung:**
-  - Joche werden im Uhrzeigersinn nummeriert
-
-* **Sondendifferenzwinkel Alpha:**
-  - Neues Attribut in der Entität Sondentyp
-  - **Typ:** Dezimal
-  - **Einheit:** Grad
-
-* **Sondenpositionierung:**
-  - Wir haben Breite und Höhe von Wicklung, aber nicht die Außenmaße der Sonde
-  - **Bei ungerader Sondenanzahl:** Sonde in der Mitte bei 180°
-  - **Bei gerader Sondenanzahl:** 180° ± Alpha/2
-
-* **Maximale Sondenanzahl pro Joch:**
-  - **Formel:** 360 / Joche / Alpha (abgerundet)
-  - Aus Alpha und Anzahl der Rückschlussjoche ergibt sich die maximale Anzahl der Sonden pro Joch
-
-* **Messeinstellung:**
-  - Plausibilitätsprüfung einbauen
-
-* **Ausleitung:**
-  - Befindet sich zwischen Joch 1 und Joch 2
-=======
-| Trench-Team & Dr. Köck & Michael Palitsch
-a|
 
 == Trench-Notebook
 
@@ -186,7 +62,7 @@ Das Trench-Notebook benötigt BIOS-Änderungen für die Virtualisierung:
 
 image::../protocol-images/2025-10-20_Side.jpg[]
 
-image::../protocol-images/2025-10-20.jpg_UpView.jpg[]
+image::../protocol-images/2025-10-20_UpView.jpg[]
 
 == Offene Fragen und Klärungen
 
@@ -271,6 +147,3 @@ A_IJ = dm * π * BB / Schenkelzahl
 * **Anfang März:** Projekt muss für Project Awards fertig sein
 * Sauberer Umgang mit vertraulichen Daten erforderlich
 * User-Story: Echtzahlen durcheinanderwürfeln
-
-|===
->>>>>>> Stashed changes
