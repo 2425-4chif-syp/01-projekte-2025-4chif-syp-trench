@@ -442,10 +442,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_besprochene_themen">1. Besprochene Themen</a></li>
-<li><a href="#_vereinbarungen_und_entscheidungen">2. Vereinbarungen und Entscheidungen</a></li>
-<li><a href="#_1_trench_notebook_setup">3. 1. Trench-Notebook Setup</a></li>
-<li><a href="#_2_fortschritt_auf_der_trench_seite">4. 2. Fortschritt auf der Trench Seite</a></li>
-<li><a href="#_3_offene_fragen_und_spezifikationen">5. 3. Offene Fragen und Spezifikationen</a></li>
+<li><a href="#_trench_notebook">2. Trench-Notebook</a></li>
+<li><a href="#_fortschritt_auf_der_trench_seite">3. Fortschritt auf der Trench Seite</a>
+<ul class="sectlevel2">
+<li><a href="#_sensorknoten">3.1. Sensorknoten</a></li>
+</ul>
+</li>
+<li><a href="#_offene_fragen_und_klärungen">4. Offene Fragen und Klärungen</a>
+<ul class="sectlevel2">
+<li><a href="#_auftragsnummern">4.1. Auftragsnummern</a></li>
+<li><a href="#_joche_und_sonden">4.2. Joche und Sonden</a></li>
+<li><a href="#_sondenpositionen">4.3. Sondenpositionen</a></li>
+<li><a href="#_alpha_parameter">4.4. Alpha-Parameter</a></li>
+<li><a href="#_frontendbackend_anforderungen">4.5. Frontend/Backend Anforderungen</a></li>
+<li><a href="#_weitere_klärungen">4.6. Weitere Klärungen</a></li>
+</ul>
+</li>
+<li><a href="#_aufgaben">5. Aufgaben</a></li>
+<li><a href="#_wichtige_termine_und_hinweise">6. Wichtige Termine und Hinweise</a></li>
 </ul>
 </div>
 </div>
@@ -456,48 +470,39 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><a href="/01-projekte-2025-4chif-syp-trench/">Trench Project</a> / <a href="/01-projekte-2025-4chif-syp-trench/conversation-protocols/">Conversation Protocols</a> / <strong>Besprechungsprotokoll 20.10.2025</strong></p>
 </div>
 <div class="paragraph">
-<p>Emil Silber</p>
+<p>Simon Pesut</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Teilnehmer</caption>
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 100%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Anwesend</th>
-<th class="tableblock halign-left valign-top">Relevant Für</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filip Schauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Axel Csomany</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Aaron Schreiegg</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Simon Pesut</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trench-Team</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dr. Köck</p></td>
-<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Michael Palitsch</p></td>
-<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filip Schauer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Axel Csomany</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Simon Pesut</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Aaron Schreiegg</p></td>
 </tr>
 </tbody>
 </table>
@@ -514,11 +519,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">am</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">So. 20.10.2025</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mo. 20.10.2025</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dauer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">nicht spezifiziert</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2 Stunden</p></td>
 </tr>
 </tbody>
 </table>
@@ -536,91 +541,41 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Fortschritt auf der Trench Seite</p>
 </li>
 <li>
-<p>Offene Fragen zur Implementierung</p>
+<p>Sensorknoten</p>
+</li>
+<li>
+<p>Offene Fragen zu Spulenaufbau und Sensorkonfiguration</p>
+</li>
+<li>
+<p>Alpha-Parameter und maximale Sondenanzahl</p>
+</li>
+<li>
+<p>Project Awards Vorbereitung</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vereinbarungen_und_entscheidungen"><a class="anchor" href="#_vereinbarungen_und_entscheidungen"></a>2. Vereinbarungen und Entscheidungen</h2>
+<h2 id="_trench_notebook"><a class="anchor" href="#_trench_notebook"></a>2. Trench-Notebook</h2>
 <div class="sectionbody">
-<table class="tableblock frame-all grid-all fit-content">
-<caption class="title">Table 3. Was wurde vereinbart?</caption>
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">wer</th>
-<th class="tableblock halign-left valign-top">möchte</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dr. Köck</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Neues SVG für eine 4-Joch Spule bereitstellen</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Aaron Schreiegg</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Alpha im Frontend implementieren:
-- Eingabe als Dezimalzahl mit Komma und Punkt
-- Auswahlmöglichkeiten von Sonden pro Schenkel (1 bis max)</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Simon Pesut</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Alpha im Backend für Datenbank implementieren</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Filip Schauer</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Alpha in die Berechnungen einbauen</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Sensorknoten in Systemarchitektur einpflegen</p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>Das Trench-Notebook benötigt BIOS-Änderungen für die Virtualisierung:</p>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_1_trench_notebook_setup"><a class="anchor" href="#_1_trench_notebook_setup"></a>3. 1. Trench-Notebook Setup</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><strong>BIOS-Konfiguration:</strong></p>
 <div class="ulist">
 <ul>
 <li>
 <p>Virtualisierung im BIOS aktivieren, damit WSL2 mit Docker verwendet werden kann</p>
 </li>
 <li>
-<p><strong>Test:</strong> Docker Desktop starten - sollte nicht abstürzen</p>
-</li>
-</ul>
-</div>
+<p>Test: Docker Desktop starten, sollte nicht abstürzen</p>
 </li>
 <li>
-<p><strong>Support-Kontakt:</strong></p>
+<p>Rückfragen an Simon Pesut</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Simon Pesut</p>
-</li>
-<li>
-<p>E-Mail: <a href="mailto:s.pesut@students.htl-leonding.ac.at">s.pesut@students.htl-leonding.ac.at</a></p>
+<p>Email: <a href="mailto:s.pesut@students.htl-leonding.ac.at">s.pesut@students.htl-leonding.ac.at</a></p>
 </li>
 <li>
 <p>Telefon: 0650 7003292</p>
@@ -633,32 +588,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_2_fortschritt_auf_der_trench_seite"><a class="anchor" href="#_2_fortschritt_auf_der_trench_seite"></a>4. 2. Fortschritt auf der Trench Seite</h2>
+<h2 id="_fortschritt_auf_der_trench_seite"><a class="anchor" href="#_fortschritt_auf_der_trench_seite"></a>3. Fortschritt auf der Trench Seite</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_sensorknoten"><a class="anchor" href="#_sensorknoten"></a>3.1. Sensorknoten</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Sensorknoten-Entwicklung:</strong></p>
-<div class="ulist">
-<ul>
-<li>
-<p>Sensorknoten erfolgreich entwickelt</p>
+<p>1 Sensorknoten pro Joch entwickelt</p>
 </li>
 <li>
-<p><strong>Konfiguration:</strong> 1 Sensorknoten pro Joch</p>
+<p>Max. 8 Sonden pro Joch</p>
 </li>
-<li>
-<p><strong>Kapazität:</strong> Maximal 8 Sonden pro Joch</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p><strong>Kommunikation:</strong></p>
-<div class="ulist">
-<ul>
 <li>
 <p>Sensorknoten hängt am MQTT-Server</p>
+</li>
+<li>
+<p>Der Sensorknoten sollte erkennen, welche Position die Sonden jeweils haben (aktuell muss man manuell die Position in der App eingeben)</p>
 </li>
 <li>
 <p>Kabelverbindung zwischen Sonden und Sensorknoten</p>
@@ -668,113 +614,196 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>Automatische Positionserkennung:</strong></p>
-<div class="ulist">
-<ul>
-<li>
-<p>Der Sensorknoten sollte erkennen, welche Position die Sonden jeweils haben</p>
-</li>
-<li>
-<p><strong>Aktueller Zustand:</strong> Position muss noch manuell in der App eingegeben werden</p>
-</li>
-</ul>
+<div class="imageblock">
+<div class="content">
+<img src="protocol-images/2025-10-20_Side.jpg" alt="2025 10 20 Side">
 </div>
-</li>
-</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="protocol-images/2025-10-20_UpView.jpg" alt="2025 10 20 UpView">
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_3_offene_fragen_und_spezifikationen"><a class="anchor" href="#_3_offene_fragen_und_spezifikationen"></a>5. 3. Offene Fragen und Spezifikationen</h2>
+<h2 id="_offene_fragen_und_klärungen"><a class="anchor" href="#_offene_fragen_und_klärungen"></a>4. Offene Fragen und Klärungen</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_auftragsnummern"><a class="anchor" href="#_auftragsnummern"></a>4.1. Auftragsnummern</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Auftragsnummer/Auftragspositionsnummer:</strong></p>
-<div class="ulist">
-<ul>
-<li>
-<p>Bei Trench numerisch oder auch String möglich (wird nicht für Berechnungen verwendet)</p>
+<p>Auftragsnummer und Auftragspositionsnummer bei Trench: numerisch oder auch String möglich (wird nicht für Berechnungen verwendet)</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>Joch-Nummerierung:</strong></p>
+</div>
+<div class="sect2">
+<h3 id="_joche_und_sonden"><a class="anchor" href="#_joche_und_sonden"></a>4.2. Joche und Sonden</h3>
 <div class="ulist">
 <ul>
 <li>
 <p>Joche werden im Uhrzeigersinn nummeriert</p>
 </li>
-</ul>
-</div>
+<li>
+<p>Sondendifferenzwinkel = Alpha</p>
 </li>
 <li>
-<p><strong>Sondendifferenzwinkel Alpha:</strong></p>
+<p>Ausleitung ist zwischen Joch 1 und Joch 2</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sondenpositionen"><a class="anchor" href="#_sondenpositionen"></a>4.3. Sondenpositionen</h3>
+<div class="paragraph">
+<p>Wir haben nur Breite und Höhe von Wicklung, aber nicht die Außenmaße der Sonde.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Neues Attribut in der Entität Sondentyp</p>
+<p>Bei <strong>ungerader</strong> Sondenanzahl: die Sonde in der Mitte ist bei 180 Grad</p>
 </li>
 <li>
-<p><strong>Typ:</strong> Dezimal</p>
-</li>
-<li>
-<p><strong>Einheit:</strong> Grad</p>
+<p>Bei <strong>gerader</strong> Sondenanzahl: 180 ± Alpha/2</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>Sondenpositionierung:</strong></p>
+<div class="imageblock">
+<div class="content">
+<img src="protocol-images/2025-10-20_SondePlan.png" alt="2025 10 20 SondePlan">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_alpha_parameter"><a class="anchor" href="#_alpha_parameter"></a>4.4. Alpha-Parameter</h3>
+<div class="paragraph">
+<p>Aus Alpha und Anzahl der Rückschlussjoche ergibt sich die maximale Anzahl der Sonden pro Joch.</p>
+</div>
+<div class="paragraph">
+<p><strong>Neue Entität Sondentyp Attribute:</strong></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Wir haben Breite und Höhe von Wicklung, aber nicht die Außenmaße der Sonde</p>
+<p>Alpha (Dezimalzahl)</p>
 </li>
 <li>
-<p><strong>Bei ungerader Sondenanzahl:</strong> Sonde in der Mitte bei 180°</p>
-</li>
-<li>
-<p><strong>Bei gerader Sondenanzahl:</strong> 180° ± Alpha/2</p>
+<p>Einheit: Grad</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>Maximale Sondenanzahl pro Joch:</strong></p>
+<div class="paragraph">
+<p><strong>Formel für maximale Anzahl:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Maximale Anzahl von Sonden pro Joch = floor(360 / Joche / Alpha)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Formel für A_IJ:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>A_IJ = dm * π * BB / Schenkelzahl</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_frontendbackend_anforderungen"><a class="anchor" href="#_frontendbackend_anforderungen"></a>4.5. Frontend/Backend Anforderungen</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Formel:</strong> 360 / Joche / Alpha (abgerundet)</p>
+<p>Bei Messeinstellung Plausibilitätsprüfung einbauen</p>
 </li>
 <li>
-<p>Aus Alpha und Anzahl der Rückschlussjoche ergibt sich die maximale Anzahl der Sonden pro Joch</p>
+<p>Alpha im Frontend: Eingabe Dezimalzahl mit Komma und Punkt erlauben</p>
+</li>
+<li>
+<p>Auswahlmöglichkeiten von Sonden pro Schenkel: 1 bis max</p>
+</li>
+<li>
+<p>MQTT-Text: optionales Mapping zu den Positionen</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>Messeinstellung:</strong></p>
+</div>
+<div class="sect2">
+<h3 id="_weitere_klärungen"><a class="anchor" href="#_weitere_klärungen"></a>4.6. Weitere Klärungen</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Plausibilitätsprüfung einbauen</p>
+<p>Tauchkernstellung: Dezimal passt, ist in Ampere</p>
+</li>
+<li>
+<p>Durchmesser von den Sonden ≠ Durchmesser der Spule</p>
+</li>
+<li>
+<p><strong>Best Practice:</strong> Alpha als Parameter eingeben (Property vom Sondentyp, Einheit Grad)</p>
+</li>
+<li>
+<p>Kalibrierungsfaktor ist Multiplikator und nicht %</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><strong>Ausleitung:</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_aufgaben"><a class="anchor" href="#_aufgaben"></a>5. Aufgaben</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Wer</th>
+<th class="tableblock halign-left valign-top">Aufgabe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Aaron Schreiegg</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alpha im Frontend implementieren / Eingabe Dezimalzahl mit Komma und Punkt / Auswahlmöglichkeiten von Sonden pro Schenkel 1 bis max</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Simon Pesut</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alpha im Backend für Datenbank implementieren</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filip Schauer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Alpha in die Berechnungen einbauen</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emil Silber</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sensorknoten in Systemarchitektur einpflegen</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dr. Köck</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Neues SVG für eine 4-Joch-Spule bereitstellen</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wichtige_termine_und_hinweise"><a class="anchor" href="#_wichtige_termine_und_hinweise"></a>6. Wichtige Termine und Hinweise</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Befindet sich zwischen Joch 1 und Joch 2</p>
+<p><strong>Anfang März:</strong> Projekt muss für Project Awards fertig sein</p>
 </li>
-</ul>
-</div>
+<li>
+<p>Sauberer Umgang mit vertraulichen Daten erforderlich</p>
+</li>
+<li>
+<p>User-Story: Echtzahlen durcheinanderwürfeln</p>
 </li>
 </ul>
 </div>
@@ -783,7 +812,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-12-10 14:29:18 UTC
+Last updated 2025-12-14 17:21:59 UTC
 </div>
 </div>
 </body>
