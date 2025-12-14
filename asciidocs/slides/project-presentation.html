@@ -19,6 +19,79 @@
       font-size: 1.2em;
       margin-bottom: 0.5em;
     }
+
+    /* Business Case Styling */
+    .business-case-section h2 {
+      color: #2c5aa0;
+      border-bottom: 3px solid #2c5aa0;
+      padding-bottom: 0.3em;
+    }
+
+    .business-case-section h3 {
+      color: #2c5aa0;
+    }
+
+    .business-case-section .section-title {
+      color: #2c5aa0;
+      font-weight: 600;
+    }
+
+    .business-case-section ul li strong {
+      color: #2c5aa0;
+    }
+
+    .business-case-section table th {
+      background-color: #2c5aa0;
+      color: white;
+    }
+
+    .business-case-section table tr:nth-child(even) {
+      background-color: #f0f4f8;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5em;
+      border-radius: 10px;
+      margin: 1em 0;
+    }
+
+    .highlight-box h3 {
+      color: white;
+      margin-top: 0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.3em 0.8em;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+
+    .status-done {
+      background-color: #10b981;
+      color: white;
+    }
+
+    .status-progress {
+      background-color: #f59e0b;
+      color: white;
+    }
+
+    .status-optional {
+      background-color: #6b7280;
+      color: white;
+    }
+
+    .benefit-item {
+      background-color: #e0f2fe;
+      padding: 0.5em 1em;
+      margin: 0.3em 0;
+      border-left: 4px solid #0284c7;
+      border-radius: 4px;
+    }
   </style>
 </head>
 
@@ -30,6 +103,193 @@
       <section>
         <h1>Trench Group Coil Visualization</h1>
         <p>HTL Leonding - 4CHIF - SYP-Projekt</p>
+        <p style="font-size: 0.8em; margin-top: 2em;">Business Case / Business Plan Präsentation</p>
+      </section>
+
+      <!-- BUSINESS CASE -->
+      <section class="business-case-section">
+        <section>
+          <h2>BUSINESS CASE</h2>
+          <p style="color: #2c5aa0; font-size: 1.1em; opacity: 0.5;">Projektziele und Nutzen</p>
+        </section>
+        
+        <!-- 1. Ausgangssituation -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3 style="margin-bottom: 0.8em;">Ausgangssituation</h3>
+          <div style="font-size: 0.78em;">
+            <div style="padding: 0.5em; border-left: 3px solid #dc2626; margin-bottom: 0.5em; background: #fee2e2;">
+              <strong style="color: #dc2626;">Herausforderung:</strong> Trench Group produziert Erdschlusslöschspulen für Hochspannungsnetze
+            </div>
+            <hr style="border: none; height: 1px; background: #e5e7eb; margin: 0.5em 0;">
+            <div style="padding: 0.5em; border-left: 3px solid #ea580c; margin-bottom: 0.5em; background: #ffedd5;">
+              <strong style="color: #ea580c;">Kernproblem:</strong> Manuelle Qualitätskontrolle ist zeitaufwändig und fehleranfällig
+            </div>
+            <hr style="border: none; height: 1px; background: #e5e7eb; margin: 0.5em 0;">
+            <div style="padding: 0.5em; border-left: 3px solid #d97706; margin-bottom: 0.5em; background: #fef3c7;">
+              <strong style="color: #d97706;">Risiko:</strong> Nicht erkannte Abweichungen führen zu Ausschuss
+            </div>
+            <hr style="border: none; height: 1px; background: #e5e7eb; margin: 0.5em 0;">
+            <div style="padding: 0.5em; border-left: 3px solid #059669; background: #d1fae5;">
+              <strong style="color: #059669;">Bedarf:</strong> Digitale Lösung zur automatisierten Überwachung
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Unsere Lösung -->
+        <section class="business-case-section">
+          <div class="section-title" style="opacity: 0.5;">BUSINESS CASE</div>
+          <h3 style="margin-bottom: 0.8em;">Unsere Lösung</h3>
+          <div style="font-size: 0.8em;">
+            <div style="padding: 0.45em; border-left: 3px solid #0891b2; background: #cffafe; margin-bottom: 0.4em;">
+              <strong style="color: #0891b2;">Echtzeit-Visualisierung</strong> der Kernabweichung
+            </div>
+            <hr style="border: none; height: 1px; background: #e5e7eb; margin: 0.4em 0;">
+            <div style="padding: 0.5em; border-left: 3px solid #7c3aed; background: #ede9fe;">
+              <strong style="color: #7c3aed;">Automatische Toleranzprüfung</strong> verhindert fehlerhafte Komponenten
+            </div>
+            <hr style="border: none; height: 1px; background: #e5e7eb; margin: 0.4em 0;">
+            <div style="padding: 0.5em; border-left: 3px solid #059669; background: #d1fae5;">
+              <strong style="color: #059669;">Digitale Dokumentation</strong> für Qualitätssicherung
+            </div>
+            <hr style="border: none; height: 1px; background: #e5e7eb; margin: 0.4em 0;">
+            <div style="padding: 0.5em; border-left: 3px solid #2563eb; background: #dbeafe;">
+              <strong style="color: #2563eb;">Web-Oberfläche</strong> für Monteure und Admins
+          </div>
+        </section>
+
+        <!-- 3. Erwarteter Nutzen - ERWEITERT -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Erwarteter Nutzen</h3>
+          <ul style="font-size: 0.9em;">
+            <li><strong>Qualität verbessern:</strong> Fehler in der Spule werden sofort während der Produktion erkannt, nicht erst später</li>
+            <li><strong>Zeit sparen:</strong> Messungen laufen automatisch ab, Monteure müssen nicht mehr manuell messen</li>
+            <li><strong>Nachvollziehbarkeit:</strong> Alle Messdaten werden digital gespeichert und können bei Audits vorgelegt werden</li>
+            <li><strong>Einheitliche Standards:</strong> Jede Messung läuft nach den gleichen Regeln und Toleranzwerten ab</li>
+            <li><strong>Aus Daten lernen:</strong> Frühere Messungen helfen dabei, Produktionsprozesse weiter zu verbessern</li>
+          </ul>
+        </section>
+
+        <!-- 4. Zielgruppe & Anwendung -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Zielgruppe & Anwendung</h3>
+          <ul>
+            <li><strong>Primär:</strong> Trench Group - Hersteller von Erdschlusslöschspulen</li>
+            <li><strong>Potenziell:</strong> Weitere Hersteller von Transformatoren und Spulen</li>
+            <li><strong>USP:</strong> Spezialisierte Lösung mit Echtzeit-MQTT-Integration</li>
+            <li><strong>Skalierbarkeit:</strong> System kann für ähnliche Messanwendungen adaptiert werden</li>
+          </ul>
+        </section>
+
+        <!-- 5. Sicherheitskonzept -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Sicherheitskonzept</h3>
+          <div class="highlight-box">
+            <h3>Lokales Deployment</h3>
+            <ul style="font-size: 0.9em; text-align: left;">
+              <li>Installation im geschützten Firmennetzwerk</li>
+              <li>Zugang nur über internes Netzwerk</li>
+              <li>Alle Daten bleiben lokal im Unternehmen</li>
+              <li>Authentifizierung kann bei Bedarf nachgerüstet werden</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 6. Aktueller Stand -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Aktueller Stand (Dezember 2025)</h3>
+          <div style="font-size: 0.9em;">
+            <div style="margin: 0.8em 0;">
+              <span class="status-badge status-done">Fertiggestellt</span>
+              <span style="margin-left: 1em;">Frontend (Angular), Backend (ASP.NET Core), MQTT-Integration</span>
+            </div>
+            <div style="margin: 0.8em 0;">
+              <span class="status-badge status-done">Fertiggestellt</span>
+              <span style="margin-left: 1em;">Datenbank-Design, CRUD-Operationen, Visualisierung</span>
+            </div>
+            <div style="margin: 0.8em 0;">
+              <span class="status-badge status-progress">In Arbeit</span>
+              <span style="margin-left: 1em;">Dokumentation, Integrationstests, End-to-End Testing</span>
+            </div>
+            <div style="margin: 0.8em 0;">
+              <span class="status-badge status-optional">Optional</span>
+              <span style="margin-left: 1em;">Benutzerverwaltung mit Authentifizierung</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. Nächste Schritte -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Nächste Schritte</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1em; font-size: 0.85em; margin-top: 1em;">
+            <div style="background: #e0f2fe; padding: 1em; border-left: 4px solid #0284c7; border-radius: 4px;">
+              <strong style="color: #0284c7;">Dezember 2025</strong><br>
+              Integration und Unit Testing
+            </div>
+            <div style="background: #ddd6fe; padding: 1em; border-left: 4px solid #7c3aed; border-radius: 4px;">
+              <strong style="color: #7c3aed;">Q1 2026</strong><br>
+              Testen an echter Spule, Code-Übergabe
+            </div>
+            <div style="background: #fce7f3; padding: 1em; border-left: 4px solid #db2777; border-radius: 4px;">
+              <strong style="color: #db2777;">Q1 2026</strong><br>
+              Installation und Konfiguration vor Ort
+            </div>
+            <div style="background: #d1fae5; padding: 1em; border-left: 4px solid #10b981; border-radius: 4px;">
+              <strong style="color: #10b981;">Q1-Q2 2026</strong><br>
+              Schulung & Support bei Pilotphase
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. Projektumfang -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Projektumfang</h3>
+          <div style="display: flex; justify-content: space-around; margin-top: 1.5em;">
+            <div style="text-align: center;">
+              <div style="font-size: 3em; color: #2c5aa0; font-weight: bold;">~800h</div>
+              <div style="font-size: 0.9em; color: #666;">Entwicklungszeit</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 3em; color: #2c5aa0; font-weight: bold;">5</div>
+              <div style="font-size: 0.9em; color: #666;">Team-Mitglieder</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 3em; color: #2c5aa0; font-weight: bold;">2</div>
+              <div style="font-size: 0.9em; color: #666;">Schuljahre</div>
+            </div>
+          </div>
+          <p style="margin-top: 1.5em; font-size: 0.9em;"><strong>Technologien:</strong> Angular, ASP.NET Core, PostgreSQL, MQTT, Docker</p>
+        </section>
+
+        <!-- 9. Projekterfolge -->
+        <section class="business-case-section">
+          <div class="section-title">BUSINESS CASE</div>
+          <h3>Projekterfolge</h3>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8em; margin-top: 1em; font-size: 0.9em;">
+            <div style="text-align: center; padding: 0.8em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
+              <div style="font-size: 1.8em; margin-bottom: 0.2em;">🏢</div>
+              <strong>Kundenprojekt</strong>
+            </div>
+            <div style="text-align: center; padding: 0.8em; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 8px; color: white;">
+              <div style="font-size: 1.8em; margin-bottom: 0.2em;">💻</div>
+              <strong>Moderne Tech</strong>
+            </div>
+            <div style="text-align: center; padding: 0.8em; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 8px; color: white;">
+              <div style="font-size: 1.8em; margin-bottom: 0.2em;">👥</div>
+              <strong>Teamarbeit</strong>
+            </div>
+            <div style="text-align: center; padding: 0.8em; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 8px; color: white;">
+              <div style="font-size: 1.8em; margin-bottom: 0.2em;">📚</div>
+              <strong>Dokumentation</strong>
+            </div>
+          </div>
+        </section>
       </section>
 
       <!-- ABOUT -->
@@ -41,7 +301,7 @@
           <div class="section-title">ABOUT</div>
           <h3>What is this project?</h3>
           <p>This project is the SYP-Project of the 5CHIF 25/26 class of the HTL Leonding. It was started last year.</p>
-          <p>It helps Trench Group visualize and validate <strong>core deviation</strong> in Arc Suppression Coils.</p>
+          <p>It helps Trench Group visualize and validate <strong>core deviation</strong> in Erdschlusslöschspulen.</p>
           <p>It checks whether deviations are within the <strong>allowed tolerance</strong>.</p>
         </section>
         <section>
