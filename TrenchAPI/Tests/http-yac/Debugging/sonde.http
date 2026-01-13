@@ -1,0 +1,45 @@
+# Sonde API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All Sonden
+GET {{baseUrl}}/api/Sonde
+KEY: {{apiKey}}
+
+### Get Sonde by ID
+GET {{baseUrl}}/api/Sonde/1
+KEY: {{apiKey}}
+
+### Create New Sonde
+# @name createSonde
+POST {{baseUrl}}/api/Sonde
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "sondenTypID": 1,
+  "name": "Test Sonde",
+  "kalibrierungsfaktor": 1.5
+}
+
+### Update Sonde
+@sondeId = 1
+PUT {{baseUrl}}/api/Sonde/{{sondeId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{sondeId}},
+  "sondenTypID": 1,
+  "name": "Updated Sonde",
+  "kalibrierungsfaktor": 2.0
+}
+
+### Delete Sonde by ID
+DELETE {{baseUrl}}/api/Sonde/999
+KEY: {{apiKey}}
+
+### Delete All Sonden
+# DELETE {{baseUrl}}/api/Sonde
+# KEY: {{apiKey}}
