@@ -1,43 +1,68 @@
 <div class="time-slider mb-4">
 	<div class="time-slider-inner d-flex align-items-center">
-		<div class="time-label start text-muted small">{{ sliderMinMs ? (sliderMinMs | date:'HH:mm:ss.SSS') : '' }}</div>
+		<div class="time-label m-1 start text-muted small">{{ sliderMinMs ? (sliderMinMs | date:'HH:mm:ss.SSS') : '' }}</div>
 
 		<div class="slider-flex flex-grow-1 mx-3">
 			<label class="form-label visually-hidden">Zeitpunkt</label>
 
             <svg class="timeline-svg" xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + outerViewBoxWidth + ' ' + outerViewBoxHeight" preserveAspectRatio="xMidYMid meet"
-				 (pointerdown)="onPointerDown($event)"
-				 (pointermove)="onPointerMove($event)"
-				 (pointerup)="onPointerUp($event)"
-				 (pointerleave)="onPointerUp($event)">
+                (pointerdown)="onPointerDown($event)"
+                (pointermove)="onPointerMove($event)"
+                (pointerup)="onPointerUp($event)"
+                (pointerleave)="onPointerUp($event)">
 
 				<g [attr.transform]="'translate(' + insetX + ', ' + insetY + ')'">
 					<!-- transparent hit-layer to ensure pointer events register anywhere inside the region -->
 					<rect x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" fill="transparent" pointer-events="all"></rect>
 					<!-- background rectangle spanning full width/height of inset area -->
-					<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#e9ecef"></rect>
+					<!--<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#e9ecef"></rect>-->
 
                     @for (line of scaledLineSegments; track $index) {
                         <!-- Red (below tolerance) -->
                         <rect [attr.x]="line.x1" y="0" [attr.width]="line.x2 - line.x1" [attr.height]="scaledTolerance" fill="red"
-                            [attr.fill-opacity]="line.y1 < scaledTolerance ? '0.5' : '0.0625'"></rect>
+                            [attr.fill-opacity]="line.y1 < scaledTolerance ? '0.5' : '0.25'"></rect>
                         <!-- Green (within tolerance) -->
-                        <rect [attr.x]="line.x1" [attr.y]="scaledTolerance" [attr.width]="line.x2 - line.x1" [attr.height]="innerHeight - scaledTolerance" fill="lime" 
-                            [attr.fill-opacity]="line.y1 < scaledTolerance ? '0.0625' : '0.5'"></rect>
+                        <rect [attr.x]="line.x1" [attr.y]="max(scaledTolerance, 0)" [attr.width]="line.x2 - line.x1" [attr.height]="min(innerHeight - scaledTolerance, innerHeight)" fill="lime" 
+                            [attr.fill-opacity]="line.y1 < scaledTolerance ? '0.25' : '0.5'"></rect>
 
                         <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" pointer-events="none" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke"></line>
                         <circle [attr.cx]="line.x1" [attr.cy]="line.y1" r="0.5" fill="black" pointer-events="none"></circle>
                     }
+                    
+                    <!-- Position line -->
+                    <g [attr.transform]="'translate(' + lineXNormalized() * innerWidth + ', 0)'">
+                    <line pointer-events="none" x1="0"
+                        x2="0"
+                        y1="-1" [attr.y2]="innerHeight + 1" stroke="#007bff" stroke-width="3" vector-effect="non-scaling-stroke" />
+                    <polyline pointer-events="none"
+                        [attr.points]="
+                            (-1) + ',' + (innerHeight + 1) + ' ' +
+                            (1) + ',' + (innerHeight + 1) + ' ' +
+                            (0) + ',' + (innerHeight)
+                        "
+                        fill="#007bff" />
+                    <polyline pointer-events="none"
+                        [attr.points]="
+                            (-1) + ',' + (-1) + ' ' +
+                            (1) + ',' + (-1) + ' ' +
+                            (0) + ',' + (0)
+                        "
+                        fill="#007bff" />
+                    </g>
 
-                    <line pointer-events="none" [attr.x1]="lineXNormalized() * innerWidth"
-                        [attr.x2]="lineXNormalized() * innerWidth"
-                        y1="0" [attr.y2]="innerHeight" stroke="#007bff" stroke-width="2" vector-effect="non-scaling-stroke" />
+                    <!-- Hover line -->
+                    @if (hoverValue !== null && !pointerDown) {
+                      <g [attr.transform]="'translate(' + lineXHoverNormalized() * innerWidth + ', 0)'">
+                        <line pointer-events="none" x1="0" x2="0" y1="0" [attr.y2]="innerHeight" 
+                        stroke="#007bff" stroke-width="2" vector-effect="non-scaling-stroke" stroke-dasharray="4 2" stroke-opacity="0.5" />
+                      </g>
+                    }
 				</g>
 			</svg>
 
-			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'HH:mm:ss.SSS') : '' }}</div>
+			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'dd.MM.yyyy HH:mm:ss.SSS') : '' }}</div>
 		</div>
 
-		<div class="time-label end text-muted small">{{ sliderMaxMs ? (sliderMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
+		<div class="time-label m-1 end text-muted small">{{ sliderMaxMs ? (sliderMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
 	</div>
 </div>

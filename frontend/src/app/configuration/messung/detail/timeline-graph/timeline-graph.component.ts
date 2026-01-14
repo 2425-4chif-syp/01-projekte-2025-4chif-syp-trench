@@ -23,7 +23,8 @@ export class TimelineGraphComponent {
   @Input() outerViewBoxHeight: number = 40;
 
   @Output() valueChange = new EventEmitter<number>();
-  private pointerDown = false;
+  public pointerDown = false;
+  public hoverValue: number | null = null;
 
   public get graphLineSegments(): { time1: number; m_tot1: number; time2: number; m_tot2: number }[] {
     // Start with 0, end with the value again
@@ -52,6 +53,13 @@ export class TimelineGraphComponent {
     if (this.tolerance === null) return 0;
     return this.innerHeight - ((this.tolerance /  Math.max(...this.mTotSeries.map(v => v[1]), 1)) * this.innerHeight);
   }
+
+  public min(a: number, b: number): number {
+    return Math.min(a, b);
+  }
+  public max(a: number, b: number): number {
+    return Math.max(a, b);
+  }
   private clamp(v: number, a: number, b: number): number {
     return Math.max(a, Math.min(b, v));
   }
@@ -78,11 +86,14 @@ export class TimelineGraphComponent {
   }
 
   public onPointerMove(ev: PointerEvent): void {
-    if (!this.pointerDown) return;
     const svg = ev.currentTarget as SVGSVGElement | null;
     if (!svg) return;
-    const v = this.computeValueFromEvent(ev, svg);
-    if (v !== null) this.valueChange.emit(v);
+    // Always update hover value on move
+    const hover = this.computeValueFromEvent(ev, svg);
+    this.hoverValue = hover;
+    // Only emit when actively dragging
+    if (!this.pointerDown) return;
+    if (hover !== null) this.valueChange.emit(hover);
   }
 
   public onPointerUp(ev: PointerEvent): void {
@@ -91,12 +102,20 @@ export class TimelineGraphComponent {
       try { svg.releasePointerCapture?.(ev.pointerId); } catch {}
     }
     this.pointerDown = false;
+    this.hoverValue = null;
   }
 
   public lineXNormalized(): number {
     if (this.sliderMinMs === null || this.sliderMaxMs === null || this.value === null) return 0;
     const range = (this.sliderMaxMs - this.sliderMinMs) || 1;
     const t = (this.value - this.sliderMinMs) / range;
+    return this.clamp(t, 0, 1);
+  }
+
+  public lineXHoverNormalized(): number {
+    if (this.sliderMinMs === null || this.sliderMaxMs === null || this.hoverValue === null) return 0;
+    const range = (this.sliderMaxMs - this.sliderMinMs) || 1;
+    const t = (this.hoverValue - this.sliderMinMs) / range;
     return this.clamp(t, 0, 1);
   }
 }
