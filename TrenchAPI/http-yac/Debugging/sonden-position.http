@@ -1,0 +1,47 @@
+# SondenPosition API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All SondenPositionen
+GET {{baseUrl}}/api/SondenPosition
+KEY: {{apiKey}}
+
+### Get SondenPosition by ID
+GET {{baseUrl}}/api/SondenPosition/1
+KEY: {{apiKey}}
+
+### Create New SondenPosition
+# @name createSondenPosition
+POST {{baseUrl}}/api/SondenPosition
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "messeinstellungID": 1,
+  "sondeID": 1,
+  "schenkel": 1,
+  "position": 100
+}
+
+### Update SondenPosition
+@positionId = 1
+PUT {{baseUrl}}/api/SondenPosition/{{positionId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{positionId}},
+  "messeinstellungID": 1,
+  "sondeID": 1,
+  "schenkel": 2,
+  "position": 150
+}
+
+### Delete SondenPosition by ID
+DELETE {{baseUrl}}/api/SondenPosition/999
+KEY: {{apiKey}}
+
+### Delete All SondenPositionen
+# DELETE {{baseUrl}}/api/SondenPosition
+# KEY: {{apiKey}}
