@@ -53,6 +53,13 @@ namespace TrenchAPI.Controllers
                 return BadRequest();
             }
 
+            // Detach any existing tracked entity with the same key
+            var existingEntity = _context.SondenTyp.Local.FirstOrDefault(e => e.ID == id);
+            if (existingEntity != null)
+            {
+                _context.Entry(existingEntity).State = EntityState.Detached;
+            }
+
             _context.Entry(SondenTyp).State = EntityState.Modified;
 
             try

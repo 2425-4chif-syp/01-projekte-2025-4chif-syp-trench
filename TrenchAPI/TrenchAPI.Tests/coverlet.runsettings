@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <Exclude>
+            <!-- Exclude migrations - using specific patterns -->
+            [*]*Migrations.*
+            [*]*.Migrations.*
+            [*]*InitialMigrate*
+            [*]*WebDbContextModelSnapshot*
+            [Persistence]*Migrations.*
+            [Persistence]Persistence.Migrations.*
+            [Persistence]Persistence.Migrations.InitialMigrate
+            [Persistence]Persistence.Migrations.WebDbContextModelSnapshot
+            
+            <!-- Exclude DTO classes (simple data transfer objects) -->
+            [Persistence]*DTO.*
+            [Persistence]Persistence.DTO.*
+            
+            <!-- Exclude Program.cs (startup files in all projects) -->
+            [*]*Program
+            [WebAPI]*Program
+            [ConsoleFillDb]*Program
+            [ConsoleMQTT]*Program
+            
+            <!-- Exclude specific files/patterns -->
+            [*]*WebDbContextModelSnapshot
+            [*]*InitialMigrate
+            
+            <!-- Exclude auto-generated files -->
+            [*]*.Designer
+            [*]*AssemblyInfo
+            
+            <!-- Exclude all WebAPI Services (background services, external integrations) -->
+            [WebAPI]*Services.*
+            [WebAPI]TrenchAPI.WebAPI.Services.*
+            
+            <!-- Exclude Swagger/OpenAPI configuration -->
+            [WebAPI]*FileUploadOperationFilter
+            [WebAPI]*ApiKeyAuthAttribute
+          </Exclude>
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+          <ExcludeByFile>
+            <!-- Exclude specific file patterns -->
+            **/*Migrations/*.cs
+            **/Migrations/*.cs
+            **/Migrations/**/*.cs
+            **/*Migrations*/*.cs
+            **/*.Designer.cs
+            **/*ModelSnapshot.cs
+            **/Program.cs
+            **/obj/**
+            **/bin/**
+          </ExcludeByFile>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

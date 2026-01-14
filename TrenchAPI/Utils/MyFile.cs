@@ -18,16 +18,25 @@ namespace TrenchAPI.Utils
             if (string.IsNullOrEmpty(fileName)) return null;
             string path = Environment.CurrentDirectory;
             // string path = AppDomain.CurrentDomain.BaseDirectory;
-            while (path != Directory.GetDirectoryRoot(path) &&
-                Directory.GetFiles(path, fileName).Length == 0)
+            
+            // First check in current directory and subdirectories
+            var filesInCurrentDir = Directory.GetFiles(path, fileName, SearchOption.AllDirectories);
+            if (filesInCurrentDir.Length > 0)
             {
+                return filesInCurrentDir[0];
+            }
+            
+            // Then search up the directory tree
+            while (path != Directory.GetDirectoryRoot(path))
+            {
+                var files = Directory.GetFiles(path, fileName, SearchOption.TopDirectoryOnly);
+                if (files.Length > 0)
+                {
+                    return files[0];
+                }
                 path = Directory.GetParent(path)!.FullName;
             }
-            if (Directory.GetFiles(path, fileName).Length > 0) // Datei existiert
-            {
-                string fullName = Path.Combine(path, fileName);
-                return fullName;
-            }
+            
             return null;
         }
 

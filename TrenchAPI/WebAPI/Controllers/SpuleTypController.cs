@@ -53,6 +53,13 @@ namespace TrenchAPI.Controllers
                 return BadRequest();
             }
 
+            // Detach any existing tracked entity with the same key
+            var existingEntity = _context.SpuleTyp.Local.FirstOrDefault(e => e.ID == id);
+            if (existingEntity != null)
+            {
+                _context.Entry(existingEntity).State = EntityState.Detached;
+            }
+
             _context.Entry(spuleTyp).State = EntityState.Modified;
 
             try
@@ -83,6 +90,12 @@ namespace TrenchAPI.Controllers
             // If ID is set and already exists, reset to 0 to let database auto-generate
             if (spuleTyp.ID > 0 && await SpuleTypExists(spuleTyp.ID))
             {
+                // Detach any existing tracked entity with the same key before resetting
+                var existingEntity = _context.SpuleTyp.Local.FirstOrDefault(e => e.ID == spuleTyp.ID);
+                if (existingEntity != null)
+                {
+                    _context.Entry(existingEntity).State = EntityState.Detached;
+                }
                 spuleTyp.ID = 0;
             }
             

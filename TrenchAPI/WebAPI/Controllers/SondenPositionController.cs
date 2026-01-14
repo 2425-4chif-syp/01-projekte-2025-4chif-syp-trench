@@ -73,7 +73,7 @@ namespace TrenchAPI.Controllers
         [HttpPut("{id}")]
 public async Task<IActionResult> PutSondenPosition(int id, SondenPositionUpdateDto dto)
 {
-    if (id != dto.ID) return BadRequest("ID passt nicht.");
+    if (id != dto.ID) return BadRequest("ID mismatch");
     if (!ModelState.IsValid) return BadRequest(ModelState);
 
     var sondenPosition = await _context.SondenPosition
