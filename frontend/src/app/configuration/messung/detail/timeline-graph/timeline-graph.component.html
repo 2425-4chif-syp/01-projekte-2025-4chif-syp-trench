@@ -5,7 +5,7 @@
 		<div class="slider-flex flex-grow-1 mx-3">
 			<label class="form-label visually-hidden">Zeitpunkt</label>
 
-            <svg class="timeline-svg" xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + outerViewBoxWidth + ' ' + outerViewBoxHeight" preserveAspectRatio="xMidYMid meet"
+            <svg class="timeline-svg" xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + viewBoxWidth + ' ' + viewBoxHeight" preserveAspectRatio="xMidYMin meet"
                 (pointerdown)="onPointerDown($event)"
                 (pointermove)="onPointerMove($event)"
                 (pointerup)="onPointerUp($event)"
@@ -29,8 +29,8 @@
                         <circle [attr.cx]="line.x1" [attr.cy]="line.y1" r="0.5" fill="black" pointer-events="none"></circle>
                     }
                     
-                    <!-- Position line -->
-                    <g [attr.transform]="'translate(' + lineXNormalized() * innerWidth + ', 0)'">
+                    <!-- Position line (uses precise pointer position during drag) -->
+                    <g [attr.transform]="'translate(' + lineXActiveNormalized() * innerWidth + ', 0)'">
                     <line pointer-events="none" x1="0"
                         x2="0"
                         y1="-1" [attr.y2]="innerHeight + 1" stroke="#007bff" stroke-width="3" vector-effect="non-scaling-stroke" />

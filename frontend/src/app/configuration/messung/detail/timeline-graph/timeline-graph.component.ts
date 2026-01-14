@@ -16,15 +16,24 @@ export class TimelineGraphComponent {
   @Input() tolerance: number | null = null;
   // Geometry inputs
   @Input() innerWidth: number = 100;
-  @Input() innerHeight: number = 30;
+  @Input() innerHeight: number = 20;
   @Input() insetX: number = 1;
-  @Input() insetY: number = 7;
+  @Input() insetY: number = 3;
   @Input() outerViewBoxWidth: number = 102;
-  @Input() outerViewBoxHeight: number = 40;
+  @Input() outerViewBoxHeight: number = 22;
 
   @Output() valueChange = new EventEmitter<number>();
   public pointerDown = false;
   public hoverValue: number | null = null;
+  private dragNormalized: number | null = null; // 0..1 while dragging
+
+  // Computed viewBox ensures inner drawing area plus margins fits without clipping
+  public get viewBoxWidth(): number {
+    return Math.max(this.outerViewBoxWidth, this.insetX + this.innerWidth + 2);
+  }
+  public get viewBoxHeight(): number {
+    return Math.max(this.outerViewBoxHeight, this.insetY + this.innerHeight + 2);
+  }
 
   public get graphLineSegments(): { time1: number; m_tot1: number; time2: number; m_tot2: number }[] {
     // Start with 0, end with the value again
@@ -64,15 +73,27 @@ export class TimelineGraphComponent {
     return Math.max(a, Math.min(b, v));
   }
 
-  private computeValueFromEvent(ev: PointerEvent, svgEl: SVGSVGElement): number | null {
+  private computeNormalizedFromEvent(ev: PointerEvent, svgEl: SVGSVGElement): number | null {
     if (this.sliderMinMs === null || this.sliderMaxMs === null) return null;
-    // Prefer mapping relative to background rect for exact inner bounds
-    const bg = svgEl.querySelector('.bg-rect') as SVGGraphicsElement | null;
-    const rect = (bg?.getBoundingClientRect()) || svgEl.getBoundingClientRect();
-    const width = rect.width;
-    const x = this.clamp(ev.clientX - rect.left, 0, width);
-    const t = width > 0 ? x / width : 0; // 0..1 across inner rect
-    const val = Math.round(this.sliderMinMs + t * (this.sliderMaxMs - this.sliderMinMs));
+    const svgRect = svgEl.getBoundingClientRect();
+    const vbW = this.viewBoxWidth;
+    const vbH = this.viewBoxHeight;
+    // Map client coordinates to SVG viewBox coordinates accounting for preserveAspectRatio="meet"
+    const scale = Math.min(svgRect.width / vbW, svgRect.height / vbH);
+    const offsetX = (svgRect.width - vbW * scale) / 2;
+    const xClient = ev.clientX - svgRect.left - offsetX;
+    const xVb = xClient / scale; // in outer viewBox units
+    // Constrain to inner drawing area [insetX, insetX + innerWidth]
+    const innerStart = this.insetX;
+    const innerEnd = this.insetX + this.innerWidth;
+    const t = (xVb - innerStart) / (innerEnd - innerStart);
+    return this.clamp(t, 0, 1);
+  }
+
+  private computeValueFromEvent(ev: PointerEvent, svgEl: SVGSVGElement): number | null {
+    const t = this.computeNormalizedFromEvent(ev, svgEl);
+    if (t === null || this.sliderMinMs === null || this.sliderMaxMs === null) return null;
+    const val = this.sliderMinMs + t * (this.sliderMaxMs - this.sliderMinMs);
     return val;
   }
 
@@ -81,6 +102,9 @@ export class TimelineGraphComponent {
     if (!svg) return;
     try { svg.setPointerCapture?.(ev.pointerId); } catch {}
     this.pointerDown = true;
+    // Track exact normalized position for rendering
+    const t = this.computeNormalizedFromEvent(ev, svg);
+    this.dragNormalized = t;
     const v = this.computeValueFromEvent(ev, svg);
     if (v !== null) this.valueChange.emit(v);
   }
@@ -90,6 +114,8 @@ export class TimelineGraphComponent {
     if (!svg) return;
     // Always update hover value on move
     const hover = this.computeValueFromEvent(ev, svg);
+    const t = this.computeNormalizedFromEvent(ev, svg);
+    if (this.pointerDown) this.dragNormalized = t;
     this.hoverValue = hover;
     // Only emit when actively dragging
     if (!this.pointerDown) return;
@@ -103,6 +129,7 @@ export class TimelineGraphComponent {
     }
     this.pointerDown = false;
     this.hoverValue = null;
+    this.dragNormalized = null;
   }
 
   public lineXNormalized(): number {
@@ -110,6 +137,13 @@ export class TimelineGraphComponent {
     const range = (this.sliderMaxMs - this.sliderMinMs) || 1;
     const t = (this.value - this.sliderMinMs) / range;
     return this.clamp(t, 0, 1);
+  }
+
+  public lineXActiveNormalized(): number {
+    if (this.pointerDown && this.dragNormalized !== null) {
+      return this.clamp(this.dragNormalized, 0, 1);
+    }
+    return this.lineXNormalized();
   }
 
   public lineXHoverNormalized(): number {
