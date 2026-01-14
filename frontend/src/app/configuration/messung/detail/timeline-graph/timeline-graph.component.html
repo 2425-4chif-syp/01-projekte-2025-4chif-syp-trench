@@ -4,12 +4,24 @@
 
 		<div class="slider-flex flex-grow-1 mx-3">
 			<label class="form-label visually-hidden">Zeitpunkt</label>
-			<input type="range"
-						 class="form-range"
-						 [min]="sliderMinMs"
-						 [max]="sliderMaxMs"
-						 [value]="value"
-						 (input)="onInput($event)" />
+
+			<svg class="timeline-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" preserveAspectRatio="xMidYMid meet"
+					 (pointerdown)="onPointerDown($event)"
+					 (pointermove)="onPointerMove($event)"
+					 (pointerup)="onPointerUp($event)"
+					 (pointerleave)="onPointerUp($event)">
+				<!-- background rectangle spanning full width -->
+				<!-- slight inset to avoid stroke cut-off at edges -->
+				<rect pointer-events="none" x="1" y="6" width="98" height="28" rx="1" fill="#e9ecef" stroke="#ced4da"></rect>
+
+				<!-- vertical line indicating current value -->
+				<g>
+					<line pointer-events="none" [attr.x1]="lineXPercent()"
+								[attr.x2]="lineXPercent()"
+								y1="6" y2="34" stroke="#007bff" stroke-width="2" vector-effect="non-scaling-stroke" />
+				</g>
+			</svg>
+
 			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'HH:mm:ss.SSS') : '' }}</div>
 		</div>
 

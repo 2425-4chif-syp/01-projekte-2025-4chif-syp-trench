@@ -1,0 +1,19 @@
+:host, .time-slider, .timeline-svg {
+	position: relative;
+	z-index: 100; /* ensure slider is above underlying SVGs */
+}
+:host {
+	display: block;
+}
+
+.timeline-svg {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 5 / 2; /* significantly taller, shapes preserved */
+	display: block;
+	touch-action: none; /* allow pointer events without browser gestures */
+}
+
+.time-selected {
+	user-select: none;
+}
