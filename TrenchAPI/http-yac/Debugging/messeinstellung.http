@@ -1,0 +1,47 @@
+# Messeinstellung API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All Messeinstellungen
+GET {{baseUrl}}/api/Messeinstellung
+KEY: {{apiKey}}
+
+### Get Messeinstellung by ID
+GET {{baseUrl}}/api/Messeinstellung/1
+KEY: {{apiKey}}
+
+### Create New Messeinstellung
+# @name createMesseinstellung
+POST {{baseUrl}}/api/Messeinstellung
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "name": "Test Messeinstellung",
+  "spuleID": 1,
+  "sondenTypID": 1,
+  "sondenProSchenkel": 5
+}
+
+### Update Messeinstellung
+@messeinstellungId = 1
+PUT {{baseUrl}}/api/Messeinstellung/{{messeinstellungId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{messeinstellungId}},
+  "name": "Updated Messeinstellung",
+  "spuleID": 1,
+  "sondenTypID": 1,
+  "sondenProSchenkel": 8
+}
+
+### Delete Messeinstellung by ID
+DELETE {{baseUrl}}/api/Messeinstellung/999
+KEY: {{apiKey}}
+
+### Delete All Messeinstellungen
+# DELETE {{baseUrl}}/api/Messeinstellung
+# KEY: {{apiKey}}

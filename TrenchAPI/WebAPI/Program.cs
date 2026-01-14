@@ -53,7 +53,12 @@ namespace TrenchAPI
                 c.OperationFilter<FileUploadOperationFilter>();
             });
 
-            builder.Services.AddDbContext<WebDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DevConnection")));
+            // Register DbContext only if not in test mode (test mode will override this)
+            if (!builder.Environment.IsEnvironment("Test"))
+            {
+                builder.Services.AddDbContext<WebDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DevConnection")));
+            }
+
             builder.Services.AddScoped<DataPackageService>();
             
             // Register MQTT Measurement Service as Singleton
@@ -165,3 +170,6 @@ namespace TrenchAPI
         }
     }
 }
+
+// Make the implicit Program class accessible for testing
+public partial class Program { }

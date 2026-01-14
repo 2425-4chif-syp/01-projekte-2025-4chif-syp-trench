@@ -1,0 +1,27 @@
+# Auth API Tests - TrenchAPI
+@host = http://localhost:5127
+@baseUrl = {{host}}
+
+### Hash Password
+POST {{baseUrl}}/api/auth/hash
+Content-Type: application/json
+
+"mySecurePassword123"
+
+### Verify Password
+POST {{baseUrl}}/api/auth/verify
+Content-Type: application/json
+
+"mySecurePassword123"
+
+### Verify Wrong Password
+POST {{baseUrl}}/api/auth/verify
+Content-Type: application/json
+
+"wrongPassword"
+
+### Hash Empty Password (should fail)
+POST {{baseUrl}}/api/auth/hash
+Content-Type: application/json
+
+""

@@ -1,0 +1,53 @@
+# SpuleTyp API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All SpuleTypen
+GET {{baseUrl}}/api/SpuleTyp
+KEY: {{apiKey}}
+
+### Get SpuleTyp by ID
+GET {{baseUrl}}/api/SpuleTyp/1
+KEY: {{apiKey}}
+
+### Create New SpuleTyp
+# @name createSpuleTyp
+POST {{baseUrl}}/api/SpuleTyp
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "name": "Test Spule Typ",
+  "schenkelzahl": 4,
+  "bandbreite": 150.5,
+  "schichthoehe": 80.0,
+  "durchmesser": 200.0,
+  "toleranzbereich": 2.5,
+  "notiz": "Test SpuleTyp"
+}
+
+### Update SpuleTyp
+@spuleTypId = 1
+PUT {{baseUrl}}/api/SpuleTyp/{{spuleTypId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{spuleTypId}},
+  "name": "Updated Spule Typ",
+  "schenkelzahl": 6,
+  "bandbreite": 180.0,
+  "schichthoehe": 90.0,
+  "durchmesser": 250.0,
+  "toleranzbereich": 3.0,
+  "notiz": "Updated SpuleTyp"
+}
+
+### Delete SpuleTyp by ID
+DELETE {{baseUrl}}/api/SpuleTyp/999
+KEY: {{apiKey}}
+
+### Delete All SpuleTypen
+# DELETE {{baseUrl}}/api/SpuleTyp
+# KEY: {{apiKey}}

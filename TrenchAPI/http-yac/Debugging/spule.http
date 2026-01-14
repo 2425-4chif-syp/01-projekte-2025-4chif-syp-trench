@@ -1,0 +1,52 @@
+# Spule API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All Spulen
+GET {{baseUrl}}/api/Spule
+KEY: {{apiKey}}
+
+### Get Spule by ID
+GET {{baseUrl}}/api/Spule/1
+KEY: {{apiKey}}
+
+### Create New Spule
+# @name createSpule
+POST {{baseUrl}}/api/Spule
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "spuleTypID": 1,
+  "auftragsnr": "AUF-2026-001",
+  "auftragsPosNr": "POS-001",
+  "bemessungsspannung": 230.0,
+  "bemessungsfrequenz": 50.0,
+  "einheit": "V"
+}
+
+### Update Spule
+@spuleId = 1
+PUT {{baseUrl}}/api/Spule/{{spuleId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{spuleId}},
+  "spuleTypID": 1,
+  "auftragsnr": "AUF-2026-001-UPD",
+  "auftragsPosNr": "POS-001-UPD",
+  "bemessungsspannung": 400.0,
+  "bemessungsfrequenz": 60.0,
+  "einheit": "V",
+  "notiz": "Updated Spule"
+}
+
+### Delete Spule by ID
+DELETE {{baseUrl}}/api/Spule/999
+KEY: {{apiKey}}
+
+### Delete All Spulen
+# DELETE {{baseUrl}}/api/Spule
+# KEY: {{apiKey}}

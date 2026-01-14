@@ -46,6 +46,14 @@ docs/slides/revealjs
 bin/
 obj/
 
+# Test results
+TestResults/
+**/TestResults/
+
+# Tools
+.tools/
+**/.tools/
+
 # User-specific files
 *.rsuser
 *.suo
