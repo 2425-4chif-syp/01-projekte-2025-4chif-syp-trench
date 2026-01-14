@@ -24,6 +24,29 @@ export class TimelineGraphComponent {
   @Output() valueChange = new EventEmitter<number>();
   private pointerDown = false;
 
+  public get graphLineSegments(): { time1: number; m_tot1: number; time2: number; m_tot2: number }[] {
+    // Start with 0, end with the value again
+    const mTotSeriesFull = [...this.mTotSeries];
+    mTotSeriesFull.unshift([this.sliderMinMs ?? 0, 0]);
+    mTotSeriesFull.push([this.sliderMaxMs ?? 0, this.mTotSeries.length > 0 ? this.mTotSeries[this.mTotSeries.length - 1][1] : 0]);
+
+    return mTotSeriesFull.slice(0, -1).map((time_value_group, index) => ({
+      time1: time_value_group[0],
+      m_tot1: time_value_group[1], 
+      time2: mTotSeriesFull[index + 1][0],
+      m_tot2: time_value_group[1]
+    }));
+  }
+  
+  // Scales line segments to fit within the inner drawing area
+  public get scaledLineSegments(): { x1: number; y1: number; x2: number; y2: number }[] {
+    return this.graphLineSegments.map(segment => ({
+      x1: ((segment.time1 - (this.sliderMinMs ?? 0)) / ((this.sliderMaxMs ?? 1) - (this.sliderMinMs ?? 0))) * this.innerWidth,
+      y1: this.innerHeight - ((segment.m_tot1 /  Math.max(...this.mTotSeries.map(v => v[1]), 1)) * this.innerHeight),
+      x2: ((segment.time2 - (this.sliderMinMs ?? 0)) / ((this.sliderMaxMs ?? 1) - (this.sliderMinMs ?? 0))) * this.innerWidth,
+      y2: this.innerHeight - ((segment.m_tot2 /  Math.max(...this.mTotSeries.map(v => v[1]), 1)) * this.innerHeight)
+    }));
+  }
   private clamp(v: number, a: number, b: number): number {
     return Math.max(a, Math.min(b, v));
   }
