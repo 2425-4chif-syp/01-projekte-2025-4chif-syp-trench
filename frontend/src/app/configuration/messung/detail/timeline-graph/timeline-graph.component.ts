@@ -12,6 +12,7 @@ export class TimelineGraphComponent {
   @Input() sliderMinMs: number | null = null;
   @Input() sliderMaxMs: number | null = null;
   @Input() value: number | null = null;
+  @Input() mTotSeries: number[][] = [];
 
   @Output() valueChange = new EventEmitter<number>();
   private pointerDown = false;
