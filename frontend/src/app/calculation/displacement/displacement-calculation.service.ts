@@ -17,19 +17,14 @@ import { Measurement } from '../../configuration/measurement-history/interfaces/
 // Sondenkalibrierung wird noch nicht berücksichtigt
 export class DisplacementCalculationService {
   constructor() {}
-
-  // false: 0, 120, 240   (Schenkel #2 und #3 vertauscht)
-  // true:  0, -120, 120  (nach Excel)
-  private static readonly alternativeThreeAngleLookup:boolean = false;
-
   public static getAngleLookup(yokeCount: number): number[] {
     switch (yokeCount) {
       case 2:
         return [0, 180]; 
       case 3:
-        return this.alternativeThreeAngleLookup ? [0, -120, 120] : [0, 120, 240];
+        return [0, 120, 240];
       case 4:
-        return [0, 90, 180, 270];
+        return [90, 180, 270, 0];
     }
     throw new Error('Invalid yoke count: ' + yokeCount);
   }
