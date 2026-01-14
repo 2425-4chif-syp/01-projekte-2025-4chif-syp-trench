@@ -13,6 +13,7 @@ export class TimelineGraphComponent {
   @Input() sliderMaxMs: number | null = null;
   @Input() value: number | null = null;
   @Input() mTotSeries: number[][] = [];
+  @Input() tolerance: number | null = null;
   // Geometry inputs
   @Input() innerWidth: number = 100;
   @Input() innerHeight: number = 30;
@@ -46,6 +47,10 @@ export class TimelineGraphComponent {
       x2: ((segment.time2 - (this.sliderMinMs ?? 0)) / ((this.sliderMaxMs ?? 1) - (this.sliderMinMs ?? 0))) * this.innerWidth,
       y2: this.innerHeight - ((segment.m_tot2 /  Math.max(...this.mTotSeries.map(v => v[1]), 1)) * this.innerHeight)
     }));
+  }
+  public get scaledTolerance(): number {
+    if (this.tolerance === null) return 0;
+    return this.innerHeight - ((this.tolerance /  Math.max(...this.mTotSeries.map(v => v[1]), 1)) * this.innerHeight);
   }
   private clamp(v: number, a: number, b: number): number {
     return Math.max(a, Math.min(b, v));
