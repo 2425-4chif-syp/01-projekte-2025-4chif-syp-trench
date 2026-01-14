@@ -6,6 +6,7 @@ import { Messwert } from '../../messwert/interfaces/messwert.model';
 import { Router } from '@angular/router';
 import { ConfirmDeleteModalComponent } from '../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 import { MessungDetailAuswertungComponent } from './auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
+import { TimelineGraphComponent } from './timeline-graph/timeline-graph.component';
 import { Measurement } from '../../measurement-history/interfaces/measurement.model';
 import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
 import { MeasurementSettingsService } from '../../measurement-settings/services/measurement-settings.service';
@@ -22,7 +23,7 @@ function asDate(d: any): Date | null {
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule, ConfirmDeleteModalComponent, MessungDetailAuswertungComponent],
+  imports: [CommonModule, ConfirmDeleteModalComponent, MessungDetailAuswertungComponent, TimelineGraphComponent],
   templateUrl: './messung-detail.component.html',
   styleUrl: './messung-detail.component.scss'
 })
@@ -41,6 +42,8 @@ export class MessungDetailComponent {
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
   m_tot = signal<number>(0);
+  // Series of [timeMs, m_tot] to feed timeline component
+  mTotSeries: number[][] = [];
 
   // Slider state: milliseconds since epoch
   sliderMinMs: number = 0;
@@ -101,6 +104,9 @@ export class MessungDetailComponent {
 
     // initialize slider bounds and compute initial derived values
     this.initializeSliderBounds();
+
+    // Build m_tot series based on available timestamps
+    this.buildMTotSeries();
   }
 
   private initializeSliderBounds(): void {
@@ -234,6 +240,93 @@ export class MessungDetailComponent {
       this.yokeData.set([]);
       this.m_tot.set(0);
     }
+  }
+
+  private computeMTotAt(time: Date): number {
+    const measurement = this.measurement;
+    if (!measurement || !measurement.messeinstellung) {
+      return 0;
+    }
+
+    const messwerte = this.messwerte();
+
+    const coiltype = measurement.messeinstellung.coil?.coiltype;
+    const yokeCount = coiltype?.schenkel ?? 0;
+
+    let sensorsPerYoke = measurement.messeinstellung.sondenProSchenkel ?? 0;
+    if (!sensorsPerYoke || sensorsPerYoke < 1) {
+      let maxPos = 0;
+      for (const m of messwerte) {
+        const pos = m.sondenPosition?.position ?? null;
+        if (pos !== null && pos !== undefined && typeof pos === 'number') {
+          if (pos > maxPos) maxPos = pos;
+        }
+      }
+      sensorsPerYoke = maxPos > 0 ? maxPos : 1;
+    }
+
+    const yokesArr: { sensors: number[] }[] = [];
+    for (let y = 0; y < yokeCount; y++) {
+      const sensors: number[] = new Array(sensorsPerYoke).fill(0);
+      for (let s = 0; s < sensorsPerYoke; s++) {
+        let candidate: Messwert | null = null;
+        let candidateTime = 0;
+        for (const mw of messwerte) {
+          const wp = mw.sondenPosition;
+          if (!wp) continue;
+          const schenkel = wp.schenkel ?? null;
+          const pos = wp.position ?? null;
+          if (schenkel === null || pos === null) continue;
+          const schenkelIndex = (typeof schenkel === 'number') ? (schenkel - 1) : schenkel;
+          const posIndex = (typeof pos === 'number') ? (pos - 1) : pos;
+          if (schenkelIndex !== y) continue;
+          if (posIndex !== s) continue;
+          const z = asDate(mw.zeitpunkt);
+          if (!z) continue;
+          const tz = z.getTime();
+          if (tz <= time.getTime() && tz >= candidateTime) {
+            candidate = mw;
+            candidateTime = tz;
+          }
+        }
+        sensors[s] = candidate?.wert ?? 0;
+      }
+      yokesArr.push({ sensors });
+    }
+
+    try {
+      const probeType = measurement.messeinstellung.probeType!;
+      const coil = measurement.messeinstellung.coil!;
+      const coiltypeObj = coil.coiltype!;
+      const measurementSetting = measurement.messeinstellung!;
+      const calc = this.displacementCalculation.calculateYokeData(yokesArr, probeType, [], coiltypeObj, coil, measurementSetting, measurement.pruefspannung!);
+      return calc.m_tot ?? 0;
+    } catch (err) {
+      console.error('Error calculating m_tot for time', time, err);
+      return 0;
+    }
+  }
+
+  private buildMTotSeries(): void {
+    const mw = this.messwerte();
+    if (!mw || mw.length === 0) {
+      this.mTotSeries = [];
+      return;
+    }
+    // Collect unique timestamps (ms) from messwerte
+    const timesSet = new Set<number>();
+    for (const m of mw) {
+      const z = asDate(m.zeitpunkt);
+      if (!z) continue;
+      timesSet.add(z.getTime());
+    }
+    const times = Array.from(timesSet.values()).sort((a, b) => a - b);
+    const series: number[][] = [];
+    for (const t of times) {
+      const val = this.computeMTotAt(new Date(t));
+      series.push([t, val]);
+    }
+    this.mTotSeries = series;
   }
 
   public navigateBack(): void {
