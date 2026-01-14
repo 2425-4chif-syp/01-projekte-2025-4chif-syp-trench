@@ -5,20 +5,26 @@
 		<div class="slider-flex flex-grow-1 mx-3">
 			<label class="form-label visually-hidden">Zeitpunkt</label>
 
-			<svg class="timeline-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 40" preserveAspectRatio="xMidYMid meet"
-					 (pointerdown)="onPointerDown($event)"
-					 (pointermove)="onPointerMove($event)"
-					 (pointerup)="onPointerUp($event)"
-					 (pointerleave)="onPointerUp($event)">
-				<!-- background rectangle spanning full width -->
-				<!-- slight inset to avoid stroke cut-off at edges -->
-				<rect pointer-events="none" x="1" y="6" width="98" height="28" rx="1" fill="#e9ecef" stroke="#ced4da"></rect>
+            <svg class="timeline-svg" xmlns="http://www.w3.org/2000/svg" [attr.viewBox]="'0 0 ' + outerViewBoxWidth + ' ' + outerViewBoxHeight" preserveAspectRatio="xMidYMid meet"
+				 (pointerdown)="onPointerDown($event)"
+				 (pointermove)="onPointerMove($event)"
+				 (pointerup)="onPointerUp($event)"
+				 (pointerleave)="onPointerUp($event)">
 
-				<!-- vertical line indicating current value -->
-				<g>
-					<line pointer-events="none" [attr.x1]="lineXPercent()"
-								[attr.x2]="lineXPercent()"
-								y1="6" y2="34" stroke="#007bff" stroke-width="2" vector-effect="non-scaling-stroke" />
+				<!-- Normalized group: translate to inset area, no scaling (keep shapes undistorted) -->
+				<g [attr.transform]="'translate(' + insetX + ', ' + insetY + ')'">
+					<!-- transparent hit-layer to ensure pointer events register anywhere inside the region -->
+					<rect x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" fill="transparent" pointer-events="all"></rect>
+					<!-- background rectangle spanning full width/height of inset area -->
+					<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#e9ecef"></rect>
+
+					<!-- vertical line indicating current value in normalized space (0..1 -> 0..100) -->
+					  <line pointer-events="none" [attr.x1]="lineXNormalized() * innerWidth"
+						  [attr.x2]="lineXNormalized() * innerWidth"
+						  y1="0" [attr.y2]="innerHeight" stroke="#007bff" stroke-width="2" vector-effect="non-scaling-stroke" />
+
+					<!-- test circle should be a perfect circle, not ellipse -->
+					<circle pointer-events="none" [attr.cx]="innerWidth / 2" [attr.cy]="innerHeight / 2" r="4" fill="#007bff" />
 				</g>
 			</svg>
 

@@ -13,6 +13,13 @@ export class TimelineGraphComponent {
   @Input() sliderMaxMs: number | null = null;
   @Input() value: number | null = null;
   @Input() mTotSeries: number[][] = [];
+  // Geometry inputs
+  @Input() innerWidth: number = 100;
+  @Input() innerHeight: number = 30;
+  @Input() insetX: number = 1;
+  @Input() insetY: number = 7;
+  @Input() outerViewBoxWidth: number = 102;
+  @Input() outerViewBoxHeight: number = 40;
 
   @Output() valueChange = new EventEmitter<number>();
   private pointerDown = false;
@@ -23,9 +30,12 @@ export class TimelineGraphComponent {
 
   private computeValueFromEvent(ev: PointerEvent, svgEl: SVGSVGElement): number | null {
     if (this.sliderMinMs === null || this.sliderMaxMs === null) return null;
-    const width = svgEl.clientWidth || svgEl.getBoundingClientRect().width;
-    const x = this.clamp((ev as any).offsetX ?? (ev.clientX - svgEl.getBoundingClientRect().left), 0, width);
-    const t = width > 0 ? x / width : 0;
+    // Prefer mapping relative to background rect for exact inner bounds
+    const bg = svgEl.querySelector('.bg-rect') as SVGGraphicsElement | null;
+    const rect = (bg?.getBoundingClientRect()) || svgEl.getBoundingClientRect();
+    const width = rect.width;
+    const x = this.clamp(ev.clientX - rect.left, 0, width);
+    const t = width > 0 ? x / width : 0; // 0..1 across inner rect
     const val = Math.round(this.sliderMinMs + t * (this.sliderMaxMs - this.sliderMinMs));
     return val;
   }
@@ -55,13 +65,10 @@ export class TimelineGraphComponent {
     this.pointerDown = false;
   }
 
-  public lineXPercent(): number {
-    if (this.sliderMinMs === null || this.sliderMaxMs === null || this.value === null) return 1;
+  public lineXNormalized(): number {
+    if (this.sliderMinMs === null || this.sliderMaxMs === null || this.value === null) return 0;
     const range = (this.sliderMaxMs - this.sliderMinMs) || 1;
     const t = (this.value - this.sliderMinMs) / range;
-    // map 0..1 -> 1..99 to stay inside the background rect
-    return 1 + this.clamp(t, 0, 1) * 98;
+    return this.clamp(t, 0, 1);
   }
-
-  // no extra helpers needed beyond computeValueFromEvent
 }
