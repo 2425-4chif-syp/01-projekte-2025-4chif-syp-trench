@@ -22,10 +22,10 @@ echo "[1/3] Container erfolgreich gestartet"
 echo ""
 
 echo "[2/3] Fuehre Integration Tests aus..."
-cd TrenchAPI/Tests/http-yac
+cd TrenchAPI/http-yac
 ./run-tests.sh
 TEST_RESULT=$?
-cd ../../..
+cd ../..
 
 if [ $TEST_RESULT -ne 0 ]; then
     echo ""

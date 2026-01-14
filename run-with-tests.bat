@@ -21,7 +21,7 @@ echo [1/3] Container erfolgreich gestartet
 echo.
 
 echo [2/3] Fuehre Integration Tests aus...
-call TrenchAPI\Tests\http-yac\run-tests.bat
+call TrenchAPI\http-yac\run-tests.bat
 
 if errorlevel 1 (
     echo.
