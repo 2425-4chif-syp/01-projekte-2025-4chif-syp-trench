@@ -41,3 +41,12 @@
 .auswertung-area .card {
   border-radius: 0.5rem;
 }
+
+.sticky-graph {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
