@@ -128,7 +128,7 @@ a|
   - Import-Funktionalität vollständig umgesetzt
   - **Hinweis:** UI zeigt derzeit "nur ZIP-Dateien", obwohl Excel-Upload funktioniert
 
-* **Bewertung durch Prof. Stütz:**
+* **Bewertung durch Prof. Aberger:**
   - Sehr positive Rückmeldung zur Implementierung
   - Wichtig für Benutzerakzeptanz (Vertrauen in Excel-Daten)
   - Funktioniert ohne Office-Installation (Open XML Format)
