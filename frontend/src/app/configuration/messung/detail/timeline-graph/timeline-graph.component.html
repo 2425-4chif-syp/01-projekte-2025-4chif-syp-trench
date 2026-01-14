@@ -1,0 +1,18 @@
+<div class="time-slider mb-4">
+	<div class="time-slider-inner d-flex align-items-center">
+		<div class="time-label start text-muted small">{{ sliderMinMs ? (sliderMinMs | date:'HH:mm:ss.SSS') : '' }}</div>
+
+		<div class="slider-flex flex-grow-1 mx-3">
+			<label class="form-label visually-hidden">Zeitpunkt</label>
+			<input type="range"
+						 class="form-range"
+						 [min]="sliderMinMs"
+						 [max]="sliderMaxMs"
+						 [value]="value"
+						 (input)="onInput($event)" />
+			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'HH:mm:ss.SSS') : '' }}</div>
+		</div>
+
+		<div class="time-label end text-muted small">{{ sliderMaxMs ? (sliderMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
+	</div>
+</div>

@@ -6,6 +6,7 @@ import { Messwert } from '../../messwert/interfaces/messwert.model';
 import { Router } from '@angular/router';
 import { ConfirmDeleteModalComponent } from '../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 import { MessungDetailAuswertungComponent } from './auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
+import { TimelineGraphComponent } from './timeline-graph/timeline-graph.component';
 import { Measurement } from '../../measurement-history/interfaces/measurement.model';
 import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
 import { MeasurementSettingsService } from '../../measurement-settings/services/measurement-settings.service';
@@ -22,7 +23,7 @@ function asDate(d: any): Date | null {
 @Component({
   selector: 'app-detail',
   standalone: true,
-  imports: [CommonModule, ConfirmDeleteModalComponent, MessungDetailAuswertungComponent],
+  imports: [CommonModule, ConfirmDeleteModalComponent, MessungDetailAuswertungComponent, TimelineGraphComponent],
   templateUrl: './messung-detail.component.html',
   styleUrl: './messung-detail.component.scss'
 })
