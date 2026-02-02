@@ -110,7 +110,8 @@ namespace ConsoleMqtt
 
                 var publishTasks = messages.Select(message => 
                 {
-                    //Console.WriteLine($"Publishing to {message.Topic}: {System.Text.Encoding.UTF8.GetString(message.Payload)}");
+                    //float value = BitConverter.ToSingle(message.Payload, 0);
+                    //Console.WriteLine($"Publishing to {message.Topic}: {value}");
                     return _mqttPublisherClient.PublishAsync(message, CancellationToken.None);
                 });
 
