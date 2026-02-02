@@ -48,7 +48,7 @@ namespace ConsoleMqtt
     try
     {
         var topic = arg.ApplicationMessage.Topic;
-        var payload = arg.ApplicationMessage.ConvertPayloadToString();
+        var payloadBytes = arg.ApplicationMessage.PayloadSegment.Array;
         
         // Parse the new topic structure
         var topicParts = topic.Split('/', StringSplitOptions.RemoveEmptyEntries);
@@ -73,8 +73,11 @@ namespace ConsoleMqtt
         if (rjNumber != null && probeNumber != null &&
             int.TryParse(rjNumber, out var rjNum) &&
             int.TryParse(probeNumber, out var probeNum) &&
-            double.TryParse(payload, out var value))
+            payloadBytes != null && payloadBytes.Length >= 16)
         {
+            // Convert byte array to float value
+            var value = BitConverter.ToSingle(payloadBytes, 0);
+            
             // Construct the legacy topic format
             var legacyTopic = $"S{rjNum}S{probeNum}";
             
@@ -122,7 +125,7 @@ namespace ConsoleMqtt
         }
         else
         {
-            Console.WriteLine($"Failed to parse topic or payload: {topic}, payload: {payload}");
+            Console.WriteLine($"Failed to parse topic or payload: {topic}, payload bytes: {payloadBytes?.Length ?? 0}");
         }
     }
     catch (Exception ex)
