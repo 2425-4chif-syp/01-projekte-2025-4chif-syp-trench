@@ -19,7 +19,7 @@ import { Probe } from '../../../configuration/probe/interfaces/probe';
 export class DisplacementVisualizationComponent {
   @Input() size:number = 512; 
   @Input() yokeData = signal<{ x: number; y: number }[][]>([]);
-  @Input() m_tot:number = 0;
+  @Input() m_tot = signal<number>(0);
   @Input() probeType:ProbeType = null!;
   @Input() probes:Probe[] = [];
   @Input() coil:Coil = null!;
@@ -145,10 +145,10 @@ export class DisplacementVisualizationComponent {
   }
 
   public get toleranceCircleRadius():number {
-    return this.finalVector.length / this.averageLength / this.m_tot * this.coiltype.toleranzbereich! * 6;
+    return this.finalVector.length / this.averageLength / this.m_tot() * this.coiltype.toleranzbereich! * 6;
   }
   public get isWithinTolerance():boolean {
-    return this.m_tot < this.coiltype.toleranzbereich!;
+    return this.m_tot() < this.coiltype.toleranzbereich!;
   }
   public get toleranceColor():string {
     return this.isWithinTolerance ? '#00FF00' : '#FF0000';
@@ -216,7 +216,8 @@ export class DisplacementVisualizationComponent {
   }
 
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
-    this.mousePosition = { x: event.pageX, y: event.pageY };
+  public onMouseMove(event: MouseEvent) {
+    // Use client coordinates so tooltip positioned as fixed aligns with viewport
+    this.mousePosition = { x: event.clientX, y: event.clientY };
   }
 }

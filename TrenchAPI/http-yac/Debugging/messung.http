@@ -1,0 +1,73 @@
+# Messung API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All Messungen
+GET {{baseUrl}}/api/Messung
+KEY: {{apiKey}}
+
+### Get Messung by ID
+GET {{baseUrl}}/api/Messung/1
+KEY: {{apiKey}}
+
+### Get Messwerte for Messung
+GET {{baseUrl}}/api/Messung/1/Messwerte
+KEY: {{apiKey}}
+
+### Get Latest Messwerte
+GET {{baseUrl}}/api/Messung/1/Messwerte/latest
+KEY: {{apiKey}}
+
+### Get Messung Status
+GET {{baseUrl}}/api/Messung/status
+KEY: {{apiKey}}
+
+### Create New Messung (with existing Messeinstellung)
+# @name createMessung
+POST {{baseUrl}}/api/Messung
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "messeinstellungID": 1,
+  "anfangszeitpunkt": "2026-01-13T10:00:00Z",
+  "endzeitpunkt": "2026-01-13T11:00:00Z",
+  "name": "Test Messung",
+  "tauchkernstellung": 50.5,
+  "pruefspannung": 230.0,
+  "notiz": "Test measurement"
+}
+
+### Start Messung
+@messungId = 1
+POST {{baseUrl}}/api/Messung/{{messungId}}/start
+KEY: {{apiKey}}
+
+### Stop Messung
+POST {{baseUrl}}/api/Messung/{{messungId}}/stop
+KEY: {{apiKey}}
+
+### Update Messung
+PUT {{baseUrl}}/api/Messung/{{messungId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{messungId}},
+  "messeinstellungID": 1,
+  "anfangszeitpunkt": "2026-01-13T10:00:00Z",
+  "endzeitpunkt": "2026-01-13T12:00:00Z",
+  "name": "Updated Messung",
+  "tauchkernstellung": 55.0,
+  "pruefspannung": 400.0,
+  "notiz": "Updated measurement"
+}
+
+### Delete Messung by ID
+DELETE {{baseUrl}}/api/Messung/999
+KEY: {{apiKey}}
+
+### Delete All Messungen
+# DELETE {{baseUrl}}/api/Messung
+# KEY: {{apiKey}}

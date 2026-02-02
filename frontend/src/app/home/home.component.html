@@ -1,23 +1,34 @@
 <div class="container text-center vh-90 d-flex flex-column align-items-center justify-content-center">
   <div class="mb-5 mt-5">
     <img src="/assets/logo-black.png" alt="Trench Logo" class="img-fluid mb-4" style="max-width: 400px;">
+    <span style="font-size: 3rem; margin: 0 20px;">×</span>
+    <img src="/assets/htlleonding-black.png" alt="HTL Leonding Logo" class="img-fluid mb-4" style="max-width: 400px;">
     <h1 class="mb-4">Trench ASC Sensor Visualization</h1>
     
-    <!-- Active Mode Display -->
-    <div class="active-mode-display clickable-mode-display" 
-         [class.admin-mode]="modeService.isAdminMode()" 
-         [class.monteur-mode]="modeService.isMonteurMode()"
-         (click)="toggleMode()">
-      <div class="mode-icon">
-        <i class="fas" [class.fa-user-shield]="modeService.isAdminMode()" [class.fa-user-cog]="modeService.isMonteurMode()"></i>
-      </div>
-      <div class="mode-info">
-        <div class="mode-title">{{ modeService.isAdminMode() ? 'Admin-Modus' : 'Monteur-Modus' }} aktiv</div>
-        <div class="mode-description">
-          {{ modeService.isAdminMode() ? 'Vollzugriff auf alle Bereiche inklusive Spulentypen und Sondentypen' : 'Zugriff auf alle Bereiche außer Spulentypen und Sondentypen' }}
+    <!-- Active Mode Display and CSV Import/Export Button -->
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-3">
+      <div class="active-mode-display clickable-mode-display" 
+           [class.admin-mode]="modeService.isAdminMode()" 
+           [class.monteur-mode]="modeService.isMonteurMode()"
+           (click)="toggleMode()">
+        <div class="mode-icon">
+          <i class="fas" [class.fa-user-shield]="modeService.isAdminMode()" [class.fa-user-cog]="modeService.isMonteurMode()"></i>
         </div>
-        <div class="mode-click-hint">Klicken zum Wechseln</div>
+        <div class="mode-info">
+          <div class="mode-title">{{ modeService.isAdminMode() ? 'Admin-Modus' : 'Monteur-Modus' }} aktiv</div>
+          <div class="mode-description">
+            {{ modeService.isAdminMode() ? 'Vollzugriff auf alle Bereiche inklusive Spulentypen und Sondentypen' : 'Zugriff auf alle Bereiche außer Spulentypen und Sondentypen' }}
+          </div>
+          <div class="mode-click-hint">Klicken zum Wechseln</div>
+        </div>
       </div>
+      
+      <button 
+        class="csv-button"
+        (click)="navigateToCsvImportExport()"
+        title="CSV Import/Export">
+        <img src="/assets/svg/upload-download.svg" alt="CSV Import/Export" class="csv-icon-image">
+      </button>
     </div>
     
     <!-- Admin Access Warning -->

@@ -70,6 +70,18 @@ link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / *Conversation Protoco
 | MQTT Topic, Trench Website, Trench Laptop
 | Trench-Team, Prof. Stütz & Dr. Klaus Köck
 
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-04-07_teacher[07.04.2025]*
+| Monteur-Admin, ERD, Messungen, Visualisierung, Toleranzbereich
+| Trench-Team, Prof. Palitsch-Infanger & Dr. Klaus Köck
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-10-20_teacher[20.10.2025]*
+| Trench-Notebook Setup, Fortschritt, Offene Fragen
+| Trench-Team, Prof. Palitsch-Infanger & Dr. Klaus Köck
+
+| *link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/teacher/2025-12-10_teacher[10.12.2025]*
+| Sprint-Fortschritt, Testautomatisierung, Excel Import/Export, Messdatenerfassung, Produktreife
+| Trench-Team, Prof. Aberger & Michael Palitsch
+
 |===
 
 == Project Meetings

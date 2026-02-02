@@ -180,7 +180,7 @@ namespace TrenchAPI.WebAPI.Services
     }
 }
 
-        public async Task StartMeasurement(int messungId, int messeinstellungId)
+        public virtual async Task StartMeasurement(int messungId, int messeinstellungId)
         {
             _logger.LogInformation($"Starting measurement: MessungID={messungId}, MesseinstellungID={messeinstellungId}");
 

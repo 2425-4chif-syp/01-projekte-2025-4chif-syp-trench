@@ -8,10 +8,7 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy the solution file
-COPY ["TrenchAPI.sln", "./"]
-
-# Copy project files so we can restore them
+# Copy project files so we can restore them (skip solution file to avoid test project issues)
 COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
 COPY ["ConsoleMQTT/ConsoleMQTT.csproj", "ConsoleMQTT/"]
 COPY ["ConsoleFillDb/ConsoleFillDb.csproj", "ConsoleFillDb/"]
@@ -19,8 +16,10 @@ COPY ["Core/Core.csproj", "Core/"]
 COPY ["Persistence/Persistence.csproj", "Persistence/"]
 COPY ["Utils/Utils.csproj", "Utils/"]
 
-# Restore solution
-RUN dotnet restore "TrenchAPI.sln"
+# Restore only the projects we need (skip TrenchAPI.Tests which targets .NET 10.0)
+RUN dotnet restore "WebAPI/WebAPI.csproj"
+RUN dotnet restore "ConsoleMQTT/ConsoleMQTT.csproj"
+RUN dotnet restore "ConsoleFillDb/ConsoleFillDb.csproj"
 
 # Copy the rest of the source code
 COPY . .
@@ -35,8 +34,10 @@ RUN dotnet clean || true
 RUN find . -name "obj" -type d -exec rm -rf {} + || true
 RUN find . -name "bin" -type d -exec rm -rf {} + || true
 
-# Build the entire solution first to resolve dependencies
-RUN dotnet build TrenchAPI.sln -c Release
+# Build each project individually (skip solution to avoid test project)
+RUN dotnet build "WebAPI/WebAPI.csproj" -c Release
+RUN dotnet build "ConsoleMQTT/ConsoleMQTT.csproj" -c Release
+RUN dotnet build "ConsoleFillDb/ConsoleFillDb.csproj" -c Release
 
 # Now publish each project individually to separate output directories
 RUN dotnet publish "WebAPI/WebAPI.csproj" -c Release -o /app/publish/api --no-build

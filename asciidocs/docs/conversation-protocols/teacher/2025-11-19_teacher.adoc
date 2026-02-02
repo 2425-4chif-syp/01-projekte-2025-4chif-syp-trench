@@ -1,0 +1,130 @@
+= Besprechungsprotokoll 19.11.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 19.11.2025*
+
+-
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Trench-Team
+|Trench-Team
+
+|Prof. Aberger
+|
+
+|Prof. Palitsch-Infanger
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|HTL Leonding
+
+|am
+|Di. 19.11.2025
+|Dauer
+|-
+|===
+
+
+
+== Besprochene Themen
+
+* Frontend-Updates und neue Features
+* CSV Import/Export
+* Kontakt mit Dr. Koeck
+* Messdaten (Fake vs. Echtdaten)
+* Deployment-Strategie
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Aberger & Prof. Palitsch-Infanger & Trench-Team
+a|
+
+== 1. Frontend-Updates (präsentiert von A)
+
+* **Neue Features:**
+  - Kommazeichen bei Eingabe: Unterstützung für sowohl `,` als auch `.` als Dezimaltrennzeichen
+  - Messondentyp Alpha: Neuer Sondentyp wurde hinzugefügt
+  - Sonden pro Schenkel: Plausibilitätsprüfung implementiert - System berechnet automatisch wie viele Sonden sich ausgehen
+  - Performance: Allgemeine Verbesserung der Geschwindigkeit wurde positiv aufgenommen
+
+* **Behobene Probleme:**
+  - Sondentabelle in Messeinstellung: Funktionierte nicht und warf 500-Fehler
+    - A hat das Problem während des Meetings behoben
+    - Prof. Palitsch-Infanger fand die Tabelle sauber
+  - Keine Sonden geladen: Problem wurde identifiziert - es waren keine Sonden vom ausgewählten Sondentyp erstellt worden
+
+== 2. Kontakt mit Dr. Koeck und MQTT
+
+* **Prof. Palitsch-Infanger:**
+  - Fragte nach dem Zeitplan für das Ausprobieren mit Dr. Koeck
+
+* **X berichtete über MQTT-Implementierung:**
+  - Wird erst bis zum nächsten Sprintmeeting fertig sein
+  - Erklärte den MQTT-Plan von Trench
+
+== 3. CSV Import/Export (präsentiert von Simon)
+
+* **Anforderungen und Diskussion:**
+  - Simon präsentierte CSV Import/Export Feature
+  - Prof. Aberger: Trench hat wahrscheinlich viele verschiedene File-Formate
+    - Import/Export ist nicht primär für Trench gedacht
+    - Excel-Format ist für uns manuell und kurzfristig gedacht
+    - Wir müssen das Trench-Format nicht einhalten
+
+* **Vorschläge:**
+  - Beispiel-ZIP mit CSV-Dateien an Trench geben und fragen ob sie Daten in diesem Format liefern könnten
+  - Wichtig für Dr. Koeck: Möglichkeit zum Download um Konfigurationen auf anderen Geräten wiederverwenden zu können
+  - Simon's Dokumentation für CSV Import/Export wurde positiv bewertet
+
+* **Excel-Export (Wunsch von Prof. Aberger):**
+  - Excel-File mit Tabs, alles in einer Datei
+  - Formatiert mit Titel etc.
+  - Eventuell zusätzlich zu CSV
+  - Umsetzung mit Apache POI (.NET-Äquivalent)
+  - Ist nur ein Wunsch, keine zwingende Anforderung
+
+== 4. Messdaten
+
+* **Prof. Palitsch-Infanger:**
+  - "Fake it till you make it" Ansatz für Messdaten
+  - X arbeitet an der Implementierung
+
+* **Wichtige Anforderungen:**
+  - Gutes Faken der Daten ermöglichen
+  - Switchen zwischen echten und Fake-Daten ermöglichen
+
+== 5. Deployment
+
+* **Prof. Aberger:**
+  - Localhost ist nicht ideal
+
+* **Trench:**
+  - Möchte die Anwendung auf localhost haben
+  - CSV Import/Export ist eine gute Lösung dafür
+
+* **Vorschlag:**
+  - Selbstextrahierendes Archiv (z.B. .exe), wie ein ZIP das sich auspackt und läuft
+
+== 6. Fazit
+
+* **Prof. Palitsch-Infanger:**
+  - Was der Kunde wünscht ist im Prinzip umgesetzt
+  - Gutes, mehr oder weniger fertiges Projekt
+
+== 7. Offene Punkte / Todos
+
+* Hinweis implementieren wenn es keine Sonden vom ausgewählten Sondentyp gibt (Vorschlag Prof. Aberger)
+* Excel Import/Export eventuell implementieren (optional)
+|===

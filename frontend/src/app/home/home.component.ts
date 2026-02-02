@@ -51,6 +51,10 @@ export class HomeComponent {
     this.router.navigate(['/measurement-management']);
   }
 
+  navigateToCsvImportExport() {
+    this.router.navigate(['/csv-import-export']);
+  }
+
   logout(event: Event): void {
     event.preventDefault();
     this.authService.logout();

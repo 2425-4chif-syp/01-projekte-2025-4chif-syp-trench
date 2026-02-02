@@ -78,6 +78,21 @@ table {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
+
+  .btn {
+    padding: 0.375rem 0.625rem;
+    min-width: 36px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+    }
+  }
 }
 
 .empty-state {
@@ -108,8 +123,14 @@ table {
   width: 16px;
   height: 16px;
   display: inline-block;
-  vertical-align: -0.125em;
+  vertical-align: middle;
   pointer-events: none;
+}
+
+.action-buttons .icon {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .btn-primary .icon,

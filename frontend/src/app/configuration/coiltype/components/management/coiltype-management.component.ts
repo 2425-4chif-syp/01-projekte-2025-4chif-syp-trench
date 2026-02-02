@@ -8,6 +8,7 @@ import { ModeService } from '../../../../services/mode.service';
 import { Subscription } from 'rxjs';
 import { AlertService } from '../../../../services/alert.service';
 import { DecimalCommaDirective } from '../../../../shared/decimal-comma.directive';
+import { ConfirmDeleteModalComponent } from '../../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 type CoiltypeField = keyof Coiltype;
 type NumericField = 'bandbreite' | 'schichthoehe' | 'durchmesser' | 'toleranzbereich';
@@ -22,7 +23,7 @@ interface NumericConstraint {
 @Component({
   selector: 'app-coiltype-management',
   standalone: true,
-  imports: [FormsModule, CommonModule, CoilVisualizationComponent, DecimalCommaDirective],
+  imports: [FormsModule, CommonModule, CoilVisualizationComponent, DecimalCommaDirective, ConfirmDeleteModalComponent],
   templateUrl: './coiltype-management.component.html',
   styleUrl: './coiltype-management.component.scss'
 })

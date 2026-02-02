@@ -1,0 +1,52 @@
+### SondenTyp API Tests - TrenchAPI
+@host = http://localhost:5127
+@apiKey = ichliebetrench
+@baseUrl = {{host}}
+
+### Get All SondenTyp
+GET {{baseUrl}}/api/SondenTyp
+KEY: {{apiKey}}
+
+### Get SondenTyp by ID
+# @name getSondenTypById
+GET {{baseUrl}}/api/SondenTyp/1
+KEY: {{apiKey}}
+
+### Create New SondenTyp
+# @name createSondenTyp
+POST {{baseUrl}}/api/SondenTyp
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "name": "Test Sonden Typ",
+  "breite": 10.5,
+  "hoehe": 15.0,
+  "windungszahl": 50,
+  "alpha": 0.85,
+  "notiz": "Test SondenTyp"
+}
+
+### Update SondenTyp
+@sondenTypId = 1
+PUT {{baseUrl}}/api/SondenTyp/{{sondenTypId}}
+KEY: {{apiKey}}
+Content-Type: application/json
+
+{
+  "id": {{sondenTypId}},
+  "name": "Updated Sonden Typ",
+  "breite": 12.0,
+  "hoehe": 18.0,
+  "windungszahl": 60,
+  "alpha": 0.90,
+  "notiz": "Updated SondenTyp"
+}
+
+### Delete SondenTyp by ID
+DELETE {{baseUrl}}/api/SondenTyp/999
+KEY: {{apiKey}}
+
+### Delete All SondenTyp
+# DELETE {{baseUrl}}/api/SondenTyp
+# KEY: {{apiKey}}

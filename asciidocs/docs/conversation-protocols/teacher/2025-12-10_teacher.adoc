@@ -1,0 +1,215 @@
+ = Besprechungsprotokoll 10.12.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Besprechungsprotokoll 10.12.2025*
+
+Emil Silber
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Filip Schauer
+|Trench-Team
+
+|Axel Csomany
+|Trench-Team
+
+|Emil Silber
+|Trench-Team
+
+|Aaron Schreiegg
+|Trench-Team
+
+|Simon Pesut
+|Trench-Team
+
+|Prof. Aberger
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|Raum 147
+
+|am
+|Di. 10.12.2025
+|Dauer
+|1 Stunde
+|===
+
+== Besprochene Themen
+
+* Sprint-Fortschritt und Backend-Arbeiten
+* Testautomatisierung und Qualitätssicherung
+* Frontend-Verbesserungen
+* Excel Import/Export-Funktionalität
+* Messdatenerfassung und -visualisierung
+* Produktreife und Praxistest
+
+== Vereinbarungen und Entscheidungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|wer |möchte 
+
+| Prof. Aberger u. Palitsch
+a|
+
+== 1. Sprint-Fortschritt und Backend-Arbeiten
+
+* **Emil Silber - Aktuelle Arbeiten:**
+  - Hauptsächlich Refactoring und Backend-Polierung
+  - Bugfixing (z.B. automatisches Speichern von Messwerten)
+  - Entfernung unnötiger Foreign Keys
+  - Komplettes Backend-Refactoring aufgrund instabiler Basis
+
+* **Problematik:**
+  - Viele unnötige Komponenten im Backend identifiziert
+  - Basis des Backends war von Anfang an instabil
+  - Derzeit wird hauptsächlich manuell auf Swagger oder Frontend getestet
+  - Bugs werden lokal auf dem Laptop rekonstruiert und behoben
+
+== 2. Testautomatisierung und Qualitätssicherung
+
+* **HTTP YAC:**
+  - Automatisierte HTTP-Request-Tests für die gesamte API
+  - Syntax ähnlich zu HTTP-Files aus IntelliJ/VS Code
+  - Statusabfragen integrieren (z.B. Status 200)
+  - Command-Line-Tool für automatisierten Ablauf
+  
+* **Implementierung:**
+  - **Sprint 1:** HTTP YAC Files für alle API-Funktionen erstellen
+  - **Später:** Integration in CI/CD-Pipeline
+  - Lokaler HTTP-Server über Docker für Tests
+
+* **Code-Abdeckungsgrad:**
+  - Report-Generierung zur Analyse der Testabdeckung
+  - Ziel: Alle .cs-Dateien grün (vollständig getestet)
+  - Statements, die bei Tests nicht durchlaufen werden, identifizieren
+  - Toten Code eliminieren
+
+* **Frontend-Tests:**
+  - Selenium Test-Kit für automatisierte Frontend-Tests
+  - Webdriver simuliert Browser-Interaktionen
+  - Tests auf URLs und HTML-Response-Auswertung
+  - Beispiele: Button-Status-Prüfung (disabled/enabled), Plausibilitätschecks
+  - Nicht für Sprint 1, aber wichtig für Produktstabilität
+
+* **CI/CD-Pipeline:**
+  - Automatische Tests bei jedem Commit/Merge
+  - Sofortige Identifikation fehlerhafter Commits
+  - Verhindert Integration ungetesteter Bugs
+
+== 3. Frontend-Verbesserungen
+
+* **Aaron Schreiegg - Durchgeführte Arbeiten:**
+  - Fenster bei Konfigurationsseiten maximiert für bessere Tablet-Nutzung
+  - Visualisierung beim Spulentyp zur Sicherstellung der Auswahl
+  - Messeinstellungen: Warning anzeigen, wenn keine Ensembletypen verfügbar sind
+
+* **Zeitstrahl und Messdatenverlauf:**
+  - Vergangene Messungen mit Visualisierung und Zeitstrahl
+  - Durchnavigierung der Messdaten möglich
+  - Timestamp-Anzeige (derzeit nur Uhrzeit, Datum fehlt)
+
+* **Zeitzonenhandling:**
+  - Speicherung in UTC
+  - Umwandlung im Frontend in lokale Zeitzone
+  - Sommer-/Winterzeit-Problematik beachten
+
+== 4. Excel Import/Export-Funktionalität
+
+* **Implementierung:**
+  - Excel-Download mit eigenen Sheets für verschiedene Datentypen
+  - Import-Funktionalität vollständig umgesetzt
+  - **Hinweis:** UI zeigt derzeit "nur ZIP-Dateien", obwohl Excel-Upload funktioniert
+
+* **Bewertung durch Prof. Aberger:**
+  - Sehr positive Rückmeldung zur Implementierung
+  - Wichtig für Benutzerakzeptanz (Vertrauen in Excel-Daten)
+  - Funktioniert ohne Office-Installation (Open XML Format)
+  - Wertet das Produkt deutlich auf
+
+== 5. Messdatenerfassung und -visualisierung
+
+* **Messwertfrequenz:**
+  - 18 Sensoren (6 pro Schenkel bei 3-Joch-Spule)
+  - Ca. 6 Messwerte pro Sekunde (18 Werte alle 3 Sekunden)
+  - Kontinuierliche Speicherung in Datenbank
+
+* **Datenbank:**
+  - PostgreSQL
+  - **Hinweis:** Bei Problemen Timescale DB-Funktion prüfen (für schnelle Zeitreihendaten)
+
+* **Visualisierung:**
+  - Ergebnisvektor-Darstellung mit Toleranzbereich
+  - Grüner Kreis: Toleranzbereich
+  - Roter Kreis: Aktueller Messwert (außerhalb = rot, innerhalb = grün)
+  - Dynamische Skalierung basierend auf durchschnittlicher Vektorlänge
+  - Schieberegler zum Durchscrollen der Messwerte
+
+* **Sensor-Nummerierung:**
+  - Im Uhrzeigersinn nummeriert
+  - Schenkel 1: Sensor 1-6, Schenkel 2: Sensor 7-12, Schenkel 3: Sensor 13-18
+  - Mouse-Over auf Pfeile zeigt Sensor-Information
+
+* **SVG-Aktualisierung:**
+  - Neue SVG für 4-Joch-Spulen von Dr. Köck erwartet
+  - Anpassung der Visualisierung nach Erhalt
+
+== 6. Docker und Deployment
+
+* **GitHub Packages:**
+  - Docker-Images in GitHub Organization Packages hosten
+  - Automatische Erstellung über CI/CD
+  - Authentifizierung mit Keys konfigurieren
+
+* **Docker Compose:**
+  - Saubere Implementierung
+  - Docker Volumes für Datenbank
+  - Stabile Lösung für verschiedene Arbeitsplätze
+  - Kombiniert mit Excel-Import/Export: Vollständige Portabilität
+
+== 7. MQTT-Integration
+
+* **Aktueller Stand:**
+  - MQTT-Struktur umgebaut
+  - Warten auf C#-Datei von Dr. Köck für korrektes Decoding der Werte
+  - Werte sind derzeit encoded (4 Werte, woraus einer extrahiert werden muss)
+  - Nach Erhalt: API-Kompatibilität zu Trench-System herstellen
+
+== 8. Produktreife und Praxistest
+
+* **Bewertung durch Prof. Aberger:**
+  - Sehr reifes Produkt
+  - Input/Export-Excel als Referenz für andere Projekte
+  - Testabdeckung als nächster wichtiger Schritt
+
+* **Praxistest bei Trench:**
+  - Test mit echter Spule, echten Sensoren und echtem Monteur
+  - Mittwochnachmittag als idealer Termin
+  - Video-Dokumentation für Projektpräsentation
+  - Wartet auf funktionierende MQTT-Integration
+  - Neuer Gesprächstermin nach MQTT-Implementierung
+
+* **Bewertungskriterien:**
+  - Doppel-Plus: Funktionierender Praxistest bei Trench
+  - Dreifach-Plus: Zusätzlich durchgehende Plus-Reviews im gesamten Projekt
+  - Project Award: Foto von echter Spule im Umspannwerk
+
+== 9. Weitere Aufgaben
+
+* **To-Do**
+  - HTTP YAC für API-Tests implementieren
+  - Testabdeckungsgrad-Report einrichten
+  - MQTT-Integration finalisieren (nach Erhalt der C#-Datei)
+  - Sensorknoten in Systemarchitektur einpflegen
+  - SVG für 4-Joch-Spulen integrieren
+  - Datum bei Messungen hinzufügen
+  - Upload-Hinweis korrigieren (Excel statt nur ZIP)
+  - Selenium-Tests für Frontend (späterer Sprint)
+|===

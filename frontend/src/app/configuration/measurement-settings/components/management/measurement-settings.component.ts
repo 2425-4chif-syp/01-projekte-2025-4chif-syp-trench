@@ -10,12 +10,13 @@ import { ProbePositionService } from '../../../probe-position/services/probe-pos
 import { Coil } from '../../../coil/interfaces/coil';
 import { ProbeType } from '../../../probe-type/interfaces/probe-type';
 import { AlertService } from '../../../../services/alert.service';
+import { ConfirmDeleteModalComponent } from '../../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 
 
 @Component({
   selector: 'app-measurement-settings',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ConfirmDeleteModalComponent],
   templateUrl: './measurement-settings.component.html',
   styleUrl: './measurement-settings.component.scss'
 })
