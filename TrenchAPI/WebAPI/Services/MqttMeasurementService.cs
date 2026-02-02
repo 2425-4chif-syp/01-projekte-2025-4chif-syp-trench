@@ -78,7 +78,7 @@ namespace TrenchAPI.WebAPI.Services
         }
 
         var topic = args.ApplicationMessage.Topic;
-        var payload = args.ApplicationMessage.ConvertPayloadToString();
+        var payloadBytes = args.ApplicationMessage.PayloadSegment.Array;
 
         // Parse topic: mqtt_topic/rj1/probe1 -> Schenkel X=1, Sensor Y=1
         var topicParts = topic.Split('/');
@@ -112,12 +112,14 @@ namespace TrenchAPI.WebAPI.Services
         // Construct the sensor key in the format "S{rjNumber}S{probeNumber}"
         var sensorKey = $"S{rjNumber}S{probeNumber}";
 
-        // Parse value
-        if (!double.TryParse(payload, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
+        // Parse value from binary payload
+        if (payloadBytes == null || payloadBytes.Length < 16)
         {
-            _logger.LogWarning($"Could not parse MQTT value: {payload}");
+            _logger.LogWarning($"Invalid payload length: {payloadBytes?.Length ?? 0} bytes");
             return;
         }
+        
+        var value = BitConverter.ToSingle(payloadBytes, 0);
 
         // Get SondenPosition ID from map
         if (!_sondenPositionMap.TryGetValue(sensorKey, out var sondenPositionId))

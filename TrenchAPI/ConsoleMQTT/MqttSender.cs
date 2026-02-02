@@ -90,9 +90,9 @@ namespace ConsoleMqtt
                         double u2 = 1.0 - random.NextDouble();
                         double standardNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
                         
-                        // Scale to range 0.256 to 6.144 (mean = 3.2, std dev = 0.98)
-                        double randomValue = 3.2 + standardNormal * 0.98;
-                        randomValue = Math.Max(0.256, Math.Min(6.144, randomValue)); // Clamp to range
+                        // Scale to range 2.5 to 3.9 (mean = 3.2, std dev = 0.35)
+                        double randomValue = 3.2 + standardNormal * 0.35;
+                        randomValue = Math.Max(2.5, Math.Min(3.9, randomValue)); // Clamp to range
                         
                         byte[] payload = new byte[16];
                         BitConverter.GetBytes((float)randomValue).CopyTo(payload, 0);
