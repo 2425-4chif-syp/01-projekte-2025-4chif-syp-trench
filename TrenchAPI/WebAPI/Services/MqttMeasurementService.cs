@@ -48,12 +48,12 @@ namespace TrenchAPI.WebAPI.Services
 
                 // Subscribe to topic
                 var topicFilter = new MqttTopicFilterBuilder()
-                    .WithTopic("trench_adc_test/#")
+                    .WithTopic("trench_mqtt_mock_v2/#")
                     .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
                     .Build();
 
                 await _mqttClient.SubscribeAsync(topicFilter, stoppingToken);
-                _logger.LogInformation("Subscribed to MQTT topic: trench_adc_test/#");
+                _logger.LogInformation("Subscribed to MQTT topic: trench_mqtt_mock_v2/#");
 
                 // Keep the service running
                 while (!stoppingToken.IsCancellationRequested)
@@ -68,89 +68,117 @@ namespace TrenchAPI.WebAPI.Services
         }
 
         private async Task HandleMqttMessage(MqttApplicationMessageReceivedEventArgs args)
+{
+    try
+    {
+        // Only process if a measurement is active
+        if (_currentMessungId == null || _currentMesseinstellungId == null)
         {
-            try
-            {
-                // Only process if a measurement is active
-                if (_currentMessungId == null || _currentMesseinstellungId == null)
-                {
-                    return;
-                }
-
-                var topic = args.ApplicationMessage.Topic;
-                var payload = args.ApplicationMessage.ConvertPayloadToString();
-
-                // Parse topic: trench_adc_test/S1S1 -> Schenkel 1, Sensor 1
-                var topicParts = topic.Split('/');
-                if (topicParts.Length != 2 || !topicParts[1].StartsWith("S"))
-                {
-                    return;
-                }
-
-                var sensorKey = topicParts[1]; // e.g., "S1S1"
-
-                // Parse value
-                if (!double.TryParse(payload, NumberStyles.Any, CultureInfo.InvariantCulture, out var value))
-                {
-                    _logger.LogWarning($"Could not parse MQTT value: {payload}");
-                    return;
-                }
-
-                // Get SondenPosition ID from map
-                if (!_sondenPositionMap.TryGetValue(sensorKey, out var sondenPositionId))
-                {
-                    _logger.LogWarning($"No SondenPosition found for key: {sensorKey}");
-                    return;
-                }
-
-                // Save to database
-                using var scope = _serviceProvider.CreateScope();
-                WebDbContext context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
-
-                // Create a new Messwert entity
-                Messwert messwert = new Messwert
-                {
-                    MessungID = _currentMessungId.Value,
-                    SondenPositionID = sondenPositionId,
-                    Wert = (decimal)value,
-                    Zeitpunkt = DateTime.UtcNow
-                };
-
-                context.Messwert.Add(messwert);
-                
-                try
-                {
-                    await context.SaveChangesAsync();
-                    _logger.LogDebug($"Saved Messwert: {sensorKey} = {value}");
-                }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
-                {
-                    // Duplicate key error - synchronize sequence and retry
-                    _logger.LogWarning($"Duplicate key error for Messwert, synchronizing sequence...");
-                    await SynchronizeMesswertSequenceAsync(context);
-                    
-                    // Clear the context and create a new entity
-                    context.ChangeTracker.Clear();
-                    var retryMesswert = new Messwert
-                    {
-                        MessungID = _currentMessungId.Value,
-                        SondenPositionID = sondenPositionId,
-                        Wert = (decimal)value,
-                        Zeitpunkt = DateTime.UtcNow
-                    };
-                    
-                    context.Messwert.Add(retryMesswert);
-                    
-                    // Retry once
-                    await context.SaveChangesAsync();
-                    _logger.LogDebug($"Saved Messwert after sequence sync: {sensorKey} = {value}");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error handling MQTT message for topic: {args.ApplicationMessage.Topic}");
-            }
+            return;
         }
+
+        var topic = args.ApplicationMessage.Topic;
+        var payloadBytes = args.ApplicationMessage.PayloadSegment.Array;
+
+        // Parse topic: mqtt_topic/rj1/probe1 -> Schenkel X=1, Sensor Y=1
+        var topicParts = topic.Split('/');
+        
+        // Expecting at least 3 parts: base_topic/rjX/probeY
+        if (topicParts.Length < 3)
+        {
+            return;
+        }
+
+        // Get the last two parts for rj and probe
+        var rjPart = topicParts[topicParts.Length - 2]; // e.g., "rj1"
+        var probePart = topicParts[topicParts.Length - 1]; // e.g., "probe1"
+
+        // Parse rj number (remove "rj" prefix)
+        if (!rjPart.StartsWith("rj", StringComparison.OrdinalIgnoreCase) || 
+            !int.TryParse(rjPart.Substring(2), out var rjNumber))
+        {
+            _logger.LogWarning($"Could not parse rj number from topic part: {rjPart}");
+            return;
+        }
+
+        // Parse probe number (remove "probe" prefix)
+        if (!probePart.StartsWith("probe", StringComparison.OrdinalIgnoreCase) || 
+            !int.TryParse(probePart.Substring(5), out var probeNumber))
+        {
+            _logger.LogWarning($"Could not parse probe number from topic part: {probePart}");
+            return;
+        }
+
+        // Construct the sensor key in the format "S{rjNumber}S{probeNumber}"
+        var sensorKey = $"S{rjNumber}S{probeNumber}";
+
+        // Parse value from binary payload
+        if (payloadBytes == null || payloadBytes.Length < 16)
+        {
+            _logger.LogWarning($"Invalid payload length: {payloadBytes?.Length ?? 0} bytes");
+            return;
+        }
+        
+        var value = BitConverter.ToSingle(payloadBytes, 0);
+
+        // Get SondenPosition ID from map
+        if (!_sondenPositionMap.TryGetValue(sensorKey, out var sondenPositionId))
+        {
+            _logger.LogWarning($"No SondenPosition found for key: {sensorKey}");
+            return;
+        }
+
+        // Log which subtopics we traversed (for debugging/tracking)
+        _logger.LogDebug($"Processing MQTT message - Topic: {topic}, RJ: {rjNumber}, Probe: {probeNumber}, SensorKey: {sensorKey}");
+
+        // Save to database
+        using var scope = _serviceProvider.CreateScope();
+        WebDbContext context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
+
+        // Create a new Messwert entity
+        Messwert messwert = new Messwert
+        {
+            MessungID = _currentMessungId.Value,
+            SondenPositionID = sondenPositionId,
+            Wert = (decimal)value,
+            Zeitpunkt = DateTime.UtcNow
+        };
+
+        context.Messwert.Add(messwert);
+        
+        try
+        {
+            await context.SaveChangesAsync();
+            _logger.LogDebug($"Saved Messwert: {sensorKey} = {value}");
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException ex) when (ex.InnerException is PostgresException pgEx && pgEx.SqlState == "23505")
+        {
+            // Duplicate key error - synchronize sequence and retry
+            _logger.LogWarning($"Duplicate key error for Messwert, synchronizing sequence...");
+            await SynchronizeMesswertSequenceAsync(context);
+            
+            // Clear the context and create a new entity
+            context.ChangeTracker.Clear();
+            var retryMesswert = new Messwert
+            {
+                MessungID = _currentMessungId.Value,
+                SondenPositionID = sondenPositionId,
+                Wert = (decimal)value,
+                Zeitpunkt = DateTime.UtcNow
+            };
+            
+            context.Messwert.Add(retryMesswert);
+            
+            // Retry once
+            await context.SaveChangesAsync();
+            _logger.LogDebug($"Saved Messwert after sequence sync: {sensorKey} = {value}");
+        }
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, $"Error handling MQTT message for topic: {args.ApplicationMessage.Topic}");
+    }
+}
 
         public virtual async Task StartMeasurement(int messungId, int messeinstellungId)
         {
