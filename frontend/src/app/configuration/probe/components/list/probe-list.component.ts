@@ -9,6 +9,7 @@ import { ProbePositionService } from '../../../probe-position/services/probe-pos
 import { ProbePosition } from '../../../probe-position/interfaces/probe-position.model';
 import { ProbePositionsBackendService } from '../../../probe-position/services/probe-positions-backend.service';
 import { MeasurementSettingsService } from '../../../measurement-settings/services/measurement-settings.service';
+import { AlertService } from '../../../../services/alert.service';
 
 @Component({
   selector: 'app-probe-list',
@@ -45,7 +46,8 @@ export class ProbeListComponent {
     private probePositionsBackendService: ProbePositionsBackendService,
     private measurementSettingsService:   MeasurementSettingsService,
     private router:                       Router,
-    private route:                        ActivatedRoute
+    private route:                        ActivatedRoute,
+    private alertService:                 AlertService
   ) {}
 
   async ngOnInit():Promise<void> {
@@ -100,6 +102,39 @@ export class ProbeListComponent {
 
     this.hasLoadedElementIdsToIgnore = false;
     await this.loadElementsToIgnore();
+    
+    // Show notification about probe type filtering when in selector mode
+    if (this.probesService.isProbeSelector) {
+      const currentSetting = this.measurementSettingsService.selectedElementCopy;
+      const probeType = currentSetting?.probeType;
+      
+      if (probeType && currentSetting?.probeTypeId && this.probesService.elements.length > 0) {
+        // Show info about filtering only when probes are available
+        this.alertService.info(
+          `Sonden werden nach Typ gefiltert`,
+          { 
+            details: `Es werden nur Sonden vom Typ "${probeType.name}" angezeigt, die zur Messeinstellung passen.`,
+            autoClose: true,
+            timeoutMs: 5000
+          }
+        );
+      }
+    }
+  }
+
+  get noProbesMessage(): string | null {
+    if (!this.probesService.isProbeSelector) {
+      return null;
+    }
+    
+    const currentSetting = this.measurementSettingsService.selectedElementCopy;
+    const probeType = currentSetting?.probeType;
+    
+    if (probeType && currentSetting?.probeTypeId && this.probesService.elements.length === 0) {
+      return `Keine Sonden vom Typ "${probeType.name}" verfügbar. Bitte erstellen Sie zuerst eine Sonde dieses Typs.`;
+    }
+    
+    return null;
   }
 
   private async loadElementsToIgnore(): Promise<void> {

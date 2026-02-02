@@ -1,8 +1,6 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-xl-10 col-lg-11">
-      <ng-container *ngIf="selectedProbe; else loadError">
-        <div class="card shadow-sm modern-card">
+<div class="probe-management-wrapper">
+  <ng-container *ngIf="selectedProbe; else loadError">
+    <div class="card shadow-sm modern-card">
           <div class="form-header">
             <div class="form-header__titles">
               <h3>{{ probesService.selectedElementIsNew ? 'Neue Sonde' : 'Sonde bearbeiten' }}</h3>
@@ -143,8 +141,6 @@
           <!-- global alerts used instead of inline save messages -->
         </div>
       </ng-container>
-    </div>
-  </div>
 </div>
 
 <ng-template #loadError>

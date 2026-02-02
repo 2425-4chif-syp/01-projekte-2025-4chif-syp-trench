@@ -1,39 +1,43 @@
-<div class="management-wrapper">
-  <div class="container">
-    <!-- Monteur-Modus Hinweis -->
-    @if (readOnly) {
-      <div class="monteur-mode-notice">
-        <div class="notice-icon">
-          <i class="fas fa-user-cog"></i>
-        </div>
-        <div class="notice-content">
-          <div class="notice-title">Monteur-Modus</div>
-          <div class="notice-description">Felder sind schreibgeschützt</div>
-        </div>
+<div class="probe-type-management-container">
+  <!-- Monteur-Modus Hinweis -->
+  @if (readOnly) {
+    <div class="monteur-mode-notice">
+      <div class="notice-icon">
+        <i class="fas fa-user-cog"></i>
       </div>
-    }
-
-    <div class="management-row">
-      <!-- Form column -->
-      <div class="management-column management-column--form">
-        <h2 class="mb-4 text-center">
-          {{ measurementProbeTypesService.selectedElementIsNew ? 'Neuer Messsondentyp' : 'Messsondentyp bearbeiten' }}
-        </h2>
-
-        <app-probe-type-form [readOnly]="readOnly"></app-probe-type-form>
-      </div>
-      <!-- Visualization column -->
-      <div class="management-column management-column--visualization">
-        <app-probe-type-visualization
-          [selectedProbeType]="selectedProbeType"
-          [selectedProbeTypeId]="selectedProbeTypeId"
-          [elements]="measurementProbeTypesService.elements"
-          [isNew]="measurementProbeTypesService.selectedElementIsNew"
-          (selectionChange)="onProbeTypeSelectionChange($event)"
-        ></app-probe-type-visualization>
+      <div class="notice-content">
+        <div class="notice-title">Monteur-Modus</div>
+        <div class="notice-description">Felder sind schreibgeschützt</div>
       </div>
     </div>
+  }
 
-    <!-- global alerts used instead of inline save messages -->
+  <div class="management-grid">
+    <!-- Messsondentyp Verwaltung -->
+    <div class="form-section">
+      <h2 class="mb-4 text-center">
+        {{ measurementProbeTypesService.selectedElementIsNew ? 'Neuer Messsondentyp' : 'Messsondentyp bearbeiten' }}
+      </h2>
+
+      <app-probe-type-form [readOnly]="readOnly"></app-probe-type-form>
+    </div>
+
+    <!-- Trennlinie -->
+    <div class="divider-section">
+      <div class="vertical-divider"></div>
+    </div>
+
+    <!-- Visualisierung -->
+    <div class="visualization-section">
+      <app-probe-type-visualization
+        [selectedProbeType]="selectedProbeType"
+        [selectedProbeTypeId]="selectedProbeTypeId"
+        [elements]="measurementProbeTypesService.elements"
+        [isNew]="measurementProbeTypesService.selectedElementIsNew"
+        (selectionChange)="onProbeTypeSelectionChange($event)"
+      ></app-probe-type-visualization>
+    </div>
   </div>
+
+  <!-- global alerts used statt inline save messages -->
 </div>

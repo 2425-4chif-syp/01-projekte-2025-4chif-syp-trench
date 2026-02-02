@@ -1,4 +1,4 @@
-<div class="container" style="margin-top: 4%">
+<div class="coiltype-management-container">
   <!-- Monteur-Modus Hinweis -->
   @if (readOnly) {
     <div class="monteur-mode-notice">
@@ -12,9 +12,9 @@
     </div>
   }
 
-  <div class="row justify-content-center">
+  <div class="management-grid">
     <!-- Spulentyp Verwaltung -->
-    <div class="col-lg-5 col-md-6">
+    <div class="form-section">
       <h2 class="mb-4 text-center">
         {{ coiltypesService.selectedElementIsNew ? 'Neuer Spulentyp' : 'Spulentyp bearbeiten' }}
       </h2>
@@ -31,219 +31,216 @@
         </div>
 
         <form #coiltypeForm="ngForm" (ngSubmit)="onSubmit(coiltypeForm)" class="modern-form was-validated">
-          <div class="form-layout">
-            <div class="form-column form-column--main">
-              <!-- Name -->
-              <div class="form-field">
-                <label for="name" class="form-label">Spulentyp-Name</label>
-                <div class="input-shell" [class.invalid]="shouldShowFieldError('name', nameElement)">
+          <div class="form-content">
+            <!-- Name -->
+            <div class="form-field">
+              <label for="name" class="form-label">Spulentyp-Name</label>
+              <div class="input-shell" [class.invalid]="shouldShowFieldError('name', nameElement)">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Spulenname eingeben"
+                  [(ngModel)]="selectedCoiltype.name"
+                  name="name"
+                  #nameElement="ngModel"
+                  minlength="2"
+                  required
+                  [readonly]="readOnly"
+                  (ngModelChange)="onFieldChange('name')"
+                  (blur)="onFieldBlur('name')"
+                  [class.is-invalid]="shouldShowFieldError('name', nameElement)"
+                />
+              </div>
+              @if(fieldError('name')){
+                <div class="invalid-feedback">{{ fieldError('name') }}</div>
+              }
+            </div>
+
+            <!-- Schenkel -->
+            <div class="form-field">
+              <label class="form-label">Schenkel</label>
+              <div
+                class="segment-group"
+                role="group"
+                aria-label="Schenkelanzahl"
+                [class.invalid]="shouldShowFieldError('schenkel', schenkelElement)"
+              >
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="schenkel"
+                  id="sch-2"
+                  [value]="2"
+                  [(ngModel)]="selectedCoiltype.schenkel"
+                  #schenkelElement="ngModel"
+                  required
+                  [disabled]="readOnly"
+                  (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
+                />
+                <label class="btn segment-btn" for="sch-2">2</label>
+
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="schenkel"
+                  id="sch-3"
+                  [value]="3"
+                  [(ngModel)]="selectedCoiltype.schenkel"
+                  required
+                  [disabled]="readOnly"
+                  (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
+                />
+                <label class="btn segment-btn" for="sch-3">3</label>
+
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="schenkel"
+                  id="sch-4"
+                  [value]="4"
+                  [(ngModel)]="selectedCoiltype.schenkel"
+                  required
+                  [disabled]="readOnly"
+                  (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
+                />
+                <label class="btn segment-btn" for="sch-4">4</label>
+              </div>
+            </div>
+
+            <!-- 2x2 Grid: Metriken -->
+            <div class="metric-grid">
+              <!-- Bandbreite -->
+              <div class="form-field metric-field">
+                <label for="bandbreite" class="form-label">Bandbreite (mm)</label>
+                <div class="input-shell" [class.invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)">
                   <input
                     type="text"
+                    inputmode="decimal"
+                    appDecimalComma
                     class="form-control"
-                    id="name"
-                    placeholder="Spulenname eingeben"
-                    [(ngModel)]="selectedCoiltype.name"
-                    name="name"
-                    #nameElement="ngModel"
-                    minlength="2"
+                    id="bandbreite"
+                    placeholder="Bandbreite in mm"
+                    [(ngModel)]="selectedCoiltype.bandbreite"
+                    name="bandbreite"
+                    #bandbreiteElement="ngModel"
+                    min="0.01"
+                    step="0.01"
                     required
                     [readonly]="readOnly"
-                    (ngModelChange)="onFieldChange('name')"
-                    (blur)="onFieldBlur('name')"
-                    [class.is-invalid]="shouldShowFieldError('name', nameElement)"
+                    (ngModelChange)="onFieldChange('bandbreite')"
+                    (blur)="onFieldBlur('bandbreite')"
+                    [class.is-invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)"
                   />
                 </div>
-                @if(fieldError('name')){
-                  <div class="invalid-feedback">{{ fieldError('name') }}</div>
+                @if(fieldError('bandbreite')){
+                  <div class="invalid-feedback">{{ fieldError('bandbreite') }}</div>
                 }
               </div>
 
-              <!-- Schenkel -->
-              <div class="form-field">
-                <label class="form-label">Schenkel</label>
-                <div
-                  class="segment-group"
-                  role="group"
-                  aria-label="Schenkelanzahl"
-                  [class.invalid]="shouldShowFieldError('schenkel', schenkelElement)"
-                >
+              <!-- Schichthöhe -->
+              <div class="form-field metric-field">
+                <label for="schichthoehe" class="form-label">Schichthöhe (mm)</label>
+                <div class="input-shell" [class.invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)">
                   <input
-                    type="radio"
-                    class="btn-check"
-                    name="schenkel"
-                    id="sch-2"
-                    [value]="2"
-                    [(ngModel)]="selectedCoiltype.schenkel"
-                    #schenkelElement="ngModel"
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="schichthoehe"
+                    placeholder="Schichthöhe in mm"
+                    [(ngModel)]="selectedCoiltype.schichthoehe"
+                    name="schichthoehe"
+                    #schichthoeheElement="ngModel"
+                    min="0.01"
+                    step="0.01"
                     required
-                    [disabled]="readOnly"
-                    (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
+                    [readonly]="readOnly"
+                    (ngModelChange)="onFieldChange('schichthoehe')"
+                    (blur)="onFieldBlur('schichthoehe')"
+                    [class.is-invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)"
                   />
-                  <label class="btn segment-btn" for="sch-2">2</label>
-
-                  <input
-                    type="radio"
-                    class="btn-check"
-                    name="schenkel"
-                    id="sch-3"
-                    [value]="3"
-                    [(ngModel)]="selectedCoiltype.schenkel"
-                    required
-                    [disabled]="readOnly"
-                    (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
-                  />
-                  <label class="btn segment-btn" for="sch-3">3</label>
-
-                  <input
-                    type="radio"
-                    class="btn-check"
-                    name="schenkel"
-                    id="sch-4"
-                    [value]="4"
-                    [(ngModel)]="selectedCoiltype.schenkel"
-                    required
-                    [disabled]="readOnly"
-                    (change)="onFieldChange('schenkel'); onFieldBlur('schenkel')"
-                  />
-                  <label class="btn segment-btn" for="sch-4">4</label>
                 </div>
+                @if(fieldError('schichthoehe')){
+                  <div class="invalid-feedback">{{ fieldError('schichthoehe') }}</div>
+                }
+              </div>
+
+              <!-- Durchmesser -->
+              <div class="form-field metric-field">
+                <label for="durchmesser" class="form-label">Durchmesser (mm)</label>
+                <div class="input-shell" [class.invalid]="shouldShowFieldError('durchmesser', durchmesserElement)">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="durchmesser"
+                    placeholder="Durchmesser in mm"
+                    [(ngModel)]="selectedCoiltype.durchmesser"
+                    name="durchmesser"
+                    #durchmesserElement="ngModel"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    [readonly]="readOnly"
+                    (ngModelChange)="onFieldChange('durchmesser')"
+                    (blur)="onFieldBlur('durchmesser')"
+                    [class.is-invalid]="shouldShowFieldError('durchmesser', durchmesserElement)"
+                  />
+                </div>
+                @if(fieldError('durchmesser')){
+                  <div class="invalid-feedback">{{ fieldError('durchmesser') }}</div>
+                }
+              </div>
+
+              <!-- Toleranzbereich -->
+              <div class="form-field metric-field">
+                <label for="toleranzbereich" class="form-label">Toleranzbereich (kg)</label>
+                <div class="input-shell" [class.invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)">
+                  <input
+                    type="text"
+                    inputmode="decimal"
+                    appDecimalComma
+                    class="form-control"
+                    id="toleranzbereich"
+                    placeholder="Toleranzbereich in kg"
+                    [(ngModel)]="selectedCoiltype.toleranzbereich"
+                    name="toleranzbereich"
+                    #toleranzElement="ngModel"
+                    min="0.01"
+                    step="0.01"
+                    required
+                    [readonly]="readOnly"
+                    (ngModelChange)="onFieldChange('toleranzbereich')"
+                    (blur)="onFieldBlur('toleranzbereich')"
+                    [class.is-invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)"
+                  />
+                </div>
+                @if(fieldError('toleranzbereich')){
+                  <div class="invalid-feedback">{{ fieldError('toleranzbereich') }}</div>
+                }
               </div>
             </div>
 
-            <div class="form-column form-column--metrics">
-              <div class="metric-grid">
-                <!-- Bandbreite -->
-                <div class="form-field metric-field">
-                  <label for="bandbreite" class="form-label">Bandbreite (mm)</label>
-                  <div class="input-shell" [class.invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)">
-                    <input
-                      type="text"
-                      inputmode="decimal"
-                      appDecimalComma
-                      class="form-control"
-                      id="bandbreite"
-                      placeholder="Bandbreite in mm"
-                      [(ngModel)]="selectedCoiltype.bandbreite"
-                      name="bandbreite"
-                      #bandbreiteElement="ngModel"
-                      min="0.01"
-                      step="0.01"
-                      required
-                      [readonly]="readOnly"
-                      (ngModelChange)="onFieldChange('bandbreite')"
-                      (blur)="onFieldBlur('bandbreite')"
-                      [class.is-invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)"
-                    />
-                  </div>
-                  @if(fieldError('bandbreite')){
-                    <div class="invalid-feedback">{{ fieldError('bandbreite') }}</div>
-                  }
-                </div>
-
-                <!-- Schichthöhe -->
-                <div class="form-field metric-field">
-                  <label for="schichthoehe" class="form-label">Schichthöhe (mm)</label>
-                  <div class="input-shell" [class.invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)">
-                    <input
-                      type="text"
-                      inputmode="decimal"
-                      appDecimalComma
-                      class="form-control"
-                      id="schichthoehe"
-                      placeholder="Schichthöhe in mm"
-                      [(ngModel)]="selectedCoiltype.schichthoehe"
-                      name="schichthoehe"
-                      #schichthoeheElement="ngModel"
-                      min="0.01"
-                      step="0.01"
-                      required
-                      [readonly]="readOnly"
-                      (ngModelChange)="onFieldChange('schichthoehe')"
-                      (blur)="onFieldBlur('schichthoehe')"
-                      [class.is-invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)"
-                    />
-                  </div>
-                  @if(fieldError('schichthoehe')){
-                    <div class="invalid-feedback">{{ fieldError('schichthoehe') }}</div>
-                  }
-                </div>
-
-                <!-- Durchmesser -->
-                <div class="form-field metric-field">
-                  <label for="durchmesser" class="form-label">Durchmesser (mm)</label>
-                  <div class="input-shell" [class.invalid]="shouldShowFieldError('durchmesser', durchmesserElement)">
-                    <input
-                      type="text"
-                      inputmode="decimal"
-                      appDecimalComma
-                      class="form-control"
-                      id="durchmesser"
-                      placeholder="Durchmesser in mm"
-                      [(ngModel)]="selectedCoiltype.durchmesser"
-                      name="durchmesser"
-                      #durchmesserElement="ngModel"
-                      min="0.01"
-                      step="0.01"
-                      required
-                      [readonly]="readOnly"
-                      (ngModelChange)="onFieldChange('durchmesser')"
-                      (blur)="onFieldBlur('durchmesser')"
-                      [class.is-invalid]="shouldShowFieldError('durchmesser', durchmesserElement)"
-                    />
-                  </div>
-                  @if(fieldError('durchmesser')){
-                    <div class="invalid-feedback">{{ fieldError('durchmesser') }}</div>
-                  }
-                </div>
-
-                <!-- Toleranzbereich -->
-                <div class="form-field metric-field">
-                  <label for="toleranzbereich" class="form-label">Toleranzbereich (kg)</label>
-                  <div class="input-shell" [class.invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)">
-                    <input
-                      type="text"
-                      inputmode="decimal"
-                      appDecimalComma
-                      class="form-control"
-                      id="toleranzbereich"
-                      placeholder="Toleranzbereich in kg"
-                      [(ngModel)]="selectedCoiltype.toleranzbereich"
-                      name="toleranzbereich"
-                      #toleranzElement="ngModel"
-                      min="0.01"
-                      step="0.01"
-                      required
-                      [readonly]="readOnly"
-                      (ngModelChange)="onFieldChange('toleranzbereich')"
-                      (blur)="onFieldBlur('toleranzbereich')"
-                      [class.is-invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)"
-                    />
-                  </div>
-                  @if(fieldError('toleranzbereich')){
-                    <div class="invalid-feedback">{{ fieldError('toleranzbereich') }}</div>
-                  }
-                </div>
+            <!-- Notiz (optional) -->
+            <div class="form-field form-field--wide note-field">
+              <label for="content" class="form-label">Notiz</label>
+              <div class="input-shell">
+                <textarea
+                  id="content"
+                  class="form-control"
+                  name="notiz"
+                  rows="3"
+                  [(ngModel)]="selectedCoiltype.notiz"
+                  placeholder="Notiz..."
+                  [readonly]="readOnly"
+                ></textarea>
               </div>
             </div>
           </div>
 
-          <!-- Notiz (optional) -->
-          <div class="form-field form-field--wide note-field">
-            <label for="content" class="form-label">Notiz</label>
-            <div class="input-shell">
-              <textarea
-                id="content"
-                class="form-control"
-                name="notiz"
-                rows="3"
-                [(ngModel)]="selectedCoiltype.notiz"
-                placeholder="Notiz..."
-                [readonly]="readOnly"
-              ></textarea>
-            </div>
-          </div>
-
-          <!-- Buttons -->
+          <!-- Buttons - Fix am unteren Rand -->
           <div class="form-actions">
             @if (!readOnly) {
               <button
@@ -290,12 +287,12 @@
     </div>
 
     <!-- Trennlinie -->
-    <div class="col-lg-1 d-none d-lg-flex align-items-center justify-content-center">
-      <div class="border-end" style="height: 100%; width: 2px; background-color: #ccc;"></div>
+    <div class="divider-section">
+      <div class="vertical-divider"></div>
     </div>
 
     <!-- Visualisierung -->
-    <div class="col-lg-6 col-md-6 visualization-column">
+    <div class="visualization-section">
       <div
         *ngIf="!coiltypesService.selectedElementIsNew && coiltypesService.elements.length > 0"
         class="select-wrapper"
