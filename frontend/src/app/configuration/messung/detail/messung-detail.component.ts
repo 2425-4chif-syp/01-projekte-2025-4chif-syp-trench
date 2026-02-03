@@ -11,6 +11,8 @@ import { Measurement } from '../../measurement-history/interfaces/measurement.mo
 import { DisplacementCalculationService } from '../../../calculation/displacement/displacement-calculation.service';
 import { MeasurementSettingsService } from '../../measurement-settings/services/measurement-settings.service';
 import { MeasurementSetting } from '../../measurement-settings/interfaces/measurement-settings';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { environment } from '../../../../environments/environment';
 
 // Small helper to coerce possible string timestamps into Date
 function asDate(d: any): Date | null {
@@ -33,11 +35,15 @@ export class MessungDetailComponent {
     public messwertService: MesswertBackendService,
     private router: Router,
     private displacementCalculation: DisplacementCalculationService,
-    private measurementSettingsService: MeasurementSettingsService) {}
+    private measurementSettingsService: MeasurementSettingsService,
+    private sanitizer: DomSanitizer) {}
+
+  public readonly environment = environment;
 
   measurement: Measurement | null = null;
   messwerte = signal<Messwert[]>([]);
   showDeleteModal: boolean = false;
+  public grafanaPanelUrls = new Map<number, SafeResourceUrl>();
 
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
@@ -57,6 +63,53 @@ export class MessungDetailComponent {
     this.measurement = this.messungService.clickedMessung;
     await this.ensureMeasurementDetails();
     await this.loadMesswerte();
+    this.buildGrafanaPanelUrls();
+  }
+
+  public schenkelNumbers(): number[] {
+    const count = this.measurement?.messeinstellung?.coil?.coiltype?.schenkel ?? 0;
+    if (!count || count < 1) return [];
+    return Array.from({ length: count }, (_, i) => i + 1);
+  }
+
+  public grafanaSchenkelPanelUrl(schenkel: number): SafeResourceUrl | null {
+    const cached = this.grafanaPanelUrls.get(schenkel);
+    if (cached) return cached;
+
+    const base = (environment.grafanaBaseUrl ?? '').trim().replace(/\/+$/, '');
+    if (!base) return null;
+    const uid = environment.grafanaDashboardUid;
+    const slug = environment.grafanaDashboardSlug;
+    const orgId = environment.grafanaOrgId;
+    const panelId = environment.grafanaSchenkelPanelId;
+    const messungId = this.measurement?.id;
+    if (!uid || !slug || !panelId) return null;
+
+    const url = new URL(`${base}/d-solo/${encodeURIComponent(uid)}/${encodeURIComponent(slug)}`);
+    url.searchParams.set('orgId', String(orgId ?? 1));
+    url.searchParams.set('panelId', String(panelId));
+
+    const start = asDate(this.measurement?.anfangszeitpunkt);
+    const end = asDate(this.measurement?.endzeitpunkt);
+    const fromMs = start?.getTime() ?? Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const endMs = (end && end.getTime() > 0) ? end.getTime() : Date.now();
+    url.searchParams.set('from', String(fromMs));
+    url.searchParams.set('to', String(endMs));
+    url.searchParams.set('theme', 'light');
+    url.searchParams.set('var-schenkel', String(schenkel));
+    if (messungId) url.searchParams.set('var-messungId', String(messungId));
+
+    const safe = this.sanitizer.bypassSecurityTrustResourceUrl(url.toString());
+    this.grafanaPanelUrls.set(schenkel, safe);
+    return safe;
+  }
+
+  private buildGrafanaPanelUrls(): void {
+    this.grafanaPanelUrls.clear();
+    for (const s of this.schenkelNumbers()) {
+      const url = this.grafanaSchenkelPanelUrl(s);
+      if (url) this.grafanaPanelUrls.set(s, url);
+    }
   }
 
   /**
