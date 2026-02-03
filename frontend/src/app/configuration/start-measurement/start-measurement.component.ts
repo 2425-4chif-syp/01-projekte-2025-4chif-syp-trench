@@ -15,6 +15,8 @@ import { MessungService } from '../messung/services/messung.service';
 import { AlertService } from '../../services/alert.service';
 import { Router } from '@angular/router';
 import { MessungDetailAuswertungComponent } from '../messung/detail/auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 registerLocaleData(localeDe);
 
@@ -27,6 +29,8 @@ registerLocaleData(localeDe);
   styleUrl: './start-measurement.component.scss'
 })
 export class StartMeasurementComponent implements OnDestroy {
+  public grafanaPanelUrls = new Map<number, SafeResourceUrl>();
+
   yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
   m_tot = signal<number>(0);
@@ -58,7 +62,8 @@ export class StartMeasurementComponent implements OnDestroy {
     private probeTypesBackendService: ProbeTypesBackendService,
     public messungService: MessungService,
     private alerts: AlertService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {
     this.loadMeasurementSettings();
     // Überprüfe, ob bereits eine Messung läuft
@@ -72,6 +77,7 @@ export class StartMeasurementComponent implements OnDestroy {
       
       // Initialisiere die Yokes basierend auf den gespeicherten Messungsdaten
       this.initializeYokesFromMeasurementData();
+      this.buildGrafanaPanelUrlsForLive();
       
       this.connectToWebSocket();
     }
@@ -130,6 +136,38 @@ export class StartMeasurementComponent implements OnDestroy {
           });
         }
       }
+    }
+  }
+
+  private buildGrafanaPanelUrlsForLive(): void {
+    this.grafanaPanelUrls.clear();
+
+    const measurementId = this.messungService.getCurrentMeasurementId();
+    const setting = this.selectedMeasurementSetting;
+    const yokeCount = setting?.coil?.coiltype?.schenkel ?? 0;
+    if (!measurementId || !yokeCount || yokeCount < 1) return;
+
+    const base = (environment.grafanaBaseUrl ?? '').trim().replace(/\/+$/, '');
+    if (!base) return;
+    const uid = environment.grafanaDashboardUid;
+    const slug = environment.grafanaDashboardSlug;
+    const orgId = environment.grafanaOrgId;
+    const panelId = environment.grafanaSchenkelPanelId;
+    if (!uid || !slug || !panelId) return;
+
+    const startMs = this.startTime?.getTime() ?? Date.now() - 15 * 60 * 1000;
+
+    for (let i = 1; i <= yokeCount; i++) {
+      const url = new URL(`${base}/d-solo/${encodeURIComponent(uid)}/${encodeURIComponent(slug)}`);
+      url.searchParams.set('orgId', String(orgId ?? 1));
+      url.searchParams.set('panelId', String(panelId));
+      url.searchParams.set('from', String(startMs));
+      url.searchParams.set('to', 'now');
+      url.searchParams.set('refresh', '2s');
+      url.searchParams.set('theme', 'light');
+      url.searchParams.set('var-schenkel', String(i));
+      url.searchParams.set('var-messungId', String(measurementId));
+      this.grafanaPanelUrls.set(i, this.sanitizer.bypassSecurityTrustResourceUrl(url.toString()));
     }
   }
 
@@ -278,7 +316,7 @@ export class StartMeasurementComponent implements OnDestroy {
 
       // Starte die Messung im Backend - Backend speichert automatisch MQTT-Werte
       const measurementName = `Messung_${this.startTime.toISOString().replace(/[:.]/g, '-').substring(0, 19)}`;
-      await this.measurementsBackendService.startMeasuring(
+      const createdMeasurementId = await this.measurementsBackendService.startMeasuring(
         this.measurementSettingId!, 
         this.note,
         measurementName,
@@ -286,7 +324,8 @@ export class StartMeasurementComponent implements OnDestroy {
         this.pruefspannung ?? 0
       );
       this.currentMeasurement = true;
-      this.messungService.startGlobalMeasurement(this.measurementSettingId!);
+      this.messungService.startGlobalMeasurement(this.measurementSettingId!, createdMeasurementId);
+      this.buildGrafanaPanelUrlsForLive();
       
       await this.connectToWebSocket();
       this.showIdError = false;
@@ -310,6 +349,7 @@ export class StartMeasurementComponent implements OnDestroy {
         await this.measurementsBackendService.stopMeasuring();
         this.currentMeasurement = false;
         this.messungService.stopGlobalMeasurement();
+        this.grafanaPanelUrls.clear();
         
         console.log('Messung erfolgreich beendet');
         this.alerts.success('Messung erfolgreich beendet');
