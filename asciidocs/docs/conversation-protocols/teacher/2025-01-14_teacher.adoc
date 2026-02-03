@@ -1,0 +1,218 @@
+= Sprint-Meeting 14.01.2025
+
+link:/01-projekte-2025-4chif-syp-trench/[Trench Project] / link:/01-projekte-2025-4chif-syp-trench/conversation-protocols/[Conversation Protocols] / *Sprint-Meeting 14.01.2025*
+
+Protokollant: [Name]
+
+.Teilnehmer
+|===
+|Anwesend |Relevant Für
+
+|Trench-Team
+|Trench-Team
+
+|Prof. Pali
+|
+
+|Prof. Aberger
+|
+
+|===
+
+.Ort und Zeit
+[cols=2*]
+|===
+|Ort
+|[Raum]
+
+|am
+|Di. 14.01.2025
+|Dauer
+|ca. 1 Stunde
+|===
+
+== Besprochene Themen
+
+* Visualisierung: Slider als Graph
+* Test-Automatisierung und Coverage
+* MQTT-Schnittstelle
+* Performance bei erhöhten Datenmengen
+
+== 1. Visualisierung: Graph-Darstellung
+
+=== Feedback zu aktueller Implementierung
+
+*Problem:* Der Graph mit dem Slider scheint verwirrend
+- Die Bedeutung der einzelnen Punkte ist nicht klar
+- Mehrere Punkte haben keinen Informationswert
+
+=== Vereinbarungen und Verbesserungen
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|Verantwortlich |Aufgabe
+
+|Prof. Pali
+a|
+**Vorschläge:**
+
+* Nur die Linie bzw. den letzten Punkt einer Messperiode anzeigen
+* Punkte erst anzeigen, wenn von allen 18 Sensoren mindestens ein Wert empfangen wurde
+* Die ersten 17 unvollständigen Messpunkte haben keinen Informationswert und sollten ausgeblendet werden
+
+|Prof. Pali
+a|
+**Zoom-Funktion:**
+
+* Zeitstrahl/Graph soll gezoomt werden können
+* Benutzer soll in die Zeit hinein- und herauszoomen können
+
+|===
+
+=== Technische Erläuterungen
+
+* Ein neuer Datenpunkt wird gezeichnet, wenn von jedem Sensor ein neuer Wert eingetroffen ist
+* Bei 18 Sensoren bedeutet ein vollständiger Messpunkt, dass alle 18 Sensoren Daten gesendet haben
+* Die Sensoren senden alle ca. 5 Sekunden Daten (nicht exakt gleichzeitig, sondern innerhalb von ca. 0,1 Sekunden)
+* Der letzte Wert wird weitergezählt, bis ein neuer Wert vom jeweiligen Sensor kommt
+
+== 2. Messungssteuerung
+
+=== Problem
+
+Eine Messung darf nicht beendet werden, wenn noch keine Messdaten von allen Sensoren angekommen sind.
+
+=== Lösung
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|Verantwortlich |Aufgabe
+
+|Frontend-Team
+a|
+**Progress Bar implementieren:**
+
+* Anzeige, wie viele Sensoren mindestens einen Wert geschickt haben
+* Beispiel: "3 von 18 Sensoren haben Daten gesendet"
+* Messung kann erst beendet werden, wenn alle Sensoren mindestens einen Wert gesendet haben
+* Visuelles Feedback für den Benutzer über den Fortschritt der Datenerfassung
+
+|===
+
+== 3. Backend-Testing
+
+=== Erfolge
+
+* Automatisierte Tests mit Coverage-Report implementiert
+* Batch-File (`run-with-tests.bat`) erstellt:
+  - Startet Docker-Container
+  - Führt automatisch Tests aus
+  - Generiert Coverage-Report als HTML
+* Coverage-Report wird automatisch im Browser geöffnet
+* Tests umfassen Unit-Tests und Integrationstests
+
+=== Verbesserungspotential
+
+.Was wurde vereinbart?
+[%autowidth]
+|===
+|Verantwortlich |Aufgabe
+
+|Backend-Team
+a|
+**HTTP/REST-Tests verbessern:**
+
+* Statuscodes bei Endpoints müssen getestet werden (z.B. Status == 200)
+* Results validieren: Im Body muss das richtige Ergebnis stehen
+* HTTP-YAC Tests sind aktuell nur rudimentär und prüfen keine Responses
+
+|Backend-Team
+a|
+**Coverage verbessern:**
+
+* Aktuelle Coverage: ~2-3% (zu niedrig)
+* Ziel: >50% Coverage
+* Viele Funktionen werden nicht getestet
+* Dead Code identifizieren und entfernen (graue Bereiche im Coverage-Report)
+
+|===
+
+=== Verwendete Tools
+
+* Coverage-Report-Generator (NuGet-Package)
+* Unit of Work Pattern (von Prof. Fitschek übernommen)
+* HTTP-YAC für API-Tests
+
+== 4. Erwähnte Technologien (von Prof. Aberger)
+
+Prof. Aberger erwähnte folgende Technologien als mögliche Alternativen/Ergänzungen:
+
+* **paho-mqtt:** MQTT-Client-Bibliothek
+* **Tiger Data:** Zeitreihendatenbank
+* **Grafana:** Visualisierungs- und Monitoring-Tool
+* **InfluxDB:** Zeitreihendatenbank
+
+_(Diese Technologien wurden nur erwähnt, es wurden keine konkreten Umsetzungsentscheidungen getroffen)_
+
+== 5. Aufgabenverteilung für nächsten Sprint
+
+.Allgemeine Aufgabenvergabe
+[%autowidth]
+|===
+|Verantwortlich |Aufgabe
+
+|X
+a|
+* MQTT-Mock umändern, sodass er realistischere Werte generiert
+
+|S + X
+a|
+* MQTT-Schnittstelle verbessern
+
+|S + E
+a|
+* Backend-Performance bei erhöhten Datenmengen sicherstellen
+* Schauen, dass sich das Backend bei den erhöhten Datenmengen nicht "in die Hose scheißt"
+
+|A + F
+a|
+* Frontend-Performance bei erhöhten Datenmengen optimieren
+* Schauen, dass das Frontend bei den erhöhten Datenmengen nicht "komplett den Geist aufgibt"
+
+|E
+a|
+* Backend-Tests verbessern (siehe Abschnitt 3)
+* Statuscodes testen
+* Coverage erhöhen
+
+|A
+a|
+* Frontend-Tests hinzufügen
+* Allgemeine Frontend-Aufgaben
+
+|F
+a|
+* Graphen fixen (siehe Abschnitt 1)
+* Zoom-Funktion zum Graphen hinzufügen
+* Dokumentation updaten
+
+|===
+
+== Zusammenfassung
+
+=== Wichtigste Erkenntnisse
+
+1. **Visualisierung:** Graph muss überarbeitet werden - nur vollständige Messpunkte (alle 18 Sensoren) sind relevant
+2. **Messung:** Progress Bar implementieren, damit Benutzer sieht, wie viele Sensoren bereits Daten gesendet haben
+3. **Testing:** Coverage muss deutlich erhöht werden, Statuscodes und Response-Bodies müssen getestet werden
+4. **Performance:** Frontend und Backend müssen für erhöhte Datenmengen optimiert werden
+
+=== Nächste Schritte
+
+* Graph-Darstellung überarbeiten (nur relevante Punkte, Zoom-Funktion)
+* Progress Bar für Messungsstart implementieren
+* Backend-Tests erweitern (Statuscodes, Response-Validierung, Coverage erhöhen)
+* MQTT-Mock realistischere Werte generieren lassen
+* Performance-Tests für Frontend und Backend durchführen
