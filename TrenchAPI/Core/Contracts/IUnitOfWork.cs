@@ -12,8 +12,6 @@ namespace TrenchAPI.Core.Contracts
         ISpuleTypRepository SpuleTypRepository { get; }
 
         Task<int> SaveChangesAsync();
-        Task DeleteDatabaseAsync();
-        Task MigrateDatabaseAsync();
         Task CreateDatabaseAsync();
         Task FillDbAsync();
     }

@@ -32,13 +32,22 @@ Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 GET {{baseUrl}}/api/data-package/download?format=zip
 KEY: {{apiKey}}
 
+?? status == 200
+?? header content-type contains application
+
 ### Download Data Package (7z format)
 GET {{baseUrl}}/api/data-package/download?format=7z
 KEY: {{apiKey}}
 
+?? status == 200
+?? header content-type contains application
+
 ### Download Data Package (Excel format)
 GET {{baseUrl}}/api/data-package/download?format=xlsx
 KEY: {{apiKey}}
+
+?? status == 200
+?? header content-type contains application
 
 ### Upload Without API Key (should fail)
 POST {{baseUrl}}/api/data-package/upload
@@ -50,3 +59,5 @@ Content-Type: application/zip
 
 < ./test-data/test-package.zip
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+?? status == 401 || status == 403

@@ -7,9 +7,15 @@
 GET {{baseUrl}}/api/Messeinstellung
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get Messeinstellung by ID
 GET {{baseUrl}}/api/Messeinstellung/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New Messeinstellung
 # @name createMesseinstellung
@@ -23,6 +29,11 @@ Content-Type: application/json
   "sondenTypID": 1,
   "sondenProSchenkel": 5
 }
+
+?? status == 201
+?? body.id > 0
+?? body.name == "Test Messeinstellung"
+?? body.sondenProSchenkel == 5
 
 ### Update Messeinstellung
 @messeinstellungId = 1
@@ -38,9 +49,13 @@ Content-Type: application/json
   "sondenProSchenkel": 8
 }
 
+?? status == 200 || status == 204
+
 ### Delete Messeinstellung by ID
 DELETE {{baseUrl}}/api/Messeinstellung/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All Messeinstellungen
 # DELETE {{baseUrl}}/api/Messeinstellung

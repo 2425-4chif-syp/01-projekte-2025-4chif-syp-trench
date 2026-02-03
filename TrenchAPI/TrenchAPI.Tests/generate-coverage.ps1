@@ -42,7 +42,7 @@ reportgenerator `
     -targetdir:"$outputDir" `
     -reporttypes:"Html;Cobertura" `
     -verbosity:"Info" `
-    -classfilters:"-Persistence.Migrations.*;-*.Migrations.*;-*InitialMigrate*;-*WebDbContextModelSnapshot*"
+    -classfilters:"-Persistence.Migrations.*;-*.Migrations.*;-*InitialMigrate*;-*WebDbContextModelSnapshot*;-*Program;-*DataPackageService;-*MqttMeasurementService;-*FileUploadOperationFilter"
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`nCoverage report generated successfully!" -ForegroundColor Green

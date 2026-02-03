@@ -7,9 +7,15 @@
 GET {{baseUrl}}/api/Messwert
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get Messwert by ID
 GET {{baseUrl}}/api/Messwert/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New Messwert
 # @name createMesswert
@@ -23,6 +29,11 @@ Content-Type: application/json
   "wert": 25.5,
   "zeitpunkt": "2026-01-13T10:00:00Z"
 }
+
+?? status == 201
+?? body.id > 0
+?? body.wert == 25.5
+?? body.messungID == 1
 
 ### Create Multiple Messwerte (Batch)
 POST {{baseUrl}}/api/Messwert/batch
@@ -50,6 +61,10 @@ Content-Type: application/json
   }
 ]
 
+?? status == 201 || status == 200
+?? body isArray
+?? body.length == 3
+
 ### Update Messwert
 @messwertId = 1
 PUT {{baseUrl}}/api/Messwert/{{messwertId}}
@@ -64,9 +79,13 @@ Content-Type: application/json
   "zeitpunkt": "2026-01-13T10:00:00Z"
 }
 
+?? status == 200 || status == 204
+
 ### Delete Messwert by ID
 DELETE {{baseUrl}}/api/Messwert/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All Messwerte
 # DELETE {{baseUrl}}/api/Messwert

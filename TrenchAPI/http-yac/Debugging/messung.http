@@ -7,21 +7,34 @@
 GET {{baseUrl}}/api/Messung
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get Messung by ID
 GET {{baseUrl}}/api/Messung/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Get Messwerte for Messung
 GET {{baseUrl}}/api/Messung/1/Messwerte
 KEY: {{apiKey}}
 
+?? status == 200 || status == 404
+?? status != 200 || body isArray
+
 ### Get Latest Messwerte
 GET {{baseUrl}}/api/Messung/1/Messwerte/latest
 KEY: {{apiKey}}
 
+?? status == 200 || status == 404
+
 ### Get Messung Status
 GET {{baseUrl}}/api/Messung/status
 KEY: {{apiKey}}
+
+?? status == 200
 
 ### Create New Messung (with existing Messeinstellung)
 # @name createMessung
@@ -39,14 +52,23 @@ Content-Type: application/json
   "notiz": "Test measurement"
 }
 
+?? status == 201
+?? body.id > 0
+?? body.name == "Test Messung"
+?? body.messeinstellungID == 1
+
 ### Start Messung
 @messungId = 1
 POST {{baseUrl}}/api/Messung/{{messungId}}/start
 KEY: {{apiKey}}
 
+?? status == 200 || status == 204 || status == 404
+
 ### Stop Messung
 POST {{baseUrl}}/api/Messung/{{messungId}}/stop
 KEY: {{apiKey}}
+
+?? status == 200 || status == 204 || status == 404
 
 ### Update Messung
 PUT {{baseUrl}}/api/Messung/{{messungId}}
@@ -64,9 +86,13 @@ Content-Type: application/json
   "notiz": "Updated measurement"
 }
 
+?? status == 200 || status == 204
+
 ### Delete Messung by ID
 DELETE {{baseUrl}}/api/Messung/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All Messungen
 # DELETE {{baseUrl}}/api/Messung

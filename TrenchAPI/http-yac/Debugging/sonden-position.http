@@ -7,9 +7,15 @@
 GET {{baseUrl}}/api/SondenPosition
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get SondenPosition by ID
 GET {{baseUrl}}/api/SondenPosition/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New SondenPosition
 # @name createSondenPosition
@@ -23,6 +29,11 @@ Content-Type: application/json
   "schenkel": 1,
   "position": 100
 }
+
+?? status == 201
+?? body.id > 0
+?? body.schenkel == 1
+?? body.position == 100
 
 ### Update SondenPosition
 @positionId = 1
@@ -38,9 +49,13 @@ Content-Type: application/json
   "position": 150
 }
 
+?? status == 200 || status == 204
+
 ### Delete SondenPosition by ID
 DELETE {{baseUrl}}/api/SondenPosition/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All SondenPositionen
 # DELETE {{baseUrl}}/api/SondenPosition

@@ -7,9 +7,15 @@
 GET {{baseUrl}}/api/Spule
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get Spule by ID
 GET {{baseUrl}}/api/Spule/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New Spule
 # @name createSpule
@@ -25,6 +31,11 @@ Content-Type: application/json
   "bemessungsfrequenz": 50.0,
   "einheit": "V"
 }
+
+?? status == 201
+?? body.id > 0
+?? body.auftragsnr == "AUF-2026-001"
+?? body.bemessungsspannung == 230.0
 
 ### Update Spule
 @spuleId = 1
@@ -43,9 +54,13 @@ Content-Type: application/json
   "notiz": "Updated Spule"
 }
 
+?? status == 200 || status == 204
+
 ### Delete Spule by ID
 DELETE {{baseUrl}}/api/Spule/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All Spulen
 # DELETE {{baseUrl}}/api/Spule

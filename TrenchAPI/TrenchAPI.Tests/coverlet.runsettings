@@ -5,6 +5,13 @@
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
           <Format>cobertura</Format>
+          <Include>
+            <!-- Explizit Core assembly inkludieren -->
+            [Core]*
+            [Persistence]*
+            [WebAPI]*
+            [Utils]*
+          </Include>
           <Exclude>
             <!-- Exclude migrations - using specific patterns -->
             [*]*Migrations.*
@@ -23,6 +30,7 @@
             <!-- Exclude Program.cs (startup files in all projects) -->
             [*]*Program
             [WebAPI]*Program
+            [WebAPI]TrenchAPI.Program
             [ConsoleFillDb]*Program
             [ConsoleMQTT]*Program
             
@@ -34,12 +42,17 @@
             [*]*.Designer
             [*]*AssemblyInfo
             
-            <!-- Exclude all WebAPI Services (background services, external integrations) -->
-            [WebAPI]*Services.*
-            [WebAPI]TrenchAPI.WebAPI.Services.*
+            <!-- Exclude MQTT Service (background service, hard to test) -->
+            [WebAPI]*MqttMeasurementService
+            [WebAPI]TrenchAPI.WebAPI.Services.MqttMeasurementService
             
-            <!-- Exclude Swagger/OpenAPI configuration -->
+            <!-- Exclude DataPackageService (complex file parsing, integration-test territory) -->
+            [WebAPI]*DataPackageService
+            [WebAPI]TrenchAPI.WebAPI.Services.DataPackageService
+            
+            <!-- Exclude Swagger/OpenAPI configuration (not business logic) -->
             [WebAPI]*FileUploadOperationFilter
+            [WebAPI]TrenchAPI.WebAPI.Swagger.FileUploadOperationFilter
             [WebAPI]*ApiKeyAuthAttribute
           </Exclude>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>

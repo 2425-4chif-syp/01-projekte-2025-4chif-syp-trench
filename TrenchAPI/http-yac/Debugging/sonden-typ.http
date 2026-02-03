@@ -7,10 +7,16 @@
 GET {{baseUrl}}/api/SondenTyp
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get SondenTyp by ID
 # @name getSondenTypById
 GET {{baseUrl}}/api/SondenTyp/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New SondenTyp
 # @name createSondenTyp
@@ -26,6 +32,11 @@ Content-Type: application/json
   "alpha": 0.85,
   "notiz": "Test SondenTyp"
 }
+
+?? status == 201
+?? body.id > 0
+?? body.name == "Test Sonden Typ"
+?? body.windungszahl == 50
 
 ### Update SondenTyp
 @sondenTypId = 1
@@ -43,9 +54,13 @@ Content-Type: application/json
   "notiz": "Updated SondenTyp"
 }
 
+?? status == 200 || status == 204
+
 ### Delete SondenTyp by ID
 DELETE {{baseUrl}}/api/SondenTyp/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All SondenTyp
 # DELETE {{baseUrl}}/api/SondenTyp

@@ -8,11 +8,18 @@ Content-Type: application/json
 
 "mySecurePassword123"
 
+?? status == 200
+?? body isString
+?? body.length > 0
+
 ### Verify Password
 POST {{baseUrl}}/api/auth/verify
 Content-Type: application/json
 
 "mySecurePassword123"
+
+?? status == 200
+?? body == true || body == false
 
 ### Verify Wrong Password
 POST {{baseUrl}}/api/auth/verify
@@ -20,8 +27,12 @@ Content-Type: application/json
 
 "wrongPassword"
 
+?? status == 401 || status == 200
+
 ### Hash Empty Password (should fail)
 POST {{baseUrl}}/api/auth/hash
 Content-Type: application/json
 
 ""
+
+?? status == 400

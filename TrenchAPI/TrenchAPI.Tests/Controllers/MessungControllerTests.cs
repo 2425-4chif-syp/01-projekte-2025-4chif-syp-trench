@@ -211,8 +211,9 @@ namespace TrenchAPI.Tests.Controllers
             var result = await _controller.StartMeasuring(startDto);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<int>>(result);
-            Assert.True(actionResult.Value > 0);
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var messungId = Assert.IsType<int>(okResult.Value);
+            Assert.True(messungId > 0);
             Assert.Equal(2, await _context.Messung.CountAsync());
         }
 

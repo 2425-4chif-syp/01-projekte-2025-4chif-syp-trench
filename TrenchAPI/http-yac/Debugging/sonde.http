@@ -7,9 +7,15 @@
 GET {{baseUrl}}/api/Sonde
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get Sonde by ID
 GET {{baseUrl}}/api/Sonde/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New Sonde
 # @name createSonde
@@ -22,6 +28,11 @@ Content-Type: application/json
   "name": "Test Sonde",
   "kalibrierungsfaktor": 1.5
 }
+
+?? status == 201
+?? body.id > 0
+?? body.name == "Test Sonde"
+?? body.kalibrierungsfaktor == 1.5
 
 ### Update Sonde
 @sondeId = 1
@@ -36,9 +47,13 @@ Content-Type: application/json
   "kalibrierungsfaktor": 2.0
 }
 
+?? status == 200 || status == 204
+
 ### Delete Sonde by ID
 DELETE {{baseUrl}}/api/Sonde/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All Sonden
 # DELETE {{baseUrl}}/api/Sonde

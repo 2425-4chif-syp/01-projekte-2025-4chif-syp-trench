@@ -11,19 +11,6 @@ namespace TrenchAPI.Persistence
     {
         private readonly WebDbContext _dbContext;
 
-        public UnitOfWork()
-        {
-            _dbContext = new WebDbContext();
-            MesseinstellungRepository = new MesseinstellungRepository(_dbContext);
-            MessungRepository = new MessungRepository(_dbContext);
-            MesswertRepository = new MesswertRepository(_dbContext);
-            SondeRepository = new SondeRepository(_dbContext);
-            SondenPositionRepository = new SondenPositionRepository(_dbContext);
-            SondenTypRepository = new SondenTypRepository(_dbContext);
-            SpuleRepository = new SpuleRepository(_dbContext);
-            SpuleTypRepository = new SpuleTypRepository(_dbContext);
-        }
-
         public UnitOfWork(WebDbContext context)
         {
             _dbContext = context;
@@ -48,27 +35,9 @@ namespace TrenchAPI.Persistence
 
         public async Task<int> SaveChangesAsync()
         {
-            var entities = _dbContext!.ChangeTracker.Entries()
-                .Where(entity => entity.State == EntityState.Added
-                                 || entity.State == EntityState.Modified)
-                .Select(e => e.Entity)
-                .ToArray();  // Geänderte Entities ermitteln
-
-            // Allfällige Validierungen der geänderten Entities durchführen
-            foreach (var entity in entities)
-            {
-                ValidateEntity(entity);
-            }
             return await _dbContext.SaveChangesAsync();
         }
 
-        private void ValidateEntity(object entity)
-        {
-            // Add entity validation logic here if needed
-        }
-
-        public async Task DeleteDatabaseAsync() => await _dbContext!.Database.EnsureDeletedAsync();
-        public async Task MigrateDatabaseAsync() => await _dbContext!.Database.MigrateAsync();
         public async Task CreateDatabaseAsync() => await _dbContext!.Database.EnsureCreatedAsync();
 
         public async ValueTask DisposeAsync()

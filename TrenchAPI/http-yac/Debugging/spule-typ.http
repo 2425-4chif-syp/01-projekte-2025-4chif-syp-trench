@@ -7,9 +7,15 @@
 GET {{baseUrl}}/api/SpuleTyp
 KEY: {{apiKey}}
 
+?? status == 200
+?? body isArray
+
 ### Get SpuleTyp by ID
 GET {{baseUrl}}/api/SpuleTyp/1
 KEY: {{apiKey}}
+
+?? status == 200 || status == 404
+?? status != 200 || body.id == 1
 
 ### Create New SpuleTyp
 # @name createSpuleTyp
@@ -26,6 +32,11 @@ Content-Type: application/json
   "toleranzbereich": 2.5,
   "notiz": "Test SpuleTyp"
 }
+
+?? status == 201
+?? body.id > 0
+?? body.name == "Test Spule Typ"
+?? body.schenkelzahl == 4
 
 ### Update SpuleTyp
 @spuleTypId = 1
@@ -44,9 +55,13 @@ Content-Type: application/json
   "notiz": "Updated SpuleTyp"
 }
 
+?? status == 204 || status == 200
+
 ### Delete SpuleTyp by ID
 DELETE {{baseUrl}}/api/SpuleTyp/999
 KEY: {{apiKey}}
+
+?? status == 204 || status == 404
 
 ### Delete All SpuleTypen
 # DELETE {{baseUrl}}/api/SpuleTyp
