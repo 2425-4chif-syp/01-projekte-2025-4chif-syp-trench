@@ -1,0 +1,65 @@
+{
+  "uid": "trench-live",
+  "title": "Trench Live",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": false,
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "messungId",
+        "label": "MessungID",
+        "type": "textbox",
+        "hide": 2,
+        "current": { "text": "", "value": "" }
+      },
+      {
+        "name": "schenkel",
+        "label": "Schenkel",
+        "type": "custom",
+        "hide": 2,
+        "query": "1,2,3,4",
+        "current": { "text": "1", "value": "1" }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Messwerte (pro Sensor)",
+      "datasource": "TrenchPostgres",
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "showPoints": "never",
+            "spanNulls": true
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "right", "showLegend": true }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  mw.\"Zeitpunkt\" AS time,\n  mw.\"Wert\"::double precision AS value,\n  ('S' || sp.\"Schenkel\"::text || 'S' || sp.\"Position\"::text) AS metric\nFROM \"Messwert\" mw\nJOIN \"SondenPosition\" sp ON sp.\"ID\" = mw.\"SondenPositionID\"\nWHERE $__timeFilter(mw.\"Zeitpunkt\")\n  AND mw.\"MessungID\" = COALESCE(NULLIF('${messungId}', '')::int, (SELECT MAX(\"ID\") FROM \"Messung\"))\n  AND sp.\"Schenkel\" = ${schenkel}\nORDER BY 1",
+          "datasource": "TrenchPostgres"
+        }
+      ]
+    }
+  ]
+}
