@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: "Trench Dashboards"
+    orgId: 1
+    folder: "Trench"
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards
+

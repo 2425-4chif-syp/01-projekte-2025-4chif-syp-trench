@@ -1,0 +1,40 @@
+.grafana-solo-frame {
+  width: 100%;
+  height: 260px;
+  border: 0;
+  display: block;
+}
+
+.grafana-all {
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.grafana-all__title {
+  margin: 0 0 0.75rem;
+}
+
+.grafana-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 992px) {
+  .grafana-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.grafana-card {
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fff;
+}
+
+.grafana-card__header {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  font-weight: 600;
+}

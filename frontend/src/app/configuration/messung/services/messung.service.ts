@@ -22,6 +22,7 @@ export class MessungService implements ListService<Measurement> {
   private currentMeasurementData: { [key: string]: number[] } = {};
   private measurementStartTime: Date | null = null;
   private currentMeasurementSettingId: number | null = null;
+  private currentMeasurementId: number | null = null;
   private currentYokeData: { x: number; y: number }[][] = [];
   private currentMTot: number = 0;
 
@@ -30,10 +31,11 @@ export class MessungService implements ListService<Measurement> {
   constructor(private messungBackendService:MessungBackendService) { }
 
   // Methoden für die laufende Messung
-  public startGlobalMeasurement(measurementSettingId: number): void {
+  public startGlobalMeasurement(measurementSettingId: number, measurementId?: number | null): void {
     this.isMeasuringSubject.next(true);
     this.measurementStartTime = new Date();
     this.currentMeasurementSettingId = measurementSettingId;
+    this.currentMeasurementId = measurementId ?? null;
     this.currentMeasurementData = {};
     this.currentYokeData = [];
     this.currentMTot = 0;
@@ -43,6 +45,7 @@ export class MessungService implements ListService<Measurement> {
     this.isMeasuringSubject.next(false);
     this.measurementStartTime = null;
     this.currentMeasurementSettingId = null;
+    this.currentMeasurementId = null;
     this.currentMeasurementData = {};
     this.currentYokeData = [];
     this.currentMTot = 0;
@@ -62,6 +65,14 @@ export class MessungService implements ListService<Measurement> {
 
   public getCurrentMeasurementSettingId(): number | null {
     return this.currentMeasurementSettingId;
+  }
+
+  public getCurrentMeasurementId(): number | null {
+    return this.currentMeasurementId;
+  }
+
+  public setCurrentMeasurementId(id: number | null): void {
+    this.currentMeasurementId = id;
   }
 
   public addMeasurementData(key: string, value: number): void {
@@ -191,6 +202,7 @@ export class MessungService implements ListService<Measurement> {
         const currentMeasurement = await this.messungBackendService.getMessung(activeMeasurement.id!);
         
         // Setze die Messungsdaten
+        this.currentMeasurementId = currentMeasurement.id ?? null;
         this.currentMeasurementSettingId = currentMeasurement.messeinstellungId;
         this.measurementStartTime = currentMeasurement.anfangszeitpunkt;
         

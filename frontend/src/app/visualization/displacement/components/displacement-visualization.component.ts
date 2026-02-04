@@ -57,7 +57,14 @@ export class DisplacementVisualizationComponent {
   }
 
   public updateVisualization():void {
-    this.calcResults = this.yokeData().map(branch => {
+    const data = this.yokeData();
+    if (!data || data.length === 0) {
+      this.calcResults = [];
+      this.averageLength = 1;
+      return;
+    }
+
+    this.calcResults = data.map(branch => {
       return branch.map(sensor => {
         const length = this.calculateVectorLength(sensor.x, sensor.y);
         const angle = this.calculateVectorAngle(sensor.x, sensor.y);
@@ -65,7 +72,14 @@ export class DisplacementVisualizationComponent {
       });
     });
 
-    this.averageLength = this.yokeVectors.reduce((sum, vector) => sum + vector.length, 0) / this.yokeVectors.length;
+    const vectors = this.yokeVectors;
+    if (!vectors || vectors.length === 0) {
+      this.averageLength = 1;
+      return;
+    }
+
+    const avg = vectors.reduce((sum, vector) => sum + vector.length, 0) / vectors.length;
+    this.averageLength = Number.isFinite(avg) && avg > 0 ? avg : 1;
   }
 
   private calculateVectorLength(x: number, y: number): number {
@@ -92,12 +106,16 @@ export class DisplacementVisualizationComponent {
   }
 
   public scaledBranchResultX(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta - 0.125;
+    const denom = Number.isFinite(this.averageLength) && this.averageLength > 0 ? this.averageLength : 1;
+    const baseLen = this.calculateVectorLength(branch.x, branch.y);
+    const newLength = baseLen / denom * 6 + lengthDelta - 0.125;
 
     return Math.cos(branch.angle) * newLength;
   }
   public scaledBranchResultY(branch:{x:number, y:number, angle:number, length:number}, lengthDelta:number):number {
-    const newLength = this.calculateVectorLength(branch.x, branch.y) / this.averageLength * 6 + lengthDelta - 0.125;
+    const denom = Number.isFinite(this.averageLength) && this.averageLength > 0 ? this.averageLength : 1;
+    const baseLen = this.calculateVectorLength(branch.x, branch.y);
+    const newLength = baseLen / denom * 6 + lengthDelta - 0.125;
 
     return Math.sin(branch.angle) * newLength;
   }
@@ -112,8 +130,12 @@ export class DisplacementVisualizationComponent {
   }
 
   public get yokeVectors(): { x: number; y: number, angle:number, length:number }[] {
+    if (!this.calcResults || this.calcResults.length === 0) return [];
     // Yoke vectors are calculated by summing up all the x and y components of each yoke
     return this.calcResults.map(branch => {
+      if (!branch || branch.length === 0) {
+        return { x: 0, y: 0, angle: 0, length: 0 };
+      }
       const branchX = branch.reduce((sum, sensor) => sum + sensor.x, 0);
       const branchY = branch.reduce((sum, sensor) => sum + sensor.y, 0);
       return {

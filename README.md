@@ -10,3 +10,10 @@
 - [YouTrack Board](https://vm81.htl-leonding.ac.at/agiles/99-400/current)
 
 - [Conversation Protocols](https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/conversation-protocols)
+
+## Grafana (Docker)
+
+- Start: `docker compose up -d`
+- Grafana: `http://localhost:3000` (Login `admin` / `admin`)
+- Datasource: `TrenchPostgres` wird automatisch provisioniert.
+- Dashboard: `Trench Live` wird automatisch provisioniert.

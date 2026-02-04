@@ -43,6 +43,22 @@
 </div>
 </div>
 
+@if (grafanaPanelUrls && yokes().length > 0) {
+  <div class="grafana-all">
+    <h4 class="grafana-all__title">Sensorverläufe (Grafana)</h4>
+    <div class="grafana-grid">
+      @for (_yoke of yokes(); track $index) {
+        @if (grafanaPanelUrls.get($index + 1); as url) {
+          <div class="grafana-card">
+            <div class="grafana-card__header">Schenkel #{{ $index + 1 }}</div>
+            <iframe class="grafana-solo-frame" [src]="url" allowfullscreen></iframe>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}
+
 @for (yoke of yokes(); track $index) {
 <div class="yoke-section">
     <h4 class="yoke-title">Schenkel #{{ $index + 1 }}</h4>

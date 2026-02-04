@@ -6,6 +6,7 @@ import { Coiltype } from '../../../../coiltype/interfaces/coiltype';
 import { MeasurementSetting } from '../../../../measurement-settings/interfaces/measurement-settings';
 import { DisplacementVisualizationComponent } from '../../../../../visualization/displacement/components/displacement-visualization.component';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-messung-detail-auswertung',
@@ -23,6 +24,7 @@ export class MessungDetailAuswertungComponent {
     @Input() coil:Coil = null!;
     @Input() coiltype:Coiltype = null!;
     @Input() measurementSetting:MeasurementSetting = null!;
+    @Input() grafanaPanelUrls: Map<number, SafeResourceUrl> | null = null;
 
     public get isWithinTolerance(): boolean {
       return this.m_tot() < this.coiltype!.toleranzbereich!;
