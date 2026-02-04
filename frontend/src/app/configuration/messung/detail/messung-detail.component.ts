@@ -3,7 +3,7 @@ import { Component, signal } from '@angular/core';
 import { MessungService } from '../services/messung.service';
 import { MesswertBackendService } from '../../messwert/services/messwert-backend.service';
 import { Messwert } from '../../messwert/interfaces/messwert.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ConfirmDeleteModalComponent } from '../../../shared/confirm-delete-modal/confirm-delete-modal.component';
 import { MessungDetailAuswertungComponent } from './auswertung/messung-detail-auswertung/messung-detail-auswertung.component';
 import { TimelineGraphComponent } from './timeline-graph/timeline-graph.component';
@@ -27,13 +27,14 @@ function asDate(d: any): Date | null {
   standalone: true,
   imports: [CommonModule, ConfirmDeleteModalComponent, MessungDetailAuswertungComponent, TimelineGraphComponent],
   templateUrl: './messung-detail.component.html',
-  styleUrl: './messung-detail.component.scss'
+  styleUrls: ['./messung-detail.component.scss']
 })
 export class MessungDetailComponent {
   constructor(
     public messungService: MessungService,
     public messwertService: MesswertBackendService,
     private router: Router,
+    private route: ActivatedRoute,
     private displacementCalculation: DisplacementCalculationService,
     private measurementSettingsService: MeasurementSettingsService,
     private sanitizer: DomSanitizer) {}
@@ -66,7 +67,31 @@ export class MessungDetailComponent {
   selectedTime = signal<Date | null>(null);
 
   async ngOnInit(): Promise<void> {
-    this.measurement = this.messungService.clickedMessung;
+    // Try to get measurement from route parameter first (allows page reload)
+    const idParam: string | null = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      const messungId: number = Number(idParam);
+      if (!isNaN(messungId) && messungId > 0) {
+        try {
+          this.measurement = await this.messungService.reloadElementWithId(messungId);
+          this.messungService.clickedMessung = this.measurement;
+        } catch (err) {
+          console.error('Error loading measurement from route:', err);
+          this.router.navigate(['/measurement-management']);
+          return;
+        }
+      }
+    } else {
+      // Fallback to clicked measurement from service (old behavior)
+      this.measurement = this.messungService.clickedMessung;
+    }
+
+    if (!this.measurement || !this.measurement.id) {
+      console.error('No measurement found');
+      this.router.navigate(['/measurement-management']);
+      return;
+    }
+
     await this.ensureMeasurementDetails();
     await this.loadMesswerte();
     this.buildGrafanaPanelUrls();
@@ -163,31 +188,47 @@ export class MessungDetailComponent {
       this.isLoading.set(true);
       this.loadingProgress.set(0);
       this.loadingMessage.set('Lade Messdaten vom Server...');
+      await this.delay(50);
+      
       this.loadingProgress.set(10);
+      await this.delay(100);
 
       const messwerte: Messwert[] = await this.messwertService.getMesswerteByMessungId(this.measurement.id);
       this.messwerte.set(messwerte);
       this.messwertCount.set(messwerte.length);
       this.loadingProgress.set(50);
+      await this.delay(100);
 
       this.loadingMessage.set('Initialisiere Zeitachse...');
-      await new Promise(resolve => setTimeout(resolve, 0));
+      this.loadingProgress.set(60);
+      await this.delay(100);
 
       // initialize slider bounds and compute initial derived values
       this.initializeSliderBounds();
       this.loadingProgress.set(70);
+      await this.delay(100);
 
       this.loadingMessage.set('Berechne Auswertung...');
-      await new Promise(resolve => setTimeout(resolve, 0));
+      this.loadingProgress.set(80);
+      await this.delay(100);
 
       // Build m_tot series based on available timestamps
       this.buildMTotSeries();
+      this.loadingProgress.set(90);
+      await this.delay(100);
+
+      this.loadingMessage.set('Fertig!');
       this.loadingProgress.set(100);
+      await this.delay(200);
     } catch (err) {
       console.error('Error loading messwerte:', err);
     } finally {
       this.isLoading.set(false);
     }
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private initializeSliderBounds(): void {
