@@ -34,6 +34,6 @@ export const routes: Routes = [
     {path: 'measurement-history', component: MeasurementHistoryComponent, canActivate: [AuthGuard]},
     {path: 'measurement-history-homescreen', component: MeasurementManagementParentComponent, canActivate: [AuthGuard]},
     {path: 'displacement-visualization-test', component: DisplacementVisualizationTestComponent, canActivate: [AuthGuard]},
-    {path: 'measurement-detail', component: MessungDetailComponent, canActivate: [AuthGuard]},
+    {path: 'measurement-detail/:id', component: MessungDetailComponent, canActivate: [AuthGuard]},
     {path: 'csv-import-export', component: CsvImportExportComponent, canActivate: [AuthGuard]}
 ];
