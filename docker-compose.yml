@@ -78,6 +78,7 @@ services:
       - ConnectionStrings__DevConnection=Host=postgres;Port=5432;Database=postgres;Username=postgres;Password=TRENCH123;
     volumes:
       - ./TrenchAPI:/src 
+      - ./20260112-Dump.csv:/app/20260112-Dump.csv:ro
     depends_on:
       postgres:
         condition: service_healthy

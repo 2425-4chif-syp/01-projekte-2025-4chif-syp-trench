@@ -1,7 +1,10 @@
 using MQTTnet;
 using MQTTnet.Client;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -13,6 +16,7 @@ namespace ConsoleMqtt
     {
         private static IMqttClient? _mqttPublisherClient;
         private static MqttSubscriber? _subscriber;
+        private static Dictionary<string, List<string>> _csvData = new Dictionary<string, List<string>>();
 
         public static async Task sendData()
         {
@@ -55,6 +59,9 @@ namespace ConsoleMqtt
             _subscriber = new MqttSubscriber();
             await _subscriber.InitializeWithExistingClient(subscriberClient);
 
+            // Load CSV data
+            LoadCsvData();
+
             // Start sending messages
             Console.WriteLine("Starting to send messages...");
             await SendMessagesPeriodically();
@@ -67,51 +74,135 @@ namespace ConsoleMqtt
             await _mqttPublisherClient.DisconnectAsync();
         }
 
+        private static void LoadCsvData()
+        {
+            // Find CSV file relative to current directory or solution root
+            string csvFileName = "20260112-Dump.csv";
+            string csvPath = FindCsvFile(csvFileName);
+            
+            if (csvPath == null || !File.Exists(csvPath))
+            {
+                Console.WriteLine($"CSV file not found: {csvFileName}");
+                return;
+            }
+            
+            Console.WriteLine($"Using CSV file: {csvPath}");
+
+            var lines = File.ReadAllLines(csvPath);
+            Console.WriteLine($"Loaded {lines.Length} lines from CSV");
+
+            foreach (var line in lines)
+            {
+                var parts = line.Split(',');
+                if (parts.Length >= 2)
+                {
+                    string topicPath = parts[0]; // e.g., "/data/rj1/probe8"
+                    string encodedData = parts[1]; // base64 encoded byte array
+
+                    // Extract rj and probe from topic path
+                    var topicParts = topicPath.Split('/');
+                    if (topicParts.Length >= 3)
+                    {
+                        string key = $"{topicParts[2]}/{topicParts[3]}"; // e.g., "rj1/probe8"
+                        
+                        if (!_csvData.ContainsKey(key))
+                        {
+                            _csvData[key] = new List<string>();
+                        }
+                        
+                        _csvData[key].Add(encodedData);
+                    }
+                }
+            }
+
+            Console.WriteLine($"Organized data for {_csvData.Count} unique probe(s)");
+            foreach (var kvp in _csvData)
+            {
+                Console.WriteLine($"  {kvp.Key}: {kvp.Value.Count} entries");
+            }
+            
+            if (_csvData.Count == 0)
+            {
+                Console.WriteLine("WARNING: No probe data was loaded from CSV!");
+            }
+        }
+
+        private static string? FindCsvFile(string fileName)
+        {
+            // Start from current directory
+            string currentDir = Directory.GetCurrentDirectory();
+            
+            // Check current directory first
+            string path = Path.Combine(currentDir, fileName);
+            if (File.Exists(path))
+                return path;
+            
+            // Search up to 5 levels up to find the file
+            DirectoryInfo? dirInfo = new DirectoryInfo(currentDir);
+            for (int i = 0; i < 5 && dirInfo != null; i++)
+            {
+                path = Path.Combine(dirInfo.FullName, fileName);
+                if (File.Exists(path))
+                    return path;
+                
+                dirInfo = dirInfo.Parent;
+            }
+            
+            return null;
+        }
+
         private static async Task SendMessagesPeriodically()
         {
+            if (_csvData.Count == 0)
+            {
+                Console.WriteLine("ERROR: No CSV data loaded. Cannot send messages.");
+                return;
+            }
+            
             var tasks = new List<Task>();
 
-            // Create independent thread for each probe
-            for (int rj = 1; rj <= 4; rj++)
+            // Create independent thread for each probe that has data
+            foreach (var kvp in _csvData)
             {
-                for (int probe = 1; probe <= 8; probe++)
-                {
-                    // Capture loop variables
-                    int rjNumber = rj;
-                    int probeNumber = probe;
-                    
-                    var task = Task.Run(async () => await SendProbeMessagesPeriodically(rjNumber, probeNumber));
-                    tasks.Add(task);
-                }
+                string probeKey = kvp.Key;
+                var task = Task.Run(async () => await SendProbeMessagesPeriodically(probeKey));
+                tasks.Add(task);
             }
 
             // Wait for all threads to complete (they run indefinitely)
             await Task.WhenAll(tasks);
         }
 
-        private static async Task SendProbeMessagesPeriodically(int rjNumber, int probeNumber)
+        private static async Task SendProbeMessagesPeriodically(string probeKey)
         {
-            var random = new Random();
             var stopwatch = Stopwatch.StartNew();
             long iterationCount = 0;
             const double targetFrequency = 300.0; // 300 times per second
             const double targetIntervalMs = 1000.0 / targetFrequency; // 3.33 ms
             
-            string topic = $"trench_mqtt_mock_v2/rj{rjNumber}/probe{probeNumber}";
+            // Extract rj and probe numbers from key (e.g., "rj1/probe8")
+            var parts = probeKey.Split('/');
+            string rjPart = parts[0]; // "rj1"
+            string probePart = parts[1]; // "probe8"
+            
+            string topic = $"trench_mqtt_mock_vTEST/{rjPart}/{probePart}";
+            
+            if (!_csvData.ContainsKey(probeKey) || _csvData[probeKey].Count == 0)
+            {
+                Console.WriteLine($"No data for {probeKey}");
+                return;
+            }
+
+            var dataList = _csvData[probeKey];
+            int dataIndex = 0;
 
             while (true)
             {
-                // Generate standard normal distribution using Box-Muller transform
-                double u1 = 1.0 - random.NextDouble();
-                double u2 = 1.0 - random.NextDouble();
-                double standardNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+                // Get the current encoded data from CSV
+                string encodedData = dataList[dataIndex];
                 
-                // Scale to range 0.8 to 2 (mean = 1.25, std dev = 0.3)
-                double randomValue = 1.25 + standardNormal * 0.3;
-                randomValue = Math.Max(0.8, Math.Min(2, randomValue)); // Clamp to range
-                
-                byte[] payload = new byte[16];
-                BitConverter.GetBytes((float)randomValue).CopyTo(payload, 0);
+                // Decode base64 to byte array
+                byte[] payload = Convert.FromBase64String(encodedData);
 
                 var message = new MqttApplicationMessageBuilder()
                     .WithTopic(topic)
@@ -121,8 +212,9 @@ namespace ConsoleMqtt
                     .Build();
 
                 await _mqttPublisherClient.PublishAsync(message, CancellationToken.None);
-                //float value = BitConverter.ToSingle(message.Payload, 0);
-                //Console.WriteLine($"Publishing to {topic}: {value}");
+
+                // Move to next data entry, loop back to start if at end
+                dataIndex = (dataIndex + 1) % dataList.Count;
 
                 iterationCount++;
                 
