@@ -24,11 +24,18 @@ namespace TrenchAPI.WebAPI.Services
         private Task[]? _consumerTasks;
         private CancellationTokenSource? _consumerCts;
         
+        // Gleitender Mittelwert pro Sensor (Thread-safe)
+        private ConcurrentDictionary<string, MovingAverageBuffer> _sensorBuffers = new();
+        
         // Konfiguration
         private const int BATCH_SIZE = 5000;           // Größere Batches = weniger DB Roundtrips
         private const int BATCH_INTERVAL_MS = 250;     // Schnelleres Flushing
         private const int CONSUMER_THREAD_COUNT = 2;   // Parallele DB-Writer
         private const int CHANNEL_CAPACITY = 50000;    // Buffer für Spitzen
+        
+        // Moving Average Konfiguration
+        private const int MOVING_AVG_WINDOW = 10;      // Fenstergröße für Mittelwert
+        private const int OUTPUT_EVERY_N = 10;         // Jeden 10. Wert speichern (30 statt 300/sec)
 
         public MqttMeasurementService(
             IServiceProvider serviceProvider,
@@ -138,12 +145,26 @@ namespace TrenchAPI.WebAPI.Services
                     return;
                 }
 
-                // Erstelle Messwert und schreibe in Channel (non-blocking)
+                // ============ GLEITENDER MITTELWERT ============
+                // Hole oder erstelle Buffer für diesen Sensor
+                MovingAverageBuffer buffer = _sensorBuffers.GetOrAdd(
+                    sensorKey, 
+                    _ => new MovingAverageBuffer(MOVING_AVG_WINDOW, OUTPUT_EVERY_N)
+                );
+
+                // Füge Wert zum Buffer hinzu - nur wenn genug Samples gesammelt, speichern
+                if (!buffer.AddValue((decimal)value, out decimal smoothedValue))
+                {
+                    // Noch nicht genug Werte für Ausgabe - überspringen
+                    return;
+                }
+
+                // Erstelle Messwert mit geglättetem Wert
                 Messwert messwert = new Messwert
                 {
                     MessungID = _currentMessungId.Value,
                     SondenPositionID = sondenPositionId,
-                    Wert = (decimal)value,
+                    Wert = smoothedValue,  // Geglätteter Mittelwert statt Rohwert
                     Zeitpunkt = DateTime.UtcNow
                 };
 
@@ -299,9 +320,13 @@ namespace TrenchAPI.WebAPI.Services
         public virtual async Task StartMeasurement(int messungId, int messeinstellungId)
         {
             _logger.LogInformation($"Starting measurement: MessungID={messungId}, MesseinstellungID={messeinstellungId}");
+            _logger.LogInformation($"Moving Average: Window={MOVING_AVG_WINDOW}, OutputEveryN={OUTPUT_EVERY_N} (reduces 300/sec to {300/OUTPUT_EVERY_N}/sec)");
 
             _currentMessungId = messungId;
             _currentMesseinstellungId = messeinstellungId;
+
+            // Reset alle Moving Average Buffer für neue Messung
+            _sensorBuffers.Clear();
 
             // Erstelle Channel für Producer-Consumer Pattern
             _messwertChannel = Channel.CreateBounded<Messwert>(new BoundedChannelOptions(CHANNEL_CAPACITY)
