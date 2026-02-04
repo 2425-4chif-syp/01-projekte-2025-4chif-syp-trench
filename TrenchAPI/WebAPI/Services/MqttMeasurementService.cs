@@ -34,8 +34,8 @@ namespace TrenchAPI.WebAPI.Services
         private const int CHANNEL_CAPACITY = 50000;    // Buffer für Spitzen
         
         // Moving Average Konfiguration
-        private const int MOVING_AVG_WINDOW = 10;      // Fenstergröße für Mittelwert
-        private const int OUTPUT_EVERY_N = 10;         // Jeden 10. Wert speichern (30 statt 300/sec)
+        private const int MOVING_AVG_WINDOW = 5;       // Fenstergröße für Mittelwert (reduziert für schnellere erste Werte)
+        private const int OUTPUT_EVERY_N = 5;          // Jeden 5. Wert speichern (60 statt 300/sec)
 
         public MqttMeasurementService(
             IServiceProvider serviceProvider,
@@ -322,32 +322,8 @@ namespace TrenchAPI.WebAPI.Services
             _logger.LogInformation($"Starting measurement: MessungID={messungId}, MesseinstellungID={messeinstellungId}");
             _logger.LogInformation($"Moving Average: Window={MOVING_AVG_WINDOW}, OutputEveryN={OUTPUT_EVERY_N} (reduces 300/sec to {300/OUTPUT_EVERY_N}/sec)");
 
-            _currentMessungId = messungId;
-            _currentMesseinstellungId = messeinstellungId;
-
-            // Reset alle Moving Average Buffer für neue Messung
-            _sensorBuffers.Clear();
-
-            // Erstelle Channel für Producer-Consumer Pattern
-            _messwertChannel = Channel.CreateBounded<Messwert>(new BoundedChannelOptions(CHANNEL_CAPACITY)
-            {
-                FullMode = BoundedChannelFullMode.DropOldest, // Bei Überlauf älteste verwerfen
-                SingleReader = false,
-                SingleWriter = false
-            });
-            
-            // Starte Consumer-Threads
-            _consumerCts = new CancellationTokenSource();
-            _consumerTasks = new Task[CONSUMER_THREAD_COUNT];
-            for (int i = 0; i < CONSUMER_THREAD_COUNT; i++)
-            {
-                int consumerId = i;
-                _consumerTasks[i] = Task.Run(() => ConsumerLoopAsync(consumerId, _consumerCts.Token));
-            }
-            
-            _logger.LogInformation($"Started {CONSUMER_THREAD_COUNT} consumer threads");
-
-            // Load SondenPositionen for this Messeinstellung
+            // WICHTIG: Zuerst SondenPositionen laden BEVOR Consumer-Threads starten!
+            // Sonst gehen MQTT-Nachrichten verloren wegen Race Condition
             using IServiceScope scope = _serviceProvider.CreateScope();
             WebDbContext context = scope.ServiceProvider.GetRequiredService<WebDbContext>();
 
@@ -375,6 +351,32 @@ namespace TrenchAPI.WebAPI.Services
             }
 
             _logger.LogInformation($"Loaded {_sondenPositionMap.Count} SondenPositionen mappings");
+
+            // Jetzt erst die Messung-IDs setzen und Consumer starten
+            _currentMessungId = messungId;
+            _currentMesseinstellungId = messeinstellungId;
+
+            // Reset alle Moving Average Buffer für neue Messung
+            _sensorBuffers.Clear();
+
+            // Erstelle Channel für Producer-Consumer Pattern
+            _messwertChannel = Channel.CreateBounded<Messwert>(new BoundedChannelOptions(CHANNEL_CAPACITY)
+            {
+                FullMode = BoundedChannelFullMode.DropOldest, // Bei Überlauf älteste verwerfen
+                SingleReader = false,
+                SingleWriter = false
+            });
+            
+            // Starte Consumer-Threads NACHDEM Mapping geladen ist
+            _consumerCts = new CancellationTokenSource();
+            _consumerTasks = new Task[CONSUMER_THREAD_COUNT];
+            for (int i = 0; i < CONSUMER_THREAD_COUNT; i++)
+            {
+                int consumerId = i;
+                _consumerTasks[i] = Task.Run(() => ConsumerLoopAsync(consumerId, _consumerCts.Token));
+            }
+            
+            _logger.LogInformation($"Started {CONSUMER_THREAD_COUNT} consumer threads - ready to process MQTT messages");
         }
 
         public void StopMeasurement()

@@ -52,9 +52,11 @@ export class MessungDetailComponent {
   loadingProgress = signal<number>(0);
   messwertCount = signal<number>(0);
 
-  yokes = signal<{ sensors: number[] }[]>([]);
+  yokes = signal<{ sensors: (number | null)[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
   m_tot = signal<number>(0);
+  // Track which sensors have NO data at all in the DB (not just missing at current time)
+  missingSensorsInDb = signal<string[]>([]);
   // Series of [timeMs, m_tot] to feed timeline component
   mTotSeries: number[][] = [];
   // Timestamp of when all sensors have sent their first value, used to indicate on timeline
@@ -255,13 +257,21 @@ export class MessungDetailComponent {
       if (!maxFromData || z.getTime() > maxFromData.getTime()) maxFromData = z;
     }
 
-    const finalStart = start ?? minFromData ?? new Date();
-    const finalEnd = end ?? maxFromData ?? finalStart;
+    // Slider-Bereich auf tatsächliche Daten beschränken
+    // Plus Offset um die Warmup-Phase zu überspringen wo nicht alle Sensoren Daten haben
+    const WARMUP_OFFSET_MS = 800;
+    let finalStart = minFromData ?? start ?? new Date();
+    let finalEnd = maxFromData ?? end ?? finalStart;
+    
+    // Überspringe die Warmup-Phase wenn genug Daten vorhanden
+    if (finalEnd.getTime() - finalStart.getTime() > WARMUP_OFFSET_MS * 2) {
+      finalStart = new Date(finalStart.getTime() + WARMUP_OFFSET_MS);
+    }
 
     this.sliderMinMs = finalStart.getTime();
     this.sliderMaxMs = finalEnd.getTime();
 
-    // default slider to end (latest time)
+    // default slider to end (latest time) where all sensors should have data
     this.sliderValue.set(this.sliderMaxMs);
     this.selectedTime.set(new Date(this.sliderValue()));
 
@@ -323,25 +333,55 @@ export class MessungDetailComponent {
       sensorsPerYoke = maxPos > 0 ? maxPos : 1;
     }
 
-    // Build yokes array
-    const yokesArr: { sensors: number[] }[] = [];
+    // Lookup-Map bauen für O(1) Zugriff statt O(n) pro Sensor
+    // Map: "schenkel-position" -> sortierte Liste der Messwerte nach Zeitpunkt
+    const sensorMap = new Map<string, Messwert[]>();
+    for (const mw of messwerte) {
+      const wp = mw.sondenPosition;
+      if (!wp) continue;
+      const schenkel = wp.schenkel ?? null;
+      const pos = wp.position ?? null;
+      if (schenkel === null || pos === null) continue;
+      const key = `${schenkel}-${pos}`;
+      if (!sensorMap.has(key)) {
+        sensorMap.set(key, []);
+      }
+      sensorMap.get(key)!.push(mw);
+    }
+    
+    // Track missing sensors for UI
+    const foundKeys = Array.from(sensorMap.keys());
+    const missingSensors: string[] = [];
     for (let y = 0; y < yokeCount; y++) {
-      const sensors: number[] = new Array(sensorsPerYoke).fill(0);
       for (let s = 0; s < sensorsPerYoke; s++) {
-        // find the most recent messwert for this yoke/position at or before time
+        const key = `${y + 1}-${s + 1}`;
+        if (!sensorMap.has(key)) {
+          missingSensors.push(key);
+        }
+      }
+    }
+    this.missingSensorsInDb.set(missingSensors);
+
+    // Build yokes array - use null for values not yet available at this time
+    const yokesArr: { sensors: (number | null)[] }[] = [];
+    for (let y = 0; y < yokeCount; y++) {
+      const sensors: (number | null)[] = new Array(sensorsPerYoke).fill(null);
+      for (let s = 0; s < sensorsPerYoke; s++) {
+        // Backend uses 1-based schenkel and position
+        const schenkel = y + 1;
+        const position = s + 1;
+        const key = `${schenkel}-${position}`;
+        const sensorValues = sensorMap.get(key);
+        
+        if (!sensorValues || sensorValues.length === 0) {
+          // Sensor has NO data in DB at all
+          continue;
+        }
+        
+        // find the most recent messwert at or before time
         let candidate: Messwert | null = null;
         let candidateTime = 0;
-        for (const mw of messwerte) {
-          const wp = mw.sondenPosition;
-          if (!wp) continue;
-          const schenkel = wp.schenkel ?? null;
-          const pos = wp.position ?? null;
-          if (schenkel === null || pos === null) continue;
-          // Backend stores schenkel and position as 1-based numbers; convert to 0-based indexes for comparison
-          const schenkelIndex = (typeof schenkel === 'number') ? (schenkel - 1) : schenkel;
-          const posIndex = (typeof pos === 'number') ? (pos - 1) : pos;
-          if (schenkelIndex !== y) continue;
-          if (posIndex !== s) continue;
+        for (const mw of sensorValues) {
           const z = asDate(mw.zeitpunkt);
           if (!z) continue;
           const tz = z.getTime();
@@ -350,7 +390,8 @@ export class MessungDetailComponent {
             candidateTime = tz;
           }
         }
-        sensors[s] = candidate?.wert ?? 0;
+        // null = no value at this time yet, number = actual value
+        sensors[s] = candidate?.wert ?? null;
       }
       yokesArr.push({ sensors });
     }
@@ -358,12 +399,17 @@ export class MessungDetailComponent {
     this.yokes.set(yokesArr);
 
     // call displacement calculation with the current measurement settings
+    // Convert null values to 0 for calculation
+    const yokesForCalc: { sensors: number[] }[] = yokesArr.map(yoke => ({
+      sensors: yoke.sensors.map(s => s ?? 0)
+    }));
+    
     try {
       const probeType = measurement.messeinstellung.probeType!;
       const coil = measurement.messeinstellung.coil!;
       const coiltypeObj = coil.coiltype!;
       const measurementSetting = measurement.messeinstellung!;
-      const calc = this.displacementCalculation.calculateYokeData(yokesArr, probeType, [], coiltypeObj, coil, measurementSetting, measurement.pruefspannung!);
+      const calc = this.displacementCalculation.calculateYokeData(yokesForCalc, probeType, [], coiltypeObj, coil, measurementSetting, measurement.pruefspannung!);
       this.yokeData.set(calc.F);
       this.m_tot.set(calc.m_tot);
     } catch (err) {

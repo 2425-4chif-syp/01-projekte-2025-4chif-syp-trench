@@ -65,12 +65,18 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
     @for (sensor of yoke.sensors; track $index) {
         <div class="col">
-        <div class="card text-center h-100 border border-primary shadow-sm">
+        <div class="card text-center h-100 border shadow-sm" [class.border-primary]="sensor !== null" [class.border-secondary]="sensor === null">
             <div class="card-body">
             <h6 class="card-title text-muted small">Sensor #{{ $index + 1 }}</h6>
-            <p class="card-text fs-4 fw-bold">
+            @if (sensor !== null) {
+              <p class="card-text fs-4 fw-bold">
                 {{ sensor | number: '1.2-2' }}
-            </p>
+              </p>
+            } @else {
+              <p class="card-text fs-4 fw-bold text-muted">
+                -
+              </p>
+            }
             </div>
         </div>
         </div>

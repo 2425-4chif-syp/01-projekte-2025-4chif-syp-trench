@@ -16,7 +16,7 @@ import { SafeResourceUrl } from '@angular/platform-browser';
   styleUrl: './messung-detail-auswertung.component.scss'
 })
 export class MessungDetailAuswertungComponent {
-    @Input() yokes = signal<{ sensors: number[] }[]>([]);
+    @Input() yokes = signal<{ sensors: (number | null)[] }[]>([]);
     @Input() yokeData = signal<{ x: number; y: number }[][]>([]);
     @Input() m_tot = signal<number>(0);
     @Input() probeType:ProbeType = null!;

@@ -1,6 +1,6 @@
 <div class="time-slider mb-4">
 	<div class="time-slider-inner d-flex align-items-center">
-		<div class="time-label m-1 start text-muted small">{{ sliderMinMs ? (sliderMinMs | date:'HH:mm:ss.SSS') : '' }}</div>
+		<div class="time-label m-1 start text-muted small">{{ effectiveMinMs ? (effectiveMinMs | date:'HH:mm:ss.SSS') : '' }}</div>
 
 		<div class="slider-flex flex-grow-1 mx-3">
 			<label class="form-label visually-hidden">Zeitpunkt</label>
@@ -14,8 +14,8 @@
 				<g [attr.transform]="'translate(' + insetX + ', ' + insetY + ')'">
 					<!-- transparent hit-layer to ensure pointer events register anywhere inside the region -->
 					<rect x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" fill="transparent" pointer-events="all"></rect>
-					<!-- background rectangle spanning full width/height of inset area -->
-					<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#e9ecef"></rect>
+					<!-- background: show data area only (no gray zone) -->
+					<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#f8f9fa"></rect>
 
                     @for (line of scaledLineSegments; track $index) {
                         <!-- Red (below tolerance) -->
@@ -82,6 +82,6 @@
                         }
 		</div>
 
-		<div class="time-label m-1 end text-muted small">{{ sliderMaxMs ? (sliderMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
+		<div class="time-label m-1 end text-muted small">{{ effectiveMaxMs ? (effectiveMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
 	</div>
 </div>
