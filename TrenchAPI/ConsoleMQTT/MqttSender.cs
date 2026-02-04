@@ -69,54 +69,60 @@ namespace ConsoleMqtt
 
         private static async Task SendMessagesPeriodically()
         {
+            var tasks = new List<Task>();
+
+            // Create independent thread for each probe
+            for (int rj = 1; rj <= 4; rj++)
+            {
+                for (int probe = 1; probe <= 8; probe++)
+                {
+                    // Capture loop variables
+                    int rjNumber = rj;
+                    int probeNumber = probe;
+                    
+                    var task = Task.Run(async () => await SendProbeMessagesPeriodically(rjNumber, probeNumber));
+                    tasks.Add(task);
+                }
+            }
+
+            // Wait for all threads to complete (they run indefinitely)
+            await Task.WhenAll(tasks);
+        }
+
+        private static async Task SendProbeMessagesPeriodically(int rjNumber, int probeNumber)
+        {
             var random = new Random();
             var stopwatch = Stopwatch.StartNew();
             long iterationCount = 0;
             const double targetFrequency = 300.0; // 300 times per second
             const double targetIntervalMs = 1000.0 / targetFrequency; // 3.33 ms
+            
+            string topic = $"trench_mqtt_mock_v2/rj{rjNumber}/probe{probeNumber}";
 
             while (true)
             {
-                var messages = new List<MqttApplicationMessage>();
+                // Generate standard normal distribution using Box-Muller transform
+                double u1 = 1.0 - random.NextDouble();
+                double u2 = 1.0 - random.NextDouble();
+                double standardNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+                
+                // Scale to range 0.8 to 2 (mean = 1.25, std dev = 0.3)
+                double randomValue = 1.25 + standardNormal * 0.3;
+                randomValue = Math.Max(0.8, Math.Min(2, randomValue)); // Clamp to range
+                
+                byte[] payload = new byte[16];
+                BitConverter.GetBytes((float)randomValue).CopyTo(payload, 0);
 
-                for (int i = 1; i <= 4; i++)
-                {
-                    for (int j = 1; j <= 8; j++)
-                    {
-                        string topic = $"trench_mqtt_mock_v2/rj{i}/probe{j}";
-                        
-                        // Generate standard normal distribution using Box-Muller transform
-                        double u1 = 1.0 - random.NextDouble();
-                        double u2 = 1.0 - random.NextDouble();
-                        double standardNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
-                        
-                        // Scale to range 0.8 to 2 (mean = 1.25, std dev = 0.3)
-                        double randomValue = 1.25 + standardNormal * 0.3;
-                        randomValue = Math.Max(0.8, Math.Min(2, randomValue)); // Clamp to range
-                        
-                        byte[] payload = new byte[16];
-                        BitConverter.GetBytes((float)randomValue).CopyTo(payload, 0);
+                var message = new MqttApplicationMessageBuilder()
+                    .WithTopic(topic)
+                    .WithPayload(payload)
+                    .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
+                    .WithRetainFlag()
+                    .Build();
 
-                        var message = new MqttApplicationMessageBuilder()
-                            .WithTopic(topic)
-                            .WithPayload(payload)
-                            .WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce)
-                            .WithRetainFlag()
-                            .Build();
-
-                        messages.Add(message);
-                    }
-                }
-
-                var publishTasks = messages.Select(message => 
-                {
-                    //float value = BitConverter.ToSingle(message.Payload, 0);
-                    //Console.WriteLine($"Publishing to {message.Topic}: {value}");
-                    return _mqttPublisherClient.PublishAsync(message, CancellationToken.None);
-                });
-
-                await Task.WhenAll(publishTasks);
-                //Console.WriteLine($"All {messages.Count} messages published at {DateTime.Now:T}");
+                await _mqttPublisherClient.PublishAsync(message, CancellationToken.None);
+                //float value = BitConverter.ToSingle(message.Payload, 0);
+                //Console.WriteLine($"Publishing to {topic}: {value}");
 
                 iterationCount++;
                 
