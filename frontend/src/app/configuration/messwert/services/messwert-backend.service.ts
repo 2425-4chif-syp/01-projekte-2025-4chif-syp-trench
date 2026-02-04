@@ -10,12 +10,24 @@ export class MesswertBackendService {
   constructor(private backendService:BackendService) { }
 
   private messwertBackendToFrontend(messwert: any): Messwert {
+    // Backend returns Schenkel and Position as flat fields from the optimized query
+    // Build sondenPosition object from these fields if they exist
+    const sondenPosition = (messwert.schenkel !== undefined || messwert.position !== undefined) 
+      ? {
+          id: messwert.sondenPositionID,
+          schenkel: messwert.schenkel ?? 0,
+          position: messwert.position ?? 0,
+          messeinstellungID: null,
+          messeinstellung: null
+        }
+      : messwert.sondenPosition;
+
     return {
       id: messwert.id,
       messungID: messwert.messungID,
       measurement: messwert.messung,
       sondenPositionID: messwert.sondenPositionID,
-      sondenPosition: messwert.sondenPosition,
+      sondenPosition: sondenPosition,
       wert: messwert.wert,
       zeitpunkt: messwert.zeitpunkt
     }

@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.IO.Compression;
+using Microsoft.AspNetCore.ResponseCompression;
 using TrenchAPI.Persistence;
 using TrenchAPI.WebAPI.Services;
 using TrenchAPI.WebAPI.Swagger;
@@ -17,13 +19,32 @@ namespace TrenchAPI
             // Port
             builder.WebHost.UseUrls("http://0.0.0.0:5127");
 
-            // Services hinzufügen
+            // Response Compression für schnellere Übertragung
+            builder.Services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.Providers.Add<GzipCompressionProvider>();
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                    new[] { "application/json" });
+            });
+            builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+            builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
+
+            // Services hinzufügen - OPTIMIERTE JSON Serialization
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.WriteIndented = false; // Keine Formatierung = schneller
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
@@ -153,6 +174,9 @@ namespace TrenchAPI
             }
 
             // Middleware konfigurieren
+            // Response Compression MUSS am Anfang stehen
+            app.UseResponseCompression();
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

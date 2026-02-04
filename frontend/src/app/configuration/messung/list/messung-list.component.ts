@@ -48,6 +48,6 @@ export class MessungListComponent {
 
   openMessung(messung:Measurement):void {
     this.messungService.clickedMessung = messung
-    this.router.navigate(['/measurement-detail']);
+    this.router.navigate(['/measurement-detail', messung.id]);
   }
 }

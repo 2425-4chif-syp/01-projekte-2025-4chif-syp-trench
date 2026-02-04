@@ -10,7 +10,20 @@
         </button>
     </div>
 
-    @if (messwerte().length < 1) {
+    <!-- Loading State -->
+    @if (isLoading()) {
+        <div class="loading-container">
+            <p class="loading-message">{{ loadingMessage() }}</p>
+            <div class="loading-progress-track">
+                <div class="loading-progress-bar" [style.width.%]="loadingProgress()"></div>
+            </div>
+            <p class="loading-percent">{{ loadingProgress() }}%</p>
+            @if (messwertCount() > 0) {
+                <p class="loading-count">{{ messwertCount() | number }} Datenpunkte geladen</p>
+            }
+        </div>
+    }
+    @else if (messwerte().length < 1) {
         <p>Keine Messwerte vorhanden!</p>
     }
     @else {

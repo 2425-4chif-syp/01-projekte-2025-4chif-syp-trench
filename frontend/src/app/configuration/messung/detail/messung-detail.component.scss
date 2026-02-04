@@ -10,6 +10,55 @@
   padding: 0.6rem 1.4rem;
 }
 
+/* Loading State - App Design */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  min-height: 200px;
+}
+
+.loading-message {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #001568;
+  margin-bottom: 1rem;
+  font-family: "Montserrat", sans-serif;
+}
+
+.loading-progress-track {
+  width: 320px;
+  max-width: 90%;
+  height: 12px;
+  background: linear-gradient(135deg, rgba(0, 21, 104, 0.08) 0%, rgba(47, 167, 174, 0.08) 100%);
+  border: 1px solid rgba(0, 21, 104, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.loading-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #001568 0%, #2fa7ae 100%);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(47, 167, 174, 0.5);
+}
+
+.loading-percent {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #001568;
+  margin-bottom: 0.25rem;
+}
+
+.loading-count {
+  font-size: 0.875rem;
+  color: #666;
+}
+
 .time-slider {
   position: sticky;
   top: 0;

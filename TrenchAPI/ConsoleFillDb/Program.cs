@@ -1,5 +1,6 @@
 using TrenchAPI.Persistence;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleFillDb
 {
@@ -14,7 +15,20 @@ namespace ConsoleFillDb
                 await TestConnection.TestDatabaseConnectionAsync();
                 Console.WriteLine();
 
-                using (UnitOfWork unitOfWork = new UnitOfWork())
+                // Create DbContext with connection string from appsettings.json
+                IConfiguration configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false)
+                    .Build();
+
+                string connectionString = configuration.GetConnectionString("DefaultConnection") 
+                    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+                DbContextOptionsBuilder<WebDbContext> optionsBuilder = new DbContextOptionsBuilder<WebDbContext>();
+                optionsBuilder.UseNpgsql(connectionString);
+
+                using (WebDbContext dbContext = new WebDbContext(optionsBuilder.Options))
+                using (UnitOfWork unitOfWork = new UnitOfWork(dbContext))
                 {
                     Console.WriteLine("Spulentypen, Spulen, Sondentypen, Sonden, Messeinstellungen, Sondenpositionieren, Messungen und Messwerte werden eingelesen");
                     

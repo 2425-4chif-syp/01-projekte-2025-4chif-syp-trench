@@ -225,6 +225,11 @@ namespace Persistence.Migrations
                 column: "MessungID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Messwert_MessungID_Zeitpunkt",
+                table: "Messwert",
+                columns: new[] { "MessungID", "Zeitpunkt" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messwert_SondenPositionID",
                 table: "Messwert",
                 column: "SondenPositionID");

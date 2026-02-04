@@ -34,6 +34,7 @@ namespace TrenchAPI.Controllers
         {
                 return await _context.Messung
                     .Include(m => m.Messeinstellung)
+                    .AsNoTracking()
                     .ToListAsync();       
         }
 
@@ -41,8 +42,9 @@ namespace TrenchAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Messung>> GetMessung(int id)
         {
-            var messung = await _context.Messung
+            Messung? messung = await _context.Messung
                 .Include(m => m.Messeinstellung)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messung == null)
@@ -54,10 +56,12 @@ namespace TrenchAPI.Controllers
         }
 
         // GET: api/Messung/5/Messwerte
+        // Gibt ALLE Messwerte einer Messung zurück (ohne Sampling)
         [HttpGet("{id}/Messwerte")]
         public async Task<ActionResult<IEnumerable<object>>> GetMesswerte(int id)
         {
-            var messung = await _context.Messung
+            Messung? messung = await _context.Messung
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (messung == null)
@@ -65,7 +69,8 @@ namespace TrenchAPI.Controllers
                 return NotFound("Messung nicht gefunden");
             }
 
-            var messwerte = await _context.Messwert
+            // Hole ALLE Messwerte ohne Sampling
+            List<object> allMesswerte = await _context.Messwert
                 .Where(m => m.MessungID == id)
                 .OrderBy(m => m.Zeitpunkt)
                 .Select(m => new {
@@ -75,9 +80,10 @@ namespace TrenchAPI.Controllers
                     m.Wert,
                     m.Zeitpunkt
                 })
-                .ToListAsync();
-
-            return messwerte;
+                .AsNoTracking()
+                .ToListAsync<object>();
+                
+            return Ok(allMesswerte);
         }
 
         [HttpPost("startMeasuring")]
@@ -94,7 +100,7 @@ namespace TrenchAPI.Controllers
             }
 
             // Erstelle neue Messung
-            var messung = new Messung
+            Messung messung = new Messung
             {
                 MesseinstellungID = dto.MesseinstellungID,
                 Anfangszeitpunkt = DateTime.UtcNow,
@@ -141,7 +147,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Keine aktive Messung gefunden.");
             }
 
-            var messung = await _context.Messung
+            Messung? messung = await _context.Messung
                 .Include(m => m.Messeinstellung)
                 .FirstOrDefaultAsync(m => m.ID == _currentMessungID.Value);
             
@@ -177,7 +183,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Die angegebene SondenPosition existiert nicht.");
             }
 
-            var messwert = new Messwert
+            Messwert messwert = new Messwert
             {
                 MessungID = _currentMessungID.Value,
                 SondenPositionID = dto.SondenPositionID,
@@ -200,7 +206,7 @@ namespace TrenchAPI.Controllers
                 return NotFound("Keine aktive Messung gefunden");
             }
 
-            var currentMessung = await _context.Messung
+            Messung? currentMessung = await _context.Messung
                 .OrderByDescending(m => m.Anfangszeitpunkt)
                 .FirstOrDefaultAsync();
 
@@ -209,7 +215,7 @@ namespace TrenchAPI.Controllers
                 return NotFound("Keine Messung gefunden");
             }
 
-            var messwerte = await _context.Messwert
+            List<object> messwerte = await _context.Messwert
                 .Where(m => m.MessungID == currentMessung.ID)
                 .OrderBy(m => m.Zeitpunkt)
                 .Select(m => new {
@@ -219,7 +225,7 @@ namespace TrenchAPI.Controllers
                     m.Wert,
                     m.Zeitpunkt
                 })
-                .ToListAsync();
+                .ToListAsync<object>();
 
             return messwerte;
         }
@@ -268,7 +274,7 @@ namespace TrenchAPI.Controllers
                 return BadRequest("Der angegebene Messeinstellung existiert nicht for some reason?. (DEBUG: 1)");
             }
 
-            var messung = new Messung
+            Messung messung = new Messung
             {
                 // Don't set ID - let database auto-generate it
                 MesseinstellungID = messungDto.MesseinstellungID,
@@ -280,7 +286,7 @@ namespace TrenchAPI.Controllers
                 Notiz = messungDto.Notiz
             };
 
-            var existingMesseinstellung = _context.Messeinstellung.Find(messung.MesseinstellungID);
+            Messeinstellung? existingMesseinstellung = _context.Messeinstellung.Find(messung.MesseinstellungID);
 
             if (existingMesseinstellung == null)
             {
@@ -308,7 +314,7 @@ namespace TrenchAPI.Controllers
             }
 
             // Erstelle die Messung
-            var messung = new Messung
+            Messung messung = new Messung
             {
                 MesseinstellungID = messungDto.MesseinstellungID,
                 Anfangszeitpunkt = messungDto.Anfangszeitpunkt,
@@ -321,12 +327,12 @@ namespace TrenchAPI.Controllers
             Console.WriteLine($"Messung erstellt mit ID: {messung.ID}");
 
             // Hole die existierenden SondenPositionen für diese Messeinstellung
-            var sondenPositionen = await _context.SondenPosition
+            List<SondenPosition> sondenPositionen = await _context.SondenPosition
                 .Where(sp => sp.MesseinstellungID == messungDto.MesseinstellungID)
                 .ToListAsync();
 
             Console.WriteLine($"Gefundene SondenPositionen: {sondenPositionen.Count}");
-            foreach (var sp in sondenPositionen)
+            foreach (SondenPosition sp in sondenPositionen)
             {
                 Console.WriteLine($"  - ID: {sp.ID}, Schenkel: {sp.Schenkel}, Position: {sp.Position}");
             }
@@ -345,12 +351,12 @@ namespace TrenchAPI.Controllers
 
             int totalMesswerte = 0;
             // Speichere die Messwerte
-            foreach (var messsonde in messungDto.Messsonden)
+            foreach (MesssondeDto messsonde in messungDto.Messsonden)
             {
                 Console.WriteLine($"Verarbeite Messsonde: Schenkel {messsonde.Schenkel}, Position {messsonde.Position}, Messwerte: {messsonde.Messwerte?.Count ?? 0}");
                 
                 // Finde die passende SondenPosition für diesen Schenkel und Position
-                var sondenPosition = sondenPositionen.FirstOrDefault(sp => 
+                SondenPosition? sondenPosition = sondenPositionen.FirstOrDefault(sp => 
                     sp.Schenkel == messsonde.Schenkel && 
                     sp.Position == messsonde.Position);
 
@@ -367,8 +373,8 @@ namespace TrenchAPI.Controllers
                 {
                     for (int i = 0; i < messsonde.Messwerte.Count; i++)
                     {
-                        var wert = messsonde.Messwerte[i];
-                        var messwert = new Messwert
+                        double wert = messsonde.Messwerte[i];
+                        Messwert messwert = new Messwert
                         {
                             MessungID = messung.ID,
                             SondenPositionID = sondenPosition.ID,
@@ -393,7 +399,7 @@ namespace TrenchAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessung(int id)
         {
-            var messung = await _context.Messung.FindAsync(id);
+            Messung? messung = await _context.Messung.FindAsync(id);
             if (messung == null)
             {
                 return NotFound();
@@ -409,7 +415,7 @@ namespace TrenchAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteMessungen()
         {
-            var messungen = await _context.Messung.ToListAsync();
+            List<Messung> messungen = await _context.Messung.ToListAsync();
             if (!messungen.Any())
             {
                 return NotFound();

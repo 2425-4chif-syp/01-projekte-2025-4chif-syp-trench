@@ -89,6 +89,22 @@ namespace TrenchAPI.Persistence
                 .HasForeignKey(m => m.SondenPositionID)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Performance-Indexes für schnelle Abfragen
+            // Composite Index für Abfragen nach MessungID sortiert nach Zeit
+            modelBuilder.Entity<Messwert>()
+                .HasIndex(m => new { m.MessungID, m.Zeitpunkt })
+                .HasDatabaseName("IX_Messwert_MessungID_Zeitpunkt");
+            
+            // Index für SondenPositionID Lookups
+            modelBuilder.Entity<Messwert>()
+                .HasIndex(m => m.SondenPositionID)
+                .HasDatabaseName("IX_Messwert_SondenPositionID");
+            
+            // Index für schnelles Zählen pro Messung
+            modelBuilder.Entity<Messwert>()
+                .HasIndex(m => m.MessungID)
+                .HasDatabaseName("IX_Messwert_MessungID");
+
             modelBuilder.Entity<Sonde>()
                 .HasOne(s => s.SondenTyp)
                 .WithMany()
