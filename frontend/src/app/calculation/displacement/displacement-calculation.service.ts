@@ -49,7 +49,7 @@ export class DisplacementCalculationService {
     // Fluss umgerechnet auf Induktion (in mT)
     const B_peak: { sensors: number[] }[] = psi.map(yoke => ({
       sensors: yoke.sensors.map(sensor => 
-        (sensor * 0.000001 / A / probeType.windungszahl! * 1000 * Math.SQRT2))
+        (sensor * 0.001 / A / probeType.windungszahl! * 1000 * Math.SQRT2))
     }));
 
     console.log('B_peak:', B_peak);
