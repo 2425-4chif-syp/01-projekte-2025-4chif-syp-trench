@@ -57,6 +57,8 @@ export class MessungDetailComponent {
   m_tot = signal<number>(0);
   // Series of [timeMs, m_tot] to feed timeline component
   mTotSeries: number[][] = [];
+  // Timestamp of when all sensors have sent their first value, used to indicate on timeline
+  allSensorsSentMs: number | null = null;
 
   // Slider state: milliseconds since epoch
   sliderMinMs: number = 0;
@@ -219,6 +221,8 @@ export class MessungDetailComponent {
 
       // Build m_tot series based on available timestamps
       this.buildMTotSeries();
+  // Compute the earliest timestamp when all sensors have reported at least one value
+  this.allSensorsSentMs = this.computeAllSensorsSentMs();
       this.loadingProgress.set(90);
       await this.delay(100);
 
@@ -454,6 +458,53 @@ export class MessungDetailComponent {
       series.push([t, val]);
     }
     this.mTotSeries = series;
+  }
+
+  private computeAllSensorsSentMs(): number | null {
+    const measurement = this.measurement;
+    const data = this.messwerte();
+    if (!measurement || !measurement.messeinstellung) return null;
+    if (!data || data.length === 0) return null;
+
+    const yokeCount = measurement.messeinstellung.coil?.coiltype?.schenkel ?? 0;
+    if (!yokeCount || yokeCount < 1) return null;
+
+    let sensorsPerYoke = measurement.messeinstellung.sondenProSchenkel ?? 0;
+    if (!sensorsPerYoke || sensorsPerYoke < 1) {
+      let maxPos = 0;
+      for (const m of data) {
+        const pos = m.sondenPosition?.position ?? null;
+        if (pos !== null && pos !== undefined && typeof pos === 'number') {
+          if (pos > maxPos) maxPos = pos;
+        }
+      }
+      if (maxPos < 1) return null;
+      sensorsPerYoke = maxPos;
+    }
+
+    let latestFirstSeen = 0;
+    for (let y = 0; y < yokeCount; y++) {
+      for (let s = 0; s < sensorsPerYoke; s++) {
+        let firstSeen: number | null = null;
+        for (const mw of data) {
+          const wp = mw.sondenPosition;
+          if (!wp) continue;
+          const schenkel = wp.schenkel ?? null;
+          const pos = wp.position ?? null;
+          if (schenkel === null || pos === null) continue;
+          const schenkelIndex = (typeof schenkel === 'number') ? (schenkel - 1) : schenkel;
+          const posIndex = (typeof pos === 'number') ? (pos - 1) : pos;
+          if (schenkelIndex !== y || posIndex !== s) continue;
+          const z = asDate(mw.zeitpunkt);
+          if (!z) continue;
+          const tz = z.getTime();
+          if (firstSeen === null || tz < firstSeen) firstSeen = tz;
+        }
+        if (firstSeen === null) return null;
+        if (firstSeen > latestFirstSeen) latestFirstSeen = firstSeen;
+      }
+    }
+    return latestFirstSeen || null;
   }
 
   public navigateBack(): void {

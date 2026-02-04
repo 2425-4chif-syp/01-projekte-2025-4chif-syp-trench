@@ -15,7 +15,7 @@
 					<!-- transparent hit-layer to ensure pointer events register anywhere inside the region -->
 					<rect x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" fill="transparent" pointer-events="all"></rect>
 					<!-- background rectangle spanning full width/height of inset area -->
-					<!--<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#e9ecef"></rect>-->
+					<rect class="bg-rect" pointer-events="none" x="0" y="0" [attr.width]="innerWidth" [attr.height]="innerHeight" rx="0" fill="#e9ecef"></rect>
 
                     @for (line of scaledLineSegments; track $index) {
                         <!-- Red (below tolerance) -->
@@ -26,7 +26,6 @@
                             [attr.fill-opacity]="line.y1 < scaledTolerance ? '0.25' : '0.5'"></rect>
 
                         <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" pointer-events="none" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke"></line>
-                        <circle [attr.cx]="line.x1" [attr.cy]="line.y1" r="0.5" fill="black" pointer-events="none"></circle>
                     }
                     
                     <!-- Position line (uses precise pointer position during drag) -->
