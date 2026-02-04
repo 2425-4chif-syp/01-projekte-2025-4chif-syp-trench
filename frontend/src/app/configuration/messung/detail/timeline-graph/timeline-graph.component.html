@@ -27,6 +27,16 @@
 
                         <line [attr.x1]="line.x1" [attr.y1]="line.y1" [attr.x2]="line.x2" [attr.y2]="line.y2" pointer-events="none" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke"></line>
                     }
+
+                    <!-- Zoom selection overlay -->
+                    @if (selectingZoom && selectionStartNormalized() !== null && selectionEndNormalized() !== null) {
+                      <rect
+                        [attr.x]="min(selectionStartNormalizedSafe(), selectionEndNormalizedSafe()) * innerWidth"
+                        y="0"
+                        [attr.width]="abs(selectionEndNormalizedSafe() - selectionStartNormalizedSafe()) * innerWidth"
+                        [attr.height]="innerHeight"
+                        fill="#007bff" fill-opacity="0.15" stroke="#007bff" stroke-width="2" stroke-dasharray="4 2" vector-effect="non-scaling-stroke"></rect>
+                    }
                     
                     <!-- Position line (uses precise pointer position during drag) -->
                     <g [attr.transform]="'translate(' + lineXActiveNormalized() * innerWidth + ', 0)'">
@@ -60,6 +70,16 @@
 			</svg>
 
 			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'dd.MM.yyyy HH:mm:ss.SSS') : '' }}</div>
+
+                        <div class="mt-2 d-flex gap-2">
+                            <button type="button" class="btn btn-primary btn-sm" [disabled]="selectingZoom" (click)="startZoomSelection()">Zoom In</button>
+                            @if (zoomStack.length > 0) {
+                                <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="selectingZoom" (click)="resetZoom()">Reset Zoom</button>
+                            }
+                        </div>
+                        @if (selectingZoom) {
+                            <div class="small text-muted mt-1">Select range: drag or click two points.</div>
+                        }
 		</div>
 
 		<div class="time-label m-1 end text-muted small">{{ sliderMaxMs ? (sliderMaxMs | date:'HH:mm:ss.SSS') : '' }}</div>
