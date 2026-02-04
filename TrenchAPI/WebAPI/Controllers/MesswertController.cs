@@ -44,8 +44,9 @@ namespace TrenchAPI.Controllers
         }
 
         // GET: api/Messwert/messung/5
+        // Gibt ALLE Messwerte einer Messung zurück (kein Sampling)
         [HttpGet("messung/{messungId}")]
-        public async Task<ActionResult<IEnumerable<Messwert>>> GetMesswertByMessungId(int messungId)
+        public async Task<ActionResult<IEnumerable<object>>> GetMesswertByMessungId(int messungId)
         {
             // Check if Messung exists
             if (!await _context.Messung.AnyAsync(m => m.ID == messungId))
@@ -53,15 +54,24 @@ namespace TrenchAPI.Controllers
                 return NotFound($"Messung with ID {messungId} not found.");
             }
 
-            var messwerte = await _context.Messwert
+            // Alle Messwerte laden ohne Sampling
+            List<object> allMesswerte = await _context.Messwert
                 .Where(m => m.MessungID == messungId)
-                .Include(m => m.SondenPosition)
-                    .ThenInclude(sp => sp.Sonde)
-                        .ThenInclude(s => s.SondenTyp)
                 .OrderBy(m => m.Zeitpunkt)
+                .Select(m => new {
+                    m.ID,
+                    m.MessungID,
+                    m.SondenPositionID,
+                    m.Wert,
+                    m.Zeitpunkt,
+                    Schenkel = m.SondenPosition != null ? m.SondenPosition.Schenkel : 0,
+                    Position = m.SondenPosition != null ? m.SondenPosition.Position : 0
+                })
+                .AsNoTracking()
+                .Cast<object>()
                 .ToListAsync();
 
-            return Ok(messwerte);
+            return Ok(allMesswerte);
         }
 
         // PUT: api/Messwert/5
