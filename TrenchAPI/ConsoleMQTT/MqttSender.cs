@@ -92,7 +92,7 @@ namespace ConsoleMqtt
                         
                         // Scale to range 0.8 to 2 (mean = 1.25, std dev = 0.3)
                         double randomValue = 1.25 + standardNormal * 0.3;
-                        randomValue = Math.Max(2, Math.Min(0.8, randomValue)); // Clamp to range
+                        randomValue = Math.Max(0.8, Math.Min(2, randomValue)); // Clamp to range
                         
                         byte[] payload = new byte[16];
                         BitConverter.GetBytes((float)randomValue).CopyTo(payload, 0);
