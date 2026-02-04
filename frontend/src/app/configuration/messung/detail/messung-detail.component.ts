@@ -45,7 +45,13 @@ export class MessungDetailComponent {
   showDeleteModal: boolean = false;
   public grafanaPanelUrls = new Map<number, SafeResourceUrl>();
 
-  yokes = signal<{ sensors: number[] }[]>([]);
+  // Loading state
+  isLoading = signal<boolean>(true);
+  loadingMessage = signal<string>('Lade Messdaten...');
+  loadingProgress = signal<number>(0);
+  messwertCount = signal<number>(0);
+
+  yokes = signal<{ sensors: number[] }[]>([]);;
   yokeData = signal<{ x: number; y: number }[][]>([]);
   m_tot = signal<number>(0);
   // Series of [timeMs, m_tot] to feed timeline component
@@ -149,17 +155,39 @@ export class MessungDetailComponent {
   private async loadMesswerte(): Promise<void> {
     if (!this.measurement || !this.measurement.id) {
       this.messwerte.set([]);
+      this.isLoading.set(false);
       return;
     }
-    
-    const messwerte: Messwert[] = await this.messwertService.getMesswerteByMessungId(this.measurement.id);
-    this.messwerte.set(messwerte);
 
-    // initialize slider bounds and compute initial derived values
-    this.initializeSliderBounds();
+    try {
+      this.isLoading.set(true);
+      this.loadingProgress.set(0);
+      this.loadingMessage.set('Lade Messdaten vom Server...');
+      this.loadingProgress.set(10);
 
-    // Build m_tot series based on available timestamps
-    this.buildMTotSeries();
+      const messwerte: Messwert[] = await this.messwertService.getMesswerteByMessungId(this.measurement.id);
+      this.messwerte.set(messwerte);
+      this.messwertCount.set(messwerte.length);
+      this.loadingProgress.set(50);
+
+      this.loadingMessage.set('Initialisiere Zeitachse...');
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // initialize slider bounds and compute initial derived values
+      this.initializeSliderBounds();
+      this.loadingProgress.set(70);
+
+      this.loadingMessage.set('Berechne Auswertung...');
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // Build m_tot series based on available timestamps
+      this.buildMTotSeries();
+      this.loadingProgress.set(100);
+    } catch (err) {
+      console.error('Error loading messwerte:', err);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   private initializeSliderBounds(): void {
