@@ -18,6 +18,28 @@ services:
       retries: 10
       start_period: 10s
 
+  grafana:
+    image: grafana/grafana:10.4.3
+    container_name: grafana_container
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_PATHS_PLUGINS=/tmp/grafana-plugins
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - internalnet
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin_container
@@ -79,6 +101,7 @@ services:
 
 volumes:
   postgres_data:
+  grafana_data:
 
 networks:
   internalnet:
