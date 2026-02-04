@@ -27,7 +27,7 @@ function asDate(d: any): Date | null {
   standalone: true,
   imports: [CommonModule, ConfirmDeleteModalComponent, MessungDetailAuswertungComponent, TimelineGraphComponent],
   templateUrl: './messung-detail.component.html',
-  styleUrls: ['./messung-detail.component.scss']
+  styleUrl: './messung-detail.component.scss'
 })
 export class MessungDetailComponent {
   constructor(
@@ -52,7 +52,7 @@ export class MessungDetailComponent {
   loadingProgress = signal<number>(0);
   messwertCount = signal<number>(0);
 
-  yokes = signal<{ sensors: number[] }[]>([]);;
+  yokes = signal<{ sensors: number[] }[]>([]);
   yokeData = signal<{ x: number; y: number }[][]>([]);
   m_tot = signal<number>(0);
   // Series of [timeMs, m_tot] to feed timeline component
@@ -80,6 +80,11 @@ export class MessungDetailComponent {
           this.router.navigate(['/measurement-management']);
           return;
         }
+      } else {
+        // Invalid ID in route parameter (e.g., "0", "abc", negative)
+        console.error('Invalid measurement ID in route:', idParam);
+        this.router.navigate(['/measurement-management']);
+        return;
       }
     } else {
       // Fallback to clicked measurement from service (old behavior)
