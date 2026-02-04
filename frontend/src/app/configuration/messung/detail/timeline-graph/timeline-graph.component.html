@@ -72,9 +72,9 @@
 			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'dd.MM.yyyy HH:mm:ss.SSS') : '' }}</div>
 
                         <div class="mt-2 d-flex gap-2">
-                            <button type="button" class="btn btn-primary btn-sm" [disabled]="selectingZoom" (click)="startZoomSelection()">Zoom In</button>
+                            <button type="button" class="btn btn-primary btn-sm" [disabled]="selectingZoom" (click)="startZoomSelection()">Hineinzoomen</button>
                             @if (zoomStack.length > 0) {
-                                <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="selectingZoom" (click)="resetZoom()">Reset Zoom</button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="selectingZoom" (click)="resetZoom()">Zoom zurücksetzen</button>
                             }
                         </div>
                         @if (selectingZoom) {
