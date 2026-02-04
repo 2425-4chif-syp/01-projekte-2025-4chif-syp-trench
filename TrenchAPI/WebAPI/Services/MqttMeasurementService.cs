@@ -377,21 +377,23 @@ namespace TrenchAPI.WebAPI.Services
             _logger.LogInformation($"Loaded {_sondenPositionMap.Count} SondenPositionen mappings");
         }
 
-        public async void StopMeasurement()
+        public void StopMeasurement()
         {
             _logger.LogInformation("Stopping measurement");
             
             // Signal consumers to stop
             _messwertChannel?.Writer.Complete();
             
-            // Warte auf Consumer-Threads
+            // Cancel the consumer tasks first
+            _consumerCts?.Cancel();
+            
+            // Then wait for Consumer-Threads to finish
             if (_consumerTasks != null)
             {
                 _logger.LogInformation("Waiting for consumer threads to finish...");
-                await Task.WhenAll(_consumerTasks);
+                Task.WhenAll(_consumerTasks);
             }
             
-            _consumerCts?.Cancel();
             _consumerCts?.Dispose();
             _consumerCts = null;
             _consumerTasks = null;
