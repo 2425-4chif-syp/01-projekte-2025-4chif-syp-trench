@@ -185,7 +185,7 @@ namespace ConsoleMqtt
             string rjPart = parts[0]; // "rj1"
             string probePart = parts[1]; // "probe8"
             
-            string topic = $"trench_mqtt_mock_vTEST/{rjPart}/{probePart}";
+            string topic = $"trench_mqtt_mock_v2/{rjPart}/{probePart}";
             
             if (!_csvData.ContainsKey(probeKey) || _csvData[probeKey].Count == 0)
             {
