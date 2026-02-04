@@ -56,6 +56,7 @@ namespace TrenchAPI.Controllers
 
             // Alle Messwerte laden ohne Sampling
             List<object> allMesswerte = await _context.Messwert
+                .Include(m => m.SondenPosition)
                 .Where(m => m.MessungID == messungId)
                 .OrderBy(m => m.Zeitpunkt)
                 .Select(m => new {
