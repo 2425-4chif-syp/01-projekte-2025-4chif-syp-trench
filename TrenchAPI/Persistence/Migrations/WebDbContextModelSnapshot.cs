@@ -112,9 +112,14 @@ namespace Persistence.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MessungID");
+                    b.HasIndex("MessungID")
+                        .HasDatabaseName("IX_Messwert_MessungID");
 
-                    b.HasIndex("SondenPositionID");
+                    b.HasIndex("SondenPositionID")
+                        .HasDatabaseName("IX_Messwert_SondenPositionID");
+
+                    b.HasIndex("MessungID", "Zeitpunkt")
+                        .HasDatabaseName("IX_Messwert_MessungID_Zeitpunkt");
 
                     b.ToTable("Messwert");
                 });
