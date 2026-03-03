@@ -69,16 +69,17 @@
 				</g>
 			</svg>
 
-			<div class="time-selected small text-muted mt-1">{{ value ? (value | date:'dd.MM.yyyy HH:mm:ss.SSS') : '' }}</div>
-
-                        <div class="mt-2 d-flex gap-2">
-                            <button type="button" class="btn btn-primary btn-sm" [disabled]="selectingZoom" (click)="startZoomSelection()">Hineinzoomen</button>
-                            @if (zoomStack.length > 0) {
-                                <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="selectingZoom" (click)="resetZoom()">Zoom zurücksetzen</button>
-                            }
+			<div class="timeline-bottom mt-1">
+                            <div class="time-selected small text-muted">{{ value ? (value | date:'dd.MM.yyyy HH:mm:ss.SSS') : '' }}</div>
+                            <div class="timeline-actions__btns">
+                                <button type="button" class="btn btn-primary btn-sm" [disabled]="selectingZoom" (click)="startZoomSelection()">Hineinzoomen</button>
+                                @if (zoomStack.length > 0) {
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" [disabled]="selectingZoom" (click)="resetZoom()">Zoom zurücksetzen</button>
+                                }
+                            </div>
                         </div>
                         @if (selectingZoom) {
-                            <div class="small text-muted mt-1">Bereich auswählen: Ziehen oder zwei Punkte anklicken.</div>
+                            <div class="small text-muted mt-1 text-end">Bereich auswählen: Ziehen oder zwei Punkte anklicken.</div>
                         }
 		</div>
 

@@ -45,7 +45,6 @@
             <!-- Messung -->
             <div class="info-section">
                 <div class="info-section__header">
-                    <span class="info-section__icon">📋</span>
                     <h5 class="info-section__title">Messung</h5>
                 </div>
                 <div class="info-grid">
@@ -79,7 +78,6 @@
             <!-- Messeinstellung -->
             <div class="info-section" *ngIf="measurement!.messeinstellung as ms">
                 <div class="info-section__header">
-                    <span class="info-section__icon">⚙️</span>
                     <h5 class="info-section__title">Messeinstellung</h5>
                 </div>
                 <div class="info-grid">
@@ -101,7 +99,6 @@
             <!-- Spule & Spulentyp -->
             <div class="info-section" *ngIf="measurement!.messeinstellung?.coil as coil">
                 <div class="info-section__header">
-                    <span class="info-section__icon">🔩</span>
                     <h5 class="info-section__title">Spule</h5>
                 </div>
                 <div class="info-grid">
@@ -165,7 +162,6 @@
             <!-- Sondentyp -->
             <div class="info-section" *ngIf="measurement!.messeinstellung?.probeType as pt">
                 <div class="info-section__header">
-                    <span class="info-section__icon">📡</span>
                     <h5 class="info-section__title">Sondentyp</h5>
                 </div>
                 <div class="info-grid">
