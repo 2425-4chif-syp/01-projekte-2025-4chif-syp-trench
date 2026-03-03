@@ -44,6 +44,21 @@ export class MessungDetailComponent {
   measurement: Measurement | null = null;
   messwerte = signal<Messwert[]>([]);
   showDeleteModal: boolean = false;
+  showInfoPanel: boolean = false;
+
+  get durationLabel(): string {
+    const start = this.measurement?.anfangszeitpunkt;
+    const end = this.measurement?.endzeitpunkt;
+    if (!start || !end) return '';
+    const ms = new Date(end).getTime() - new Date(start).getTime();
+    if (ms <= 0) return '';
+    const totalSec = ms / 1000;
+    if (totalSec < 60) return `${totalSec.toFixed(2)} s`;
+    const totalMin = totalSec / 60;
+    if (totalMin < 60) return `${totalMin.toFixed(2)} min`;
+    const totalHrs = totalMin / 60;
+    return `${totalHrs.toFixed(2)} h`;
+  }
   public grafanaPanelUrls = new Map<number, SafeResourceUrl>();
 
   // Loading state
@@ -113,9 +128,6 @@ export class MessungDetailComponent {
   }
 
   public grafanaSchenkelPanelUrl(schenkel: number): SafeResourceUrl | null {
-    const cached = this.grafanaPanelUrls.get(schenkel);
-    if (cached) return cached;
-
     const base = (environment.grafanaBaseUrl ?? '').trim().replace(/\/+$/, '');
     if (!base) return null;
     const uid = environment.grafanaDashboardUid;
@@ -140,16 +152,17 @@ export class MessungDetailComponent {
     if (messungId) url.searchParams.set('var-messungId', String(messungId));
 
     const safe = this.sanitizer.bypassSecurityTrustResourceUrl(url.toString());
-    this.grafanaPanelUrls.set(schenkel, safe);
     return safe;
   }
 
   private buildGrafanaPanelUrls(): void {
-    this.grafanaPanelUrls.clear();
+    const urls = new Map<number, SafeResourceUrl>();
     for (const s of this.schenkelNumbers()) {
       const url = this.grafanaSchenkelPanelUrl(s);
-      if (url) this.grafanaPanelUrls.set(s, url);
+      if (url) urls.set(s, url);
     }
+    // Assign a NEW Map so Angular detects the reference change in child @Input()
+    this.grafanaPanelUrls = urls;
   }
 
   /**

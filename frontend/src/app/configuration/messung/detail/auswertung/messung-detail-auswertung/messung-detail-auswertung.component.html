@@ -43,17 +43,22 @@
 </div>
 </div>
 
-@if (grafanaPanelUrls && yokes().length > 0) {
-  <div class="grafana-all">
+@if (stagedPanels.length > 0) {
+  @if (!allReady) {
+    <div class="grafana-loading">
+      <div class="grafana-loading__spinner"></div>
+      <span class="grafana-loading__text">Diagramme werden geladen…</span>
+    </div>
+  }
+  <div class="grafana-all" [style.visibility]="allReady ? 'visible' : 'hidden'"
+       [style.height]="allReady ? 'auto' : '0'" [style.overflow]="allReady ? 'visible' : 'hidden'">
     <h4 class="grafana-all__title">Sensorverläufe (Grafana)</h4>
     <div class="grafana-grid">
-      @for (_yoke of yokes(); track $index) {
-        @if (grafanaPanelUrls.get($index + 1); as url) {
-          <div class="grafana-card">
-            <div class="grafana-card__header">Schenkel #{{ $index + 1 }}</div>
-            <iframe class="grafana-solo-frame" [src]="url" allowfullscreen></iframe>
-          </div>
-        }
+      @for (panel of stagedPanels; track panel.schenkel) {
+        <div class="grafana-card">
+          <div class="grafana-card__header">Schenkel #{{ panel.schenkel }}</div>
+          <iframe class="grafana-solo-frame" [src]="panel.url" allowfullscreen></iframe>
+        </div>
       }
     </div>
   </div>

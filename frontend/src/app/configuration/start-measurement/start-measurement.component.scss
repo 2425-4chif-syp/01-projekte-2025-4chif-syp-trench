@@ -1,10 +1,9 @@
 .modern-card {
-  border: none;
   border-radius: 1.25rem;
   padding: clamp(1.5rem, 3vw, 2.4rem);
-  background: var(--bs-card-bg, #ffffff);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 16px 42px -32px rgba(15, 23, 42, 0.45);
+  background: var(--bs-card-bg, #fff);
+  border: 1px solid rgba(15,23,42,.08);
+  box-shadow: 0 16px 42px -32px rgba(15,23,42,.45);
   display: flex;
   flex-direction: column;
   gap: clamp(1.25rem, 2.8vw, 2.1rem);

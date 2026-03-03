@@ -1,13 +1,202 @@
-<div class="text-center">
-    <h2>Messung #{{ measurement!.id }}</h2>
+<div class="detail-page">
 
-    <div class="detail-actions">
-        <button class="btn btn-outline-secondary btn-modern me-2" (click)="navigateBack()">
-            Zurück zur Liste
-        </button>
-        <button class="btn btn-outline-danger btn-modern" (click)="openDeleteModal()">
-            Messung löschen
-        </button>
+    <!-- Header -->
+    <div class="detail-header">
+        <div class="detail-header__left">
+            <button class="action-btn action-btn--back" (click)="navigateBack()">
+                <svg class="action-btn__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Zurück</span>
+            </button>
+        </div>
+
+        <div class="detail-header__center">
+            <span class="detail-header__eyebrow">Messung</span>
+            <h2 class="detail-header__title">{{ measurement!.name || ('#' + measurement!.id) }}</h2>
+            <div class="detail-header__meta" *ngIf="measurement!.anfangszeitpunkt">
+                {{ measurement!.anfangszeitpunkt | date:'dd.MM.yyyy, HH:mm' }}
+                <span *ngIf="durationLabel" class="detail-header__duration">· {{ durationLabel }}</span>
+            </div>
+        </div>
+
+        <div class="detail-header__right">
+            <button class="action-btn action-btn--info" (click)="showInfoPanel = !showInfoPanel" [class.is-active]="showInfoPanel" title="Details anzeigen">
+                <svg class="action-btn__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+                    <line x1="10" y1="9" x2="10" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="10" cy="6.5" r="0.5" fill="currentColor" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span>Details</span>
+            </button>
+            <button class="action-btn action-btn--danger" (click)="openDeleteModal()">
+                <svg class="action-btn__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M5 6h10M8 6V4h4v2M9 9v5M11 9v5M6 6l.75 9.5h6.5L14 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Löschen</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Info Panel (Slide-in) -->
+    <div class="info-panel" [class.is-open]="showInfoPanel">
+        <div class="info-panel__inner">
+
+            <!-- Messung -->
+            <div class="info-section">
+                <div class="info-section__header">
+                    <span class="info-section__icon">📋</span>
+                    <h5 class="info-section__title">Messung</h5>
+                </div>
+                <div class="info-grid">
+                    <div class="info-pill" *ngIf="measurement!.name">
+                        <span class="info-pill__label">Name</span>
+                        <span class="info-pill__value">{{ measurement!.name }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="measurement!.tauchkernstellung != null">
+                        <span class="info-pill__label">Tauchkernstellung</span>
+                        <span class="info-pill__value">{{ measurement!.tauchkernstellung }} A</span>
+                    </div>
+                    <div class="info-pill" *ngIf="measurement!.pruefspannung != null">
+                        <span class="info-pill__label">Prüfspannung</span>
+                        <span class="info-pill__value">{{ measurement!.pruefspannung }} V</span>
+                    </div>
+                    <div class="info-pill" *ngIf="measurement!.anfangszeitpunkt">
+                        <span class="info-pill__label">Start</span>
+                        <span class="info-pill__value">{{ measurement!.anfangszeitpunkt | date:'dd.MM.yy, HH:mm:ss' }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="measurement!.endzeitpunkt">
+                        <span class="info-pill__label">Ende</span>
+                        <span class="info-pill__value">{{ measurement!.endzeitpunkt | date:'dd.MM.yy, HH:mm:ss' }}</span>
+                    </div>
+                    <div class="info-pill info-pill--full" *ngIf="measurement!.notiz">
+                        <span class="info-pill__label">Notiz</span>
+                        <span class="info-pill__value">{{ measurement!.notiz }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messeinstellung -->
+            <div class="info-section" *ngIf="measurement!.messeinstellung as ms">
+                <div class="info-section__header">
+                    <span class="info-section__icon">⚙️</span>
+                    <h5 class="info-section__title">Messeinstellung</h5>
+                </div>
+                <div class="info-grid">
+                    <div class="info-pill">
+                        <span class="info-pill__label">ID</span>
+                        <span class="info-pill__value">#{{ ms.id }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="ms.name">
+                        <span class="info-pill__label">Name</span>
+                        <span class="info-pill__value">{{ ms.name }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="ms.sondenProSchenkel != null">
+                        <span class="info-pill__label">Sonden/Schenkel</span>
+                        <span class="info-pill__value">{{ ms.sondenProSchenkel }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spule & Spulentyp -->
+            <div class="info-section" *ngIf="measurement!.messeinstellung?.coil as coil">
+                <div class="info-section__header">
+                    <span class="info-section__icon">🔩</span>
+                    <h5 class="info-section__title">Spule</h5>
+                </div>
+                <div class="info-grid">
+                    <div class="info-pill">
+                        <span class="info-pill__label">ID</span>
+                        <span class="info-pill__value">#{{ coil.id }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="coil.auftragsnummer">
+                        <span class="info-pill__label">Auftrag</span>
+                        <span class="info-pill__value">{{ coil.auftragsnummer }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="coil.auftragsPosNr">
+                        <span class="info-pill__label">Position</span>
+                        <span class="info-pill__value">{{ coil.auftragsPosNr }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="coil.bemessungsspannung != null">
+                        <span class="info-pill__label">Bemessungsspannung</span>
+                        <span class="info-pill__value">{{ coil.bemessungsspannung }} V</span>
+                    </div>
+                    <div class="info-pill" *ngIf="coil.bemessungsfrequenz != null">
+                        <span class="info-pill__label">Bemessungsfrequenz</span>
+                        <span class="info-pill__value">{{ coil.bemessungsfrequenz }} Hz</span>
+                    </div>
+                    <div class="info-pill info-pill--full" *ngIf="coil.notiz">
+                        <span class="info-pill__label">Notiz</span>
+                        <span class="info-pill__value">{{ coil.notiz }}</span>
+                    </div>
+
+                    <ng-container *ngIf="coil.coiltype as ct">
+                        <div class="info-pill info-pill--divider info-pill--full">
+                            <span class="info-pill__label">Spulentyp: {{ ct.name }}</span>
+                        </div>
+                        <div class="info-pill">
+                            <span class="info-pill__label">Schenkel</span>
+                            <span class="info-pill__value">{{ ct.schenkel }}</span>
+                        </div>
+                        <div class="info-pill" *ngIf="ct.bandbreite != null">
+                            <span class="info-pill__label">Bandbreite</span>
+                            <span class="info-pill__value">{{ ct.bandbreite | number:'1.0-1' }} mm</span>
+                        </div>
+                        <div class="info-pill" *ngIf="ct.schichthoehe != null">
+                            <span class="info-pill__label">Schichthöhe</span>
+                            <span class="info-pill__value">{{ ct.schichthoehe | number:'1.0-1' }} mm</span>
+                        </div>
+                        <div class="info-pill" *ngIf="ct.durchmesser != null">
+                            <span class="info-pill__label">Durchmesser</span>
+                            <span class="info-pill__value">{{ ct.durchmesser | number:'1.0-1' }} mm</span>
+                        </div>
+                        <div class="info-pill" *ngIf="ct.toleranzbereich != null">
+                            <span class="info-pill__label">Toleranz</span>
+                            <span class="info-pill__value">{{ ct.toleranzbereich | number:'1.0-1' }} kg</span>
+                        </div>
+                        <div class="info-pill info-pill--full" *ngIf="ct.notiz">
+                            <span class="info-pill__label">Notiz</span>
+                            <span class="info-pill__value">{{ ct.notiz }}</span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+            <!-- Sondentyp -->
+            <div class="info-section" *ngIf="measurement!.messeinstellung?.probeType as pt">
+                <div class="info-section__header">
+                    <span class="info-section__icon">📡</span>
+                    <h5 class="info-section__title">Sondentyp</h5>
+                </div>
+                <div class="info-grid">
+                    <div class="info-pill">
+                        <span class="info-pill__label">Name</span>
+                        <span class="info-pill__value">{{ pt.name || '–' }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="pt.breite != null">
+                        <span class="info-pill__label">Breite</span>
+                        <span class="info-pill__value">{{ pt.breite | number:'1.0-2' }} mm</span>
+                    </div>
+                    <div class="info-pill" *ngIf="pt.hoehe != null">
+                        <span class="info-pill__label">Höhe</span>
+                        <span class="info-pill__value">{{ pt.hoehe | number:'1.0-2' }} mm</span>
+                    </div>
+                    <div class="info-pill" *ngIf="pt.windungszahl != null">
+                        <span class="info-pill__label">Windungen</span>
+                        <span class="info-pill__value">{{ pt.windungszahl }}</span>
+                    </div>
+                    <div class="info-pill" *ngIf="pt.alpha != null">
+                        <span class="info-pill__label">Alpha</span>
+                        <span class="info-pill__value">{{ pt.alpha }}</span>
+                    </div>
+                    <div class="info-pill info-pill--full" *ngIf="pt.notiz">
+                        <span class="info-pill__label">Notiz</span>
+                        <span class="info-pill__value">{{ pt.notiz }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <!-- Loading State -->
@@ -24,7 +213,9 @@
         </div>
     }
     @else if (messwerte().length < 1) {
-        <p>Keine Messwerte vorhanden!</p>
+        <div class="empty-state">
+            <p class="empty-state__text">Keine Messwerte vorhanden</p>
+        </div>
     }
     @else {
         <div class="container">

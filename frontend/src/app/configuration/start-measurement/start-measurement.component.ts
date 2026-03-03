@@ -162,7 +162,7 @@ export class StartMeasurementComponent implements OnDestroy {
   }
 
   private buildGrafanaPanelUrlsForLive(): void {
-    this.grafanaPanelUrls.clear();
+    const urls = new Map<number, SafeResourceUrl>();
 
     const measurementId = this.messungService.getCurrentMeasurementId();
     const setting = this.selectedMeasurementSetting;
@@ -189,8 +189,11 @@ export class StartMeasurementComponent implements OnDestroy {
       url.searchParams.set('theme', 'light');
       url.searchParams.set('var-schenkel', String(i));
       url.searchParams.set('var-messungId', String(measurementId));
-      this.grafanaPanelUrls.set(i, this.sanitizer.bypassSecurityTrustResourceUrl(url.toString()));
+      urls.set(i, this.sanitizer.bypassSecurityTrustResourceUrl(url.toString()));
     }
+
+    // Assign a NEW Map so Angular detects the reference change in child @Input()
+    this.grafanaPanelUrls = urls;
   }
 
   private async connectToWebSocket(): Promise<void> {
@@ -377,7 +380,7 @@ export class StartMeasurementComponent implements OnDestroy {
         await this.measurementsBackendService.stopMeasuring();
         this.currentMeasurement = false;
         this.messungService.stopGlobalMeasurement();
-        this.grafanaPanelUrls.clear();
+        this.grafanaPanelUrls = new Map<number, SafeResourceUrl>();
         
         console.log('Messung erfolgreich beendet');
         this.alerts.success('Messung erfolgreich beendet');
