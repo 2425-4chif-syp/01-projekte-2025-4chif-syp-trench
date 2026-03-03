@@ -72,15 +72,38 @@
               <div class="setting-summary">
                 <div class="setting-summary__primary">
                   @if (selectedMeasurementSetting) {
-                    <div class="setting-summary__name">
-                      #{{ selectedMeasurementSetting.id }} ·
-                      {{ selectedMeasurementSetting.name || 'Ohne Namen' }}
-                    </div>
-                    <div class="setting-summary__meta">
-                      Spule: {{ selectedMeasurementSetting.coil?.coiltype?.name || 'Unbekannt' }}
-                    </div>
-                    <div class="setting-summary__meta" *ngIf="selectedMeasurementSetting?.coil as coil">
-                      Auftrag: {{ coil.auftragsnummer || '–' }} · Pos: {{ coil.auftragsPosNr || '–' }}
+                    <div class="setting-info">
+                      <div class="setting-info__title">
+                        <span class="setting-info__id">#{{ selectedMeasurementSetting.id }}</span>
+                        <span class="setting-info__name">{{ selectedMeasurementSetting.name || 'Ohne Namen' }}</span>
+                      </div>
+
+                      <div class="setting-info__grid">
+                        <div class="setting-info__pill">
+                          <span class="setting-info__pill-label">Spulentyp</span>
+                          <span class="setting-info__pill-value">{{ selectedMeasurementSetting.coil?.coiltype?.name || '–' }}</span>
+                        </div>
+                        <div class="setting-info__pill" *ngIf="selectedMeasurementSetting.coil?.coiltype?.schenkel != null">
+                          <span class="setting-info__pill-label">Schenkel</span>
+                          <span class="setting-info__pill-value">{{ selectedMeasurementSetting.coil?.coiltype?.schenkel }}</span>
+                        </div>
+                        <div class="setting-info__pill" *ngIf="selectedMeasurementSetting.sondenProSchenkel != null">
+                          <span class="setting-info__pill-label">Sonden/Schenkel</span>
+                          <span class="setting-info__pill-value">{{ selectedMeasurementSetting.sondenProSchenkel }}</span>
+                        </div>
+                        <div class="setting-info__pill" *ngIf="selectedMeasurementSetting.coil?.coiltype?.toleranzbereich != null">
+                          <span class="setting-info__pill-label">Toleranz</span>
+                          <span class="setting-info__pill-value">{{ selectedMeasurementSetting.coil?.coiltype?.toleranzbereich | number: '1.1-1' }} kg</span>
+                        </div>
+                        <div class="setting-info__pill" *ngIf="selectedMeasurementSetting.coil?.auftragsnummer">
+                          <span class="setting-info__pill-label">Auftrag</span>
+                          <span class="setting-info__pill-value">{{ selectedMeasurementSetting.coil?.auftragsnummer }}</span>
+                        </div>
+                        <div class="setting-info__pill" *ngIf="selectedMeasurementSetting.coil?.auftragsPosNr">
+                          <span class="setting-info__pill-label">Position</span>
+                          <span class="setting-info__pill-value">{{ selectedMeasurementSetting.coil?.auftragsPosNr }}</span>
+                        </div>
+                      </div>
                     </div>
                   } @else {
                     <div class="setting-empty-state">
@@ -107,21 +130,6 @@
                   }
                 </div>
 
-                <div class="selection-card__chips" *ngIf="selectedMeasurementSetting">
-                  <span class="selection-chip" *ngIf="selectedMeasurementSetting.coil?.coiltype?.schenkel != null">
-                    Schenkel: {{ selectedMeasurementSetting.coil?.coiltype?.schenkel }}
-                  </span>
-                  <span class="selection-chip" *ngIf="selectedMeasurementSetting.sondenProSchenkel != null">
-                    Sonden/Schenkel: {{ selectedMeasurementSetting.sondenProSchenkel }}
-                  </span>
-                  <span
-                    class="selection-chip"
-                    *ngIf="selectedMeasurementSetting.coil?.coiltype?.toleranzbereich != null"
-                  >
-                    Toleranz: {{ selectedMeasurementSetting.coil?.coiltype?.toleranzbereich | number: '1.1-1' }} kg
-                  </span>
-                </div>
-
                 <div class="setting-summary__note" *ngIf="error">
                   {{ error }}
                 </div>
@@ -134,15 +142,13 @@
                   <div class="config-panel__eyebrow">Schritt 2</div>
                   <h4 class="config-panel__title">Parameter</h4>
                 </div>
-                <div class="config-panel__hint">
-                  * Pflichtfelder
-                </div>
+                
               </header>
 
               <div class="form-grid">
                 <div class="form-field">
                   <label for="tauchkernstellung" class="form-label">
-                    Tauchkernstellung *
+                    Tauchkernstellung
                   </label>
                   <div
                     class="input-shell"
@@ -158,6 +164,7 @@
                       [attr.aria-invalid]="showInputErrors && tauchkernstellung === null"
                       aria-describedby="tauchkernstellung-unit"
                       inputmode="decimal"
+                      placeholder="Tauchkernstellung eingeben"
                       required
                     />
                     <span id="tauchkernstellung-unit" class="input-unit" aria-hidden="true">A</span>
@@ -172,7 +179,7 @@
 
                 <div class="form-field">
                   <label for="pruefspannung" class="form-label">
-                    Prüfspannung *
+                    Prüfspannung
                   </label>
                   <div
                     class="input-shell"
@@ -188,6 +195,7 @@
                       [attr.aria-invalid]="showInputErrors && pruefspannung === null"
                       aria-describedby="pruefspannung-unit"
                       inputmode="decimal"
+                      placeholder="Prüfspannung eingeben"
                       required
                     />
                     <span id="pruefspannung-unit" class="input-unit" aria-hidden="true">V</span>
@@ -201,7 +209,7 @@
                 </div>
 
                 <div class="form-field form-field--full">
-                  <label for="note" class="form-label">Notiz (optional)</label>
+                  <label for="note" class="form-label">Notiz</label>
                   <div class="input-shell">
                     <textarea
                       class="form-control"
@@ -209,6 +217,7 @@
                       [(ngModel)]="note"
                       (ngModelChange)="onNoteChange($event)"
                       [disabled]="isConnected"
+                      placeholder="Notiz hinzufügen ..."
                       rows="4"
                     ></textarea>
                   </div>
