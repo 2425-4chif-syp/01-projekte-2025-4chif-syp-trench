@@ -112,7 +112,7 @@
             <div class="metric-grid">
               <!-- Bandbreite -->
               <div class="form-field metric-field">
-                <label for="bandbreite" class="form-label">Bandbreite (mm)</label>
+                <label for="bandbreite" class="form-label">Bandbreite</label>
                 <div class="input-shell" [class.invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)">
                   <input
                     type="text"
@@ -120,7 +120,8 @@
                     appDecimalComma
                     class="form-control"
                     id="bandbreite"
-                    placeholder="Bandbreite in mm"
+                    aria-describedby="bandbreite-unit"
+                    placeholder="z.B. 12,5"
                     [(ngModel)]="selectedCoiltype.bandbreite"
                     name="bandbreite"
                     #bandbreiteElement="ngModel"
@@ -132,6 +133,7 @@
                     (blur)="onFieldBlur('bandbreite')"
                     [class.is-invalid]="shouldShowFieldError('bandbreite', bandbreiteElement)"
                   />
+                  <span id="bandbreite-unit" class="input-unit" aria-hidden="true">mm</span>
                 </div>
                 @if(fieldError('bandbreite')){
                   <div class="invalid-feedback">{{ fieldError('bandbreite') }}</div>
@@ -140,7 +142,7 @@
 
               <!-- Schichthöhe -->
               <div class="form-field metric-field">
-                <label for="schichthoehe" class="form-label">Schichthöhe (mm)</label>
+                <label for="schichthoehe" class="form-label">Schichthöhe</label>
                 <div class="input-shell" [class.invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)">
                   <input
                     type="text"
@@ -148,7 +150,8 @@
                     appDecimalComma
                     class="form-control"
                     id="schichthoehe"
-                    placeholder="Schichthöhe in mm"
+                    aria-describedby="schichthoehe-unit"
+                    placeholder="z.B. 8,0"
                     [(ngModel)]="selectedCoiltype.schichthoehe"
                     name="schichthoehe"
                     #schichthoeheElement="ngModel"
@@ -160,6 +163,7 @@
                     (blur)="onFieldBlur('schichthoehe')"
                     [class.is-invalid]="shouldShowFieldError('schichthoehe', schichthoeheElement)"
                   />
+                  <span id="schichthoehe-unit" class="input-unit" aria-hidden="true">mm</span>
                 </div>
                 @if(fieldError('schichthoehe')){
                   <div class="invalid-feedback">{{ fieldError('schichthoehe') }}</div>
@@ -168,7 +172,7 @@
 
               <!-- Durchmesser -->
               <div class="form-field metric-field">
-                <label for="durchmesser" class="form-label">Durchmesser (mm)</label>
+                <label for="durchmesser" class="form-label">Durchmesser</label>
                 <div class="input-shell" [class.invalid]="shouldShowFieldError('durchmesser', durchmesserElement)">
                   <input
                     type="text"
@@ -176,7 +180,8 @@
                     appDecimalComma
                     class="form-control"
                     id="durchmesser"
-                    placeholder="Durchmesser in mm"
+                    aria-describedby="durchmesser-unit"
+                    placeholder="z.B. 450"
                     [(ngModel)]="selectedCoiltype.durchmesser"
                     name="durchmesser"
                     #durchmesserElement="ngModel"
@@ -188,6 +193,7 @@
                     (blur)="onFieldBlur('durchmesser')"
                     [class.is-invalid]="shouldShowFieldError('durchmesser', durchmesserElement)"
                   />
+                  <span id="durchmesser-unit" class="input-unit" aria-hidden="true">mm</span>
                 </div>
                 @if(fieldError('durchmesser')){
                   <div class="invalid-feedback">{{ fieldError('durchmesser') }}</div>
@@ -196,7 +202,7 @@
 
               <!-- Toleranzbereich -->
               <div class="form-field metric-field">
-                <label for="toleranzbereich" class="form-label">Toleranzbereich (kg)</label>
+                <label for="toleranzbereich" class="form-label">Toleranzbereich</label>
                 <div class="input-shell" [class.invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)">
                   <input
                     type="text"
@@ -204,7 +210,8 @@
                     appDecimalComma
                     class="form-control"
                     id="toleranzbereich"
-                    placeholder="Toleranzbereich in kg"
+                    aria-describedby="toleranzbereich-unit"
+                    placeholder="z.B. 1,5"
                     [(ngModel)]="selectedCoiltype.toleranzbereich"
                     name="toleranzbereich"
                     #toleranzElement="ngModel"
@@ -216,6 +223,7 @@
                     (blur)="onFieldBlur('toleranzbereich')"
                     [class.is-invalid]="shouldShowFieldError('toleranzbereich', toleranzElement)"
                   />
+                  <span id="toleranzbereich-unit" class="input-unit" aria-hidden="true">kg</span>
                 </div>
                 @if(fieldError('toleranzbereich')){
                   <div class="invalid-feedback">{{ fieldError('toleranzbereich') }}</div>

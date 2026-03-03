@@ -50,6 +50,20 @@
   }
 }
 
+/* Unit suffix for input shells (e.g. V, Hz, mm) */
+.input-unit {
+  flex: 0 0 auto;
+  margin-left: 0.75rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(15, 23, 42, 0.12);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(31, 39, 77, 0.6);
+  user-select: none;
+  white-space: nowrap;
+}
+
 /* Prevent scrolling only on CSV import/export page */
 body.csv-page-no-scroll,
 html.csv-page-no-scroll {

@@ -31,7 +31,7 @@
           <div class="coildetail-grid">
             <section class="coildetail-panel">
               <div class="coiltype-summary" [class.is-empty]="!selectedCoiltype">
-                <div class="coiltype-summary__meta">
+                <div class="coiltype-summary__meta" *ngIf="selectedCoiltype">
                   <span class="coiltype-summary__eyebrow">Spulentyp</span>
                   <h4>{{ selectedCoiltype?.name || 'Noch kein Spulentyp ausgewählt' }}</h4>
                   <!--<p class="coiltype-summary__id" *ngIf="selectedCoiltype">ID {{ selectedCoiltype?.id }}</p>-->
@@ -74,14 +74,29 @@
                 </ng-container>
 
                 <ng-template #coiltypeHint>
-                  <p class="coiltype-summary__hint">
-                    Wählen Sie einen Spulentyp
-                  </p>
+                  <div class="coiltype-empty-state">
+                    <div class="coiltype-empty-state__icon-wrap">
+                      <svg class="coiltype-empty-state__icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 4"/>
+                        <ellipse cx="32" cy="32" rx="13" ry="8" stroke="currentColor" stroke-width="2.2"/>
+                        <ellipse cx="32" cy="26" rx="13" ry="8" stroke="currentColor" stroke-width="2.2"/>
+                        <ellipse cx="32" cy="20" rx="13" ry="8" stroke="currentColor" stroke-width="2.2"/>
+                        <line x1="19" y1="20" x2="19" y2="32" stroke="currentColor" stroke-width="2.2"/>
+                        <line x1="45" y1="20" x2="45" y2="32" stroke="currentColor" stroke-width="2.2"/>
+                      </svg>
+                    </div>
+                    <p class="coiltype-empty-state__title">Kein Spulentyp ausgewählt</p>
+                    <p class="coiltype-empty-state__desc">Wählen Sie einen Spulentyp, um die Spulendaten zu vervollständigen.</p>
+                    <button type="button" class="coiltype-empty-state__btn" (click)="openCoiltypeSelect()">
+                      <span>Spulentyp wählen</span>
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
                 </ng-template>
 
-                <div class="coiltype-summary__footer justify-content-center">
+                <div class="coiltype-summary__footer justify-content-center" *ngIf="selectedCoiltype">
                   <button type="button" class="coiltype-link" (click)="openCoiltypeSelect()">
-                    <span>{{ selectedCoiltype ? 'Spulentyp ändern' : 'Spulentyp wählen' }}</span>
+                    <span>Spulentyp ändern</span>
                     <span aria-hidden="true" class="coiltype-link__icon">→</span>
                   </button>
                 </div>
@@ -125,7 +140,7 @@
               </div>
 
               <div class="form-field">
-                <label for="bemessungsspannung" class="form-label">Bemessungsspannung (V)</label>
+                <label for="bemessungsspannung" class="form-label">Bemessungsspannung</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsspannung')">
                   <input
                     type="text"
@@ -133,11 +148,13 @@
                     appDecimalComma
                     class="form-control"
                     id="bemessungsspannung"
-                    placeholder="Bemessungsspannung in V"
+                    aria-describedby="bemessungsspannung-unit"
+                    placeholder="z.B. 230"
                     [(ngModel)]="selectedCoil!.bemessungsspannung"
                     name="bemessungsspannung"
                     min="0"
                   />
+                  <span id="bemessungsspannung-unit" class="input-unit" aria-hidden="true">V</span>
                 </div>
                 <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('bemessungsspannung')">
                   Bitte geben Sie eine Bemessungsspannung ein.
@@ -145,7 +162,7 @@
               </div>
 
               <div class="form-field">
-                <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz (Hz)</label>
+                <label for="bemessungsfrequenz" class="form-label">Bemessungsfrequenz</label>
                 <div class="input-shell" [class.invalid]="saveError && isFieldInvalid('bemessungsfrequenz')">
                   <input
                     type="text"
@@ -153,11 +170,13 @@
                     appDecimalComma
                     class="form-control"
                     id="bemessungsfrequenz"
-                    placeholder="Bemessungsfrequenz in Hz"
+                    aria-describedby="bemessungsfrequenz-unit"
+                    placeholder="z.B. 50"
                     [(ngModel)]="selectedCoil!.bemessungsfrequenz"
                     name="bemessungsfrequenz"
                     min="0"
                   />
+                  <span id="bemessungsfrequenz-unit" class="input-unit" aria-hidden="true">Hz</span>
                 </div>
                 <div class="invalid-feedback" *ngIf="saveError && isFieldInvalid('bemessungsfrequenz')">
                   Bitte geben Sie eine Bemessungsfrequenz ein.

@@ -12,161 +12,213 @@
           </span>
         </div>
 
-        <div class="form-actions form-actions--top">
+        <div class="action-bar">
           <button
-            class="btn btn-success btn-modern"
-            type="button"
-            (click)="startMeasurement()"
-            [disabled]="isConnected || !isValid()"
-          >
-            🧪 Messung starten
-          </button>
-          <button
-            class="btn btn-danger btn-modern"
-            type="button"
-            (click)="stopMeasurement()"
-            [disabled]="!isConnected"
-          >
-            ⛔ Messung beenden
-          </button>
-          <button
-            class="btn btn-outline-secondary btn-modern"
+            class="action-btn action-btn--back"
             type="button"
             (click)="backToListing()"
           >
-            Zurück
+            <svg class="action-btn__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Zurück</span>
           </button>
-        </div>
 
-        <div class="selection-row">
-          <div
-            class="selection-card"
-            [class.is-empty]="!selectedMeasurementSetting"
-            [class.has-error]="showIdError"
-          >
-            <span class="selection-card__eyebrow">Messeinstellung</span>
-            <h4 class="selection-card__title">
-              @if (selectedMeasurementSetting) {
-                #{{ selectedMeasurementSetting.id }} –
-                {{ selectedMeasurementSetting.name || 'Ohne Namen' }}
-              } @else {
-                Keine Messeinstellung ausgewählt
-              }
-            </h4>
-            <p class="selection-card__subtitle" *ngIf="selectedMeasurementSetting">
-              Spule:
-              {{ selectedMeasurementSetting.coil?.coiltype?.name || 'Unbekannte Spule' }}
-            </p>
-            <p class="selection-card__subtitle" *ngIf="selectedMeasurementSetting?.coil as coil">
-              Auftrag:
-              {{ coil.auftragsnummer || '–' }}
-              · Pos:
-              {{ coil.auftragsPosNr || '–' }}
-            </p>
-
-            <div class="selection-card__chips" *ngIf="selectedMeasurementSetting">
-              <span class="selection-chip" *ngIf="selectedMeasurementSetting.coil?.coiltype?.schenkel != null">
-                Schenkel: {{ selectedMeasurementSetting.coil?.coiltype?.schenkel }}
-              </span>
-              <span class="selection-chip" *ngIf="selectedMeasurementSetting.sondenProSchenkel != null">
-                Sonden/Schenkel: {{ selectedMeasurementSetting.sondenProSchenkel }}
-              </span>
-              <span
-                class="selection-chip"
-                *ngIf="selectedMeasurementSetting.coil?.coiltype?.toleranzbereich != null"
-              >
-                Toleranz: {{ selectedMeasurementSetting.coil?.coiltype?.toleranzbereich | number: '1.1-1' }} kg
-              </span>
-            </div>
-
-            <p class="selection-card__empty" *ngIf="!selectedMeasurementSetting">
-              Wählen Sie eine Messeinstellung über die Schaltfläche unten.
-            </p>
-
-            <div class="selection-card__note" *ngIf="error">
-              {{ error }}
-            </div>
-
+          <div class="action-bar__primary">
             <button
+              class="action-btn"
+              [class.action-btn--start]="!isConnected"
+              [class.action-btn--stop]="isConnected"
               type="button"
-              class="selection-card__action"
-              (click)="openMeasurementSettingsSelect()"
-              [disabled]="isConnected"
+              (click)="isConnected ? stopMeasurement() : startMeasurement()"
+              [disabled]="!isConnected && !isValid()"
             >
-              <span>
-                {{ selectedMeasurementSetting ? 'Messeinstellung ändern' : 'Messeinstellung wählen' }}
-              </span>
-              <span class="selection-card__action-icon" aria-hidden="true">→</span>
+              <svg *ngIf="!isConnected" class="action-btn__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 7L14 10L8 13V7Z" fill="currentColor"/>
+              </svg>
+              <svg *ngIf="isConnected" class="action-btn__icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="5" y="5" width="10" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              <span>{{ isConnected ? 'Messung beenden' : 'Messung starten' }}</span>
             </button>
           </div>
+        </div>
 
-          <div class="form-section">
-            <div class="form-field">
-              <label for="tauchkernstellung" class="form-label">
-                Tauchkernstellung (A)
-              </label>
-              <div class="input-shell">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="tauchkernstellung"
-                  [ngModel]="tauchkernstellungInput"
-                  (ngModelChange)="onDecimalInputChange($event, 'tauchkernstellung')"
+        <div class="config-box">
+          <div class="config-grid">
+            <section
+              class="config-panel"
+              [class.is-empty]="!selectedMeasurementSetting"
+              [class.has-error]="showIdError"
+            >
+              <header class="config-panel__header">
+                <div>
+                  <div class="config-panel__eyebrow">Schritt 1</div>
+                  <h4 class="config-panel__title">Messeinstellung</h4>
+                </div>
+                <button
+                  *ngIf="selectedMeasurementSetting"
+                  type="button"
+                  class="selection-card__action"
+                  (click)="openMeasurementSettingsSelect()"
                   [disabled]="isConnected"
-                  [class.is-invalid]="showInputErrors && tauchkernstellung === null"
-                  [attr.aria-invalid]="showInputErrors && tauchkernstellung === null"
-                  inputmode="decimal"
-                  required
-                  placeholder="Tauchkernstellung in Ampere"
-                />
-                <div class="invalid-feedback">
-                  Bitte Tauchkernstellung eingeben.
+                >
+                  <span>Ändern</span>
+                  <span class="selection-card__action-icon" aria-hidden="true">→</span>
+                </button>
+              </header>
+
+              <div class="setting-summary">
+                <div class="setting-summary__primary">
+                  @if (selectedMeasurementSetting) {
+                    <div class="setting-summary__name">
+                      #{{ selectedMeasurementSetting.id }} ·
+                      {{ selectedMeasurementSetting.name || 'Ohne Namen' }}
+                    </div>
+                    <div class="setting-summary__meta">
+                      Spule: {{ selectedMeasurementSetting.coil?.coiltype?.name || 'Unbekannt' }}
+                    </div>
+                    <div class="setting-summary__meta" *ngIf="selectedMeasurementSetting?.coil as coil">
+                      Auftrag: {{ coil.auftragsnummer || '–' }} · Pos: {{ coil.auftragsPosNr || '–' }}
+                    </div>
+                  } @else {
+                    <div class="setting-empty-state">
+                      <div class="setting-empty-state__icon-wrap">
+                        <svg class="setting-empty-state__icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                          <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 4"/>
+                          <path d="M20 38 Q32 18 44 38" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+                          <line x1="32" y1="38" x2="32" y2="46" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                          <rect x="26" y="46" width="12" height="5" rx="2" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                      </div>
+                      <p class="setting-empty-state__title">Keine Messeinstellung ausgewählt</p>
+                      <p class="setting-empty-state__desc">Wählen Sie eine Messeinstellung, um die Messung zu konfigurieren.</p>
+                      <button
+                        type="button"
+                        class="setting-empty-state__btn"
+                        (click)="openMeasurementSettingsSelect()"
+                        [disabled]="isConnected"
+                      >
+                        <span>Messeinstellung wählen</span>
+                        <span aria-hidden="true">→</span>
+                      </button>
+                    </div>
+                  }
+                </div>
+
+                <div class="selection-card__chips" *ngIf="selectedMeasurementSetting">
+                  <span class="selection-chip" *ngIf="selectedMeasurementSetting.coil?.coiltype?.schenkel != null">
+                    Schenkel: {{ selectedMeasurementSetting.coil?.coiltype?.schenkel }}
+                  </span>
+                  <span class="selection-chip" *ngIf="selectedMeasurementSetting.sondenProSchenkel != null">
+                    Sonden/Schenkel: {{ selectedMeasurementSetting.sondenProSchenkel }}
+                  </span>
+                  <span
+                    class="selection-chip"
+                    *ngIf="selectedMeasurementSetting.coil?.coiltype?.toleranzbereich != null"
+                  >
+                    Toleranz: {{ selectedMeasurementSetting.coil?.coiltype?.toleranzbereich | number: '1.1-1' }} kg
+                  </span>
+                </div>
+
+                <div class="setting-summary__note" *ngIf="error">
+                  {{ error }}
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div class="form-field">
-              <label for="pruefspannung" class="form-label">
-                Prüfspannung (V)
-              </label>
-              <div class="input-shell">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="pruefspannung"
-                  [ngModel]="pruefspannungInput"
-                  (ngModelChange)="onDecimalInputChange($event, 'pruefspannung')"
-                  [disabled]="isConnected"
-                  [class.is-invalid]="showInputErrors && pruefspannung === null"
-                  [attr.aria-invalid]="showInputErrors && pruefspannung === null"
-                  inputmode="decimal"
-                  required
-                  placeholder="Prüfspannung in Volt"
-                />
-                <div class="invalid-feedback">
-                  Bitte Prüfspannung eingeben.
+            <section class="config-panel">
+              <header class="config-panel__header">
+                <div>
+                  <div class="config-panel__eyebrow">Schritt 2</div>
+                  <h4 class="config-panel__title">Parameter</h4>
+                </div>
+                <div class="config-panel__hint">
+                  * Pflichtfelder
+                </div>
+              </header>
+
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="tauchkernstellung" class="form-label">
+                    Tauchkernstellung *
+                  </label>
+                  <div
+                    class="input-shell"
+                    [class.has-invalid]="showInputErrors && tauchkernstellung === null"
+                  >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="tauchkernstellung"
+                      [ngModel]="tauchkernstellungInput"
+                      (ngModelChange)="onDecimalInputChange($event, 'tauchkernstellung')"
+                      [disabled]="isConnected"
+                      [attr.aria-invalid]="showInputErrors && tauchkernstellung === null"
+                      aria-describedby="tauchkernstellung-unit"
+                      inputmode="decimal"
+                      required
+                    />
+                    <span id="tauchkernstellung-unit" class="input-unit" aria-hidden="true">A</span>
+                  </div>
+                  <div
+                    class="field-error"
+                    *ngIf="showInputErrors && tauchkernstellung === null"
+                  >
+                    Bitte Tauchkernstellung eingeben.
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="pruefspannung" class="form-label">
+                    Prüfspannung *
+                  </label>
+                  <div
+                    class="input-shell"
+                    [class.has-invalid]="showInputErrors && pruefspannung === null"
+                  >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="pruefspannung"
+                      [ngModel]="pruefspannungInput"
+                      (ngModelChange)="onDecimalInputChange($event, 'pruefspannung')"
+                      [disabled]="isConnected"
+                      [attr.aria-invalid]="showInputErrors && pruefspannung === null"
+                      aria-describedby="pruefspannung-unit"
+                      inputmode="decimal"
+                      required
+                    />
+                    <span id="pruefspannung-unit" class="input-unit" aria-hidden="true">V</span>
+                  </div>
+                  <div
+                    class="field-error"
+                    *ngIf="showInputErrors && pruefspannung === null"
+                  >
+                    Bitte Prüfspannung eingeben.
+                  </div>
+                </div>
+
+                <div class="form-field form-field--full">
+                  <label for="note" class="form-label">Notiz (optional)</label>
+                  <div class="input-shell">
+                    <textarea
+                      class="form-control"
+                      id="note"
+                      [(ngModel)]="note"
+                      (ngModelChange)="onNoteChange($event)"
+                      [disabled]="isConnected"
+                      rows="4"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-field form-field--full" *ngIf="isLoading">
+                  <small class="text-muted">Lade Messeinstellungen...</small>
                 </div>
               </div>
-            </div>
-
-            <div class="form-field">
-              <label for="note" class="form-label">Notiz (optional)</label>
-              <div class="input-shell">
-                <textarea
-                  class="form-control"
-                  id="note"
-                  [(ngModel)]="note"
-                  (ngModelChange)="onNoteChange($event)"
-                  [disabled]="isConnected"
-                  placeholder="Geben Sie eine optionale Notiz ein"
-                  rows="4"
-                ></textarea>
-              </div>
-            </div>
-
-            <div class="form-field" *ngIf="isLoading">
-              <small class="text-muted">Lade Messeinstellungen...</small>
-            </div>
+            </section>
           </div>
         </div>
       </div>
