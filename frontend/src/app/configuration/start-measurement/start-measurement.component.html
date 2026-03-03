@@ -113,8 +113,15 @@
                   [ngModel]="tauchkernstellungInput"
                   (ngModelChange)="onDecimalInputChange($event, 'tauchkernstellung')"
                   [disabled]="isConnected"
+                  [class.is-invalid]="showInputErrors && tauchkernstellung === null"
+                  [attr.aria-invalid]="showInputErrors && tauchkernstellung === null"
+                  inputmode="decimal"
+                  required
                   placeholder="Tauchkernstellung in Ampere"
                 />
+                <div class="invalid-feedback">
+                  Bitte Tauchkernstellung eingeben.
+                </div>
               </div>
             </div>
 
@@ -130,8 +137,15 @@
                   [ngModel]="pruefspannungInput"
                   (ngModelChange)="onDecimalInputChange($event, 'pruefspannung')"
                   [disabled]="isConnected"
+                  [class.is-invalid]="showInputErrors && pruefspannung === null"
+                  [attr.aria-invalid]="showInputErrors && pruefspannung === null"
+                  inputmode="decimal"
+                  required
                   placeholder="Prüfspannung in Volt"
                 />
+                <div class="invalid-feedback">
+                  Bitte Prüfspannung eingeben.
+                </div>
               </div>
             </div>
 

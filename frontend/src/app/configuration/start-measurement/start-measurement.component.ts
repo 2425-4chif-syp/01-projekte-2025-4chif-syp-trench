@@ -44,6 +44,7 @@ export class StartMeasurementComponent implements OnDestroy {
   tauchkernstellungInput: string = '';
   pruefspannungInput: string = '';
   showIdError: boolean = false;
+  showInputErrors: boolean = false;
   isLoading: boolean = true;
   error: string | null = null;
   currentMeasurement: boolean = false;
@@ -108,7 +109,28 @@ export class StartMeasurementComponent implements OnDestroy {
   }
 
   isValid(): boolean {
-    return this.measurementSettingId !== null && this.measurementSettingId > 0;
+    return (
+      this.measurementSettingId !== null &&
+      this.measurementSettingId > 0 &&
+      this.tauchkernstellung !== null &&
+      this.pruefspannung !== null
+    );
+  }
+
+  private getMissingRequiredFields(): string[] {
+    const missing: string[] = [];
+
+    if (this.measurementSettingId === null || this.measurementSettingId <= 0) {
+      missing.push('Messeinstellung');
+    }
+    if (this.tauchkernstellung === null) {
+      missing.push('Tauchkernstellung');
+    }
+    if (this.pruefspannung === null) {
+      missing.push('Prüfspannung');
+    }
+
+    return missing;
   }
 
 
@@ -215,7 +237,7 @@ export class StartMeasurementComponent implements OnDestroy {
             this.selectedMeasurementSetting!.coil!.coiltype!,
             this.selectedMeasurementSetting!.coil!,
             this.selectedMeasurementSetting!,
-            this.pruefspannung!
+            this.pruefspannung ?? 0
           );
 
           this.yokeData.set(result.F);
@@ -245,12 +267,18 @@ export class StartMeasurementComponent implements OnDestroy {
 
   async startMeasurement(): Promise<void> {
     if (!this.isValid()) {
-      this.showIdError = true;
-      this.error = 'Bitte wählen Sie eine gültige Messeinstellung aus';
+      const missing = this.getMissingRequiredFields();
+      this.showIdError = missing.includes('Messeinstellung');
+      this.showInputErrors = true;
+      this.error =
+        missing.length === 0
+          ? 'Bitte prüfen Sie die Eingaben'
+          : `Bitte füllen Sie folgende Felder aus: ${missing.join(', ')}`;
       return;
     }
 
     try {
+      this.showInputErrors = false;
       // Hole die Messeinstellung direkt vom Backend
       const measurementSetting = await this.measurementSettingsService.reloadElementWithId(this.measurementSettingId!);
       if (!measurementSetting) {
@@ -428,6 +456,12 @@ export class StartMeasurementComponent implements OnDestroy {
     }
 
     this.syncDraftToMessung();
+
+    if (this.showInputErrors) {
+      const missing = this.getMissingRequiredFields();
+      this.showIdError = missing.includes('Messeinstellung');
+      this.error = missing.length > 0 ? `Bitte füllen Sie folgende Felder aus: ${missing.join(', ')}` : null;
+    }
   }
 
   onNoteChange(value: string): void {
