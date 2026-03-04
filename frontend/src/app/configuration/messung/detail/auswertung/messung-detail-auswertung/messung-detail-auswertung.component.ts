@@ -30,10 +30,11 @@ export class MessungDetailAuswertungComponent implements OnChanges, OnDestroy {
      * Panels staged in the DOM (hidden) – added one by one with a delay
      * so the browser doesn't saturate its per-host connection limit.
      */
-    stagedPanels: { schenkel: number; url: SafeResourceUrl }[] = [];
+    stagedPanels: { schenkel: number; url: SafeResourceUrl; trackKey: string }[] = [];
     /** Flips to true once every panel iframe is in the DOM → makes them all visible at once */
     allReady = false;
     private staggerTimers: any[] = [];
+    private reloadGeneration = 0;
 
     public get isWithinTolerance(): boolean {
       return this.m_tot() < this.coiltype!.toleranzbereich!;
@@ -49,13 +50,20 @@ export class MessungDetailAuswertungComponent implements OnChanges, OnDestroy {
       this.staggerTimers.forEach(t => clearTimeout(t));
     }
 
+    public resetGrafanaZoom(): void {
+      // Grafana "solo" embeds don't expose the usual time-range history/zoom-out UI.
+      // Recreating the iframes resets the panels to the original time range.
+      this.reloadGeneration++;
+      this.staggerIframes({ delayMs: 150 });
+    }
+
     /**
      * Add iframes to the DOM one-by-one with a delay so each gets the
      * browser's full connection budget (6 per hostname on HTTP/1.1).
      * Once the last iframe is staged we flip `allReady` so all panels
      * become visible simultaneously.
      */
-    private staggerIframes(): void {
+    private staggerIframes(opts?: { delayMs?: number }): void {
       this.staggerTimers.forEach(t => clearTimeout(t));
       this.staggerTimers = [];
       this.stagedPanels = [];
@@ -64,9 +72,13 @@ export class MessungDetailAuswertungComponent implements OnChanges, OnDestroy {
       if (!this.grafanaPanelUrls || this.grafanaPanelUrls.size === 0) return;
 
       const allPanels = Array.from(this.grafanaPanelUrls.entries())
-        .map(([schenkel, url]) => ({ schenkel, url }));
+        .map(([schenkel, url]) => ({
+          schenkel,
+          url,
+          trackKey: `${this.reloadGeneration}-${schenkel}`
+        }));
 
-      const DELAY_MS = 1500;
+      const delayMs = Math.max(0, opts?.delayMs ?? 1500);
       allPanels.forEach((panel, i) => {
         const timer = setTimeout(() => {
           this.stagedPanels = [...this.stagedPanels, panel];
@@ -74,7 +86,7 @@ export class MessungDetailAuswertungComponent implements OnChanges, OnDestroy {
           if (this.stagedPanels.length === allPanels.length) {
             this.allReady = true;
           }
-        }, i * DELAY_MS);
+        }, i * delayMs);
         this.staggerTimers.push(timer);
       });
     }

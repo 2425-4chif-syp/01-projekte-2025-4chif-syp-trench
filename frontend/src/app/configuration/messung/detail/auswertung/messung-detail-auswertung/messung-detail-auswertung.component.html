@@ -49,9 +49,16 @@
   }
   <div class="grafana-all" [style.visibility]="allReady ? 'visible' : 'hidden'"
        [style.height]="allReady ? 'auto' : '0'" [style.overflow]="allReady ? 'visible' : 'hidden'">
-    <h4 class="grafana-all__title">Sensorverläufe (Grafana)</h4>
+    <div class="grafana-header">
+      <h4 class="grafana-all__title">Sensorverläufe (Grafana)</h4>
+      <div class="grafana-actions" *ngIf="allReady">
+        <button type="button" class="grafana-action-btn" (click)="resetGrafanaZoom()" title="Zoom zurücksetzen (lädt Diagramme neu)">
+          Zoom zurücksetzen
+        </button>
+      </div>
+    </div>
     <div class="grafana-grid">
-      @for (panel of stagedPanels; track panel.schenkel) {
+      @for (panel of stagedPanels; track panel.trackKey) {
         <div class="grafana-card">
           <div class="grafana-card__header">Schenkel #{{ panel.schenkel }}</div>
           <iframe class="grafana-solo-frame" [src]="panel.url" allowfullscreen></iframe>

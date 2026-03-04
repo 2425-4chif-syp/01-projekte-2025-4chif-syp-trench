@@ -109,8 +109,44 @@
   margin-bottom: 1.25rem;
 }
 
-.grafana-all__title {
+.grafana-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   margin: 0 0 0.75rem;
+}
+
+.grafana-all__title {
+  margin: 0;
+}
+
+.grafana-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0;
+}
+
+.grafana-action-btn {
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
+}
+
+.grafana-action-btn:hover {
+  background: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.22);
+}
+
+.grafana-action-btn:active {
+  transform: translateY(1px);
 }
 
 .grafana-grid {
