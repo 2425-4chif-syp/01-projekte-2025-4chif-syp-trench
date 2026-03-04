@@ -17,11 +17,11 @@ export class TimelineGraphComponent {
   @Input() tolerance: number | null = null;
   // Geometry inputs
   @Input() innerWidth: number = 100;
-  @Input() innerHeight: number = 20;
+  @Input() innerHeight: number = 10;
   @Input() insetX: number = 1;
-  @Input() insetY: number = 3;
+  @Input() insetY: number = 2;
   @Input() outerViewBoxWidth: number = 102;
-  @Input() outerViewBoxHeight: number = 22;
+  @Input() outerViewBoxHeight: number = 14;
 
   @Output() valueChange = new EventEmitter<number>();
   public pointerDown = false;
