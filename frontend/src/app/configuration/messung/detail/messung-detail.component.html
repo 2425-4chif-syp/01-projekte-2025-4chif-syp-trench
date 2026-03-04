@@ -220,7 +220,7 @@
                 [sliderMinMs]="sliderMinMs"
                 [sliderMaxMs]="sliderMaxMs"
                 [value]="sliderValue()"
-                [mTotSeries]="mTotSeries"
+                [mTotSeries]="mTotSeriesDownsampled"
                 [allSensorsSentMs]="allSensorsSentMs"
                 [tolerance]="measurement?.messeinstellung?.coil?.coiltype?.toleranzbereich || 0"
                 (valueChange)="onSliderInput($event)">

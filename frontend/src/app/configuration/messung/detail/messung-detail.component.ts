@@ -22,6 +22,79 @@ function asDate(d: any): Date | null {
   return isNaN(parsed.getTime()) ? null : parsed;
 }
 
+// Binary search: find the index of the last entry whose timestamp (entry[0]) is <= targetMs.
+// Returns -1 if no such entry exists.
+function bsLatestAtOrBefore(sortedEntries: { timeMs: number; wert: number }[], targetMs: number): number {
+  let lo = 0;
+  let hi = sortedEntries.length - 1;
+  let result = -1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1;
+    if (sortedEntries[mid].timeMs <= targetMs) {
+      result = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return result;
+}
+
+/**
+ * Downsample a series of [time, value] using Largest-Triangle-Three-Buckets (LTTB).
+ * Preserves visual shape much better than uniform sampling.
+ */
+function lttbDownsample(data: number[][], threshold: number): number[][] {
+  if (data.length <= threshold) return data;
+
+  const sampled: number[][] = [];
+  // Always keep first point
+  sampled.push(data[0]);
+
+  const bucketSize = (data.length - 2) / (threshold - 2);
+
+  let a = 0; // index of previous selected point
+  for (let i = 1; i < threshold - 1; i++) {
+    // Calculate bucket range
+    const rangeStart = Math.floor((i - 1) * bucketSize) + 1;
+    const rangeEnd = Math.min(Math.floor(i * bucketSize) + 1, data.length - 1);
+
+    // Calculate average of next bucket (for triangle area)
+    const nextRangeStart = Math.floor(i * bucketSize) + 1;
+    const nextRangeEnd = Math.min(Math.floor((i + 1) * bucketSize) + 1, data.length - 1);
+    let avgX = 0, avgY = 0;
+    const nextLen = nextRangeEnd - nextRangeStart + 1;
+    for (let j = nextRangeStart; j <= nextRangeEnd; j++) {
+      avgX += data[j][0];
+      avgY += data[j][1];
+    }
+    avgX /= nextLen;
+    avgY /= nextLen;
+
+    // Pick the point in current bucket with largest triangle area
+    let maxArea = -1;
+    let maxIdx = rangeStart;
+    const pointAx = data[a][0];
+    const pointAy = data[a][1];
+    for (let j = rangeStart; j <= rangeEnd; j++) {
+      const area = Math.abs(
+        (pointAx - avgX) * (data[j][1] - pointAy) -
+        (pointAx - data[j][0]) * (avgY - pointAy)
+      );
+      if (area > maxArea) {
+        maxArea = area;
+        maxIdx = j;
+      }
+    }
+    sampled.push(data[maxIdx]);
+    a = maxIdx;
+  }
+
+  // Always keep last point
+  sampled.push(data[data.length - 1]);
+  return sampled;
+}
+
 @Component({
   selector: 'app-detail',
   standalone: true,
@@ -74,8 +147,15 @@ export class MessungDetailComponent {
   missingSensorsInDb = signal<string[]>([]);
   // Series of [timeMs, m_tot] to feed timeline component
   mTotSeries: number[][] = [];
+  // Downsampled version of mTotSeries for the timeline graph (max ~800 points)
+  mTotSeriesDownsampled: number[][] = [];
   // Timestamp of when all sensors have sent their first value, used to indicate on timeline
   allSensorsSentMs: number | null = null;
+
+  // Pre-built lookup: "schenkel-position" -> sorted array of {timeMs, wert}
+  private sensorMap = new Map<string, { timeMs: number; wert: number }[]>();
+  private yokeCount = 0;
+  private sensorsPerYoke = 0;
 
   // Slider state: milliseconds since epoch
   sliderMinMs: number = 0;
@@ -225,6 +305,9 @@ export class MessungDetailComponent {
       this.loadingProgress.set(60);
       await this.delay(100);
 
+      // Pre-build sorted sensor lookup map once (O(N log N))
+      this.buildSensorMap();
+
       // initialize slider bounds and compute initial derived values
       this.initializeSliderBounds();
       this.loadingProgress.set(70);
@@ -234,8 +317,10 @@ export class MessungDetailComponent {
       this.loadingProgress.set(80);
       await this.delay(100);
 
-      // Build m_tot series based on available timestamps
+      // Build m_tot series based on available timestamps (optimized sweep-line)
       this.buildMTotSeries();
+      // Downsample for timeline graph rendering (max 800 points)
+      this.mTotSeriesDownsampled = lttbDownsample(this.mTotSeries, 800);
   // Compute the earliest timestamp when all sensors have reported at least one value
   this.allSensorsSentMs = this.computeAllSensorsSentMs();
       this.loadingProgress.set(90);
@@ -315,6 +400,7 @@ export class MessungDetailComponent {
    * Build yokes structure from available messwerte using the most recent value
    * at or before the given time for each sensor, then call the displacement
    * calculation service to compute yokeData and total mass.
+   * Optimized: uses pre-built sorted sensorMap + binary search.
    */
   private updateDerivedAt(time: Date): void {
     const measurement = this.measurement;
@@ -325,86 +411,23 @@ export class MessungDetailComponent {
       return;
     }
 
-    const messwerte = this.messwerte();
-
-    // determine yoke count
-    const coiltype = measurement.messeinstellung.coil?.coiltype;
-    const yokeCount = coiltype?.schenkel ?? 0;
-
-    // number of sensors per yoke (prefer messeinstellung value)
-    let sensorsPerYoke = measurement.messeinstellung.sondenProSchenkel ?? 0;
-    if (!sensorsPerYoke || sensorsPerYoke < 1) {
-      // fallback: determine from data by finding max position number (positions are 1-based in backend)
-      let maxPos = 0;
-      for (const m of messwerte) {
-        const pos = m.sondenPosition?.position ?? null;
-        if (pos !== null && pos !== undefined && typeof pos === 'number') {
-          if (pos > maxPos) maxPos = pos;
-        }
-      }
-      // If backend uses 1-based positions, maxPos is already the count; fallback to 1 if nothing found
-      sensorsPerYoke = maxPos > 0 ? maxPos : 1;
-    }
-
-    // Lookup-Map bauen für O(1) Zugriff statt O(n) pro Sensor
-    // Map: "schenkel-position" -> sortierte Liste der Messwerte nach Zeitpunkt
-    const sensorMap = new Map<string, Messwert[]>();
-    for (const mw of messwerte) {
-      const wp = mw.sondenPosition;
-      if (!wp) continue;
-      const schenkel = wp.schenkel ?? null;
-      const pos = wp.position ?? null;
-      if (schenkel === null || pos === null) continue;
-      const key = `${schenkel}-${pos}`;
-      if (!sensorMap.has(key)) {
-        sensorMap.set(key, []);
-      }
-      sensorMap.get(key)!.push(mw);
-    }
-    
-    // Track missing sensors for UI
-    const foundKeys = Array.from(sensorMap.keys());
-    const missingSensors: string[] = [];
-    for (let y = 0; y < yokeCount; y++) {
-      for (let s = 0; s < sensorsPerYoke; s++) {
-        const key = `${y + 1}-${s + 1}`;
-        if (!sensorMap.has(key)) {
-          missingSensors.push(key);
-        }
-      }
-    }
-    this.missingSensorsInDb.set(missingSensors);
+    const timeMs = time.getTime();
+    const yokeCount = this.yokeCount;
+    const sensorsPerYoke = this.sensorsPerYoke;
 
     // Build yokes array - use null for values not yet available at this time
     const yokesArr: { sensors: (number | null)[] }[] = [];
     for (let y = 0; y < yokeCount; y++) {
       const sensors: (number | null)[] = new Array(sensorsPerYoke).fill(null);
       for (let s = 0; s < sensorsPerYoke; s++) {
-        // Backend uses 1-based schenkel and position
-        const schenkel = y + 1;
-        const position = s + 1;
-        const key = `${schenkel}-${position}`;
-        const sensorValues = sensorMap.get(key);
-        
-        if (!sensorValues || sensorValues.length === 0) {
-          // Sensor has NO data in DB at all
-          continue;
+        const key = `${y + 1}-${s + 1}`;
+        const sensorValues = this.sensorMap.get(key);
+        if (!sensorValues || sensorValues.length === 0) continue;
+
+        const idx = bsLatestAtOrBefore(sensorValues, timeMs);
+        if (idx >= 0) {
+          sensors[s] = sensorValues[idx].wert;
         }
-        
-        // find the most recent messwert at or before time
-        let candidate: Messwert | null = null;
-        let candidateTime = 0;
-        for (const mw of sensorValues) {
-          const z = asDate(mw.zeitpunkt);
-          if (!z) continue;
-          const tz = z.getTime();
-          if (tz <= time.getTime() && tz >= candidateTime) {
-            candidate = mw;
-            candidateTime = tz;
-          }
-        }
-        // null = no value at this time yet, number = actual value
-        sensors[s] = candidate?.wert ?? null;
       }
       yokesArr.push({ sensors });
     }
@@ -412,7 +435,6 @@ export class MessungDetailComponent {
     this.yokes.set(yokesArr);
 
     // call displacement calculation with the current measurement settings
-    // Convert null values to 0 for calculation
     const yokesForCalc: { sensors: number[] }[] = yokesArr.map(yoke => ({
       sensors: yoke.sensors.map(s => s ?? 0)
     }));
@@ -432,16 +454,24 @@ export class MessungDetailComponent {
     }
   }
 
-  private computeMTotAt(time: Date): number {
+  /**
+   * Build the sensorMap once after loading messwerte.
+   * Map: "schenkel-position" -> sorted array of { timeMs, wert }.
+   * Also determines yokeCount, sensorsPerYoke, and missingSensorsInDb.
+   */
+  private buildSensorMap(): void {
     const measurement = this.measurement;
+    const messwerte = this.messwerte();
+    this.sensorMap.clear();
+
     if (!measurement || !measurement.messeinstellung) {
-      return 0;
+      this.yokeCount = 0;
+      this.sensorsPerYoke = 0;
+      return;
     }
 
-    const messwerte = this.messwerte();
-
     const coiltype = measurement.messeinstellung.coil?.coiltype;
-    const yokeCount = coiltype?.schenkel ?? 0;
+    this.yokeCount = coiltype?.schenkel ?? 0;
 
     let sensorsPerYoke = measurement.messeinstellung.sondenProSchenkel ?? 0;
     if (!sensorsPerYoke || sensorsPerYoke < 1) {
@@ -454,32 +484,66 @@ export class MessungDetailComponent {
       }
       sensorsPerYoke = maxPos > 0 ? maxPos : 1;
     }
+    this.sensorsPerYoke = sensorsPerYoke;
+
+    // Build map
+    for (const mw of messwerte) {
+      const wp = mw.sondenPosition;
+      if (!wp) continue;
+      const schenkel = wp.schenkel ?? null;
+      const pos = wp.position ?? null;
+      if (schenkel === null || pos === null) continue;
+      const key = `${schenkel}-${pos}`;
+      if (!this.sensorMap.has(key)) {
+        this.sensorMap.set(key, []);
+      }
+      const z = asDate(mw.zeitpunkt);
+      if (!z) continue;
+      this.sensorMap.get(key)!.push({ timeMs: z.getTime(), wert: mw.wert ?? 0 });
+    }
+
+    // Sort each sensor's values by time
+    for (const arr of this.sensorMap.values()) {
+      arr.sort((a, b) => a.timeMs - b.timeMs);
+    }
+
+    // Track missing sensors for UI
+    const missingSensors: string[] = [];
+    for (let y = 0; y < this.yokeCount; y++) {
+      for (let s = 0; s < sensorsPerYoke; s++) {
+        const key = `${y + 1}-${s + 1}`;
+        if (!this.sensorMap.has(key)) {
+          missingSensors.push(key);
+        }
+      }
+    }
+    this.missingSensorsInDb.set(missingSensors);
+  }
+
+  /**
+   * Compute m_tot at a given time. Optimized: uses pre-built sensorMap + binary search.
+   */
+  private computeMTotAt(timeMs: number): number {
+    const measurement = this.measurement;
+    if (!measurement || !measurement.messeinstellung) {
+      return 0;
+    }
+
+    const yokeCount = this.yokeCount;
+    const sensorsPerYoke = this.sensorsPerYoke;
 
     const yokesArr: { sensors: number[] }[] = [];
     for (let y = 0; y < yokeCount; y++) {
       const sensors: number[] = new Array(sensorsPerYoke).fill(0);
       for (let s = 0; s < sensorsPerYoke; s++) {
-        let candidate: Messwert | null = null;
-        let candidateTime = 0;
-        for (const mw of messwerte) {
-          const wp = mw.sondenPosition;
-          if (!wp) continue;
-          const schenkel = wp.schenkel ?? null;
-          const pos = wp.position ?? null;
-          if (schenkel === null || pos === null) continue;
-          const schenkelIndex = (typeof schenkel === 'number') ? (schenkel - 1) : schenkel;
-          const posIndex = (typeof pos === 'number') ? (pos - 1) : pos;
-          if (schenkelIndex !== y) continue;
-          if (posIndex !== s) continue;
-          const z = asDate(mw.zeitpunkt);
-          if (!z) continue;
-          const tz = z.getTime();
-          if (tz <= time.getTime() && tz >= candidateTime) {
-            candidate = mw;
-            candidateTime = tz;
-          }
+        const key = `${y + 1}-${s + 1}`;
+        const sensorValues = this.sensorMap.get(key);
+        if (!sensorValues || sensorValues.length === 0) continue;
+
+        const idx = bsLatestAtOrBefore(sensorValues, timeMs);
+        if (idx >= 0) {
+          sensors[s] = sensorValues[idx].wert;
         }
-        sensors[s] = candidate?.wert ?? 0;
       }
       yokesArr.push({ sensors });
     }
@@ -492,7 +556,7 @@ export class MessungDetailComponent {
       const calc = this.displacementCalculation.calculateYokeData(yokesArr, probeType, [], coiltypeObj, coil, measurementSetting, measurement.pruefspannung!);
       return calc.m_tot ?? 0;
     } catch (err) {
-      console.error('Error calculating m_tot for time', time, err);
+      console.error('Error calculating m_tot for time', timeMs, err);
       return 0;
     }
   }
@@ -511,55 +575,48 @@ export class MessungDetailComponent {
       timesSet.add(z.getTime());
     }
     const times = Array.from(timesSet.values()).sort((a, b) => a - b);
+
+    // If there are a huge number of unique timestamps, subsample before computing m_tot.
+    // Computing m_tot involves displacement calculation per timestamp, so limit to ~500 points.
+    const MAX_MTOT_COMPUTATIONS = 500;
+    let computeTimes: number[];
+    if (times.length <= MAX_MTOT_COMPUTATIONS) {
+      computeTimes = times;
+    } else {
+      // Uniform sampling across the time range, always include first and last
+      computeTimes = [times[0]];
+      const step = (times.length - 1) / (MAX_MTOT_COMPUTATIONS - 1);
+      for (let i = 1; i < MAX_MTOT_COMPUTATIONS - 1; i++) {
+        computeTimes.push(times[Math.round(i * step)]);
+      }
+      computeTimes.push(times[times.length - 1]);
+    }
+
     const series: number[][] = [];
-    for (const t of times) {
-      const val = this.computeMTotAt(new Date(t));
+    for (const t of computeTimes) {
+      const val = this.computeMTotAt(t);
       series.push([t, val]);
     }
     this.mTotSeries = series;
   }
 
+  /**
+   * Compute the earliest timestamp when ALL sensors have sent at least one value.
+   * Optimized: reads first entry from pre-built sorted sensorMap.
+   */
   private computeAllSensorsSentMs(): number | null {
-    const measurement = this.measurement;
-    const data = this.messwerte();
-    if (!measurement || !measurement.messeinstellung) return null;
-    if (!data || data.length === 0) return null;
-
-    const yokeCount = measurement.messeinstellung.coil?.coiltype?.schenkel ?? 0;
-    if (!yokeCount || yokeCount < 1) return null;
-
-    let sensorsPerYoke = measurement.messeinstellung.sondenProSchenkel ?? 0;
-    if (!sensorsPerYoke || sensorsPerYoke < 1) {
-      let maxPos = 0;
-      for (const m of data) {
-        const pos = m.sondenPosition?.position ?? null;
-        if (pos !== null && pos !== undefined && typeof pos === 'number') {
-          if (pos > maxPos) maxPos = pos;
-        }
-      }
-      if (maxPos < 1) return null;
-      sensorsPerYoke = maxPos;
-    }
+    const yokeCount = this.yokeCount;
+    const sensorsPerYoke = this.sensorsPerYoke;
+    if (!yokeCount || yokeCount < 1 || !sensorsPerYoke || sensorsPerYoke < 1) return null;
 
     let latestFirstSeen = 0;
     for (let y = 0; y < yokeCount; y++) {
       for (let s = 0; s < sensorsPerYoke; s++) {
-        let firstSeen: number | null = null;
-        for (const mw of data) {
-          const wp = mw.sondenPosition;
-          if (!wp) continue;
-          const schenkel = wp.schenkel ?? null;
-          const pos = wp.position ?? null;
-          if (schenkel === null || pos === null) continue;
-          const schenkelIndex = (typeof schenkel === 'number') ? (schenkel - 1) : schenkel;
-          const posIndex = (typeof pos === 'number') ? (pos - 1) : pos;
-          if (schenkelIndex !== y || posIndex !== s) continue;
-          const z = asDate(mw.zeitpunkt);
-          if (!z) continue;
-          const tz = z.getTime();
-          if (firstSeen === null || tz < firstSeen) firstSeen = tz;
-        }
-        if (firstSeen === null) return null;
+        const key = `${y + 1}-${s + 1}`;
+        const sensorValues = this.sensorMap.get(key);
+        if (!sensorValues || sensorValues.length === 0) return null;
+        // Already sorted by timeMs, first entry is earliest
+        const firstSeen = sensorValues[0].timeMs;
         if (firstSeen > latestFirstSeen) latestFirstSeen = firstSeen;
       }
     }

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,9 +6,10 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './timeline-graph.component.html',
-  styleUrl: './timeline-graph.component.scss'
+  styleUrl: './timeline-graph.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimelineGraphComponent {
+export class TimelineGraphComponent implements OnChanges {
   @Input() sliderMinMs: number | null = null;
   @Input() sliderMaxMs: number | null = null;
   @Input() value: number | null = null;
@@ -24,6 +25,9 @@ export class TimelineGraphComponent {
   @Input() outerViewBoxHeight: number = 14;
 
   @Output() valueChange = new EventEmitter<number>();
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
   public pointerDown = false;
   public hoverValue: number | null = null;
   private dragNormalized: number | null = null; // 0..1 while dragging
@@ -34,6 +38,100 @@ export class TimelineGraphComponent {
   private selectionEndMs: number | null = null;
   public zoomStack: { min: number; max: number }[] = [];
 
+  // === Cached computed values (recalculated only when inputs change) ===
+  private _cachedTrimmedSeries: number[][] = [];
+  private _cachedMinY: number = 0;
+  private _cachedMaxY: number = 1;
+  private _cachedScaledSegments: { x1: number; y1: number; x2: number; y2: number }[] = [];
+  private _cachedScaledTolerance: number = 0;
+  private _segmentsDirty = true;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Mark segments dirty if any relevant input changed
+    if (changes['mTotSeries'] || changes['allSensorsSentMs'] || changes['sliderMinMs'] || 
+        changes['sliderMaxMs'] || changes['tolerance'] || changes['innerWidth'] || changes['innerHeight']) {
+      this._segmentsDirty = true;
+    }
+  }
+
+  private recomputeIfDirty(): void {
+    if (!this._segmentsDirty) return;
+    this._segmentsDirty = false;
+
+    // Trimmed series
+    if (this.allSensorsSentMs === null) {
+      this._cachedTrimmedSeries = this.mTotSeries;
+    } else {
+      this._cachedTrimmedSeries = this.mTotSeries.filter(entry => entry[0] >= this.allSensorsSentMs!);
+    }
+
+    // Compute min/max Y from data, include tolerance so it stays visible
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const entry of this._cachedTrimmedSeries) {
+      if (entry[1] < minY) minY = entry[1];
+      if (entry[1] > maxY) maxY = entry[1];
+    }
+    // Include tolerance in range so the tolerance line is always visible
+    if (this.tolerance !== null && this.tolerance !== 0) {
+      if (this.tolerance < minY) minY = this.tolerance;
+      if (this.tolerance > maxY) maxY = this.tolerance;
+    }
+    // Fallbacks for empty or constant data
+    if (!isFinite(minY)) { minY = 0; maxY = 1; }
+    if (minY === maxY) { minY -= 0.5; maxY += 0.5; }
+
+    // Add 10% padding so the line doesn't sit right at the edges
+    const rangeY = maxY - minY;
+    const padding = rangeY * 0.1;
+    this._cachedMinY = minY - padding;
+    this._cachedMaxY = maxY + padding;
+
+    // Scaled tolerance (mapped into the centered Y range)
+    if (this.tolerance === null) {
+      this._cachedScaledTolerance = 0;
+    } else {
+      const yRange = (this._cachedMaxY - this._cachedMinY) || 1;
+      this._cachedScaledTolerance = this.innerHeight - (((this.tolerance - this._cachedMinY) / yRange) * this.innerHeight);
+    }
+
+    // Line segments (graph + scaled)
+    this._cachedScaledSegments = this.computeScaledSegments();
+  }
+
+  private computeScaledSegments(): { x1: number; y1: number; x2: number; y2: number }[] {
+    const trimmed = this._cachedTrimmedSeries;
+    if (trimmed.length === 0) return [];
+
+    const endTime = (this.effectiveMaxMs ?? this.sliderMaxMs ?? 0);
+    const minT = this.effectiveMinMs ?? this.sliderMinMs ?? 0;
+    const maxT = this.effectiveMaxMs ?? this.sliderMaxMs ?? 1;
+    const denom = (maxT - minT) || 1;
+    const minY = this._cachedMinY;
+    const yRange = (this._cachedMaxY - minY) || 1;
+    const iW = this.innerWidth;
+    const iH = this.innerHeight;
+
+    const result: { x1: number; y1: number; x2: number; y2: number }[] = [];
+    for (let i = 0; i < trimmed.length; i++) {
+      const time1 = trimmed[i][0];
+      const mTot = trimmed[i][1];
+      const time2 = (i + 1 < trimmed.length) ? trimmed[i + 1][0] : endTime;
+      
+      // Clip to effective range
+      if (time2 < minT || time1 > maxT) continue;
+
+      const scaledY = iH - (((mTot - minY) / yRange) * iH);
+      result.push({
+        x1: ((time1 - minT) / denom) * iW,
+        y1: scaledY,
+        x2: ((time2 - minT) / denom) * iW,
+        y2: scaledY
+      });
+    }
+    return result;
+  }
+
   // Computed viewBox ensures inner drawing area plus margins fits without clipping
   public get viewBoxWidth(): number {
     return Math.max(this.outerViewBoxWidth, this.insetX + this.innerWidth + 2);
@@ -42,12 +140,14 @@ export class TimelineGraphComponent {
     return Math.max(this.outerViewBoxHeight, this.insetY + this.innerHeight + 2);
   }
 
-  public get trimmedMTotSeries(): number[][] { 
-    // mTotSeries should start at allSensorsSentMs 
-    if (this.allSensorsSentMs === null) 
-      return this.mTotSeries;
-
-    return this.mTotSeries.filter(entry => entry[0] >= this.allSensorsSentMs!);
+  // Public cached accessors used in template
+  public get scaledLineSegments(): { x1: number; y1: number; x2: number; y2: number }[] {
+    this.recomputeIfDirty();
+    return this._cachedScaledSegments;
+  }
+  public get scaledTolerance(): number {
+    this.recomputeIfDirty();
+    return this._cachedScaledTolerance;
   }
 
   public get baseMinMs(): number | null {
@@ -63,44 +163,6 @@ export class TimelineGraphComponent {
   public get effectiveMaxMs(): number | null {
     if (this.zoomStack.length > 0) return this.zoomStack[this.zoomStack.length - 1].max;
     return this.sliderMaxMs;
-  }
-
-  public get graphLineSegments(): { time1: number; m_tot1: number; time2: number; m_tot2: number }[] {
-    // End with the value again
-    const endTime = (this.effectiveMaxMs ?? this.sliderMaxMs ?? 0);
-    const mTotSeriesFull = [...this.trimmedMTotSeries];
-    mTotSeriesFull.push([endTime, this.trimmedMTotSeries.length > 0 ? this.trimmedMTotSeries[this.trimmedMTotSeries.length - 1][1] : 0]);
-
-    // Create horizontal segments, then clip to effective range
-    const segments = mTotSeriesFull
-      .slice(0, -1)
-      .map((time_value_group, index) => ({
-        time1: time_value_group[0],
-        m_tot1: time_value_group[1], 
-        time2: mTotSeriesFull[index + 1][0],
-        m_tot2: time_value_group[1]
-      }));
-    const minT = this.effectiveMinMs ?? this.sliderMinMs ?? 0;
-    const maxT = this.effectiveMaxMs ?? this.sliderMaxMs ?? 0;
-    return segments.filter(s => s.time2 >= minT && s.time1 <= maxT);
-  }
-  
-  // Scales line segments to fit within the inner drawing area
-  public get scaledLineSegments(): { x1: number; y1: number; x2: number; y2: number }[] {
-    const minT = this.effectiveMinMs ?? this.sliderMinMs ?? 0;
-    const maxT = this.effectiveMaxMs ?? this.sliderMaxMs ?? 1;
-    const denom = (maxT - minT) || 1;
-    const maxY = Math.max(...this.trimmedMTotSeries.map(v => v[1]), 1);
-    return this.graphLineSegments.map(segment => ({
-      x1: ((segment.time1 - minT) / denom) * this.innerWidth,
-      y1: this.innerHeight - ((segment.m_tot1 / maxY) * this.innerHeight),
-      x2: ((segment.time2 - minT) / denom) * this.innerWidth,
-      y2: this.innerHeight - ((segment.m_tot2 / maxY) * this.innerHeight)
-    }));
-  }
-  public get scaledTolerance(): number {
-    if (this.tolerance === null) return 0;
-    return this.innerHeight - ((this.tolerance /  Math.max(...this.trimmedMTotSeries.map(v => v[1]), 1)) * this.innerHeight);
   }
 
   public min(a: number, b: number): number {
@@ -152,9 +214,11 @@ export class TimelineGraphComponent {
       // Begin selection by drag or click
       this.selectionStartMs = v;
       this.selectionEndMs = v;
+      this.cdr.markForCheck();
       return;
     }
     if (v !== null) this.valueChange.emit(v);
+    this.cdr.markForCheck();
   }
 
   public onPointerMove(ev: PointerEvent): void {
@@ -168,11 +232,16 @@ export class TimelineGraphComponent {
     // Zoom selection: update end while dragging, do not emit value changes
     if (this.selectingZoom) {
       if (this.pointerDown) this.selectionEndMs = hover;
+      this.cdr.markForCheck();
       return;
     }
     // Only emit when actively dragging (normal mode)
-    if (!this.pointerDown) return;
+    if (!this.pointerDown) {
+      this.cdr.markForCheck();
+      return;
+    }
     if (hover !== null) this.valueChange.emit(hover);
+    this.cdr.markForCheck();
   }
 
   public onPointerUp(ev: PointerEvent): void {
@@ -202,6 +271,7 @@ export class TimelineGraphComponent {
     // Reset transient drag selection markers
     this.selectionStartMs = null;
     this.selectionEndMs = null;
+    this.cdr.markForCheck();
   }
 
   public lineXNormalized(): number {
@@ -259,6 +329,7 @@ export class TimelineGraphComponent {
     this.selectionFirstMs = null;
     this.selectionStartMs = null;
     this.selectionEndMs = null;
+    this.cdr.markForCheck();
   }
 
   public resetZoom(): void {
@@ -267,6 +338,8 @@ export class TimelineGraphComponent {
     this.selectionFirstMs = null;
     this.selectionStartMs = null;
     this.selectionEndMs = null;
+    this._segmentsDirty = true;
+    this.cdr.markForCheck();
   }
 
   private finalizeZoom(a: number, b: number): void {
@@ -286,10 +359,12 @@ export class TimelineGraphComponent {
       newMax = this.clamp(newMin + 1, baseMin, baseMax);
     }
     this.zoomStack.push({ min: newMin, max: newMax });
+    this._segmentsDirty = true;
     // Clear selection state
     this.selectingZoom = false;
     this.selectionFirstMs = null;
     this.selectionStartMs = null;
     this.selectionEndMs = null;
+    this.cdr.markForCheck();
   }
 }
