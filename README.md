@@ -1,4 +1,7 @@
 # Trench Project
+
+**PROJECT AWARD PRESENTATION:** [YouTube (with timestamp)](https://www.youtube.com/live/LCYJquj7Bss?t=1348s)
+
 ## Index
 
 - [Project Description](https://2425-4chif-syp.github.io/01-projekte-2025-4chif-syp-trench/project-description)
